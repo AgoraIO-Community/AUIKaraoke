@@ -31,3 +31,11 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+.DS_Store
+
+# iOS
+Pods
+**/*.xcworkspace/**
+**/xcuserdata
+**/*.xcframework/**

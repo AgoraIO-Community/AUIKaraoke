@@ -1,0 +1,68 @@
+PODS:
+  - AgoraLyricsScore (1.1.1-beta-3)
+  - AgoraRtcEngine_iOS (1.0)
+  - Alamofire (5.6.4)
+  - AScenesKit (0.1.0):
+    - AUiKit
+  - AUiKit (0.1.0):
+    - AgoraLyricsScore
+    - AgoraRtcEngine_iOS
+    - Alamofire
+    - Kingfisher (~> 7.6.2)
+    - MJRefresh
+    - ScoreEffectUI
+    - SwiftTheme
+    - SwiftyBeaver (~> 1.9.5)
+    - YYModel
+    - Zip
+  - Kingfisher (7.6.2)
+  - MJRefresh (3.7.5)
+  - ScoreEffectUI (1.0.1)
+  - SwiftTheme (0.6.4)
+  - SwiftyBeaver (1.9.5)
+  - YYModel (1.0.4)
+  - Zip (2.1.2)
+
+DEPENDENCIES:
+  - AgoraLyricsScore (= 1.1.1-beta-3)
+  - AgoraRtcEngine_iOS (from `./libs`)
+  - AScenesKit (from `../../AScenesKit`)
+  - AUiKit (from `../../AUiKit`)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - AgoraLyricsScore
+    - Alamofire
+    - Kingfisher
+    - MJRefresh
+    - ScoreEffectUI
+    - SwiftTheme
+    - SwiftyBeaver
+    - YYModel
+    - Zip
+
+EXTERNAL SOURCES:
+  AgoraRtcEngine_iOS:
+    :path: "./libs"
+  AScenesKit:
+    :path: "../../AScenesKit"
+  AUiKit:
+    :path: "../../AUiKit"
+
+SPEC CHECKSUMS:
+  AgoraLyricsScore: 7e25860ccecd3c6ed73f2b503f1d73d8849079e1
+  AgoraRtcEngine_iOS: 7af3b344c55059556eeb05dc748ff124c593d4fb
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  AScenesKit: 8edf960cf679ee157e17a922d7caf76ca621b45a
+  AUiKit: c77c78361232d841d7e41924cf4a22d903bc35eb
+  Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  ScoreEffectUI: 1a3bbd83b17cfef1c16a3a4eede2854f89c9eb10
+  SwiftTheme: 007cbaf1f9e171caf6448a4657533e54c682b285
+  SwiftyBeaver: 84069991dd5dca07d7069100985badaca7f0ce82
+  YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
+  Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
+
+PODFILE CHECKSUM: a1785473b2421b095fd11b5633b1cd70f74356d8
+
+COCOAPODS: 1.12.0
