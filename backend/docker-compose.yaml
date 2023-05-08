@@ -1,0 +1,49 @@
+version: "3"
+
+networks:
+    uikit-network:
+        driver: bridge
+
+services:
+    web:
+        image: sunshinexdocker/uikit-karaoke:0.1.2023050815
+        container_name: uikit-web
+        ports:
+            - 8080:8080
+        environment:
+            - PROFILES=dev
+            - MONGODB_URI=mongodb://dev:test@uikit-mongo:27017/test
+            - NCS_SECRET=
+            - REDIS_HOST=uikit-redis
+            - REDIS_PASSWORD=test
+            - TOKEN_APP_ID=
+            - TOKEN_APP_CERTIFICATE=
+        networks:
+            - uikit-network
+        depends_on:
+            - redis
+            - mongo
+    redis:
+        image: redis:6.0
+        container_name: uikit-redis
+        restart: always
+        ports:
+            - 6379:6379
+        command: >
+            --requirepass test
+        networks:
+            - uikit-network
+    mongo:
+        image: mongo:6.0
+        container_name: uikit-mongo
+        restart: always
+        ports:
+            - 27017:27017
+        environment:
+            - MONGO_INITDB_DATABASE=test
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=admin
+        volumes:
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+        networks:
+            - uikit-network
