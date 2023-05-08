@@ -101,7 +101,7 @@ class RoomViewController: UIViewController {
                 group.leave()
             }
             
-            guard let tokenMap = result as? [String: String], tokenMap.count == 2 else {return}
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
             roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
             roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
@@ -116,7 +116,7 @@ class RoomViewController: UIViewController {
                 group.leave()
             }
             
-            guard let tokenMap = result as? [String: String], tokenMap.count == 2 else {return}
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
             roomConfig.rtcRtcToken006 = tokenMap["rtcToken"] ?? ""
             roomConfig.rtcRtmToken006 = tokenMap["rtmToken"] ?? ""
@@ -131,7 +131,7 @@ class RoomViewController: UIViewController {
                 group.leave()
             }
             
-            guard let tokenMap = result as? [String: String], tokenMap.count == 2 else {return}
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
             roomConfig.rtcChorusRtcToken007 = tokenMap["rtcToken"] ?? ""
         }
