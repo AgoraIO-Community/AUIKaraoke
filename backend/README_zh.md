@@ -39,14 +39,17 @@
 
 
 ### 正式上线
-- 正式上线前, 需要调整Redis/MongoDB等配置, 并将服务部署在网关后, 网关可提供鉴权/限流等能力, 本服务不带网关能力.
+- 正式上线前, 需要调整Redis/MongoDB等配置, 并将服务部署在网关后, 网关可提供鉴权/限流等能力, 本服务不带网关能力
+- 同时还需要开通以下服务
+    - RTM, [联系客服人员开通](https://www.shengwang.cn/)
+    - NCS, RTC频道事件回调通知, 处理人员进出/房间销毁逻辑
+        - [开通消息通知服务
+    ](https://docs.agora.io/cn/video-call-4.x/enable_webhook_ncs?platform=All%20Platforms)
+        - [频道事件回调
+    ](https://docs.agora.io/cn/video-call-4.x/rtc_channel_event?platform=All%20Platforms)
+    - K歌, 联系销售给 AppID 开通 K歌权限(如果您没有销售人员的联系方式可通过智能客服联系销售人员 [Agora 支持](https://agora-ticket.agora.io/))
+- 指标收集, https://您的域名:9090/metrics/prometheus, 可根据需要收集相应指标监控服务
 - 服务可以部署在云平台, 比如[阿里云容器服务ACK](https://www.alibabacloud.com/zh/product/kubernetes)
-- 指标收集, /metrics/prometheus
-- NCS, RTC频道事件回调通知, 处理人员进出/房间销毁逻辑
-    - [开通消息通知服务
-](https://docs.agora.io/cn/video-call-4.x/enable_webhook_ncs?platform=All%20Platforms)
-    - [频道事件回调
-](https://docs.agora.io/cn/video-call-4.x/rtc_channel_event?platform=All%20Platforms)
 
 
 ## 目录结构
