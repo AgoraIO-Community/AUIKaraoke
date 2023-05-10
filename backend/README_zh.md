@@ -10,17 +10,18 @@
 ## 服务部署
 ### 快速体验
 - > 采用Docker部署服务, 服务安装环境需要提前安装好Docker环境, 并安装[docker-compose](https://docs.docker.com/compose/)部署工具
-  - Mac环境
-      - 下载安装[Docker Desktop](https://www.docker.com/products/docker-desktop/), 并已默认安装docker-compose
+    - 可以下载安装[Docker Desktop](https://www.docker.com/products/docker-desktop/), 并已默认安装docker-compose
 - 本地部署
     - > 本地启动服务前, 需要打开docker-compose.yaml文件, 填入在声网申请的[appId和Secret](https://docs.agora.io/cn/Agora%20Platform/get_appid_token?platform=All%20Platforms#%E8%8E%B7%E5%8F%96-app-id)
         - TOKEN_APP_ID
         - TOKEN_APP_CERTIFICATE
-    - 在当前项目根目录下执行 docker-compose up, 会启动Redis/MongoDB/Web服务
+    - 在当前项目根目录下执行 docker-compose up, 会启动Redis/MongoDB/Web服务, 会拉取相关镜像, 如镜像拉取失败, 可配置国内镜像源解决
     - 服务启动后, 可使用 curl http://localhost:8080/health/check 测试
     - 停止服务, 执行 docker-compose down
 
-    > 注意! 未开启NCS消息通知, 不能自动处理人员进出和房间销毁逻辑, 如果需要开启此功能, 需开通NCS服务
+    > 注意! 未开启NCS消息通知, 不能自动处理人员进出和房间销毁逻辑, 如果需要开启此功能, 需开通NCS服务.
+    
+    > RTM和K歌权限未开通, 功能体验会受限, 如需完整体验功能, 可以参考[正式上线权限开通说明](#正式上线)
 
 
 ### 本地开发
