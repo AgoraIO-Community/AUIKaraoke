@@ -16,6 +16,7 @@
         - TOKEN_APP_CERTIFICATE
     - 在当前项目根目录下执行 docker-compose up, 会启动Redis/MongoDB/Web服务, 会拉取相关镜像, 如镜像拉取失败, 可配置国内镜像源解决
     - 服务启动后, 可使用 curl http://localhost:8080/health/check 测试
+    - 如果使用App调试本地服务, 需要在App上替换对应后端服务域名为http://服务机器IP:8080, 替换域名后可以使用App体验相关服务
     - 停止服务, 执行 docker-compose down
 
     > 注意! 未开启NCS消息通知, 不能自动处理人员进出和房间销毁逻辑, 如果需要开启此功能, 需开通NCS服务.

@@ -15,6 +15,7 @@
     - TOKEN_APP_CERTIFICATE
 - Execute docker-compose up in the current project root directory, which will start Redis/MongoDB/Web service and pull related images. If the image fails to be pulled, you can configure a domestic image source to solve the problem.
 - After the service is started, you can use curl http://localhost:8080/health/check to test.
+- To debug local services using the app, you need to replace the corresponding backend service domain with http://service_machine_IP:8080 on the app. After replacing the domain, you can experience the related services on the app.
 - To stop the service, execute docker-compose down.
 - Note! NCS message notification is not turned on, and personnel entering and leaving and room destruction logic cannot be automatically processed. If you need to enable this feature, NCS service needs to be enabled.
 - RTM and KTV permissions are not enabled, and the functional experience will be limited. To experience all the functions, refer to [Online Deployment Permission Access Instructions](#online-deployment).
