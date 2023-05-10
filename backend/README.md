@@ -13,7 +13,7 @@
 - To launch the service locally, you need to open the docker-compose.yaml file and fill in the [appId and Secret](https://docs.agora.io/en/video-calling/reference/manage-agora-account?platform=android#get-the-app-id) obtained from Agora.
     - TOKEN_APP_ID
     - TOKEN_APP_CERTIFICATE
-- Execute docker-compose up in the current project root directory, which will start Redis/MongoDB/Web service and pull related images. If the image fails to be pulled, you can configure a domestic image source to solve the problem.
+- Execute docker-compose up in the current project root directory, which will pull related images and start Redis/MongoDB/Web service.
 - After the service is started, you can use curl http://localhost:8080/health/check to test.
 - To debug local services using the app, you need to replace the corresponding backend service domain with http://service_machine_IP:8080 on the app. After replacing the domain, you can experience the related services on the app.
 - To stop the service, execute docker-compose down.
