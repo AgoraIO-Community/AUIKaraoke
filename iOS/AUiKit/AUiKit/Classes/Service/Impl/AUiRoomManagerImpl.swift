@@ -18,20 +18,23 @@ let kUserMuteAttrKey = "mute"
 //房间Service实现
 open class AUiRoomManagerImpl: NSObject {
     private var respDelegates: NSHashTable<AnyObject> = NSHashTable<AnyObject>.weakObjects()
-    private(set) var rtmClient: AgoraRtmClientKit!
-    public private(set) var rtmManager: AUiRtmManager!
+    private lazy var rtmClient: AgoraRtmClientKit = createRtmClient()
     public private(set) var commonConfig: AUiCommonConfig!
+    public private(set) lazy var rtmManager: AUiRtmManager = {
+        return AUiRtmManager(rtmClient: self.rtmClient)
+    }()
     
     deinit {
         rtmManager.logout()
         aui_info("deinit AUiRoomManagerImpl", tag: "AUiRoomManagerImpl")
     }
     
-    public init(commonConfig: AUiCommonConfig, rtmClient: AgoraRtmClientKit? = nil) {
+    public required init(commonConfig: AUiCommonConfig, rtmClient: AgoraRtmClientKit? = nil) {
         super.init()
         self.commonConfig = commonConfig
-        self.rtmClient = rtmClient ?? createRtmClient()
-        self.rtmManager = AUiRtmManager(rtmClient: self.rtmClient)
+        if let rtmClient = rtmClient {
+            self.rtmClient = rtmClient
+        }
         AUiRoomContext.shared.commonConfig = commonConfig
         aui_info("init AUiRoomManagerImpl", tag: "AUiRoomManagerImpl")
     }
@@ -40,6 +43,14 @@ open class AUiRoomManagerImpl: NSObject {
         let rtmConfig = AgoraRtmClientConfig()
         rtmConfig.userId = commonConfig.userId
         rtmConfig.appId = commonConfig.appId
+        if rtmConfig.userId.count == 0 {
+            aui_error("userId is empty")
+            assert(false, "userId is empty")
+        }
+        if rtmConfig.appId.count == 0 {
+            aui_error("appId is empty, please check 'AUiRoomContext.shared.commonConfig.appId' ")
+            assert(false, "appId is empty, please check 'AUiRoomContext.shared.commonConfig.appId' ")
+        }
         
         let rtmClient = AgoraRtmClientKit(config: rtmConfig, delegate: nil)!
         return rtmClient
@@ -61,11 +72,11 @@ extension AUiRoomManagerImpl: AUiRoomManagerDelegate {
         model.userId = AUiRoomContext.shared.currentUserInfo.userId
         model.userName = AUiRoomContext.shared.currentUserInfo.userName
         model.userAvatar = AUiRoomContext.shared.currentUserInfo.userAvatar
-        model.request {[weak self] error, resp in
-            guard let self = self else {return}
-            if let room = resp as? AUiRoomInfo {
-                self.rtmManager.subscribeError(channelName: room.roomId, delegate: self)
-            }
+        model.request {/*[weak self]*/ error, resp in
+//            guard let self = self else {return}
+//            if let room = resp as? AUiRoomInfo {
+//                self.rtmManager.subscribeError(channelName: room.roomId, delegate: self)
+//            }
             callback(error, resp as? AUiRoomInfo)
         }
     }

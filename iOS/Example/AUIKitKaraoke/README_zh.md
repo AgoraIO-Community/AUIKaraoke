@@ -1,4 +1,4 @@
-# AUiKaraokeApp iOS 示例工程快速跑通
+# AUIKitKaraoke iOS 示例工程快速跑通
 
 本文档主要介绍如何快速跑通 AUiKaraokeApp 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../../AScenesKit)和[AUiKit](../../AUiKit/)
 
@@ -6,7 +6,7 @@
 ## 目录结构
 ```
 ┌─ Example                     // Demo代码集成目录
-│  └─ AUiKaraokeApp            // 主要提供 Karaoke 的集成页面
+│  └─ AUIKitKaraoke            // 主要提供 Karaoke 的集成页面
 ├─ AUiScenesKit                // 场景业务组装模块，目前只包含Karaoke
 │  ├─ AUiKaraokeRoomView       // Karaoke房间容器View，用于拼接各个基础组件以及基础组件与Service的绑定
 │  └─ AUiKaraokeRoomService    // Karaoke房间Service，用于创建各个基础Service以及RTC/RTM/KTVAPi等的初始化
@@ -25,39 +25,17 @@
 
 ## 运行示例
 
-### 1. 获取声网App ID 和 App 证书
 
-[声网Agora - 文档中心 - 如何获取 App ID](https://docs.agora.io/cn/Agora%20Platform/get_appid_token?platform=All%20Platforms#%E8%8E%B7%E5%8F%96-app-id)  
-[声网Agora - 文档中心 - 获取 App 证书](https://docs.agora.io/cn/Agora%20Platform/get_appid_token?platform=All%20Platforms#%E8%8E%B7%E5%8F%96-app-%E8%AF%81%E4%B9%A6)
-
-- 点击创建应用
-
-  ![https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/create_app_1.jpg](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/create_app_1.jpg)
-
-  
-
-- 选择你要创建的应用类型
-
-  ![https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/create_app_2.jpg](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/create_app_2.jpg)
-
-- 得到App ID与App 证书
-
-  ![https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/get_app_id.jpg](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/get_app_id.jpg)
-
-
-### 2. 一键部署Karaoke后端服务
+### 1. 一键部署Karaoke后端服务
 
 [如何部署Karaoke后端服务](https://bitbucket.agoralab.co/projects/ADUC/repos/uikit-backend/browse/README_zh.md?at=refs%2Fheads%2Fdevelop)  
 
-- 填入步骤1获取到的AppId和Certificate
-
-### 3. 项目运行
+### 2. 项目运行
 - 克隆或者直接下载项目源码
 
-- 在项目的[KeyCenter.swift](AUiKaraokeApp/KeyCenter.swift) 中填入步骤1获取到的AppId和步骤2获取到的域名HostUrl
+- 在项目的[KeyCenter.swift](AUiKaraokeApp/KeyCenter.swift) 中填入步骤1的HostUrl
 ```
-    static let AppId: String = <#Your AppId#>
-    static var HostUrl: String = <#Your HostUrl#>
+static var HostUrl: String = <#Your HostUrl#>
 ```
 
 - 下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/sdk/release/Agora_Native_SDK_for_iOS_hyf_63842_FULL_20230428_1607_263060.zip) , 解压之后把libs里的文件拷贝到[libs](libs) 里
@@ -68,7 +46,8 @@
 
 ## 常见问题
 
-- 
+- [常见问题](../../doc/KaraokeFAQ_zh.md)
+- 如有其他问题请反馈至 [开发者社区](https://confluence.agoralab.co/display/DPE/3.0.1)
 
 ## 许可证
 

@@ -24,7 +24,7 @@ class RoomViewController: UIViewController {
         self.navigationItem.title = roomInfo?.roomName
         
         let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
-        
+        //创建房间容器
         let karaokeView = AUiKaraokeRoomView(frame: self.view.bounds)
         let isOwner = roomInfo?.owner?.userId == uid ? true : false
         karaokeView.onClickOffButton = { [weak self] in
@@ -38,8 +38,6 @@ class RoomViewController: UIViewController {
                 .rightButtonTapClosure {
                     guard let self = self else {return}
                     self.navigationController?.popViewController(animated: true)
-                    KaraokeUIKit.shared.destoryRoom(roomId: self.roomInfo?.roomId ?? "")
-                    KaraokeUIKit.shared.unsubscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
                     aui_info("rightButtonTapClosure", tag: "RoomViewController")
                 }.leftButtonTapClosure {
                     aui_info("leftButtonTapClosure", tag: "RoomViewController")
@@ -49,19 +47,24 @@ class RoomViewController: UIViewController {
         self.view.addSubview(karaokeView)
         self.karaokeView = karaokeView
         
-        generatorToken { roomConfig in
+        //通过generateToken方法获取到必须的token和appid
+        generateToken {[weak self] roomConfig, appId in
+            guard let self = self else {return}
             KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
+                                           appId: appId,
                                            config: roomConfig,
                                            karaokeView: karaokeView) {_ in
             }
+            //订阅Token过期回调
             KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
+            //订阅房间被销毁回调
+            KaraokeUIKit.shared.bindRespDelegate(delegate: self)
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-//        roomManager?.bindRespDelegate(delegate: self)
         navigationController?.isNavigationBarHidden = true
     }
     
@@ -69,7 +72,8 @@ class RoomViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.karaokeView?.onBackAction()
         KaraokeUIKit.shared.destoryRoom(roomId: roomInfo?.roomId ?? "")
-//        roomManager?.unbindRespDelegate(delegate: self)
+        KaraokeUIKit.shared.unsubscribeError(roomId: roomInfo?.roomId ?? "", delegate: self)
+        KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
     }
     
     override func willMove(toParent parent: UIViewController?) {
@@ -79,7 +83,7 @@ class RoomViewController: UIViewController {
         }
     }
     
-    private func generatorToken(completion:@escaping ((AUiRoomConfig)->())) {
+    private func generateToken(completion:@escaping ((AUiRoomConfig, String)->())) {
         let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
         let channelName = roomInfo?.roomId ?? ""
         let rtcChannelName = "\(channelName)_rtc"
@@ -89,6 +93,8 @@ class RoomViewController: UIViewController {
         roomConfig.rtcChannelName = rtcChannelName
         roomConfig.rtcChorusChannelName = rtcChorusChannelName
         print("generateTokens: \(uid)")
+        
+        var appId = ""
         
         let group = DispatchGroup()
         
@@ -105,6 +111,7 @@ class RoomViewController: UIViewController {
             
             roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
             roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
+            appId = tokenMap["appId"] ?? ""
         }
         
         group.enter()
@@ -137,7 +144,7 @@ class RoomViewController: UIViewController {
         }
         
         group.notify(queue: DispatchQueue.main) {
-            completion(roomConfig)
+            completion(roomConfig, appId)
         }
     }
 }
@@ -165,7 +172,7 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
 
 extension RoomViewController: AUiRtmErrorProxyDelegate {
     @objc func onTokenPrivilegeWillExpire(channelName: String?) {
-        generatorToken { config in
+        generateToken { config, _ in
             KaraokeUIKit.shared.renew(config: config)
         }
     }

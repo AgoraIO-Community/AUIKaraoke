@@ -135,9 +135,9 @@ extension AUiUserServiceImpl: AUiUserServiceDelegate {
         }
     }
     
-    public func getUserInfo(by userId: String) -> AUiUserThumbnailInfo? {
-        return self.userList.filter {$0.userId == userId}.first
-    }
+//    public func getUserInfo(by userId: String) -> AUiUserThumbnailInfo? {
+//        return self.userList.filter {$0.userId == userId}.first
+//    }
     
     public func muteUserAudio(isMute: Bool, callback: @escaping AUiCallback) {
         aui_info("muteUserAudio: \(isMute)", tag: "AUiUserServiceImpl")

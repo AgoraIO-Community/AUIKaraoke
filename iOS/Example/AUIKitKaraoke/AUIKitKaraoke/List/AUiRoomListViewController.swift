@@ -91,16 +91,16 @@ class AUiRoomListViewController: UIViewController {
     }
     
     private func initEngine() {
-        //设置用户信息到AUiKit里
+        //设置基础信息到KaraokeUIKit里
         let commonConfig = AUiCommonConfig()
         commonConfig.host = KeyCenter.HostUrl
-        commonConfig.appId = KeyCenter.AppId
         commonConfig.userId = userInfo.userId
         commonConfig.userName = userInfo.userName
         commonConfig.userAvatar = userInfo.userAvatar
-        
-        //创建room manager， 用于获取房间列表
-        KaraokeUIKit.shared.setup(roomConfig: commonConfig)
+        KaraokeUIKit.shared.setup(roomConfig: commonConfig,
+                                  ktvApi: nil,
+                                  rtcEngine: nil,
+                                  rtmClient: nil)
     }
     
     private func _layoutButton() {

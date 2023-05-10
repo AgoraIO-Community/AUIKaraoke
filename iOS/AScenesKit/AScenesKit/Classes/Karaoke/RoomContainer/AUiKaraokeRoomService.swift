@@ -37,6 +37,8 @@ open class AUiKaraokeRoomService: NSObject {
     private(set) var rtcEngine: AgoraRtcEngineKit!
     private var rtmManager: AUiRtmManager!
     private var ktvApi: KTVApiDelegate!
+    private var rtcEngineCreateBySercice = false
+    private var ktvApiCreateBySercice = false
     
     private var rtcJoinClousure: ((Error?)->())?
     
@@ -45,6 +47,7 @@ open class AUiKaraokeRoomService: NSObject {
     }
     
     public init(rtcEngine: AgoraRtcEngineKit?,
+                ktvApi: KTVApiDelegate?,
                 roomManager: AUiRoomManagerImpl,
                 roomConfig: AUiRoomConfig,
                 roomInfo: AUiRoomInfo) {
@@ -52,19 +55,30 @@ open class AUiKaraokeRoomService: NSObject {
         super.init()
         self.channelName = roomInfo.roomId
         self.roomConfig = roomConfig
-        self.rtcEngine = rtcEngine ?? self._createRtcEngine(commonConfig: roomManager.commonConfig)
+        if let rtcEngine = rtcEngine {
+            self.rtcEngine = rtcEngine
+        } else {
+            self.rtcEngine = self._createRtcEngine(commonConfig: roomManager.commonConfig)
+            rtcEngineCreateBySercice = true
+        }
         self.roomManagerImpl = roomManager
         self.rtmManager = roomManager.rtmManager
         self.userImpl.bindRespDelegate(delegate: self)
-        let userId = Int(roomManager.commonConfig.userId) ?? 0
-        let config = KTVApiConfig(appId: roomManager.commonConfig.appId,
-                                  rtmToken: roomConfig.rtcRtmToken006,
-                                  engine: self.rtcEngine,
-                                  channelName: roomConfig.rtcChannelName,
-                                  localUid: userId,
-                                  chorusChannelName: roomConfig.rtcChorusChannelName,
-                                  chorusChannelToken: roomConfig.rtcChorusRtcToken007)
-        ktvApi = KTVApiImpl.init(config: config)
+        if let ktvApi = ktvApi {
+            self.ktvApi = ktvApi
+        } else {
+            let userId = Int(roomManager.commonConfig.userId) ?? 0
+            let config = KTVApiConfig(appId: roomManager.commonConfig.appId,
+                                      rtmToken: roomConfig.rtcRtmToken006,
+                                      engine: self.rtcEngine,
+                                      channelName: roomConfig.rtcChannelName,
+                                      localUid: userId,
+                                      chorusChannelName: roomConfig.rtcChorusChannelName,
+                                      chorusChannelToken: roomConfig.rtcChorusRtcToken007)
+            self.ktvApi = KTVApiImpl.init(config: config)
+            
+            ktvApiCreateBySercice = true
+        }
         
         AUiRoomContext.shared.roomConfigMap[channelName] = roomConfig
         AUiRoomContext.shared.roomInfoMap[channelName] = roomInfo
@@ -115,7 +129,9 @@ open class AUiKaraokeRoomService: NSObject {
     
     func leaveRtcChannel() {
         self.rtcEngine.leaveChannel()
-        AgoraRtcEngineKit.destroy()
+        if rtcEngineCreateBySercice {
+            AgoraRtcEngineKit.destroy()
+        }
         aui_error("leaveRtcChannel", tag: "AUiKaraokeRoomService")
     }
     
@@ -181,6 +197,11 @@ extension AUiKaraokeRoomService {
         config.channelProfile = .liveBroadcasting
         config.audioScenario = .gameStreaming
         config.areaCode = .global
+        
+        if config.appId?.count ?? 0 == 0 {
+            aui_error("config.appId is empty, please check 'AUiRoomContext.shared.commonConfig.appId'", tag: "AUiKaraokeRoomService")
+            assert(false, "config.appId is empty, please check 'AUiRoomContext.shared.commonConfig.appId'")
+        }
         return config
     }
     
@@ -189,16 +210,6 @@ extension AUiKaraokeRoomService {
                                                     delegate: self)
         engine.delegate = self
         return engine
-    }
-    
-    private func _createRtmClient(commonConfig: AUiCommonConfig) ->AgoraRtmClientKit {
-        let rtmConfig = AgoraRtmClientConfig()
-        rtmConfig.userId = commonConfig.userId
-        rtmConfig.appId = commonConfig.appId;
-        
-        let rtmClient = AgoraRtmClientKit(config: rtmConfig, delegate: self)!
-//        rtmClient.destroy()
-        return rtmClient
     }
 }
 

@@ -1,8 +1,8 @@
 //
 //  AppDelegate.swift
-//  AUiKaraokeApp
+//  AUIKitKaraoke
 //
-//  Created by wushengtao on 2023/5/4.
+//  Created by wushengtao on 2023/5/10.
 //
 
 import UIKit

@@ -8,14 +8,18 @@
 import Foundation
 
 open class AUiCommonConfig: NSObject {
+    /// appid
     public var appId: String = ""
+    /// 网络请求域名
     public var host: String = ""
+    
+    //用户信息
     public var userId: String = ""
     public var userName: String = ""
     public var userAvatar: String = ""
     
     open override var description: String {
-        return "AUiCommonConfig: appId: \(appId), userId: \(userId) userName: \(userName)"
+        return "AUiCommonConfig: userId: \(userId) userName: \(userName)"
     }
 }
 

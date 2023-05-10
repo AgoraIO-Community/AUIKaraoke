@@ -12,19 +12,24 @@ import AgoraRtcKit
 public protocol AUiPlayerServiceDelegate: AUiCommonServiceDelegate {
     
     /// 绑定响应协议
+    /// - Parameter delegate: 需要回调的对象
     func bindRespDelegate(delegate: AUiPlayerRespDelegate)
     
     /// 解绑响应协议
-    /// - Parameter delegate: <#delegate description#>
+    /// - Parameter delegate: 需要回调的对象
     func unbindRespDelegate(delegate: AUiPlayerRespDelegate)
 
     /// 加载歌曲
     /// - Parameters:
-    ///   - songCode: <#songCode description#>
+    ///   - songCode: 歌曲code
     ///   - config: 歌曲配置信息
-    ///   - musicLoadStateListener: <#musicLoadStateListener description#>
+    ///   - musicLoadStateListener: 歌曲加载回调
     func loadMusic(songCode: Int, config: KTVSongConfiguration, musicLoadStateListener: IMusicLoadStateListener)
     
+    /// 切换角色
+    /// - Parameters:
+    ///   - newRole: 角色
+    ///   - onSwitchRoleState: 完成回调
     func switchSingerRole(newRole: KTVSingRole, onSwitchRoleState:@escaping ISwitchRoleStateListener)
     
     /// 播放歌曲
@@ -41,7 +46,7 @@ public protocol AUiPlayerServiceDelegate: AUiCommonServiceDelegate {
     func pauseSing()
     
     /// 调整进度
-    /// - Parameter time: <#time description#>
+    /// - Parameter time: 单位ms
     func seekSing(time: Int)
     
     /// 调整音乐本地播放的声音 （主唱&&伴唱都可以调节）
@@ -73,6 +78,8 @@ public protocol AUiPlayerServiceDelegate: AUiCommonServiceDelegate {
     /// - Returns: <#description#>
     func getPlayerDuration() -> Int
     
+    /// 获取播放器实例
+    /// - Returns: <#description#>
     func getMusicPlayer() -> AgoraMusicPlayerProtocol?
     
     /// 升降调
@@ -130,14 +137,14 @@ public protocol AUiPlayerRespDelegate: NSObject {
     /// 尾奏开始加载
     func onPostludeDidAppear()
     
-    /// 尾奏结束
+    /// 尾奏结束加载
     func onPostludeDidDisappear()
     
     /// 获取时间进度回调
     /// - Parameter position: <#position description#>
     func onPlayerPositionDidChange(position: Int)
     
-    /// 播放状态变化
+    /// 播放状态变化回调
     /// - Parameter status: <#status description#>
     func onPlayerStateChanged(state: AgoraMediaPlayerState, isLocal: Bool ) -> Void
     

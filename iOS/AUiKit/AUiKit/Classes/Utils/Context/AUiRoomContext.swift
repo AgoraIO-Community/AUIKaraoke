@@ -12,7 +12,7 @@ private let themeNames = ["UIKit", "KTV"]
 open class AUiRoomContext: NSObject {
     public static let shared: AUiRoomContext = AUiRoomContext()
     
-    public var currentUserInfo: AUiUserThumbnailInfo = AUiUserThumbnailInfo()
+    public let currentUserInfo: AUiUserThumbnailInfo = AUiUserThumbnailInfo()
     public var commonConfig: AUiCommonConfig? {
         didSet {
             guard let config = commonConfig else {return}

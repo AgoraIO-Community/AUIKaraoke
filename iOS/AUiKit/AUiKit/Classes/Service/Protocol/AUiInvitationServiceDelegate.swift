@@ -11,72 +11,112 @@ import Foundation
 /// 邀请Service抽象协议
 public protocol AUiInvitationServiceDelegate: AUiCommonServiceDelegate {
     
+    /// 绑定响应回调
+    /// - Parameter delegate: 需要回调的对象
     func bindRespDelegate(delegate: AUiInvitationRespDelegate)
     
+    /// 解除绑响应回调
+    /// - Parameter delegate: 需要回调的对象
     func unbindRespDelegate(delegate: AUiInvitationRespDelegate)
     
     /// 向用户发送邀请
     /// - Parameters:
-    ///   - cmd: <#cmd description#>
     ///   - userId: <#userId description#>
-    ///   - content: <#content description#>
     ///   - callback: <#callback description#>
     /// - Returns: <#description#>
-    func sendInvitation(cmd: String, userId: String, content: String, callback: AUiCallback) -> String
-    
+    func sendInvitation(userId: String, seatIndex: Int?, callback: AUiCallback)
     
     /// 接受邀请
     /// - Parameters:
-    ///   - id: <#id description#>
+    ///   - userId: <#id description#>
     ///   - callback: <#callback description#>
-    func acceptInvitation(id: String, callback: AUiCallback)
+    func acceptInvitation(userId: String, seatIndex: Int?, callback: AUiCallback)
     
     
     /// 拒绝邀请
     /// - Parameters:
-    ///   - id: <#id description#>
+    ///   - userId: <#id description#>
     ///   - callback: <#callback description#>
-    func rejectInvitation(id: String, callback: AUiCallback)
+    func rejectInvitation(userId: String, callback: AUiCallback)
     
     /// 取消邀请
     /// - Parameters:
     ///   - id: <#id description#>
     ///   - callback: <#callback description#>
-    func cancelInvitation(id: String, callback: AUiCallback)
+    func cancelInvitation(userId: String, callback: AUiCallback)
 
+    /// 发送申请
+    /// - Parameter callback: <#callback description#>
+    func sendApply(seatIndex: Int?, callback: AUiCallback)
+    
+    /// 取消申请
+    /// - Parameter callback: <#callback description#>
+    func cancelApply(callback: AUiCallback)
+    
+    /// 接受申请(房主同意)
+    /// - Parameters:
+    ///   - userId: <#userId description#>
+    ///   - callback: <#callback description#>
+    func acceptApply(userId: String, seatIndex: Int?, callback: AUiCallback)
+    
+    
+    /// 拒绝申请(房主同意)
+    /// - Parameters:
+    ///   - userId: <#userId description#>
+    ///   - callback: <#callback description#>
+    func rejectApply(userId: String, callback: AUiCallback)
 }
 
 
 /// 邀请相关操作的响应
 public protocol AUiInvitationRespDelegate: NSObject {
     
-    /// 收到新的邀请请求
+    /// 收到新的邀请请求(不动态显示content)
     /// - Parameters:
-    ///   - id: <#id description#>
-    ///   - inviter: <#inviter description#>
-    ///   - cmd: <#cmd description#>
-    ///   - content: <#content description#>
-    func onReceiveNewInvitation(id: String, inviter: String, cmd: String, content: String)
+    ///   - userId: <#id description#>
+    ///   - seatIndex: <#cmd description#>
+    func onReceiveNewInvitation(userId: String, seatIndex: Int?)
     
     
     /// 被邀请者接受邀请
     /// - Parameters:
-    ///   - id: <#id description#>
+    ///   - userId: <#id description#>
     ///   - inviteeId: <#inviteeId description#>
-    func onInviteeAccepted(id: String, inviteeId: String)
+    func onInviteeAccepted(userId: String)
     
     
     /// 被邀请者拒绝邀请
     /// - Parameters:
-    ///   - id: <#id description#>
+    ///   - userId: <#id description#>
     ///   - invitee: <#invitee description#>
-    func onInviteeRejected(id: String, invitee: String)
+    func onInviteeRejected(userId: String)
     
     
     /// 邀请人取消邀请
     /// - Parameters:
     ///   - id: <#id description#>
     ///   - inviter: <#inviter description#>
-    func onInvitationCancelled(id: String, inviter: String)
-
+    func onInvitationCancelled(userId: String)
+    
+    
+    /// 收到新的申请信息
+    /// - Parameters:
+    ///   - userId: <#userId description#>
+    ///   - seatIndex: <#seatIndex description#>
+    func onReceiveNewApply(userId: String, seatIndex: Int?)
+    
+    
+    /// 房主接受申请
+    /// - Parameter userId: <#userId description#>
+    func onApplyAccepted(userId: String)
+    
+    
+    /// 房主拒接申请
+    /// - Parameter userId: <#userId description#>
+    func onApplyRejected(userId: String)
+    
+    
+    /// 取消申请
+    /// - Parameter userId: <#userId description#>
+    func onApplyCanceled(userId: String)
 }

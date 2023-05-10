@@ -83,6 +83,7 @@ let kUserMuteVideoInitStatus = true
 open class AUiUserInfo: AUiUserThumbnailInfo {
     public var muteAudio: Bool = kUserMuteAudioInitStatus  //是否静音状态
     public var muteVideo: Bool = kUserMuteVideoInitStatus   //是否关闭视频状态
+    
 }
 
 @objcMembers
@@ -134,10 +135,3 @@ open class AUiMicSeatInfo: NSObject {
     case locked = 2
 }
 
-@objcMembers
-open class AUiInviteInfo: NSObject {
-    var roomId: String = ""         //邀请的房间id
-    var invitedUserId: String = ""  //邀请用户id
-    var commond: String = ""        //邀请类型
-    var invitetContent: String = "" //邀请信息
-}

@@ -40,19 +40,34 @@ extension AUiInvitationServiceImpl: AUiInvitationServiceDelegate {
         respDelegates.remove(delegate)
     }
     
-    public func sendInvitation(cmd: String, userId: String, content: String, callback: (Error?) -> ()) -> String {
-        return ""
-    }
-    
-    public func acceptInvitation(id: String, callback: (Error?) -> ()) {
+    public func sendInvitation(userId: String, seatIndex: Int?, callback: (Error?) -> ()) {
         
     }
     
-    public func rejectInvitation(id: String, callback: (Error?) -> ()) {
+    public func acceptInvitation(userId: String, seatIndex: Int?, callback: (Error?) -> ()) {
         
     }
     
-    public func cancelInvitation(id: String, callback: (Error?) -> ()) {
+    public func rejectInvitation(userId: String, callback: (Error?) -> ()) {
+    }
+    
+    public func cancelInvitation(userId: String, callback: (Error?) -> ()) {
+    }
+    
+    public func sendApply(seatIndex: Int?, callback: (Error?) -> ()) {
         
     }
+    
+    public func cancelApply(callback: (Error?) -> ()) {
+        
+    }
+    
+    public func acceptApply(userId: String, seatIndex: Int?, callback: (Error?) -> ()) {
+        
+    }
+    
+    public func rejectApply(userId: String, callback: (Error?) -> ()) {
+        
+    }
+    
 }

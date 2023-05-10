@@ -84,11 +84,11 @@ open class AUiChooseMusicModel: AUiMusicModel {
 public protocol AUiMusicServiceDelegate: AUiCommonServiceDelegate {
     
     /// 绑定响应
-    /// - Parameter delegate: <#delegate description#>
+    /// - Parameter delegate: 需要回调的对象
     func bindRespDelegate(delegate: AUiMusicRespDelegate)
     
     /// 解绑响应
-    /// - Parameter delegate: <#delegate description#>
+    /// - Parameter delegate: 需要回调的对象
     func unbindRespDelegate(delegate: AUiMusicRespDelegate)
     
     /// 获取歌曲列表
@@ -96,7 +96,7 @@ public protocol AUiMusicServiceDelegate: AUiCommonServiceDelegate {
     ///   - chartId: 榜单类型 
     ///   - page: 页数，从1开始
     ///   - pageSize: 一页返回数量，最大50
-    ///   - completion: <#completion description#>
+    ///   - completion: 操作完成回调
     func getMusicList(chartId: Int,
                       page: Int,
                       pageSize: Int,
@@ -107,39 +107,38 @@ public protocol AUiMusicServiceDelegate: AUiCommonServiceDelegate {
     ///   - keyword: 关键字
     ///   - page: 页数，从1开始
     ///   - pageSize: 一页返回数量，最大50
-    ///   - completion: <#completion description#>
+    ///   - completion: 操作完成回调
     func searchMusic(keyword: String,
                      page: Int,
                      pageSize: Int,
                      completion: @escaping AUiMusicListCompletion)
     
     /// 获取当前点歌列表
-    /// - Parameter completion: <#completion description#>
+    /// - Parameter completion: 操作完成回调
     func getAllChooseSongList(completion: AUiChooseSongListCompletion?)
     
     /// 点一首歌
     /// - Parameters:
     ///   - songModel: 歌曲对象(是否需要只传songNo，后端通过mcc查？)
-    ///   - completion: <#completion description#>
+    ///   - completion: 操作完成回调
     func chooseSong(songModel:AUiMusicModel, completion: AUiCallback?)
     
     /// 移除一首自己点的歌
     /// - Parameters:
     ///   - songCode: 歌曲id
-    ///   - completion: <#completion description#>
+    ///   - completion: 操作完成回调
     func removeSong(songCode: String, completion: AUiCallback?)
     
     /// 置顶歌曲
     /// - Parameters:
     ///   - songCode: 歌曲id
-    ///   - completion: <#completion description#>
+    ///   - completion: 操作完成回调
     func pinSong(songCode: String, completion: AUiCallback?)
-    
     
     /// 更新歌曲播放状态
     /// - Parameters:
-    ///   - playStatus: <#playStatus description#>
-    ///   - completion: <#completion description#>
+    ///   - playStatus: 播放状态
+    ///   - completion: 操作完成回调
     func updatePlayStatus(songCode: String, playStatus: AUiPlayStatus, completion: AUiCallback?)
 }
 

@@ -20,14 +20,15 @@ class KaraokeUIKit: NSObject {
     private var service: AUiKaraokeRoomService?
     
     private var roomManager: AUiRoomManagerImpl?
+    
     func setup(roomConfig: AUiCommonConfig,
                ktvApi: KTVApiDelegate? = nil,
                rtcEngine: AgoraRtcEngineKit? = nil,
                rtmClient: AgoraRtmClientKit? = nil) {
         self.roomConfig = roomConfig
         self.ktvApi = ktvApi
-        self.rtcEngine = rtcEngine ?? _createRtcEngine(commonConfig: roomConfig)
-        self.rtmClient = rtmClient ?? _createRtmClient(commonConfig: roomConfig)
+        self.rtcEngine = rtcEngine
+        self.rtmClient = rtmClient
         self.roomManager = AUiRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
@@ -61,6 +62,7 @@ class KaraokeUIKit: NSObject {
     }
     
     func launchRoom(roomInfo: AUiRoomInfo,
+                    appId: String,
                     config: AUiRoomConfig,
                     karaokeView: AUiKaraokeRoomView,
                     completion: @escaping ((Int)->())) {
@@ -68,8 +70,9 @@ class KaraokeUIKit: NSObject {
             assert(false, "please invoke setup first")
             return
         }
-            
-        let service = AUiKaraokeRoomService(rtcEngine: nil,
+        AUiRoomContext.shared.commonConfig?.appId = appId
+        let service = AUiKaraokeRoomService(rtcEngine: rtcEngine,
+                                            ktvApi: ktvApi,
                                             roomManager: roomManager,
                                             roomConfig: config,
                                             roomInfo: roomInfo)
@@ -90,38 +93,15 @@ class KaraokeUIKit: NSObject {
     func unsubscribeError(roomId: String, delegate: AUiRtmErrorProxyDelegate) {
         roomManager?.rtmManager.unsubscribeError(channelName: roomId, delegate: delegate)
     }
-}
-
-
-extension KaraokeUIKit {
-    private func _rtcEngineConfig(commonConfig: AUiCommonConfig) -> AgoraRtcEngineConfig {
-       let config = AgoraRtcEngineConfig()
-        config.appId = commonConfig.appId
-        config.channelProfile = .liveBroadcasting
-        config.audioScenario = .gameStreaming
-        config.areaCode = .global
-        return config
+    
+    func bindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+        roomManager?.bindRespDelegate(delegate: delegate)
     }
     
-    private func _createRtcEngine(commonConfig: AUiCommonConfig) ->AgoraRtcEngineKit {
-        let engine = AgoraRtcEngineKit.sharedEngine(with: _rtcEngineConfig(commonConfig: commonConfig),
-                                                    delegate: self)
-        engine.delegate = self
-        return engine
-    }
-    
-    
-    private func _createRtmClient(commonConfig: AUiCommonConfig) ->AgoraRtmClientKit {
-        let rtmConfig = AgoraRtmClientConfig()
-        rtmConfig.userId = commonConfig.userId
-        rtmConfig.appId = commonConfig.appId;
-        
-        let rtmClient = AgoraRtmClientKit(config: rtmConfig, delegate: self)!
-//        rtmClient.destroy()
-        return rtmClient
+    func unbindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+        roomManager?.unbindRespDelegate(delegate: delegate)
     }
 }
-
 
 extension KaraokeUIKit: AgoraRtcEngineDelegate {
     

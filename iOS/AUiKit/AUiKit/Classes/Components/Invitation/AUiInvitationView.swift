@@ -58,21 +58,39 @@ class AUiInvitationView: UIView {
 }
 
 extension AUiInvitationView: AUiInvitationRespDelegate {
-    func onReceiveNewInvitation(id: String, inviter: String, cmd: String, content: String) {
+    func onReceiveNewInvitation(userId: String, seatIndex: Int?) {
         
     }
     
-    func onInviteeAccepted(id: String, inviteeId: String) {
+    func onInviteeAccepted(userId: String) {
         
     }
     
-    func onInviteeRejected(id: String, invitee: String) {
+    func onInviteeRejected(userId: String) {
         
     }
     
-    func onInvitationCancelled(id: String, inviter: String) {
+    func onInvitationCancelled(userId: String) {
         
     }
+    
+    func onReceiveNewApply(userId: String, seatIndex: Int?) {
+        
+    }
+    
+    func onApplyAccepted(userId: String) {
+        
+    }
+    
+    func onApplyRejected(userId: String) {
+        
+    }
+    
+    func onApplyCanceled(userId: String) {
+        
+    }
+    
+    
 }
 
 extension AUiInvitationView: AUiRoomManagerRespDelegate {

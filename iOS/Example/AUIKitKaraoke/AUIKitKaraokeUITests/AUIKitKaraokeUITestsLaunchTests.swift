@@ -1,13 +1,13 @@
 //
-//  AUiKaraokeAppUITestsLaunchTests.swift
-//  AUiKaraokeAppUITests
+//  AUIKitKaraokeUITestsLaunchTests.swift
+//  AUIKitKaraokeUITests
 //
-//  Created by wushengtao on 2023/5/4.
+//  Created by wushengtao on 2023/5/10.
 //
 
 import XCTest
 
-final class AUiKaraokeAppUITestsLaunchTests: XCTestCase {
+final class AUIKitKaraokeUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

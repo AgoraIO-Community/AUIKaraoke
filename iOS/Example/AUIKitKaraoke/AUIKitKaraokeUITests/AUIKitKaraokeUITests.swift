@@ -1,13 +1,13 @@
 //
-//  AUiKaraokeAppUITests.swift
-//  AUiKaraokeAppUITests
+//  AUIKitKaraokeUITests.swift
+//  AUIKitKaraokeUITests
 //
-//  Created by wushengtao on 2023/5/4.
+//  Created by wushengtao on 2023/5/10.
 //
 
 import XCTest
 
-final class AUiKaraokeAppUITests: XCTestCase {
+final class AUIKitKaraokeUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

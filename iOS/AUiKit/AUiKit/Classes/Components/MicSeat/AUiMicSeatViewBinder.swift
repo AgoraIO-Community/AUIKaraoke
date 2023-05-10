@@ -449,10 +449,6 @@ extension AUiMicSeatViewBinder: AUiChorusRespDelegate {
         updateMic(with: index, role: .onlineAudience)
     }
     
-    public func onSingerRoleChanged(oldRole: KTVSingRole, newRole: KTVSingRole) {
-        
-    }
-    
     private func getMicIndex(with userId: String) -> Int? {
         return micSeatArray
             .filter { $0.user?.userId == userId }

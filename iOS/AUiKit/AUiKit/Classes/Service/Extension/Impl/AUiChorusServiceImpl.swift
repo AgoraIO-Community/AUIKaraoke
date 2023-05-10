@@ -68,11 +68,6 @@ extension AUiChorusServiceImpl: AUiChorusServiceDelegate {
         }
     }
     
-    public func switchSingerRole(newRole: KTVSingRole,
-                                 stateCallBack:@escaping (KTVSwitchRoleState, KTVSwitchRoleFailReason) -> ()) {
-        ktvApi.switchSingerRole(newRole: newRole, onSwitchRoleState: stateCallBack)
-    }
-    
     public func getChannelName() -> String {
         return channelName
     }
