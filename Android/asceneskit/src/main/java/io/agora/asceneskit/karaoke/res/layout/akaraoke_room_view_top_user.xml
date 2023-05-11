@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="18dp"
+    android:paddingVertical="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/akaraoke_roomInfo_background"
+        android:padding="8dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivRoomCover"
+            style="@style/ShapeAppearance.MaterialComponents.RoundComponent"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/aui_micseat_dialog_avatar_idle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvRoomName"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:singleLine="true"
+            android:textColor="?attr/akaraoke_roomInfo_nameTextColor"
+            android:textSize="?attr/akaraoke_roomInfo_nameTextSize"
+            app:layout_constraintStart_toEndOf="@id/ivRoomCover"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvRoomId"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:singleLine="true"
+            android:textColor="?attr/akaraoke_roomInfo_idTextColor"
+            android:textSize="?attr/akaraoke_roomInfo_idTextSize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivRoomCover" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivUserAvatar1"
+        style="@style/ShapeAppearance.MaterialComponents.RoundComponent"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/aui_micseat_dialog_avatar_idle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llContainer2"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:visibility="gone"
+        android:layout_marginStart="4dp" >
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivUserAvatar2"
+            style="@style/ShapeAppearance.MaterialComponents.RoundComponent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/aui_micseat_dialog_avatar_idle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvUserCount"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/white"
+            android:background="@drawable/bg_user_count"
+            android:gravity="center"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <io.agora.auikit.ui.basic.AUiButton
+        android:id="@+id/btnUserMore"
+        style="@style/AUiButton.Circle"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="4dp"
+        app:aui_button_backgroundNormalColor="?attr/akaraoke_roomButton_normalColor"
+        app:aui_button_drawableCenter="?attr/akaraoke_roomMoreUser_drawable" />
+
+    <io.agora.auikit.ui.basic.AUiButton
+        android:id="@+id/btnShutDown"
+        style="@style/AUiButton.Circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:aui_button_backgroundNormalColor="?attr/akaraoke_roomButton_normalColor"
+        app:aui_button_drawableCenter="?attr/akaraoke_roomClose_drawable" />
+
+</LinearLayout>

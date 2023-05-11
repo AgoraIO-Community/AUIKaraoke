@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="AKaraokeRoomView">
+
+        <!-- 背景 -->
+        <item name="akaraoke_room_background">@null</item>
+
+        <!-- 房间信息 -->
+        <item name="akaraoke_roomInfo_background">@drawable/bg_room_info</item>
+        <item name="akaraoke_roomInfo_nameTextColor">@color/aui_primary</item>
+        <item name="akaraoke_roomInfo_nameTextSize">16sp</item>
+        <item name="akaraoke_roomInfo_idTextColor">@color/aui_primary_light</item>
+        <item name="akaraoke_roomInfo_idTextSize">12sp</item>
+
+        <!-- 更多用户 -->
+        <item name="akaraoke_roomMoreUser_drawable">@mipmap/ic_arrow</item>
+
+        <!-- 关闭 -->
+        <item name="akaraoke_roomClose_drawable">@mipmap/ic_shutdown</item>
+
+        <!-- 按钮 -->
+        <item name="akaraoke_roomButton_normalColor">#594230C8</item>
+
+    </style>
+
+
+</resources>
