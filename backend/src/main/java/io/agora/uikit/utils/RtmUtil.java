@@ -659,7 +659,6 @@ public class RtmUtil {
      * Who now
      * 
      * @param channelName
-     * @param lockName
      * @return
      */
     public Long whoNow(String channelName) {

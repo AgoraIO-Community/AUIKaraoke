@@ -1,4 +1,5 @@
 # UIKit K歌场景后台服务
+[English](README.md) | 中文
 ## 项目简介
 - 本项目基于Spring Boot框架开发, 依赖Redis/MongoDB/RTM/NCS组件
     - Redis, 主要用于在线人数定时刷新/分布式锁方式保证数据更新的一致性
