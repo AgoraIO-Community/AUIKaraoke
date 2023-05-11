@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 麦位座位样式 -->
+    <style name="AUIMicSeatItem.Appearance.KTV">
+        <item name="aui_micSeatItem_dimensionRatio">1:1</item>
+        <item name="aui_micSeatItem_seatBackground">@drawable/ktv_ic_seat</item>
+        <item name="aui_micSeatItem_seatIconIdle">@null</item>
+        <item name="aui_micSeatItem_roomOwnerBackground">@drawable/ktv_micseat_item_roomowner_bg</item>
+        <item name="aui_micSeatItem_audioMuteIcon">@drawable/ktv_ic_off_mic_with_bg</item>
+        <item name="aui_micSeatItem_audioMuteIconWidth">match_parent</item>
+        <item name="aui_micSeatItem_audioMuteIconHeight">match_parent</item>
+        <item name="aui_micSeatItem_audioMuteIconGravity">center</item>
+        <item name="aui_micSeatItem_titleIdleText">@string/ktv_micseat_item_title_idle</item>
+    </style>
+
+
+</resources>
