@@ -1,5 +1,7 @@
 # AUiKit Service
 
+*[English](AUiKit-Service.md) | 中文*
+
 AUiKit Service提供一套通用的服务接口，可用于数据交互。这套接口可以结合rtm2.0或者其他serverless云服务实现一套完整的服务
 
 
@@ -206,6 +208,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 ### <span>**`数据结构`**</span>
 
 * **公共配置类 ->** [AUiCommonConfig](../auikit/src/main/java/io/agora/auikit/model/AUiCommonConfig.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | context | Android上下文 |
@@ -215,6 +218,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | userAvatar | 本地用户头像 |
 
 * **房间配置信息 ->** [AUiRoomConfig](../auikit/src/main/java/io/agora/auikit/model/AUiRoomConfig.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | channelName | 主频道 |
@@ -223,6 +227,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | tokenMap | 内部使用到的所有token表 |
 
 * **房间上下文 ->** [AUiRoomContext](../auikit/src/main/java/io/agora/auikit/model/AUiRoomContext.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | currentUserInfo | 缓存的本地用户信息 |
@@ -230,6 +235,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | roomInfoMap | 加入的所有房间列表 |
 
 * **创建房间信息 ->** [AUiCreateRoomInfo](../auikit/src/main/java/io/agora/auikit/model/AUiCreateRoomInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | roomName | 房间名称 |
@@ -238,6 +244,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | password | 房间密码 |
 
 * **房间信息 ->** [AUiRoomInfo](../auikit/src/main/java/io/agora/auikit/model/AUiRoomInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | roomId | 房间ID |
@@ -246,6 +253,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | createTime | 房间创建时间 |
 
 * **基础用户信息 ->** [AUiUserThumbnailInfo](../auikit/src/main/java/io/agora/auikit/model/AUiUserThumbnailInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | userId | 用户ID |
@@ -253,6 +261,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | userAvatar | 用户头像 |
 
 * **完整用户信息 ->** [AUiUserInfo](../auikit/src/main/java/io/agora/auikit/model/AUiUserInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | userId | 用户ID |
@@ -262,6 +271,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | muteVideo | 是否关闭视频状态 |
 
 * **麦位信息 ->** [AUiMicSeatInfo](../auikit/src/main/java/io/agora/auikit/model/AUiMicSeatInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | user | 用户信息 |
@@ -271,6 +281,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | muteVideo | 麦位禁用视频，0：否，1：是 |
 
 * **点唱歌曲信息 ->** [AUiMusicModel](../auikit/src/main/java/io/agora/auikit/model/AUiMusicModel.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | songCode | 歌曲id，mcc则对应songCode |
@@ -283,6 +294,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | lrcUrl | 歌词url，mcc则为空 |
 
 * **已点歌曲信息 ->** [AUiChooseMusicModel](../auikit/src/main/java/io/agora/auikit/model/AUiChooseMusicModel.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | songCode | 歌曲id，mcc则对应songCode |
@@ -300,6 +312,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 
 
 * **合唱者信息 ->** [AUiChoristerModel](../auikit/src/main/java/io/agora/auikit/model/AUiChoristerModel.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | userId | 主唱者用户id |
@@ -307,6 +320,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | owner | 合唱者信息 |
 
 * **播放音效信息 ->** [AUiEffectVoiceInfo](../auikit/src/main/java/io/agora/auikit/model/AUiEffectVoiceInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | id | 音效唯一标识 |
@@ -315,6 +329,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | name | 名称资源Id |
 
 * **播放加载音乐配置 ->** [AUiLoadMusicConfiguration](../auikit/src/main/java/io/agora/auikit/model/AUiLoadMusicConfiguration.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | autoPlay | 是否自动播放 |
@@ -322,6 +337,7 @@ Agora播放管理类 -> [AUiMusicPlayerServiceImpl](../auikit/src/main/java/io/a
 | loadMusicMode | 加载音乐模式，0：LOAD Music Only，1：观众，2：主唱 |
 
 * **播放音乐配置信息 ->** [AUiMusicSettingInfo](../auikit/src/main/java/io/agora/auikit/model/AUiMusicSettingInfo.java)
+
 | 字段 | 注释 |
 | :- | :- |
 | isEar | 耳返 |

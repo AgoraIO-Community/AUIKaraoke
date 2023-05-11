@@ -1,4 +1,6 @@
-#AUiKit Ui
+# AUiKit Ui
+
+*English | [中文](AUiKit-Ui.zh.md)*
 
 AUiKit Ui provides basic ui components and functional ui components. Based on these two sets of ui components, developers can quickly build a scene-based application with a unified ui style.
 
