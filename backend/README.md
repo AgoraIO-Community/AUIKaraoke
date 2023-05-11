@@ -1,4 +1,5 @@
 # UIKit Karaoke Scene Backend Service
+English | [中文](README_zh.md)
 ## Project Introduction
 - This project is developed based on the Spring Boot framework, relying on Redis/MongoDB/RTM/NCS components.
 - Redis is mainly used for online user number real-time updates and data consistency through distributed lock.

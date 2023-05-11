@@ -77,7 +77,7 @@ public class RoomServiceImpl implements IRoomService {
     /**
      * Add room list
      * 
-     * @param roomReq
+     * @param roomCreateReq
      * @return
      */
     @Override
@@ -103,7 +103,6 @@ public class RoomServiceImpl implements IRoomService {
      * Check whether owner
      * 
      * @param method
-     * @param metadataItem
      * @param roomId
      * @param userId
      * @throws Exception
@@ -143,7 +142,7 @@ public class RoomServiceImpl implements IRoomService {
      * Create room
      * 
      * @param metadata
-     * @param roomReq
+     * @param roomCreateReq
      * @throws Exception
      */
     @Override

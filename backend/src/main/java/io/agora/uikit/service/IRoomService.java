@@ -23,16 +23,15 @@ public interface IRoomService extends IService<RoomCreateReq> {
     /**
      * Add room list
      * 
-     * @param roomReq
+     * @param roomCreateReq
      * @return
      */
-    void addRoomList(RoomCreateReq roomReq) throws Exception;
+    void addRoomList(RoomCreateReq roomCreateReq) throws Exception;
 
     /**
      * Check whether owner
      * 
      * @param method
-     * @param metadataItem
      * @param roomId
      * @param userId
      * @throws Exception
@@ -54,10 +53,10 @@ public interface IRoomService extends IService<RoomCreateReq> {
      * Create room
      * 
      * @param metadata
-     * @param roomReq
+     * @param roomCreateReq
      * @throws Exception
      */
-    void create(Metadata metadata, RoomCreateReq roomReq) throws Exception;
+    void create(Metadata metadata, RoomCreateReq roomCreateReq) throws Exception;
 
     /**
      * Destroy room
