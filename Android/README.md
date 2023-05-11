@@ -5,7 +5,7 @@
 UiKit is a set of scaffolding for scenario-based applications. It provides Ui components and Service components to facilitate developers to quickly build their own scenario-based applications.
 
 ## Project Construction
-![图片](https://download.agora.io/demo/release/UiKit.png)
+![图片](https://download.agora.io/null/UiKit.png)
 
 ## Features
 - [KaraokeUiKit](examples/AUIKitKaraoke/main/java/io/agora/app/karaoke/kit) **([Document](doc/KaraokeUiKit.md))**

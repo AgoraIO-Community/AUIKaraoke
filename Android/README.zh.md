@@ -6,7 +6,7 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 
 
 ## 项目结构
-![图片](https://download.agora.io/demo/release/UiKit.png)
+![图片](https://download.agora.io/null/UiKit.png)
 
 
 ## 特性
