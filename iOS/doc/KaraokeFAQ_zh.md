@@ -12,7 +12,7 @@
 
 ## 3 K歌房中的歌曲资源使用的是哪家？是否可以自己选择供应商？
 
-K歌房的歌曲资源使用的是Agora内容中心服务，暂不支持自行切换供应商，详情请查看[https://docs.agora.io/cn/online-ktv/API%20Reference/ios_ng/API/toc_drm.html](https://docs.agora.io/cn/online-ktv/API Reference/ios_ng/API/toc_drm.html)
+K歌房的歌曲资源使用的是Agora内容中心服务，暂不支持自行切换供应商，详情请查看[版权音乐](https://docs.agora.io/cn/online-ktv/API Reference/ios_ng/API/toc_drm.html)
 
 ## 4 集成遇到困难，该如何联系声网获取协助
 

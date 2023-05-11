@@ -3,22 +3,28 @@
 *[English](README.md) | 中文*
 
 <!-- TOC START -->
+
 - [AUiKit基础组件](#auikit基础组件)
 - [Service](#service)
-  *  [AUiMicSeatServiceDelegate](#auimicseatservicedelegate)
-  *  [AUiMicSeatRespDelegate](#auimicseatrespdelegate)
-  *  [AUiUserServiceDelegate](#auiuserservicedelegate)
-  *  [AUiUserRespDelegate](#auiuserrespdelegate)
-  *  [AUiChorusServiceDelegate](#auichorusservicedelegate)
-  *  [AUiChorusRespDelegate](#auichorusrespdelegate)
-  *  [AUiMusicServiceDelegate](#auimusicservicedelegate)
-  *  [AUiMusicRespDelegate](#auimusicrespdelegate)
-  *  [AUiPlayerServiceDelegate](#auiplayerservicedelegate)
-  *  [AUiPlayerRespDelegate](#auiplayerrespdelegate)
-  *  [AUiRoomManagerDelegate](#auiroommanagerdelegate)
-  *  [AUiRoomManagerRespDelegate](#auiroommanagerrespdelegate)
+  * [AUiMicSeatServiceDelegate](#auimicseatservicedelegate)
+  * [AUiMicSeatRespDelegate](#auimicseatrespdelegate)
+  * [AUiUserServiceDelegate](#auiuserservicedelegate)
+  * [AUiUserRespDelegate](#auiuserrespdelegate)
+  * [AUiChorusServiceDelegate](#auichorusservicedelegate)
+  * [AUiChorusRespDelegate](#auichorusrespdelegate)
+  * [AUiMusicServiceDelegate](#auimusicservicedelegate)
+  * [AUiMusicRespDelegate](#auimusicrespdelegate)
+  * [AUiPlayerServiceDelegate](#auiplayerservicedelegate)
+  * [AUiPlayerRespDelegate](#auiplayerrespdelegate)
+  * [AUiRoomManagerDelegate](#auiroommanagerdelegate)
+  * [AUiRoomManagerRespDelegate](#auiroommanagerrespdelegate)
 - [Widget](#widget)
-<!-- TOC END -->
+  * [AUiActionSheet](#auiactionsheet)
+    * [主容器配置](#主容器配置) 
+    * [列表Item配置](#列表Item配置)
+  
+  
+  <!-- TOC END -->
 
 # AUiKit基础组件
 ```
@@ -43,8 +49,8 @@ AUiKit
 │  ├─ AUiRoomManagerRespDelegate        // 房间管理响应协议
 │  └─ AUiRoomManagerImpl                // 房间管理实现类
 │
-├─ Widget                              // 无业务的基础UI组件
-│  ├─ ActionSheet                       // 动作面板
+├─ Widget                               // 无业务的基础UI组件
+│  ├─ AUiActionSheet                    // 动作面板
 │  ├─ Alert                             // 按钮组件
 │  ├─ Button                            // 按钮
 │  ├─ Segmented                         //
@@ -99,20 +105,20 @@ AUiKit
 | ------------------ | -------------------------- |
 | bindRespDelegate   | 绑定响应回调               |
 | unbindRespDelegate | 解除绑定响应回调           |
-| getUserInfoList    | 获取指定 userId 的用户信息 |
+| getUserInfoList    | 获取用户列表信息           |
 | muteUserAudio      | 对自己静音/解除静音        |
-| muteUserVideo      | 对自己禁摄像头/解禁摄像头  |
+| muteUserVideo      | 对自己禁用/解禁摄像头  |
 
 ### AUiUserRespDelegate
 
 | API                | 描述                               |
 | ------------------ | ---------------------------------- |
 | onRoomUserSnapshot | 用户进入房间后获取到的所有用户信息 |
-| onRoomUserEnter    | 用户进入房间回调                   |
-| onRoomUserLeave    | 用户离开房间回调                   |
-| onRoomUserUpdate   | 用户的信息被修改                   |
-| onUserAudioMute    | 用户关闭/开启了麦克风              |
-| onUserVideoMute    | 用户关闭/开启了摄像头              |
+| onRoomUserEnter    | 用户进入房间时的回调                   |
+| onRoomUserLeave    | 用户离开房间时的回调                   |
+| onRoomUserUpdate   | 用户的信息被修改时的回调               |
+| onUserAudioMute    | 用户关闭/开启了麦克风时的回调            |
+| onUserVideoMute    | 用户关闭/开启了摄像头时的回调            |
 
 ### AUiChorusServiceDelegate
 
@@ -149,10 +155,10 @@ AUiKit
 
 | API                    | 描述                                    |
 | ---------------------- | --------------------------------------- |
-| onAddChooseSong        | 新增一首歌曲回调                        |
-| onRemoveChooseSong     | 删除一首歌歌曲回调                      |
-| onUpdateChooseSong     | 更新一首歌曲回调（例如修改play status） |
-| onUpdateAllChooseSongs | 更新所有歌曲回调（例如pin）             |
+| onAddChooseSong        | 新增一首歌曲时的回调                        |
+| onRemoveChooseSong     | 删除一首歌曲时的回调                      |
+| onUpdateChooseSong     | 更新一首歌曲时的回调（例如修改play status） |
+| onUpdateAllChooseSongs | 更新所有歌曲时的回调（例如pin）             |
 
 ### AUiPlayerServiceDelegate
 
@@ -210,3 +216,52 @@ AUiKit
 | onRoomInfoChange | 房间信息变更回调 |
 
 ## Widget
+### AUiActionSheet
+#### 主容器配置
+| 属性                 | 描述       |
+| ------------------- | ---------- |
+| collectionViewTopEdge | 展示的列表内容距离上面空间的间距 |
+| itemType | 列表样式，上下滑动还是左右滑动 |
+| itemHeight | 列表Item高度 |
+| titleLabelFont | 主标题字体 |
+| titleLabelTextColor | 主标题字体颜色 |
+| nameLabelFont | 用户主标题字体 |
+| nameLabelTextColor | 用户主标题字体颜色 |
+| seatLabelFont | 用户副标题字体 |
+| seatLabelTextColor | 用户副标题字体颜色 |
+| avatarWidth | 头像宽度 |
+| avatarHeight | 头像高度 |
+
+#### 列表Item配置
+| 属性                 | 描述       |
+| ------------------- | ---------- |
+| icon | item图标 |
+| backgroundIcon | item背景图标 |
+| titleColor | 标题颜色 |
+| imageWidth | 图片宽度 |
+| imageHeight | 图片高度 |
+| backgroundImageWidth | 背景图片宽度 |
+| backgroundImageHeight | 背景图片高度 |
+| padding | 文字图片内容的间隔 |
+| selectedBorderColor | 选中框颜色 |
+| selectedBorderWidth | 选中框宽度 |
+| selectedBorderRadius | 选中框圆角 |
+
+
+### Alert
+
+
+### Button
+
+
+### Segmented
+
+### Slider
+
+### TableView
+
+### Tabs
+
+### TextField
+
+### Toast

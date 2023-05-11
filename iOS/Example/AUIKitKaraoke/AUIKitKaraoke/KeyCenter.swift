@@ -7,5 +7,6 @@
 
 
 struct KeyCenter {
-    static var HostUrl: String = <#Your HostUrl#>
+    static var HostUrl: String = <#Your Host Url#>
+//    static var HostUrl: String = "https://service.agora.io/uikit-karaoke"  //该域名仅限体验使用，请勿用户正式商用环境
 }

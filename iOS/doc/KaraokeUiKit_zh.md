@@ -5,10 +5,8 @@
 KaraokeUiKit是一个Karaoke场景组件，提供房间管理以及拉起房间页面的功能，开发者可以凭借该组件快速搭起一个Karaoke应用。
 
 
-
-
 ## 快速集成
-> 在集成前请确保已经按照这个[教程](../Example/AUiKaraokeApp/README_zh.md)将项目成功运行起来。
+> 在集成前请确保已经按照这个[教程](../Example/AUIKitKaraoke/README_zh.md)将项目成功运行起来。
 
 ### 1. 添加源码
 
@@ -16,8 +14,8 @@ KaraokeUiKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 - [AUiKit](../AUiKit)
 - [AScenesKit](../AScenesKit)
-- [KaraokeUiKit.swift](Example/AUiKaraokeApp/AUiKaraokeApp/KaraokeUIKit.swift)
-- [KeyCenter.swift](Example/AUiKaraokeApp/AUiKaraokeApp/KeyCenter.swift)
+- [KaraokeUiKit.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KaraokeUIKit.swift)
+- [KeyCenter.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KeyCenter.swift)
 
 **在Podfile文件里添加依赖AScenesKit和AUiKit(例如AUiKit与AScenesKit放置在Podfile同一级目录下时)**
 

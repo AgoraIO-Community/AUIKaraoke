@@ -1,6 +1,8 @@
 # AUIKitKaraoke iOS 示例工程快速跑通
 
-本文档主要介绍如何快速跑通 AUiKaraokeApp 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../../AScenesKit)和[AUiKit](../../AUiKit/)
+*[English](README.md) | 中文*
+
+本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../../AScenesKit/README_zh.md)和[AUiKit](../../AUiKit/README_zh.md)
 
 
 ## 目录结构
@@ -33,7 +35,7 @@
 ### 2. 项目运行
 - 克隆或者直接下载项目源码
 
-- 在项目的[KeyCenter.swift](AUiKaraokeApp/KeyCenter.swift) 中填入步骤1的HostUrl
+- 在项目的[KeyCenter.swift](AUIKitKaraoke/KeyCenter.swift) 中填入步骤1的HostUrl
 ```
 static var HostUrl: String = <#Your HostUrl#>
 ```
@@ -42,12 +44,12 @@ static var HostUrl: String = <#Your HostUrl#>
 
 - 打开终端进入到[Podfile](Podfile)目录下，执行`pod install`命令
 
-- 最后打开AUiKaraokeApp.xcworkspace，运行即可开始您的体验
+- 最后打开AUIKitKaraoke.xcworkspace，运行即可开始您的体验
 
 ## 常见问题
 
 - [常见问题](../../doc/KaraokeFAQ_zh.md)
-- 如有其他问题请反馈至 [开发者社区](https://confluence.agoralab.co/display/DPE/3.0.1)
+- 如有其他问题请反馈至 [开发者社区](https://www.rtcdeveloper.cn/cn/community/discussion/0)
 
 ## 许可证
 
