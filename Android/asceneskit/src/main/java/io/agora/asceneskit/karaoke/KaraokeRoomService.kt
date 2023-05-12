@@ -72,6 +72,7 @@ class KaraokeRoomService(
         }
     }
 
+
     override fun exitRoom(fromUser: Boolean) {
         roomManager.exitRoom(channelName) {}
         ktvApi.release()
@@ -160,6 +161,7 @@ class KaraokeRoomService(
             null,
             mRoomContext.roomConfig.userId.toInt()
         )
+
         if (ret == Constants.ERR_OK) {
             mDelegateHelper.notifyDelegate { it.onRoomJoined() }
         }else{

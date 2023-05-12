@@ -1,4 +1,5 @@
 # UIKit K歌场景后台服务
+[English](README.md) | 中文
 ## 项目简介
 - 本项目基于Spring Boot框架开发, 依赖Redis/MongoDB/RTM/NCS组件
     - Redis, 主要用于在线人数定时刷新/分布式锁方式保证数据更新的一致性
@@ -86,8 +87,6 @@
 │   │   │               │   ├── enums                                   // 枚举
 │   │   │               │   ├── exception                               // 异常处理
 │   │   │               │   │   └── BusinessException.java
-│   │   │               │   ├── repository                              // DB访问层
-│   │   │               │   │   └── RoomListRepository.java
 │   │   │               │   ├── req                                     // 请求类
 │   │   │               │   └── valid                                   // 校验
 │   │   │               │       ├── EnumValid.java
@@ -109,6 +108,8 @@
 │   │   │               │   └── TraceIdInterceptor.java                 // 链路追踪
 │   │   │               ├── metric                                      // 指标上报
 │   │   │               │   └── PrometheusMetric.java
+│   │   │               │── repository                                  // DB访问层
+│   │   │               │   └── RoomListRepository.java
 │   │   │               ├── service                                     // 服务层
 │   │   │               │   ├── IChorusService.java                     // 合唱
 │   │   │               │   ├── IMicSeatService.java                    // 麦位
