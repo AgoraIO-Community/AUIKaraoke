@@ -184,7 +184,7 @@ class RoomListActivity : AppCompatActivity() {
             onRoomLaunchFailure = {
                 Toast.makeText(
                     this@RoomListActivity,
-                    "Room ${roomInfo.roomName} launch failure: code=${it.code}, msg=${it.message}",
+                    "Room ${roomInfo.roomName} launch failure: code=${it.value}, msg=${it.message}",
                     Toast.LENGTH_SHORT
                 ).show()
             }

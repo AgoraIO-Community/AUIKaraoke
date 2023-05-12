@@ -1,6 +1,7 @@
 package io.agora.asceneskit.karaoke
 
 import android.util.Log
+import io.agora.auikit.model.AUiRoomConfig
 import io.agora.auikit.model.AUiRoomContext
 import io.agora.auikit.model.AUiRoomInfo
 import io.agora.auikit.model.AUiUserInfo
@@ -22,9 +23,8 @@ import io.agora.rtc2.RtcEngine
 class KaraokeRoomService(
     private val mRoomContext: AUiRoomContext,
     private val mRtcEngine: RtcEngine,
+    private val roomConfig: AUiRoomConfig,
     private val roomInfo: AUiRoomInfo,
-    private val roomToken: String,
-    private val rtcToken: String,
     private val roomManager: IAUiRoomManager,
     private val userService: IAUiUserService,
     private val micSeatService: IAUiMicSeatService,
@@ -56,7 +56,7 @@ class KaraokeRoomService(
 
     override fun enterRoom(success: (AUiRoomInfo) -> Unit, failure: (AUiException) -> Unit) {
         logger().d("EnterRoom", "enterRoom $channelName start ...")
-        roomManager.enterRoom(channelName, roomToken) { error ->
+        roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
             logger().d("EnterRoom", "enterRoom $channelName result : $error")
             if (error != null) {
                 // failure
@@ -72,17 +72,23 @@ class KaraokeRoomService(
         }
     }
 
-    override fun exitRoom() {
+
+    override fun exitRoom(fromUser: Boolean) {
         roomManager.exitRoom(channelName) {}
         ktvApi.release()
-        mDelegateHelper.notifyDelegate { it.onRoomExitedOrDestroyed() }
+        if (fromUser) {
+            mDelegateHelper.notifyDelegate { it.onRoomExited() }
+        } else {
+            mDelegateHelper.notifyDelegate { it.onRoomDestroyed() }
+        }
+
         leaveRtcRoom()
     }
 
     override fun destroyRoom() {
         roomManager.destroyRoom(channelName) {}
         ktvApi.release()
-        mDelegateHelper.notifyDelegate { it.onRoomExitedOrDestroyed() }
+        mDelegateHelper.notifyDelegate { it.onRoomExited() }
         leaveRtcRoom()
     }
 
@@ -150,12 +156,15 @@ class KaraokeRoomService(
         mRtcEngine.enableAudioVolumeIndication(50, 10, true)
         mRtcEngine.setClientRole(if (context.isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
         val ret: Int = mRtcEngine.joinChannel(
-            rtcToken,
-            channelName,
+            roomConfig.rtcRtcToken006,
+            roomConfig.rtcChannelName,
             null,
             mRoomContext.roomConfig.userId.toInt()
         )
-        if (ret != Constants.ERR_OK) {
+
+        if (ret == Constants.ERR_OK) {
+            mDelegateHelper.notifyDelegate { it.onRoomJoined() }
+        }else{
             // TODO LOG
         }
     }

@@ -47,7 +47,7 @@ UiKit is a set of scaffolding for scenario-based applications. It provides Ui co
 
 ### 2. Running the Example
 - Obtain Agora SDK
-  Download [the rtc sdk with rtm 2.0](https://download.agora.io/sdk/release/Agora_Native_SDK_for_Android_RTM_2_0.zip) and then unzip it to the directions belows:
+  Download [the rtc sdk with rtm 2.0](https://download.agora.io/null/Agora_Native_SDK_for_Android_rel.v4.1.1.30_49294_FULL_20230512_1606_264137.zip) and then unzip it to the directions belows:
   [auikit/libs](auikit/libs) : agora-rtc-sdk.jar
   [auikit/src/main/jniLibs](uikit/src/main/jniLibs) : so(arm64-v8a/armeabi-v7a/x86/x86_64)
 
@@ -59,7 +59,7 @@ UiKit is a set of scaffolding for scenario-based applications. It provides Ui co
 SERVER_HOST= （Domain name of the business server）
 ```
 
-> Agora Test Domain: https://test-vikit.bi2.agoralab.co
+> Agora Test Domain: https://service.agora.io/uikit-karaoke
 
 - Run the project with Android Studio to begin your experience.
 

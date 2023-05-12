@@ -28,7 +28,8 @@ interface IKaraokeRoomService :
 
     fun enterRoom(success: (AUiRoomInfo) -> Unit, failure: (AUiException)->Unit)
 
-    fun exitRoom()
+
+    fun exitRoom(fromUser: Boolean = true)
 
     fun destroyRoom()
 
@@ -39,7 +40,13 @@ interface IKaraokeRoomService :
     fun setupLocalAudioMute(isMute: Boolean)
     fun setupRemoteAudioMute(userId: String, isMute: Boolean)
     interface KaraokeRoomRoomRespDelegate {
-        fun onRoomExitedOrDestroyed() {}
+
+        fun onRoomExited() {}
+
+        fun onRoomDestroyed(){}
+
+        fun onRoomJoined() {}
+
     }
 
 }
