@@ -15,7 +15,7 @@ class KaraokeRoomActivity : AppCompatActivity(), IKaraokeRoomService.KaraokeRoom
 
     companion object {
         private var roomService: IKaraokeRoomService? = null
-        private var onRoomDestroy: ((Boolean) -> Unit)? = null
+        private var onRoomDestroy: ((KaraokeUiKit.ErrorCode?) -> Unit)? = null
         private var onRoomCreated: (() -> Unit)? = null
         private var themeId: Int = View.NO_ID
 
@@ -24,7 +24,7 @@ class KaraokeRoomActivity : AppCompatActivity(), IKaraokeRoomService.KaraokeRoom
             themeId: Int,
             roomService: IKaraokeRoomService,
             onRoomCreated: () -> Unit,
-            onRoomDestroy: (Boolean) -> Unit
+            onRoomDestroy: (KaraokeUiKit.ErrorCode?) -> Unit
         ) {
             Companion.roomService = roomService
             Companion.onRoomCreated = onRoomCreated
@@ -40,14 +40,6 @@ class KaraokeRoomActivity : AppCompatActivity(), IKaraokeRoomService.KaraokeRoom
     private val mViewBinding by lazy { KaraokeRoomActivityBinding.inflate(LayoutInflater.from(this)) }
     private val mPermissionHelp = PermissionHelp(this)
 
-    override fun onDestroy() {
-        super.onDestroy()
-        roomService?.unbindRespDelegate(this)
-        roomService = null
-        onRoomDestroy?.invoke(false)
-        onRoomDestroy = null
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (themeId != View.NO_ID) {
@@ -59,11 +51,9 @@ class KaraokeRoomActivity : AppCompatActivity(), IKaraokeRoomService.KaraokeRoom
         mPermissionHelp.checkMicPerm(
             {
                 mViewBinding.karaokeRoomView.bindService(roomService!!)
-                onRoomCreated?.invoke()
-                onRoomCreated = null
             },
             {
-                onRoomDestroy?.invoke(true)
+                onRoomDestroy?.invoke(KaraokeUiKit.ErrorCode.ROOM_PERMISSIONS_LEAK)
                 onRoomDestroy = null
                 finish()
             },
@@ -71,9 +61,29 @@ class KaraokeRoomActivity : AppCompatActivity(), IKaraokeRoomService.KaraokeRoom
         )
     }
 
-    override fun onRoomExitedOrDestroyed() {
-        super.onRoomExitedOrDestroyed()
+    override fun onRoomDestroyed() {
+        super.onRoomDestroyed()
+        roomService?.unbindRespDelegate(this)
+        roomService = null
+        onRoomDestroy?.invoke(KaraokeUiKit.ErrorCode.ROOM_DESTROYED)
+        onRoomDestroy = null
         finish()
+    }
+
+    override fun onRoomExited() {
+        super.onRoomExited()
+        roomService?.unbindRespDelegate(this)
+        roomService = null
+        onRoomDestroy = null
+        finish()
+    }
+
+    override fun onRoomJoined() {
+        super.onRoomJoined()
+        runOnUiThread {
+            onRoomCreated?.invoke()
+            onRoomCreated = null
+        }
     }
 
     override fun onBackPressed() {

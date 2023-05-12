@@ -72,17 +72,22 @@ class KaraokeRoomService(
         }
     }
 
-    override fun exitRoom() {
+    override fun exitRoom(fromUser: Boolean) {
         roomManager.exitRoom(channelName) {}
         ktvApi.release()
-        mDelegateHelper.notifyDelegate { it.onRoomExitedOrDestroyed() }
+        if (fromUser) {
+            mDelegateHelper.notifyDelegate { it.onRoomExited() }
+        } else {
+            mDelegateHelper.notifyDelegate { it.onRoomDestroyed() }
+        }
+
         leaveRtcRoom()
     }
 
     override fun destroyRoom() {
         roomManager.destroyRoom(channelName) {}
         ktvApi.release()
-        mDelegateHelper.notifyDelegate { it.onRoomExitedOrDestroyed() }
+        mDelegateHelper.notifyDelegate { it.onRoomExited() }
         leaveRtcRoom()
     }
 
@@ -155,7 +160,9 @@ class KaraokeRoomService(
             null,
             mRoomContext.roomConfig.userId.toInt()
         )
-        if (ret != Constants.ERR_OK) {
+        if (ret == Constants.ERR_OK) {
+            mDelegateHelper.notifyDelegate { it.onRoomJoined() }
+        }else{
             // TODO LOG
         }
     }

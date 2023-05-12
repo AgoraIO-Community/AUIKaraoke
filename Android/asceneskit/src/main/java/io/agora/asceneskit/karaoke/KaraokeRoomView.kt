@@ -250,7 +250,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
     /** IAUiUserService.AUiRoomRespDelegate */
     override fun onRoomDestroy(roomId: String) {
         if (!isRoomOwner()) {
-            mRoomService?.exitRoom()
+            mRoomService?.exitRoom(false)
         }
     }
 

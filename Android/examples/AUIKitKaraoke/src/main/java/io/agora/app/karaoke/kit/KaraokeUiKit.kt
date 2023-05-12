@@ -180,7 +180,7 @@ object KaraokeUiKit {
                         rtcEngine,
                         roomInfo,
                         config.tokenMap[AUiRoomConfig.TOKEN_RTC_007],
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_SERVICE],
+                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_007],
                         roomManager,
                         AUiUserServiceImpl(roomContext, channelName, rtmManager),
                         AUiMicSeatServiceImpl(roomContext, channelName, rtmManager),
@@ -198,25 +198,17 @@ object KaraokeUiKit {
                         onRoomCreated = {
                             eventHandler?.onRoomLaunchSuccess?.invoke()
                         },
-                        onRoomDestroy = { isPermsLeak ->
+                        onRoomDestroy = { e ->
                             ktvApi.release()
                             mRoomManager?.rtmManager?.logout()
-                            if (isPermsLeak) {
-                                eventHandler?.onRoomLaunchFailure?.invoke(
-                                    AUiException(
-                                        ErrorCode.PERMISSIONS_LEAK.value,
-                                        ""
-                                    )
-                                )
+                            if (e != null) {
+                                eventHandler?.onRoomLaunchFailure?.invoke(e)
                             }
                         }
                     )
                 } else {
                     eventHandler?.onRoomLaunchFailure?.invoke(
-                        AUiException(
-                            ErrorCode.RTM_LOGIN_FAILURE.value,
-                            "$error"
-                        )
+                        ErrorCode.RTM_LOGIN_FAILURE
                     )
                 }
             }
@@ -288,13 +280,14 @@ object KaraokeUiKit {
             })
     }
 
-    enum class ErrorCode(val value: Int) {
-        RTM_LOGIN_FAILURE(100),
-        PERMISSIONS_LEAK(101)
+    enum class ErrorCode(val value: Int, val message: String) {
+        RTM_LOGIN_FAILURE(100, "Rtm login failed!"),
+        ROOM_PERMISSIONS_LEAK(101, "The room leak required permissions!"),
+        ROOM_DESTROYED(102, "The room has been destroyed!"),
     }
 
     data class RoomEventHandler(
         val onRoomLaunchSuccess: (() -> Unit)? = null,
-        val onRoomLaunchFailure: ((AUiException) -> Unit)? = null,
+        val onRoomLaunchFailure: ((ErrorCode) -> Unit)? = null,
     )
 }
