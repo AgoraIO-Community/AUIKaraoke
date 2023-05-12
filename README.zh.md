@@ -31,7 +31,7 @@ AUIKitKaraoke 提供以下核心功能：
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![](https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/app_download_ios.png) | ![](https://main.qcloudimg.com/raw/8a603ced0a61983018c794df842f7029.png) |
+| ![](https://download.agora.io/null/iOS_uikit_karaoke_1.0.0.png) | ![](https://download.agora.io/null/android_uikit_karaoke_demo_1.0.0.png) |
 
 ## 快速开始
 
