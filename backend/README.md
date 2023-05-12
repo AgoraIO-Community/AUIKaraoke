@@ -82,8 +82,6 @@ English | [中文](README_zh.md)
 │   │   │               │   ├── enums                                   // Enumeration
 │   │   │               │   ├── exception                               // Exception handling
 │   │   │               │   │   └── BusinessException.java
-│   │   │               │   ├── repository                              // DB access layer
-│   │   │               │   │   └── RoomListRepository.java
 │   │   │               │   ├── req                                     // Request class
 │   │   │               │   └── valid                                   // Verify
 │   │   │               │       ├── EnumValid.java
@@ -105,6 +103,8 @@ English | [中文](README_zh.md)
 │   │   │               │   └── TraceIdInterceptor.java                 // Trace link
 │   │   │               ├── metric                                      // Indicator report
 │   │   │               │   └── PrometheusMetric.java
+│   │   │               │── repository                                  // DB access layer
+│   │   │               │   └── RoomListRepository.java
 │   │   │               ├── service                                     // Service layer
 │   │   │               │   ├── IChorusService.java                     // Chorus
 │   │   │               │   ├── IMicSeatService.java                    // Mic
