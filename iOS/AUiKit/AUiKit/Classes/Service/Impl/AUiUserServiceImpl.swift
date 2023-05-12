@@ -186,6 +186,10 @@ extension AUiUserServiceImpl: AUiUserServiceDelegate {
             }
         }
     }
+    
+    public func kickUser(roomId: String, userId: String, callback: @escaping AUiCallback) {
+        //TODO: 
+    }
 }
 
 extension AUiUserServiceImpl {

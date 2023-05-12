@@ -61,6 +61,13 @@ open class AUiRoomInfo: AUiCreateRoomInfo {
     }
 }
 
+
+@objcMembers
+/// 房间详情数据展示
+public class AUiRoomDetailInfo: AUiRoomInfo {
+    public var announcementContent: String = ""
+}
+
 @objcMembers
 ///用户简略信息，用于各个模型传递简单数据
 open class AUiUserThumbnailInfo: NSObject {

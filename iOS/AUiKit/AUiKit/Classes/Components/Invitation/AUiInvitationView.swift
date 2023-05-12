@@ -103,8 +103,7 @@ extension AUiInvitationView: AUiRoomManagerRespDelegate {
         
     }
     
-    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo) {
-        
+    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomDetailInfo) {
     }
     
     func onRoomUserEnter(roomId: String, userInfo: AUiUserInfo) {

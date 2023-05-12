@@ -164,7 +164,7 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
             .show()
     }
     
-    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo) {
+    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomDetailInfo) {
         
     }
 }

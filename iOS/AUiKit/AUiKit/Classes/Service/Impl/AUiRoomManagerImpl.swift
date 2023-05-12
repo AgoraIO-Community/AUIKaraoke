@@ -141,6 +141,10 @@ extension AUiRoomManagerImpl: AUiRoomManagerDelegate {
             callback(error, list as? [AUiRoomInfo])
         }
     }
+    
+    public func updateAnnouncementInfo(roomId: String, content: String, callback: @escaping AUiCallback) {
+        //TODO: 
+    }
 }
 
 extension AUiRoomManagerImpl: AUiRtmErrorProxyDelegate {

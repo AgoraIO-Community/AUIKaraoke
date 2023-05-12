@@ -10,7 +10,7 @@ import Foundation
 
 
 /// 房间管理抽象协议
-public protocol AUiRoomManagerDelegate: NSObject {
+public protocol AUiRoomManagerDelegate: NSObjectProtocol {
     
     /// 绑定响应
     /// - Parameter delegate: 需要回调的对象
@@ -52,18 +52,32 @@ public protocol AUiRoomManagerDelegate: NSObject {
     ///   - pageSize: 分页大小
     ///   - callback: 操作完成回调
     func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUiRoomListCallback)
+    
+    
+    /// 更新房间公告
+    /// - Parameters:
+    ///   - roomId: 房间id
+    ///   - content: 公告信息
+    ///   - callback: 操作完成回调
+    func updateAnnouncementInfo(roomId: String, content: String, callback: @escaping AUiCallback)
 }
 
 /// 房间操作对应的响应
-public protocol AUiRoomManagerRespDelegate: NSObject {
+@objc public protocol AUiRoomManagerRespDelegate: NSObjectProtocol {
 
     /// 房间被销毁的回调
     /// - Parameter roomId: 房间id
     func onRoomDestroy(roomId: String)
     
-    /// 房间信息变更回调
+    /// 房间信息变更回调(当更新的属性回调没有实现则会调用该方法通知)
     /// - Parameters:
     ///   - roomId: 房间id
     ///   - roomInfo: 房间信息
-    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo)
+    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomDetailInfo)
+    
+    /// 房间公告被更新
+    /// - Parameters:
+    ///   - roomId: 房间id
+    ///   - content: 公告信息
+    @objc optional func onAnnouncementDidChange(roomId: String, content: String)
 }
