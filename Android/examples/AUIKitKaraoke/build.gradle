@@ -25,9 +25,21 @@ android {
         buildConfigField "String", "SERVER_HOST", "\"$SERVER_HOST\""
     }
 
+    signingConfigs {
+        release {
+            storeFile new File(rootProject.rootDir.absolutePath + "/keystore.jks")
+            storePassword "230511"
+            keyAlias "uikit"
+            keyPassword "230511"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            shrinkResources false
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
