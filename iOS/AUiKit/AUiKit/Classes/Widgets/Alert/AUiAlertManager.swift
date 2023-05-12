@@ -51,17 +51,12 @@ class AUiAlertManager: NSObject {
             view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
             view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
         }
-        if vc == nil {
-            vc = UIViewController()
-            vc?.view.layer.contents = nil
-            vc?.view.backgroundColor = UIColor.clear
-            vc?.view.addSubview(containerView)
-            vc?.modalPresentationStyle = .custom
-            UIViewController.cl_topViewController()?.present(vc!, animated: false) {
-                showAlertPostion(alertPostion: alertPostion, view: view)
-            }
-        } else {
-            vc?.view.addSubview(containerView)
+        vc = UIViewController()
+        vc?.view.layer.contents = nil
+        vc?.view.backgroundColor = UIColor.clear
+        vc?.view.addSubview(containerView)
+        vc?.modalPresentationStyle = .custom
+        UIViewController.cl_topViewController()?.present(vc!, animated: false) {
             showAlertPostion(alertPostion: alertPostion, view: view)
         }
         //注册键盘出现通知
