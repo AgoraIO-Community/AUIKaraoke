@@ -157,19 +157,19 @@ object KaraokeUiKit {
 
             // login rtm
             rtmManager.login(
-                config.tokenMap[AUiRoomConfig.TOKEN_RTM_LOGIN]
+                config.rtmToken007
             ) { error ->
                 if (error == null) {
                     // init ktv api
                     ktvApi.initialize(
                         KTVApiConfig(
                             roomContext.roomConfig.appId,
-                            config.tokenMap[AUiRoomConfig.TOKEN_RTM_KTV],
+                            config.rtcRtmToken006,
                             rtcEngine,
-                            config.ktvChannelName,
+                            config.rtcChannelName,
                             roomContext.roomConfig.userId.toInt(),
-                            config.ktvChorusChannelName,
-                            config.tokenMap[AUiRoomConfig.TOKEN_RTC_KTV_CHORUS]
+                            config.rtcChorusChannelName,
+                            config.rtcChorusRtcToken007
                         )
                     )
                     ktvApi.renewInnerDataStreamId()
@@ -178,9 +178,8 @@ object KaraokeUiKit {
                     val roomService = KaraokeRoomService(
                         roomContext,
                         rtcEngine,
+                        config,
                         roomInfo,
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_007],
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_007],
                         roomManager,
                         AUiUserServiceImpl(roomContext, channelName, rtmManager),
                         AUiMicSeatServiceImpl(roomContext, channelName, rtmManager),
@@ -232,10 +231,8 @@ object KaraokeUiKit {
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
-                        //rtcToken007
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_007] = rspObj.rtcToken
-                        //rtmToken007
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTM_LOGIN] = rspObj.rtmToken
+                        config.rtcToken007 = rspObj.rtcToken
+                        config.rtmToken007 = rspObj.rtmToken
                         mRoomContext?.roomConfig?.appId = rspObj.appId
                     }
                     trySuccess.invoke()
@@ -246,15 +243,14 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate006(TokenGenerateReq(config.ktvChannelName, userId))
+            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
                         //rtcRtcToken006
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_SERVICE] = rspObj.rtcToken
-                        //rtcRtmToken006
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTM_KTV] = rspObj.rtmToken
+                        config.rtcRtcToken006 = rspObj.rtcToken
+                        config.rtcRtmToken006 = rspObj.rtmToken
                     }
                     trySuccess.invoke()
                 }
@@ -264,13 +260,13 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.ktvChorusChannelName, userId))
+            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
                         // rtcChorusRtcToken007
-                        config.tokenMap[AUiRoomConfig.TOKEN_RTC_KTV_CHORUS] = rspObj.rtcToken
+                        config.rtcChorusRtcToken007 = rspObj.rtcToken
                     }
                     trySuccess.invoke()
                 }

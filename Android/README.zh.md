@@ -49,7 +49,7 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 
 ### 2. 运行示例
 - 获取声网sdk
-  下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/sdk/release/Agora_Native_SDK_for_Android_RTM_2_0.zip)并将文件解压到以下目录
+  下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/null/Agora_Native_SDK_for_Android_rel.v4.1.1.30_49294_FULL_20230512_1606_264137.zip)并将文件解压到以下目录
   [auikit/libs](auikit/libs) : agora-rtc-sdk.jar
   [auikit/src/main/jniLibs](uikit/src/main/jniLibs) : so(arm64-v8a/armeabi-v7a/x86/x86_64)
 
