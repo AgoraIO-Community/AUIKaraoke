@@ -49,7 +49,7 @@ public protocol AUiUserServiceDelegate: AUiCommonServiceDelegate {
     func kickUser(roomId: String, userId: String, callback: @escaping AUiCallback)
 }
 
-public protocol AUiUserRespDelegate: NSObject {
+public protocol AUiUserRespDelegate: NSObjectProtocol {
     
     /// 用户进入房间后获取到的所有用户信息
     /// - Parameters:

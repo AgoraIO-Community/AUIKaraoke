@@ -9,7 +9,7 @@ import Foundation
 
 
 /// 合唱者模型
-open class AUiChoristerModel: NSObject {
+open class AUiChoristerModel: NSObjectProtocol {
     @objc public var userId: String = ""
     public var chorusSongNo: String?          //合唱者演唱歌曲
     public var owner: AUiUserThumbnailInfo?   //合唱者信息
@@ -41,7 +41,7 @@ public protocol AUiChorusServiceDelegate: AUiCommonServiceDelegate {
 
 
 /// 合唱响应协议
-public protocol AUiChorusRespDelegate: NSObject {
+public protocol AUiChorusRespDelegate: NSObjectProtocol {
     
     /// 合唱者加入
     /// - Parameter chorus: 加入的合唱者信息
