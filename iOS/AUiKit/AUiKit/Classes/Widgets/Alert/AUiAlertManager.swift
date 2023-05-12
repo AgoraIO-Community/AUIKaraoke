@@ -61,6 +61,7 @@ class AUiAlertManager: NSObject {
                 showAlertPostion(alertPostion: alertPostion, view: view)
             }
         } else {
+            vc?.view.addSubview(containerView)
             showAlertPostion(alertPostion: alertPostion, view: view)
         }
         //注册键盘出现通知
