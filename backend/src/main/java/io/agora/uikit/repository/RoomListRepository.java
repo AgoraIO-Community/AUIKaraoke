@@ -1,4 +1,4 @@
-package io.agora.uikit.bean.repository;
+package io.agora.uikit.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
