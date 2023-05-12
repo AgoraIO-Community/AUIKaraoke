@@ -61,7 +61,8 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 SERVER_HOST= （业务服务器域名）
 ```
 
-> 声网测试域名：https://test-vikit.bi2.agoralab.co
+> 声网测试域名： https://service.agora.io/uikit-karaoke，
+
 
 - 用 Android Studio 运行项目即可开始您的体验
 

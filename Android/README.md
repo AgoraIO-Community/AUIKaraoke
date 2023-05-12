@@ -59,7 +59,7 @@ UiKit is a set of scaffolding for scenario-based applications. It provides Ui co
 SERVER_HOST= （Domain name of the business server）
 ```
 
-> Agora Test Domain: https://test-vikit.bi2.agoralab.co
+> Agora Test Domain: https://service.agora.io/uikit-karaoke
 
 - Run the project with Android Studio to begin your experience.
 
