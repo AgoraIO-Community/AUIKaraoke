@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="akaraoke_room_appearance" format="reference"/>
+
+    <declare-styleable name="AKaraokeRoomView">
+
+        <!-- 背景 -->
+        <attr name="akaraoke_room_background" format="color|reference"/>
+
+        <!-- 房间信息 -->
+        <attr name="akaraoke_roomInfo_background" format="color|reference"/>
+        <attr name="akaraoke_roomInfo_nameTextColor" format="color"/>
+        <attr name="akaraoke_roomInfo_nameTextSize" format="dimension"/>
+        <attr name="akaraoke_roomInfo_idTextColor" format="color"/>
+        <attr name="akaraoke_roomInfo_idTextSize" format="dimension"/>
+
+        <!-- 更多用户 -->
+        <attr name="akaraoke_roomMoreUser_drawable" format="reference"/>
+
+        <!-- 关闭 -->
+        <attr name="akaraoke_roomClose_drawable" format="reference"/>
+
+        <!-- 按钮 -->
+        <attr name="akaraoke_roomButton_normalColor" format="color"/>
+
+    </declare-styleable>
+
+
+</resources>

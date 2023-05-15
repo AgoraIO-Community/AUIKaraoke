@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/ktv_bg" />
+    <item >
+        <bitmap android:src="@drawable/ktv_bg_room_living"/>
+    </item>
+</layer-list>
