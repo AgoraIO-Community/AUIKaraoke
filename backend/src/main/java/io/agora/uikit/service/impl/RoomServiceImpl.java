@@ -28,6 +28,7 @@ import io.agora.uikit.bean.req.RoomLeaveReq;
 import io.agora.uikit.bean.req.RoomListReq;
 import io.agora.uikit.bean.req.RoomQueryReq;
 import io.agora.uikit.repository.RoomListRepository;
+import io.agora.uikit.service.IChorusService;
 import io.agora.uikit.service.IMicSeatService;
 import io.agora.uikit.service.IRoomService;
 import io.agora.uikit.service.ISongService;
@@ -48,6 +49,9 @@ public class RoomServiceImpl implements IRoomService {
     @Autowired
     @Lazy(true)
     private ISongService songService;
+    @Autowired
+    @Lazy(true)
+    private IChorusService chorusService;
     @Autowired
     @Lazy(true)
     private RoomListRepository roomListRepository;
@@ -334,6 +338,8 @@ public class RoomServiceImpl implements IRoomService {
         micSeatService.leave("leave", metadata, roomLeaveReq.getRoomId(), roomLeaveReq.getUserId());
         // Clear song by user
         songService.clearByUser("leave", metadata, roomLeaveReq.getRoomId(), roomLeaveReq.getUserId());
+        // Clear chorus by user
+        chorusService.clearByUser("leave", metadata, roomLeaveReq.getRoomId(), roomLeaveReq.getUserId());
 
         // Release lock
         releaseLock(roomLeaveReq.getRoomId());
