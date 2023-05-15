@@ -48,7 +48,7 @@
         app:currentLineHighlightedTextColor="#E1FF98F5"
         app:currentLineTextColor="@android:color/white"
         app:currentLineTextSize="16sp"
-        app:enableDragging="true"
+        app:enableDragging="false"
         app:labelWhenNoLyrics=" "
         app:layout_constraintBottom_toTopOf="@+id/bgd_control_layout_lrc"
         app:layout_constraintTop_toBottomOf="@+id/scoringView"
