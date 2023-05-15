@@ -296,8 +296,8 @@ open class AUiAlertView: UIView {
         return self
     }
     @discardableResult
-    public func show() -> AUiAlertView {
-        AUiAlertManager.show(view: self, alertPostion: .center, didCoverDismiss: false)
+    public func show(fromVC: UIViewController? = nil) -> AUiAlertView {
+        AUiAlertManager.show(view: self, fromVC: fromVC, alertPostion: .center, didCoverDismiss: false)
         return self
     }
     @discardableResult

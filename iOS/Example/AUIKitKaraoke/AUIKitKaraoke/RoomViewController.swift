@@ -161,7 +161,7 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
                 guard let self = self else { return }
                 self.navigationController?.popViewController(animated: true)
             })
-            .show()
+            .show(fromVC: self)
     }
     
     func onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo) {

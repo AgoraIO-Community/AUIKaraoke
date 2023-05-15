@@ -27,6 +27,7 @@ class AUiAlertManager: NSObject {
     private static var bottomAnchor: NSLayoutConstraint?
     
     public static func show(view: UIView,
+                            fromVC: UIViewController? = nil,
                             alertPostion: AlertPosition = .center,
                             didCoverDismiss: Bool = true) {
         let index = viewCache.isEmpty ? 0 : viewCache.count
@@ -51,13 +52,14 @@ class AUiAlertManager: NSObject {
             view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor).isActive = true
             view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor).isActive = true
         }
+        let parentVC = fromVC ?? UIViewController.cl_topViewController()
         if vc == nil {
             vc = UIViewController()
             vc?.view.layer.contents = nil
             vc?.view.backgroundColor = UIColor.clear
             vc?.view.addSubview(containerView)
             vc?.modalPresentationStyle = .custom
-            UIViewController.cl_topViewController()?.present(vc!, animated: false) {
+            parentVC?.present(vc!, animated: false) {
                 showAlertPostion(alertPostion: alertPostion, view: view)
             }
         } else {
@@ -65,7 +67,7 @@ class AUiAlertManager: NSObject {
             if let _ = vc?.view.superview {
                 showAlertPostion(alertPostion: alertPostion, view: view)
             }else{
-                UIViewController.cl_topViewController()?.present(vc!, animated: false) {
+                parentVC?.present(vc!, animated: false) {
                     showAlertPostion(alertPostion: alertPostion, view: view)
                 }
             }
