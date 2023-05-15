@@ -4,6 +4,9 @@
 
 本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../../AScenesKit/README_zh.md)和[AUiKit](../../AUiKit/README_zh.md)
 
+## 架构图
+![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
+
 
 ## 目录结构
 ```

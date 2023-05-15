@@ -21,7 +21,7 @@
   * [AUiRoomManagerRespDelegate](#auiroommanagerrespdelegate)
 - [Widget](#widget)
   * [AUiActionSheet](#auiactionsheet)
-    * [Main container configuration](#main- container-configuration)
+    * [Main container configuration](#main-container-configuration)
     * [List Item Configuration](#list-item-configuration)
   * [AUiAlertView](#auialertview)
   * [AUiButton](#auibutton)
