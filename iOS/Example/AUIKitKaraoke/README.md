@@ -46,6 +46,7 @@ static var HostUrl: String = <#Your HostUrl#>
 If you do not intend to deploy backend services temporarily, you can use the default domain name in KeyCenter.swift
 
 - Download the [ latest version of the RTC SDK containing RTM 2.0](https://download.agora.io/sdk/release/Agora_Native_SDK_for_iOS_hyf_63842_FULL_20230428_1607_263060.zip), extract it, and then copy the files from libs to [libs](libs)
+![](https://download.agora.io/null/3.jpg)
 
 - Open the terminal and enter the [Podfile](Podfile) directory, run `pod install`
 
