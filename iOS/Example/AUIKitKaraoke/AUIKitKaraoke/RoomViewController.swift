@@ -115,7 +115,7 @@ class RoomViewController: UIViewController {
         }
         
         group.enter()
-        let tokenModel2 = AUiTokenGenerate006NetworkModel()
+        let tokenModel2 = AUiTokenGenerateNetworkModel()
         tokenModel2.channelName = rtcChannelName
         tokenModel2.userId = uid
         tokenModel2.request { error, result in
@@ -125,8 +125,8 @@ class RoomViewController: UIViewController {
             
             guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
-            roomConfig.rtcRtcToken006 = tokenMap["rtcToken"] ?? ""
-            roomConfig.rtcRtmToken006 = tokenMap["rtmToken"] ?? ""
+            roomConfig.rtcRtcToken = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtcRtmToken = tokenMap["rtmToken"] ?? ""
         }
         
         group.enter()
@@ -140,7 +140,7 @@ class RoomViewController: UIViewController {
             
             guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
-            roomConfig.rtcChorusRtcToken007 = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtcChorusRtcToken = tokenMap["rtcToken"] ?? ""
         }
         
         group.notify(queue: DispatchQueue.main) {
