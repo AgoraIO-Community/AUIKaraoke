@@ -22,12 +22,12 @@ import io.agora.uikit.bean.dto.RoomQueryDto;
 import io.agora.uikit.bean.entity.RoomListEntity;
 import io.agora.uikit.bean.enums.ReturnCodeEnum;
 import io.agora.uikit.bean.exception.BusinessException;
-import io.agora.uikit.bean.repository.RoomListRepository;
 import io.agora.uikit.bean.req.RoomCreateReq;
 import io.agora.uikit.bean.req.RoomDestroyReq;
 import io.agora.uikit.bean.req.RoomLeaveReq;
 import io.agora.uikit.bean.req.RoomListReq;
 import io.agora.uikit.bean.req.RoomQueryReq;
+import io.agora.uikit.repository.RoomListRepository;
 import io.agora.uikit.service.IMicSeatService;
 import io.agora.uikit.service.IRoomService;
 import io.agora.uikit.service.ISongService;
@@ -77,7 +77,7 @@ public class RoomServiceImpl implements IRoomService {
     /**
      * Add room list
      * 
-     * @param roomReq
+     * @param roomCreateReq
      * @return
      */
     @Override
@@ -103,7 +103,6 @@ public class RoomServiceImpl implements IRoomService {
      * Check whether owner
      * 
      * @param method
-     * @param metadataItem
      * @param roomId
      * @param userId
      * @throws Exception
@@ -143,7 +142,7 @@ public class RoomServiceImpl implements IRoomService {
      * Create room
      * 
      * @param metadata
-     * @param roomReq
+     * @param roomCreateReq
      * @throws Exception
      */
     @Override

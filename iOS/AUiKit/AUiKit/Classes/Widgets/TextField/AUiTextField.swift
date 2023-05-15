@@ -8,6 +8,11 @@
 import UIKit
 import SwiftTheme
 
+public enum AUiDividerSide {
+    case all
+    case bottom
+}
+
 public class AUiTextField: UIView {
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView()
@@ -25,7 +30,8 @@ public class AUiTextField: UIView {
         return view
     }()
     private lazy var leftIconImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "magnifyingglass"))
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     private lazy var textFieldContainerView: UIView = {
@@ -46,8 +52,31 @@ public class AUiTextField: UIView {
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
+    private lazy var topLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 12)
+        label.isHidden = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    private lazy var bottomLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .red
+        label.font = .systemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
+        return label
+    }()
+    private lazy var dividerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
+        return view
+    }()
     
     private var textFieldLeftCons: NSLayoutConstraint?
+    private var stackViewLeftCons: NSLayoutConstraint?
     
     // MARK: Public
     public var textEditingChangedClosure: ((String?) -> Void)?
@@ -58,8 +87,18 @@ public class AUiTextField: UIView {
         didSet {
             leftIconImageView.image = leftIconImage
             leftIconContainerView.isHidden = leftIconImage == nil
-            textFieldLeftCons?.constant = 0
+            textFieldLeftCons?.constant = position == .all ? 16 : 0
             textFieldLeftCons?.isActive = true
+            stackViewLeftCons?.constant = ((position == nil || position == .bottom) && leftIconImage != nil) ? -15 : 0
+            stackViewLeftCons?.isActive = true
+        }
+    }
+    public override var backgroundColor: UIColor? {
+        didSet {
+            textFieldLeftCons?.constant = position == .all ? 16 : 0
+            textFieldLeftCons?.isActive = true
+            stackViewLeftCons?.constant = ((position == nil || position == .bottom) && leftIconImage != nil) ? 0 : 16
+            stackViewLeftCons?.isActive = true
         }
     }
     @objc public var rightIconImage: UIImage? {
@@ -73,12 +112,6 @@ public class AUiTextField: UIView {
     public var placeHolder: String? {
         didSet {
             textField.placeholder = placeHolder
-        }
-    }
-    
-    public var text: String? {
-        didSet {
-            textField.text = text
         }
     }
     
@@ -108,6 +141,13 @@ public class AUiTextField: UIView {
             textField.attributedPlaceholder = attr
         }
     }
+    
+    public var text: String? {
+        didSet {
+            textField.text = text
+        }
+    }
+    
     @objc public var textColor: UIColor? {
         didSet {
             textField.textColor = textColor
@@ -146,12 +186,75 @@ public class AUiTextField: UIView {
             textField.returnKeyType = returnKeyType
         }
     }
+    public var cornerRadius: CGFloat = 0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
     public func becomeFirstResponder() {
         textField.becomeFirstResponder()
     }
     public func resignFirstResponder() {
         textField.resignFirstResponder()
     }
+    public var topText: String? {
+        didSet {
+            topLabel.isHidden = topText == nil
+            topLabel.text = topText
+        }
+    }
+    public var topTextFont: UIFont? {
+        didSet {
+            topLabel.font = topTextFont
+        }
+    }
+    public var topTextColor: UIColor? {
+        didSet {
+            topLabel.textColor = topTextColor
+        }
+    }
+    public var bottomText: String? {
+        didSet {
+            bottomLabel.isHidden = bottomText == nil
+            bottomLabel.text = bottomText
+        }
+    }
+    public var bottomTextFont: UIFont? {
+        didSet {
+            bottomLabel.font = bottomTextFont
+        }
+    }
+    public var bottomTextColor: UIColor? {
+        didSet {
+            bottomLabel.textColor = bottomTextColor
+        }
+    }
+    public var dividerColor: UIColor? {
+        didSet {
+            if position == .all {
+                layer.borderColor = dividerColor?.cgColor
+            } else {
+                dividerView.backgroundColor = dividerColor
+            }
+        }
+    }
+    public func divider(color: UIColor, position: AUiDividerSide = .all) {
+        self.position = position
+        if position == .all {
+            layer.borderWidth = 1
+            layer.borderColor = color.cgColor
+            
+        } else {
+            dividerView.backgroundColor = color
+        }
+        dividerView.isHidden = position == .all
+        textFieldLeftCons?.constant = (position == .bottom || leftIconImage != nil) ? 0 : 16
+        textFieldLeftCons?.isActive = true
+        stackViewLeftCons?.constant = (position == .bottom && leftIconImage != nil) ? -15 : 0
+        stackViewLeftCons?.isActive = true
+    }
+    
+    private var position: AUiDividerSide?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -165,7 +268,8 @@ public class AUiTextField: UIView {
     private func setupUI() {
         addSubview(stackView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        stackViewLeftCons = stackView.leadingAnchor.constraint(equalTo: leadingAnchor)
+        stackViewLeftCons?.isActive = true
         stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -178,27 +282,40 @@ public class AUiTextField: UIView {
         leftIconContainerView.addSubview(leftIconImageView)
         leftIconImageView.translatesAutoresizingMaskIntoConstraints = false
         leftIconImageView.leadingAnchor.constraint(equalTo: leftIconContainerView.leadingAnchor,
-                                               constant: 20).isActive = true
+                                               constant: 15).isActive = true
         leftIconImageView.trailingAnchor.constraint(equalTo: leftIconContainerView.trailingAnchor,
                                                 constant: -8).isActive = true
-        leftIconImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        leftIconImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         leftIconImageView.centerYAnchor.constraint(equalTo: leftIconContainerView.centerYAnchor).isActive = true
         
         textFieldContainerView.addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textFieldLeftCons = textField.leadingAnchor.constraint(equalTo: textFieldContainerView.leadingAnchor, constant: 16)
+        textFieldLeftCons = textField.leadingAnchor.constraint(equalTo: textFieldContainerView.leadingAnchor, constant: 0)
         textFieldLeftCons?.isActive = true
         textField.trailingAnchor.constraint(equalTo: textFieldContainerView.trailingAnchor).isActive = true
         textField.topAnchor.constraint(equalTo: textFieldContainerView.topAnchor).isActive = true
         textField.bottomAnchor.constraint(equalTo: textFieldContainerView.bottomAnchor).isActive = true
         
-        rightIconContainerView.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        rightIconContainerView.widthAnchor.constraint(equalToConstant: 36).isActive = true
         rightIconContainerView.addSubview(rightIconImageView)
         rightIconImageView.translatesAutoresizingMaskIntoConstraints = false
         rightIconImageView.leadingAnchor.constraint(equalTo: rightIconContainerView.leadingAnchor).isActive = true
         rightIconImageView.centerYAnchor.constraint(equalTo: rightIconContainerView.centerYAnchor).isActive = true
-        rightIconImageView.trailingAnchor.constraint(equalTo: rightIconContainerView.trailingAnchor, constant: -21).isActive = true
+        rightIconImageView.trailingAnchor.constraint(equalTo: rightIconContainerView.trailingAnchor,
+                                                     constant: -15).isActive = true
+        
+        addSubview(topLabel)
+        topLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        topLabel.bottomAnchor.constraint(equalTo: textField.topAnchor, constant: -10).isActive = true
+        
+        addSubview(bottomLabel)
+        bottomLabel.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        bottomLabel.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 10).isActive = true
+        
+        addSubview(dividerView)
+        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        dividerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        dividerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        dividerView.heightAnchor.constraint(equalToConstant: 1).isActive = true
         
         defaultConfig()
     }

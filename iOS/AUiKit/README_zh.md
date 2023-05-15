@@ -22,7 +22,13 @@
   * [AUiActionSheet](#auiactionsheet)
     * [主容器配置](#主容器配置) 
     * [列表Item配置](#列表Item配置)
-  
+  * [AUiAlertView](#auialertview)
+  * [AUiButton](#auibutton)
+  * [AUiSlider](#auislider)
+  * [AUiTableViewCell](#auitableviewcell)
+  * [AUiTabs](#auitabs)
+  * [AUiTextField](#auitextfield)
+  * [AUiToast](#auitoast)
   <!-- TOC END -->
 
 # AUiKit基础组件
@@ -50,14 +56,13 @@ AUiKit
 │
 ├─ Widget                               // 无业务的基础UI组件
 │  ├─ AUiActionSheet                    // 动作面板
-│  ├─ Alert                             // 按钮组件
-│  ├─ Button                            // 按钮
-│  ├─ Segmented                         //
-│  ├─ Slider                            // 滑动条
-│  ├─ TableView                         // 
-│  ├─ Tabs                              // 选项卡
-│  ├─ TextField                         // 编辑框
-│  └─ Toast                             // 提示框
+│  ├─ AUiAlertView                      // 对话框
+│  ├─ AUiButton                         // 按钮
+│  ├─ AUiSlider                         // 滑动条
+│  ├─ AUiTableViewCell                  // 表格视图单元格 
+│  ├─ AUiTabs                           // 选项卡
+│  ├─ AUiTextField                      // 编辑框
+│  └─ AUiToast                          // 提示框
 │
 └─ Component                           // 包含具体业务的UI模块
    ├─ JukeBox                           // 点歌器组件 
@@ -250,20 +255,145 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | selectedBorderRadius | 选中框圆角 |
 
 
-### Alert
+### AUiAlertView
+| 属性                 | 描述       |
+| ------------------- | ---------- |
+| background(color: UIColor?) | 背景色 |
+| isShowCloseButton(isShow: Bool) | 是否显示关闭按钮 |
+| title(title: String?) | 主标题 |
+| titleColor(color: UIColor?) | 主标题文字颜色 |
+| titleFont(font: UIFont?) | 主标题字体 |
+| content(content: String?) | 内容 |
+| contentTextAligment(textAlignment: NSTextAlignment) | 内容文字对齐方式 |
+| contentColor(color: UIColor?) | 内容文字颜色 |
+| contentFont(font: UIFont?) | 内容字体 |
+| textField(text: String?) | 输入框内容 |
+| textField(color: UIColor?) | 输入框文字颜色 |
+| textField(font: UIFont?) | 内容字体 |
+| textField(cornerRadius: CGFloat) | 输入框圆角大小 |
+| textField(showBottomDivider: Bool) | 输入框底部分割是否显示 |
+| textField(bottomDividerColor: UIColor?)  | 输入框底部分割颜色 |
+| textFieldBackground(color: UIColor?)  | 输入框背景色 |
+| textFieldPlaceholder(placeholder: String?)  | 输入框文字占位符 |
+| textFieldPlaceholder(color: UIColor?)   | 输入框文字占位符文字颜色 |
+| textFieldPlaceholder(font: UIFont?)  | 输入框文字占位符字体 |
+| leftButton(title: String?)  | 左边按钮文字内容 |
+| leftButton(color: UIColor?)  | 左边按钮文字颜色 |
+| leftButton(font: UIFont?)  | 左边按钮文字字体大小 |
+| leftButton(cornerRadius: CGFloat)  | 左边按钮圆角大小 |
+| leftButtonBackground(color: UIColor?)  | 左边按钮背景色 |
+| leftButtonBorder(color: UIColor?)   | 左边按钮边框颜色 |
+| leftButtonBorder(width: CGFloat)   | 左边按钮边框宽度 |
+| leftButtonTapClosure(onTap: @escaping () -> Void)   | 左边按钮点击回调 |
+| rightButton(title: String?)   | 右边按钮文字内容 |
+| rightButton(color: UIColor?)   | 右边按钮文字颜色 |
+| rightButton(font: UIFont?)   | 右边按钮文字字体大小 |
+| rightButton(cornerRadius: CGFloat)   | 右边按钮圆角大小 |
+| rightButtonBackground(color: UIColor?)   | 右边按钮背景色 |
+| rightButtonBorder(color: UIColor?)   | 右边按钮边框颜色 |
+| rightButtonBorder(width: CGFloat)   | 右边按钮边框宽度 |
+| rightButtonTapClosure(onTap: @escaping (String?) -> Void)   | 右边按钮点击回调(带输入框内容) |
+| rightButtonTapClosure(onTap: @escaping () -> Void)   | 右边按钮点击回调(不带输入框内容) |
+
+### AUiButton
+| API              | 描述             |
+| ---------------- | ---------------- |
+| backgroundColor | 背景色 |
+| icon    | 按钮图标 |
+| selectedIcon | 选中图标 |
+| iconWidth | 按钮图标宽度 |
+| iconHeight | 按钮图标高度 |
+| buttonWitdth | 按钮宽度 |
+| buttonHeight | 宽度高度 |
+| titleFont | 按钮文字字体  |
+| titleColor | 按钮文字颜色 |
+| selectedTitleColor | 选中文字颜色 |
+| cornerRadius | 按钮圆角 |
+| textAlpha | 按钮文字透明度 |
 
 
-### Button
+### AUiSlider
+| API              | 描述             |
+| ---------------- | ---------------- |
+| backgroundColor    | 背景色 |
+| minimumTrackColor | 滑块左边部分颜色 |
+| maximumTrackColor | 滑块右边部分颜色 |
+| thumbColor | 滑块颜色 |
+| thumbBorderColor | 滑块边框颜色 |
+| trackBigLabelFont | 数值描述的字体(文字描述居于左右时) |
+| trackSmallLabelFont | 数值描述的字体(文字描述居于底部时) |
+| trackLabelColor | 数值描述颜色 |
+| titleLabelFont | 标题字体 |
+| titleLabelColor | 标题颜色 |
+
+### AUiTableViewCell
+
+| API              | 描述             |
+| ---------------- | ---------------- |
+| titleFont    | 主标题字体 |
+| titleColor    | 主标题字体颜色 |
+| subTitleFont    | 副标题字体 |
+| subTitleColor | 副标题字体颜色 |
+| detailFont    | 详情字体 |
+| detailColor    | 详情字体颜色 |
+| highlightColor    | 必填项星号 |
+| badgeFont    | 角标字体 |
+| badgeColor    | 角标文字颜色 |
+| badgeBackgroundColor    | 角标背景色 |
+| switchTintColor    | 开关背景色 |
+| switchThumbColor    | 开关滑块颜色 |
+| arrow    | 箭头图标 |
+
+### AUiTabs
+
+| API              | 描述             |
+| ---------------- | ---------------- |
+| titleFont    | 标签文字字体 |
+| indicatorColor    | 选中标签指示条颜色 |
+| titleMargin    | 标签间距 |
+| titlePendingHorizontal    | 水平方向左右间距 |
+| titlePendingVertical    | 垂直方向上下间距 |
+| minimumWidth    | 标签最小宽度 |
+| normalTitleColor    | 标签未选中时的文字颜色 |
+| normalBorderColor    | 标签未选中时边框颜色 |
+| selectedTitleColor    | 标签选中时的文字颜色 |
+| selectedBorderColor    | 标签选中时边框颜色 |
+| indicatorWidth    | 选中标签指示条宽度 |
+
+### AUiTextField
+| API              | 描述             |
+| ---------------- | ---------------- |
+| backgroundColor    | 背景色 |
+| leftIconImage    | 输入框左部图片 |
+| rightIconImage    | 输入框右部未选中时图片 |
+| rightSelectedIconImage    | 输入框右部选中时图片 |
+| placeHolder    | 输入占位符 |
+| placeHolderColor    | 输入占位符颜色 |
+| placeHolderFont    | 输入占位符字体 |
+| text    | 输入内容 |
+| textColor    | 输入文字颜色 |
+| textFont    | 输入文字字体 |
+| keyBoardType    | 键盘类型 |
+| isSecureTextEntry    | 是否是密码输入框 |
+| clearButtonMode    | 清除按钮（输入框内右侧小叉） |
+| textAlignment    | 文字对齐方式 |
+| returnKeyType    | 键盘返回类型 |
+| cornerRadius    | 圆角大小 |
+| topText    | 顶部文字内容 |
+| topTextFont    | 顶部文字字体 |
+| topTextColor    | 顶部文字字体颜色 |
+| bottomText    | 底部文字内容 |
+| bottomTextFont    | 底部文字字体 |
+| bottomTextColor    | 底部文字颜色 |
+| dividerColor    | 输入内容底部分割线颜色 |
 
 
-### Segmented
+### AUiToast
 
-### Slider
-
-### TableView
-
-### Tabs
-
-### TextField
-
-### Toast
+| API              | 描述             |
+| ---------------- | ---------------- |
+| text    | 文字内容 |
+| textColor    | 文字颜色 |
+| font    | 文字字体 |
+| tagImage    | 图标 |
+| postion | 显示位置 |

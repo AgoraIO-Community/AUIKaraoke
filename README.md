@@ -31,13 +31,13 @@ AUIKitKaraoke provides the following core features:
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![](https://liteav.sdk.qcloud.com/doc/res/trtc/picture/zh-cn/app_download_ios.png) | ![](https://main.qcloudimg.com/raw/8a603ced0a61983018c794df842f7029.png) |
+| ![](https://download.agora.io/null/iOS_uikit_karaoke_1.0.0.png) | ![](https://download.agora.io/null/android_uikit_karaoke_demo_1.0.0.png) |
 
 ## Quick Start
 
 | iOS | Android | Backend |
 | --- | --- | --- |
-| [Karaoke（iOS）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/iOS) | [Karaoke（Android）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/Android)  | [Karaoke（Backend）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/backend) |
+| [Karaoke（iOS）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/iOS/Example/AUIKitKaraoke) | [Karaoke（Android）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/Android)  | [Karaoke（Backend）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/backend) |
 
 
 ## Communication&Feedback

@@ -4,6 +4,8 @@
 
 This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../../AScenesKit/README.md) and [AUiKit](../../../backend/README.md)
 
+## Architecture
+![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
 
 ## Directory
 ```

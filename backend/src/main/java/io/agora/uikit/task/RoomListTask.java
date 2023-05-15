@@ -10,9 +10,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import io.agora.uikit.bean.entity.RoomListEntity;
-import io.agora.uikit.bean.repository.RoomListRepository;
 import io.agora.uikit.bean.req.RoomDestroyReq;
 import io.agora.uikit.metric.PrometheusMetric;
+import io.agora.uikit.repository.RoomListRepository;
 import io.agora.uikit.service.IRoomService;
 import io.agora.uikit.utils.RedisUtil;
 import io.agora.uikit.utils.RtmUtil;

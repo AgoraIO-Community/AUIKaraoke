@@ -1,4 +1,5 @@
 # UIKit Karaoke Scene Backend Service
+English | [中文](README_zh.md)
 ## Project Introduction
 - This project is developed based on the Spring Boot framework, relying on Redis/MongoDB/RTM/NCS components.
 - Redis is mainly used for online user number real-time updates and data consistency through distributed lock.
@@ -81,8 +82,6 @@
 │   │   │               │   ├── enums                                   // Enumeration
 │   │   │               │   ├── exception                               // Exception handling
 │   │   │               │   │   └── BusinessException.java
-│   │   │               │   ├── repository                              // DB access layer
-│   │   │               │   │   └── RoomListRepository.java
 │   │   │               │   ├── req                                     // Request class
 │   │   │               │   └── valid                                   // Verify
 │   │   │               │       ├── EnumValid.java
@@ -104,6 +103,8 @@
 │   │   │               │   └── TraceIdInterceptor.java                 // Trace link
 │   │   │               ├── metric                                      // Indicator report
 │   │   │               │   └── PrometheusMetric.java
+│   │   │               │── repository                                  // DB access layer
+│   │   │               │   └── RoomListRepository.java
 │   │   │               ├── service                                     // Service layer
 │   │   │               │   ├── IChorusService.java                     // Chorus
 │   │   │               │   ├── IMicSeatService.java                    // Mic

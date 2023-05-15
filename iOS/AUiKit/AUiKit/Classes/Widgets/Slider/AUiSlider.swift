@@ -9,16 +9,16 @@ import Foundation
 import SwiftTheme
 
 public class AUiSliderTheme: NSObject {
-    public var backgroundColor: ThemeColorPicker = "CommonColor.black"
-    public var minimumTrackColor: ThemeColorPicker = "CommonColor.primary"         //球左边部分颜色
-    public var maximumTrackColor: ThemeColorPicker = "CommonColor.primary35"       //球右边部分颜色
-    public var thumbTrackColor: ThemeColorPicker = "CommonColor.normalTextColor"   //当前球颜色
-    public var thumbTrackBorderColor: ThemeCGColorPicker = "CommonColor.primary"   //球边框颜色
-    public var trackBigLabelFont: ThemeFontPicker = "Slider.numberBigLabelFont"          //数值描述的字体
-    public var trackSmallLabelFont: ThemeFontPicker = "Slider.numberSmallLabelFont"          //数值描述的字体
-    public var trackLabelColor: ThemeColorPicker = "CommonColor.normalTextColor"   //数值描述颜色
-    public var titleLabelFont: ThemeFontPicker = "Slider.titleLabelFont"           //标题字体
-    public var titleLabelColor: ThemeColorPicker = "CommonColor.normalTextColor"   //标题颜色
+    public var backgroundColor: ThemeColorPicker = "CommonColor.black"              //背景色
+    public var minimumTrackColor: ThemeColorPicker = "CommonColor.primary"          //滑块左边部分颜色
+    public var maximumTrackColor: ThemeColorPicker = "CommonColor.primary35"        //滑块右边部分颜色
+    public var thumbColor: ThemeColorPicker = "CommonColor.normalTextColor"         //滑块颜色
+    public var thumbBorderColor: ThemeCGColorPicker = "CommonColor.primary"         //滑块边框颜色
+    public var trackBigLabelFont: ThemeFontPicker = "Slider.numberBigLabelFont"     //数值描述的字体(文字描述居于左右时)
+    public var trackSmallLabelFont: ThemeFontPicker = "Slider.numberSmallLabelFont" //数值描述的字体(文字描述居于底部时)
+    public var trackLabelColor: ThemeColorPicker = "CommonColor.normalTextColor"    //数值描述颜色
+    public var titleLabelFont: ThemeFontPicker = "Slider.titleLabelFont"            //标题字体
+    public var titleLabelColor: ThemeColorPicker = "CommonColor.normalTextColor"    //标题颜色
 }
 
 public enum AUiSliderStyle: Int {
@@ -39,11 +39,11 @@ open class AUiSlider: UIControl {
     open var maximumValue: CGFloat = 100
     open var currentValue: CGFloat = 50 {
         didSet {
-            thumbTrackLabel.text = "\(Int(currentValue))"
+            thumbLabel.text = "\(Int(currentValue))"
             let percent = currentValue / (maximumValue - minimumValue)
             minimumTrackLine.aui_width = maximumTrackLine.aui_width * percent
-            thumbTrackView.aui_centerX = maximumTrackLine.aui_left + maximumTrackLine.aui_width * percent
-            thumbTrackLabel.aui_centerX = thumbTrackView.aui_centerX
+            thumbView.aui_centerX = maximumTrackLine.aui_left + maximumTrackLine.aui_width * percent
+            thumbLabel.aui_centerX = thumbView.aui_centerX
         }
     }
     public var style: AUiSliderStyle = .singleLine {
@@ -66,18 +66,18 @@ open class AUiSlider: UIControl {
     //尾部分割线
     lazy var tailSplitLine: UIView = UIView()
     
-    //球左边部分线
+    //滑块左边部分线
     lazy var minimumTrackLine: UIView = UIView()
     
-    //球右边部分线
+    //滑块右边部分线
     lazy var maximumTrackLine: UIView = UIView()
     
-    //球
-    lazy var thumbTrackView: UIView = {
+    //滑块
+    lazy var thumbView: UIView = {
         let view = UIView()
         view.aui_size = kThumbViewSize
         view.layer.cornerRadius = kThumbViewSize.width / 2
-        view.layer.theme_borderColor = theme.thumbTrackBorderColor
+        view.layer.theme_borderColor = theme.thumbBorderColor
         view.layer.borderWidth = 2
         view.clipsToBounds = true
         
@@ -91,7 +91,7 @@ open class AUiSlider: UIControl {
     lazy var maximumTrackLabel: UILabel = UILabel()
     
     //当前数值展示
-    lazy var thumbTrackLabel: UILabel = UILabel()
+    lazy var thumbLabel: UILabel = UILabel()
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -109,15 +109,15 @@ open class AUiSlider: UIControl {
         
         minimumTrackLine.theme_backgroundColor = theme.minimumTrackColor
         maximumTrackLine.theme_backgroundColor = theme.maximumTrackColor
-        thumbTrackView.theme_backgroundColor = theme.thumbTrackColor
+        thumbView.theme_backgroundColor = theme.thumbColor
         
         minimumTrackLabel.theme_textColor = theme.titleLabelColor
         maximumTrackLabel.theme_textColor = theme.titleLabelColor
-        thumbTrackLabel.theme_textColor = theme.titleLabelColor
+        thumbLabel.theme_textColor = theme.titleLabelColor
         
         maximumTrackLabel.text = "\(Int(maximumValue))"
         minimumTrackLabel.text = "\(Int(minimumValue))"
-        thumbTrackLabel.text = "\(Int(currentValue))"
+        thumbLabel.text = "\(Int(currentValue))"
         
         _resetFont()
     }
@@ -126,11 +126,11 @@ open class AUiSlider: UIControl {
         if style == .smallNumberAndSingleLine {
             minimumTrackLabel.theme_font = theme.trackSmallLabelFont
             maximumTrackLabel.theme_font = theme.trackSmallLabelFont
-            thumbTrackLabel.theme_font = theme.trackSmallLabelFont
+            thumbLabel.theme_font = theme.trackSmallLabelFont
         } else {
             minimumTrackLabel.theme_font = theme.trackBigLabelFont
             maximumTrackLabel.theme_font = theme.trackBigLabelFont
-            thumbTrackLabel.theme_font = theme.trackBigLabelFont
+            thumbLabel.theme_font = theme.trackBigLabelFont
         }
     }
     
@@ -140,10 +140,10 @@ open class AUiSlider: UIControl {
         addSubview(maximumTrackLine)
         addSubview(headSplitLine)
         addSubview(tailSplitLine)
-        addSubview(thumbTrackView)
+        addSubview(thumbView)
         addSubview(maximumTrackLabel)
         addSubview(minimumTrackLabel)
-        addSubview(thumbTrackLabel)
+        addSubview(thumbLabel)
         resetTheme()
         resetStyle()
         
@@ -159,7 +159,7 @@ open class AUiSlider: UIControl {
             textLabel.isHidden = true
             headSplitLine.isHidden = true
             tailSplitLine.isHidden = true
-            thumbTrackLabel.isHidden = true
+            thumbLabel.isHidden = true
             minimumTrackLabel.isHidden = true
             maximumTrackLabel.isHidden = true
             
@@ -167,14 +167,14 @@ open class AUiSlider: UIControl {
             maximumTrackLine.frame = CGRect(x: kPadding, y: (aui_height - kLineHeight) / 2, width: lineWidth, height: kLineHeight)
             let percent = currentValue / (maximumValue - minimumValue)
             minimumTrackLine.frame = CGRect(x: maximumTrackLine.aui_left, y: (aui_height - kLineHeight) / 2, width: lineWidth * percent, height: kLineHeight)
-            thumbTrackView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
+            thumbView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
                                                 y: maximumTrackLine.center.y)
             break
         case .titleAndSingleLine:
             textLabel.isHidden = false
             headSplitLine.isHidden = true
             tailSplitLine.isHidden = true
-            thumbTrackLabel.isHidden = true
+            thumbLabel.isHidden = true
             minimumTrackLabel.isHidden = true
             maximumTrackLabel.isHidden = true
             
@@ -183,32 +183,32 @@ open class AUiSlider: UIControl {
             maximumTrackLine.frame = CGRect(x: textLabel.aui_width + kPadding * 2, y: (aui_height - kLineHeight) / 2, width: lineWidth, height: kLineHeight)
             let percent = currentValue / (maximumValue - minimumValue)
             minimumTrackLine.frame = CGRect(x: maximumTrackLine.aui_left, y: maximumTrackLine.aui_top, width: lineWidth * percent, height: kLineHeight)
-            thumbTrackView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
+            thumbView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
                                                 y: maximumTrackLine.center.y)
-            textLabel.aui_center = CGPoint(x: kPadding + textLabel.aui_width / 2, y: thumbTrackView.aui_centerY)
+            textLabel.aui_center = CGPoint(x: kPadding + textLabel.aui_width / 2, y: thumbView.aui_centerY)
             break
         case .smallNumberAndSingleLine:
             textLabel.isHidden = true
             headSplitLine.isHidden = false
             tailSplitLine.isHidden = false
-            thumbTrackLabel.isHidden = false
+            thumbLabel.isHidden = false
             minimumTrackLabel.isHidden = false
             maximumTrackLabel.isHidden = false
             
             minimumTrackLabel.sizeToFit()
             maximumTrackLabel.sizeToFit()
-            thumbTrackLabel.sizeToFit()
+            thumbLabel.sizeToFit()
             let contentHeight = kPaddingBetweenThumbViewAndSmallNumber + kThumbViewSize.height + minimumTrackLabel.aui_height
             let topBottomPadding = (aui_height - contentHeight) / 2
             let lineWidth = aui_width - kPadding * 2
             maximumTrackLine.frame = CGRect(x: kPadding, y: topBottomPadding, width: lineWidth, height: kLineHeight)
             let percent = currentValue / (maximumValue - minimumValue)
             minimumTrackLine.frame = CGRect(x: maximumTrackLine.aui_left, y: maximumTrackLine.aui_top, width: lineWidth * percent, height: kLineHeight)
-            thumbTrackView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
+            thumbView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
                                                 y: maximumTrackLine.center.y)
-            minimumTrackLabel.aui_tl = CGPoint(x: maximumTrackLine.aui_left, y: thumbTrackView.aui_bottom + kPaddingBetweenThumbViewAndSmallNumber)
+            minimumTrackLabel.aui_tl = CGPoint(x: maximumTrackLine.aui_left, y: thumbView.aui_bottom + kPaddingBetweenThumbViewAndSmallNumber)
             maximumTrackLabel.aui_tr = CGPoint(x: maximumTrackLine.aui_right, y: minimumTrackLabel.aui_top)
-            thumbTrackLabel.aui_center = CGPoint(x: thumbTrackView.aui_centerX, y: maximumTrackLabel.aui_centerY)
+            thumbLabel.aui_center = CGPoint(x: thumbView.aui_centerX, y: maximumTrackLabel.aui_centerY)
             
             headSplitLine.frame = CGRect(x: maximumTrackLine.aui_left,
                                          y: maximumTrackLine.aui_centerY - (maximumTrackLine.aui_height - kSplitLineSize.height) / 2,
@@ -219,7 +219,7 @@ open class AUiSlider: UIControl {
             textLabel.isHidden = true
             headSplitLine.isHidden = true
             tailSplitLine.isHidden = true
-            thumbTrackLabel.isHidden = true
+            thumbLabel.isHidden = true
             minimumTrackLabel.isHidden = false
             maximumTrackLabel.isHidden = false
             
@@ -231,7 +231,7 @@ open class AUiSlider: UIControl {
             maximumTrackLine.frame = CGRect(x: minimumTrackLabel.aui_right + kPadding, y: (aui_height - kLineHeight) / 2, width: lineWidth, height: kLineHeight)
             let percent = currentValue / (maximumValue - minimumValue)
             minimumTrackLine.frame = CGRect(x: maximumTrackLine.aui_left, y: maximumTrackLine.aui_top, width: lineWidth * percent, height: kLineHeight)
-            thumbTrackView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
+            thumbView.aui_center = CGPoint(x: maximumTrackLine.aui_left + lineWidth * percent,
                                                 y: maximumTrackLine.center.y)
             break
         }
@@ -242,7 +242,7 @@ open class AUiSlider: UIControl {
     
     open override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         let isInside = super.point(inside: point, with: event)
-        if thumbTrackView.frame.insetBy(dx: -10, dy: -10).contains(point) {
+        if thumbView.frame.insetBy(dx: -10, dy: -10).contains(point) {
             return true
         }
         return isInside

@@ -29,10 +29,10 @@ open class AUiRoomConfig: NSObject {
     public var rtcToken007: String = ""     //rtm join用
     
     public var rtcChannelName: String = ""  //rtc使用的频道
-    public var rtcRtcToken006: String = ""  //rtc join使用
-    public var rtcRtmToken006: String = ""  //rtc mcc使用，只能006
+    public var rtcRtcToken: String = ""  //rtc join使用
+    public var rtcRtmToken: String = ""  //rtc mcc使用
     
     public var rtcChorusChannelName: String = ""  //rtc 合唱使用的频道
-    public var rtcChorusRtcToken007: String = ""  //rtc 合唱join使用
+    public var rtcChorusRtcToken: String = ""  //rtc 合唱join使用
 }
 

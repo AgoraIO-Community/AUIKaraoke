@@ -30,16 +30,16 @@ open class AUiTableViewCellTheme: NSObject {
     public var detailFont: ThemeFontPicker = "TableViewCell.detailFont"     //详情字体
     public var detailColor: ThemeColorPicker = "CommonColor.grey"     //详情字体颜色
     
-    public var highlightColor: ThemeColorPicker = "CommonColor.danger"   //必填项星号
+    public var highlightColor: ThemeColorPicker = "CommonColor.danger"   //必填项星号颜色
     
     public var badgeFont: ThemeFontPicker = "TableViewCell.badgeFont"       //角标字体
-    public var badgeColor: ThemeColorPicker = "CommonColor.normalTextColor"     //角标字体颜色
+    public var badgeColor: ThemeColorPicker = "CommonColor.normalTextColor"     //角标文字颜色
     public var badgeBackgroundColor: ThemeColorPicker = "CommonColor.danger"    //角标背景色
     
-    public var switchTintColor: ThemeColorPicker = "CommonColor.primary"
-    public var switchThumbColor: ThemeColorPicker = "CommonColor.normalTextColor"
+    public var switchTintColor: ThemeColorPicker = "CommonColor.primary"           //开关背景色
+    public var switchThumbColor: ThemeColorPicker = "CommonColor.normalTextColor"  //开关滑块颜色
     
-    public var arrow: ThemeImagePicker = "TableViewCell.arrow"    //箭头
+    public var arrow: ThemeImagePicker = "TableViewCell.arrow"    //箭头图标
 }
 
 //@objc
