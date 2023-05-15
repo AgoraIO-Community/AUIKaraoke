@@ -23,6 +23,13 @@
   * [AUiActionSheet](#auiactionsheet)
     * [Main container configuration](#main- container-configuration)
     * [List Item Configuration](#list-item-configuration)
+  * [AUiAlertView](#auialertview)
+  * [AUiButton](#auibutton)
+  * [AUiSlider](#auislider)
+  * [AUiTableViewCell](#auitableviewcell)
+  * [AUiTabs](#auitabs)
+  * [AUiTextField](#auitextfield)
+  * [AUiToast](#auitoast)
   
   
   <!-- TOC END -->
@@ -251,20 +258,145 @@ AUiKit
 | selectedBorderRadius | Selected border radius |
 
 
-### Alert
+### AUiAlertView
+| Attribute                 | Describe       |
+| ------------------- | ---------- |
+| background(color: UIColor?) | Background color |
+| isShowCloseButton(isShow: Bool) | Show close button or not |
+| title(title: String?) | Main title content |
+| titleColor(color: UIColor?) | Main title text color |
+| titleFont(font: UIFont?) | Main title font |
+| content(content: String?) | Content |
+| contentTextAligment(textAlignment: NSTextAlignment) | Message alignment |
+| contentColor(color: UIColor?) | Message text color |
+| contentFont(font: UIFont?) | Message text font |
+| textField(text: String?) | Set the content |
+| textField(color: UIColor?) | Set the text color |
+| textField(font: UIFont?) | Set the text font |
+| textField(cornerRadius: CGFloat) | Set the corner radius |
+| textField(showBottomDivider: Bool) | Set whether the bottom division is displayed |
+| textField(bottomDividerColor: UIColor?)  | Set the bottom division color |
+| textFieldBackground(color: UIColor?)  | Set text field background color |
+| textFieldPlaceholder(placeholder: String?)  | Set the placeholder content |
+| textFieldPlaceholder(color: UIColor?)   | Set the placeholder text color |
+| textFieldPlaceholder(font: UIFont?)  | Set the placeholder font size |
+| leftButton(title: String?)  | Left button text content |
+| leftButton(color: UIColor?)  | Left button text color |
+| leftButton(font: UIFont?)  | Left button text font size |
+| leftButton(cornerRadius: CGFloat)  | Left button fillet size |
+| leftButtonBackground(color: UIColor?)  | Left button background color |
+| leftButtonBorder(color: UIColor?)   | Left button border color |
+| leftButtonBorder(width: CGFloat)   | Left button border width |
+| leftButtonTapClosure(onTap: @escaping () -> Void)   | Callback when the left button is clicked |
+| rightButton(title: String?)   | Right button text content |
+| rightButton(color: UIColor?)   | Right button text color |
+| rightButton(font: UIFont?)   | Right button text font size |
+| rightButton(cornerRadius: CGFloat)   | Right button fillet size  |
+| rightButtonBackground(color: UIColor?)   | Right button background color  |
+| rightButtonBorder(color: UIColor?)   | Right button border color  |
+| rightButtonBorder(width: CGFloat)   | Right button border width  |
+| rightButtonTapClosure(onTap: @escaping (String?) -> Void)   | Callback when the right button is clicked (with text field content) |
+| rightButtonTapClosure(onTap: @escaping () -> Void)   | Callback when the right button is clicked (without text field content) |
+
+### AUiButton
+| API              | Describe             |
+| ---------------- | ---------------- |
+| backgroundColor | Background color |
+| icon    | Button icon |
+| selectedIcon | Select icon |
+| iconWidth | Button icon width |
+| iconHeight | Button icon height |
+| buttonWitdth | Button width |
+| buttonHeight | Button height |
+| titleFont | Button text font  |
+| titleColor | Button Text Color |
+| selectedTitleColor | Select Text Color |
+| cornerRadius | The  corner radius of the button|
+| textAlpha | Transparency of button text |
 
 
-### Button
+### AUiSlider
+| API              | Describe             |
+| ---------------- | ---------------- |
+| backgroundColor    | Background color |
+| minimumTrackColor | Color of the left part of the thumb |
+| maximumTrackColor | Color of the right part of the thumb |
+| thumbColor | Thumb color |
+| thumbBorderColor | Thumb border color |
+| trackBigLabelFont | Font for numerical description (when text description is centered to the left and right) |
+| trackSmallLabelFont | Font for numerical description (when text description is at the bottom) |
+| trackLabelColor | Text color for numerical descriptions |
+| titleLabelFont | Title Font |
+| titleLabelColor | Title Color |
+
+### AUiTableViewCell
+
+| API              | Describe             |
+| ---------------- | ---------------- |
+| titleFont    | Font size of the main title |
+| titleColor    | Font color of the main title |
+| subTitleFont    | Font size of subtitles |
+| subTitleColor    | Font color of subtitles |
+| detailFont    | Font size for details |
+| detailColor    | Font color for details |
+| highlightColor    | The color of the asterisk |
+| badgeFont    | Font size of badge |
+| badgeColor    | Font color of badge |
+| badgeBackgroundColor    | Background color of badge|
+| switchTintColor    | Background color of the switch |
+| switchThumbColor    | Color of thumb |
+| arrow    | Arrow icon |
+
+### AUiTabs
+
+| API              | Describe             |
+| ---------------- | ---------------- |
+| titleFont    | Font size of label text |
+| indicatorColor    | Select the color of the label indicator |
+| titleMargin    | Spacing of labels |
+| titlePendingHorizontal    | Horizontal spacing |
+| titlePendingVertical    | Vertical spacing |
+| minimumWidth    | Minimum width of label |
+| normalTitleColor    | Text color when label is not selected |
+| normalBorderColor    | Border color when label is not selected |
+| selectedTitleColor    | Text color when label is selected |
+| selectedBorderColor    | Border color when label is selected |
+| indicatorWidth    | Indicates the width of the bar when selecting a label |
+
+### AUiTextField
+| API              | Describe             |
+| ---------------- | ---------------- |
+| backgroundColor    | Background color |
+| leftIconImage    | Image on the left side of the text field |
+| rightIconImage    | Image when the right part of the text field is not selected |
+| rightSelectedIconImage    | Image when the right part of the input box is selected |
+| placeHolder    | The content of the placeholder |
+| placeHolderColor    | Color of placeholders|
+| placeHolderFont    | Font size of placeholders |
+| text    | Input Content |
+| textColor    | Input text color |
+| textFont    | Input text font size |
+| keyBoardType    | KeyBoard type |
+| isSecureTextEntry    | Is it a password input box |
+| clearButtonMode    | Clear button |
+| textAlignment    | Style for text alignment |
+| returnKeyType    | Type of keyboard return |
+| cornerRadius    | Size of corner radius |
+| topText    | The content of the top text |
+| topTextFont    | Font size of top text |
+| topTextColor    | Font color of top text |
+| bottomText    | Text content at the bottom |
+| bottomTextFont    | Text font size at the bottom |
+| bottomTextColor    | Text color at the bottom |
+| dividerColor    | The color of the bottom divider line |
 
 
-### Segmented
+### AUiToast
 
-### Slider
-
-### TableView
-
-### Tabs
-
-### TextField
-
-### Toast
+| API              | Describe             |
+| ---------------- | ---------------- |
+| text    | Text content |
+| textColor    | Text color |
+| font    | Font size |
+| tagImage    | icon |
+| postion | Display Location |

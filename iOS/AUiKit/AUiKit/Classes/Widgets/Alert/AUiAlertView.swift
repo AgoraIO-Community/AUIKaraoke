@@ -181,8 +181,8 @@ open class AUiAlertView: UIView {
         textFieldLineView.isHidden = !showBottomDivider
         return self
     }
-    public func textField(bottmeDividerColor: UIColor?) -> AUiAlertView {
-        textFieldLineView.backgroundColor = bottmeDividerColor
+    public func textField(bottomDividerColor: UIColor?) -> AUiAlertView {
+        textFieldLineView.backgroundColor = bottomDividerColor
         return self
     }
     public func textFieldBackground(color: UIColor?) -> AUiAlertView {
