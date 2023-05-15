@@ -8,10 +8,27 @@ import java.util.List;
 import java.util.Map;
 
 public class AUiRoomContext {
+    private static AUiRoomContext instance = null;
+    private AUiRoomContext() {
+        // 私有构造函数
+    }
+    public static synchronized AUiRoomContext shared() {
+        if (instance == null) {
+            instance = new AUiRoomContext();
+        }
+        return instance;
+    }
 
     public @NonNull AUiUserThumbnailInfo currentUserInfo = new AUiUserThumbnailInfo();
-    public @NonNull AUiCommonConfig roomConfig = new AUiCommonConfig();
+    public @NonNull AUiCommonConfig commonConfig = new AUiCommonConfig();
     private final Map<String, AUiRoomInfo> roomInfoMap = new HashMap<>();
+
+    public void setCommonConfig(@NonNull AUiCommonConfig config) {
+        commonConfig = config;
+        currentUserInfo.userId = config.userId;
+        currentUserInfo.userName = config.userName;
+        currentUserInfo.userAvatar = config.userAvatar;
+    }
 
     public boolean isRoomOwner(String channelName){
         AUiRoomInfo roomInfo = roomInfoMap.get(channelName);

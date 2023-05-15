@@ -159,7 +159,7 @@ class KaraokeRoomService(
             roomConfig.rtcRtcToken006,
             roomConfig.rtcChannelName,
             null,
-            mRoomContext.roomConfig.userId.toInt()
+            mRoomContext.commonConfig.userId.toInt()
         )
 
         if (ret == Constants.ERR_OK) {

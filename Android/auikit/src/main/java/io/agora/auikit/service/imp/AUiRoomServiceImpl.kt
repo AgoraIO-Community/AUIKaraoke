@@ -1,5 +1,6 @@
 package io.agora.auikit.service.imp
 
+import io.agora.auikit.model.AUiCommonConfig
 import io.agora.auikit.model.AUiCreateRoomInfo
 import io.agora.auikit.model.AUiRoomContext
 import io.agora.auikit.model.AUiRoomInfo
@@ -30,17 +31,20 @@ import retrofit2.Response
 
 private const val kRoomAttrKey = "room"
 class AUiRoomManagerImpl(
-    private val roomContext: AUiRoomContext,
+    private val commonConfig: AUiCommonConfig,
     private val rtmClient: RtmClient? = null
 ) : IAUiRoomManager, AUiRtmMsgProxyDelegate {
 
+    private val roomContext by lazy { AUiRoomContext.shared() }
+
     public val rtmManager by lazy {
+
         val rtm = rtmClient ?: AgoraEngineCreator.createRtmClient(
-            roomContext.roomConfig.context,
-            roomContext.roomConfig.appId,
-            roomContext.roomConfig.userId
+            commonConfig.context,
+            commonConfig.appId,
+            commonConfig.userId
         )
-        AUiRtmManager(roomContext.roomConfig.context, rtm)
+        AUiRtmManager(commonConfig.context, rtm)
     }
 
     private val TAG = "AUiRoomManagerImpl"
@@ -51,6 +55,10 @@ class AUiRoomManagerImpl(
 
     protected fun finalize() {
         rtmManager.logout()
+    }
+
+    init {
+        AUiRoomContext.shared().commonConfig = commonConfig
     }
 
     override fun bindRespDelegate(delegate: IAUiRoomManager.AUiRoomRespDelegate?) {

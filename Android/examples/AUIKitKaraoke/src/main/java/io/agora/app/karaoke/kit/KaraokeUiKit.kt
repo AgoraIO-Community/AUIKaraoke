@@ -35,7 +35,6 @@ object KaraokeUiKit {
         RuntimeException("The KaraokeServiceManager has been initialized!")
 
     private var mRoomManager: AUiRoomManagerImpl? = null
-    private var mRoomContext: AUiRoomContext? = null
 
     private var shouldReleaseRtc = true
     private var mRtmClient: RtmClient? = null
@@ -58,14 +57,9 @@ object KaraokeUiKit {
             throw initedException
         }
         HttpManager.setBaseURL(BuildConfig.SERVER_HOST)
-        val roomContext = AUiRoomContext()
-        roomContext.roomConfig = config
-        roomContext.currentUserInfo.userId = config.userId
-        roomContext.currentUserInfo.userName = config.userName
-        roomContext.currentUserInfo.userAvatar = config.userAvatar
-        mRoomContext = roomContext
+        AUiRoomContext.shared().commonConfig = config
 
-        mRoomManager = AUiRoomManagerImpl(roomContext, rtmClient)
+        mRoomManager = AUiRoomManagerImpl(config, rtmClient)
 
         if (rtcEngineEx != null) { // 用户塞进来的engine由用户自己管理生命周期
             mRtcEngineEx = rtcEngineEx
@@ -74,7 +68,7 @@ object KaraokeUiKit {
         if (ktvApi != null) {
             mKTVApi = ktvApi
         }
-        AUiLogger.initLogger(AUiLogger.Config(roomContext.roomConfig.context, "Karaoke"))
+        AUiLogger.initLogger(AUiLogger.Config(AUiRoomContext.shared().commonConfig.context, "Karaoke"))
     }
 
     /**
@@ -84,7 +78,6 @@ object KaraokeUiKit {
         if (shouldReleaseRtc) {
             RtcEngine.destroy()
         }
-        mRoomContext = null
         mRtcEngineEx = null
         mRtmClient = null
         mRoomManager = null
@@ -141,11 +134,9 @@ object KaraokeUiKit {
         eventHandler: RoomEventHandler? = null,
     ) {
         generateTokenWithConfig(config) {
-            val roomContext = mRoomContext ?: throw notInitException
-
             mRtcEngineEx = mRtcEngineEx ?: AgoraEngineCreator.createRtcEngine(
-                roomContext.roomConfig.context,
-                roomContext.roomConfig.appId
+                AUiRoomContext.shared().commonConfig.context,
+                AUiRoomContext.shared().commonConfig.appId
             )
             mKTVApi = mKTVApi ?: AgoraEngineCreator.createKTVApi()
 
@@ -163,11 +154,11 @@ object KaraokeUiKit {
                     // init ktv api
                     ktvApi.initialize(
                         KTVApiConfig(
-                            roomContext.roomConfig.appId,
+                            AUiRoomContext.shared().commonConfig.appId,
                             config.rtcRtmToken006,
                             rtcEngine,
                             config.rtcChannelName,
-                            roomContext.roomConfig.userId.toInt(),
+                            AUiRoomContext.shared().commonConfig.userId.toInt(),
                             config.rtcChorusChannelName,
                             config.rtcChorusRtcToken007
                         )
@@ -176,22 +167,22 @@ object KaraokeUiKit {
 
                     // create room service
                     val roomService = KaraokeRoomService(
-                        roomContext,
+                        AUiRoomContext.shared(),
                         rtcEngine,
                         config,
                         roomInfo,
                         roomManager,
-                        AUiUserServiceImpl(roomContext, channelName, rtmManager),
-                        AUiMicSeatServiceImpl(roomContext, channelName, rtmManager),
-                        AUiJukeboxServiceImpl(roomContext, channelName, rtmManager, ktvApi),
-                        AUiMusicPlayerServiceImpl(roomContext, rtcEngine, channelName, ktvApi),
-                        AUiChorusServiceImpl(roomContext, channelName, rtmManager, ktvApi),
+                        AUiUserServiceImpl(AUiRoomContext.shared(), channelName, rtmManager),
+                        AUiMicSeatServiceImpl(AUiRoomContext.shared(), channelName, rtmManager),
+                        AUiJukeboxServiceImpl(AUiRoomContext.shared(), channelName, rtmManager, ktvApi),
+                        AUiMusicPlayerServiceImpl(AUiRoomContext.shared(), rtcEngine, channelName, ktvApi),
+                        AUiChorusServiceImpl(AUiRoomContext.shared(), channelName, rtmManager, ktvApi),
                         ktvApi
                     )
 
                     // launch room activity
                     KaraokeRoomActivity.launch(
-                        roomContext.roomConfig.context,
+                        AUiRoomContext.shared().commonConfig.context,
                         config.themeId,
                         roomService,
                         onRoomCreated = {
@@ -223,7 +214,7 @@ object KaraokeUiKit {
             }
         }
 
-        val userId = mRoomContext?.currentUserInfo?.userId ?: ""
+        val userId = AUiRoomContext.shared().currentUserInfo.userId
         HttpManager
             .getService(ApplicationInterface::class.java)
             .tokenGenerate(TokenGenerateReq(config.channelName, userId))
@@ -233,7 +224,7 @@ object KaraokeUiKit {
                     if (rspObj != null) {
                         config.rtcToken007 = rspObj.rtcToken
                         config.rtmToken007 = rspObj.rtmToken
-                        mRoomContext?.roomConfig?.appId = rspObj.appId
+                        AUiRoomContext.shared()?.commonConfig?.appId = rspObj.appId
                     }
                     trySuccess.invoke()
                 }
