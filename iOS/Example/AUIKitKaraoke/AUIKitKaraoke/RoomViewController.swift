@@ -37,6 +37,7 @@ class RoomViewController: UIViewController {
                 .rightButton(title: "确定")
                 .rightButtonTapClosure {
                     guard let self = self else {return}
+                    self.karaokeView?.onBackAction()
                     self.navigationController?.popViewController(animated: true)
                     aui_info("rightButtonTapClosure", tag: "RoomViewController")
                 }.leftButtonTapClosure {
@@ -70,7 +71,6 @@ class RoomViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.karaokeView?.onBackAction()
         KaraokeUIKit.shared.destoryRoom(roomId: roomInfo?.roomId ?? "")
         KaraokeUIKit.shared.unsubscribeError(roomId: roomInfo?.roomId ?? "", delegate: self)
         KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
@@ -159,6 +159,7 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
             .rightButton(title: "确认")
             .rightButtonTapClosure(onTap: {[weak self] text in
                 guard let self = self else { return }
+                self.karaokeView?.onBackAction()
                 self.navigationController?.popViewController(animated: true)
             })
             .show(fromVC: self)
