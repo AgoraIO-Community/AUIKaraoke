@@ -23,29 +23,30 @@
     * [主容器配置](#主容器配置) 
     * [列表Item配置](#列表Item配置)
   
+
   <!-- TOC END -->
 
 # AUiKit基础组件
 ```
 AUiKit  
 ├─ Service                              // 基础服务组件
-│  ├─ AUiMicSeatServiceDelegate         // 麦位管理协议
-│  ├─ AUiMicSeatRespDelegate            // 麦位管理回调
+│  ├─ AUiMicSeatServiceDelegate         // 麦位管理请求协议
+│  ├─ AUiMicSeatRespDelegate            // 麦位管理响应协议
 │  ├─ AUiMicSeatServiceImpl             // 麦位管理实现类         
-│  ├─ AUiUserServiceDelegate            // 用户管理协议       
-│  ├─ AUiUserRespDelegate               // 用户管理回调
+│  ├─ AUiUserServiceDelegate            // 用户管理请求协议       
+│  ├─ AUiUserRespDelegate               // 用户管理响应协议
 │  ├─ AUiUserServiceImpl                // 用户管理实现类
-│  ├─ AUiChorusServiceDelegate          // 合唱管理协议
-│  ├─ AUiChorusRespDelegate             // 合唱管理回调
+│  ├─ AUiChorusServiceDelegate          // 合唱管理请求协议
+│  ├─ AUiChorusRespDelegate             // 合唱管理响应协议
 │  ├─ AUiChorusServiceImpl              // 合唱管理实现类
-│  ├─ AUiMusicServiceDelegate           // 音乐管理协议
-│  ├─ AUiMusicRespDelegate              // 音乐管理回调
+│  ├─ AUiMusicServiceDelegate           // 音乐管理请求协议
+│  ├─ AUiMusicRespDelegate              // 音乐管理响应协议
 │  ├─ AUiMusicServiceImpl               // 音乐管理实现类
-│  ├─ AUiPlayerServiceDelegate          // k歌播放管理协议
-│  ├─ AUiPlayerRespDelegate             // k歌播放管理回调
+│  ├─ AUiPlayerServiceDelegate          // k歌播放管理请求协议
+│  ├─ AUiPlayerRespDelegate             // k歌播放管理响应协议
 │  ├─ AUiPlayerServiceImpl              // K歌播放管理实现类
-│  ├─ AUiRoomManagerDelegate            // 房间管理协议
-│  ├─ AUiRoomManagerRespDelegate        // 房间管理回调
+│  ├─ AUiRoomManagerDelegate            // 房间管理请求协议
+│  ├─ AUiRoomManagerRespDelegate        // 房间管理响应协议
 │  └─ AUiRoomManagerImpl                // 房间管理实现类
 │
 ├─ Widget                               // 无业务的基础UI组件
@@ -73,15 +74,13 @@ AUiKit
 ```
 # API参考
 ## Service
-Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而成的组件
 
 ### AUiMicSeatServiceDelegate 
-#### 麦位管理协议
 
 | API                | 描述                              |
 | ------------------ | --------------------------------- |
-| bindRespDelegate   | 绑定回调                      |
-| unbindRespDelegate | 解除绑定回调                  |
+| bindRespDelegate   | 绑定响应回调                      |
+| unbindRespDelegate | 解除绑定响应回调                  |
 | enterSeat          | 主动上麦（听众端和房主均可调用）  |
 | leaveSeat          | 主动下麦（主播调用）              |
 | pickSeat           | 抱人上麦（房主调用）              |
@@ -91,7 +90,6 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | closeSeat          | 封禁/解禁某个麦位（房主调用）     |
 
 ### AUiMicSeatRespDelegate
-#### 麦位管理回调
 
 | API               | 描述                                |
 | ----------------- | ----------------------------------- |
@@ -102,17 +100,17 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | onSeatClose       | 房主对麦位进行了封麦/解封           |
 
 ### AUiUserServiceDelegate
-#### 用户管理协议
+
 | API                | 描述                       |
 | ------------------ | -------------------------- |
-| bindRespDelegate   | 绑定回调               |
-| unbindRespDelegate | 解除绑定回调           |
+| bindRespDelegate   | 绑定响应回调               |
+| unbindRespDelegate | 解除绑定响应回调           |
 | getUserInfoList    | 获取用户列表信息           |
 | muteUserAudio      | 对自己静音/解除静音        |
 | muteUserVideo      | 对自己禁用/解禁摄像头  |
 
 ### AUiUserRespDelegate
-#### 用户管理回调
+
 | API                | 描述                               |
 | ------------------ | ---------------------------------- |
 | onRoomUserSnapshot | 用户进入房间后获取到的所有用户信息 |
@@ -123,28 +121,28 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | onUserVideoMute    | 用户关闭/开启了摄像头时的回调            |
 
 ### AUiChorusServiceDelegate
-#### 合唱管理协议
+
 | API                | 描述             |
 | ------------------ | ---------------- |
-| bindRespDelegate   | 绑定回调     |
-| unbindRespDelegate | 解除绑定回调 |
+| bindRespDelegate   | 绑定响应回调     |
+| unbindRespDelegate | 解除绑定响应回调 |
 | getChoristersList  | 获取合唱者列表   |
 | joinChorus         | 加入合唱         |
 | leaveChorus        | 退出合唱         |
 
 ### AUiChorusRespDelegate
-#### 合唱管理回调
+
 | API                 | 描述       |
 | ------------------- | ---------- |
 | onChoristerDidEnter | 合唱者加入 |
 | onChoristerDidLeave | 合唱者离开 |
 
 ### AUiMusicServiceDelegate
-#### 音乐管理协议
+
 | API                  | 描述               |
 | -------------------- | ------------------ |
-| bindRespDelegate     | 绑定回调       |
-| unbindRespDelegate   | 解除绑定回调   |
+| bindRespDelegate     | 绑定响应回调       |
+| unbindRespDelegate   | 解除绑定响应回调   |
 | getMusicList         | 获取歌曲列表       |
 | searchMusic          | 搜索歌曲           |
 | getAllChooseSongList | 获取当前点歌列表   |
@@ -154,7 +152,7 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | updatePlayStatus     | 更新歌曲播放状态   |
 
 ### AUiMusicRespDelegate
-#### 音乐管理回调
+
 | API                    | 描述                                    |
 | ---------------------- | --------------------------------------- |
 | onAddChooseSong        | 新增一首歌曲时的回调                        |
@@ -163,11 +161,11 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | onUpdateAllChooseSongs | 更新所有歌曲时的回调（例如pin）             |
 
 ### AUiPlayerServiceDelegate
-#### k歌播放管理协议
+
 | API                            | 描述                               |
 | ------------------------------ | ---------------------------------- |
-| bindRespDelegate               | 绑定回调                       |
-| unbindRespDelegate             | 解除绑定回调                   |
+| bindRespDelegate               | 绑定响应回调                       |
+| unbindRespDelegate             | 解除绑定响应回调                   |
 | loadMusic                      | 加载歌曲                           |
 | switchSingerRole               | 切换角色                           |
 | startSing                      | 播放歌曲                           |
@@ -188,7 +186,7 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | enableEarMonitoring            | 耳返                               |
 
 ### AUiPlayerRespDelegate
-#### k歌播放管理回调
+
 | API                       | 描述             |
 | ------------------------- | ---------------- |
 | onPreludeDidAppear        | 前奏开始加载     |
@@ -199,11 +197,11 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | onPlayerStateChanged      | 播放状态变化回调 |
 
 ### AUiRoomManagerDelegate
-#### 房间管理协议
+
 | API                | 描述                 |
 | ------------------ | -------------------- |
-| bindRespDelegate   | 绑定回调         |
-| unbindRespDelegate | 解除绑定回调     |
+| bindRespDelegate   | 绑定响应回调         |
+| unbindRespDelegate | 解除绑定响应回调     |
 | createRoom         | 创建房间（房主调用） |
 | destroyRoom        | 销毁房间（房主调用） |
 | enterRoom          | 进入房间（听众调用） |
@@ -211,7 +209,7 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 | getRoomInfoList    | 获取房间列表         |
 
 ### AUiRoomManagerRespDelegate
-#### 房间管理回调
+
 | API              | 描述             |
 | ---------------- | ---------------- |
 | onRoomDestroy    | 房间被销毁的回调 |
@@ -252,7 +250,6 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 
 ### Alert
 
-
 ### Button
 
 
@@ -266,4 +263,3 @@ Service是基于声网的实时音视频(RTC)和即时通信服务(RTM)组合而
 
 ### TextField
 
-### Toast

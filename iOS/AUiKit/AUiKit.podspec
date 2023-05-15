@@ -30,7 +30,14 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '13.0'
   s.xcconfig = {'ENABLE_BITCODE' => 'NO'}
-
+  
+  s.subspec 'AUIKitChat' do scene
+  scene.source_files = ['AUiKit/Classes/Components/IM/**/*','AUiKit/Classes/Service/**/*','AUiKit/Classes/Model/*']
+  scene.resource_bundles = {}
+  scene.dependency 'AgoraChat_iOS'
+  scene.swift_version = '5.0'
+  end
+  
   s.source_files = 'AUiKit/Classes/**/*'
   s.static_framework = true
   

@@ -21,7 +21,7 @@
   * [AUiRoomManagerRespDelegate](#auiroommanagerrespdelegate)
 - [Widget](#widget)
   * [AUiActionSheet](#auiactionsheet)
-    * [Main container configuration](#main- container-configuration)
+    * [Main container configuration](#main- container-configuration) 
     * [List Item Configuration](#list-item-configuration)
   
   
@@ -31,24 +31,24 @@
 ```
 AUiKit  
 ├─ Service                              // Basic service components
-│  ├─ AUiMicSeatServiceDelegate         // MicSeat management protocol
+│  ├─ AUiMicSeatServiceDelegate         // MicSeat management request protocol
 │  ├─ AUiMicSeatRespDelegate            // MicSeat management response protocol
-│  ├─ AUiMicSeatServiceImpl             // MicSeat management implementation
-│  ├─ AUiUserServiceDelegate            // User management protocol      
+│  ├─ AUiMicSeatServiceImpl             // MicSeat management implementation class
+│  ├─ AUiUserServiceDelegate            // User management request protocol      
 │  ├─ AUiUserRespDelegate               // User management response protocol
-│  ├─ AUiUserServiceImpl                // User management implementation
-│  ├─ AUiChorusServiceDelegate          // Chorus management protocol 
+│  ├─ AUiUserServiceImpl                // User management implementation class
+│  ├─ AUiChorusServiceDelegate          // Chorus management request protocol 
 │  ├─ AUiChorusRespDelegate             // Chorus management response protocol 
-│  ├─ AUiChorusServiceImpl              // Chorus management implementation
-│  ├─ AUiMusicServiceDelegate           // Music management protocol      
+│  ├─ AUiChorusServiceImpl              // Chorus management implementation class
+│  ├─ AUiMusicServiceDelegate           // Music management request protocol      
 │  ├─ AUiMusicRespDelegate              // User management response protocol      
-│  ├─ AUiMusicServiceImpl               // User management implementation
-│  ├─ AUiPlayerServiceDelegate          // Karaoke music player protocol      
+│  ├─ AUiMusicServiceImpl               // User management implementation class
+│  ├─ AUiPlayerServiceDelegate          // Karaoke music player request protocol      
 │  ├─ AUiPlayerRespDelegate             // Karaoke music player response protocol      
-│  ├─ AUiPlayerServiceImpl              // Karaoke music player implementation
-│  ├─ AUiRoomManagerDelegate            // Room management protocol 
+│  ├─ AUiPlayerServiceImpl              // Karaoke music player implementation class
+│  ├─ AUiRoomManagerDelegate            // Room management request protocol 
 │  ├─ AUiRoomManagerRespDelegate        // Room management response protocol 
-│  └─ AUiRoomManagerImpl                // Room management implementation
+│  └─ AUiRoomManagerImpl                // Room management implementation class
 │
 ├─ Widget                               // Basic UI components without business
 │  ├─ AUiActionSheet                    // Action sheet
@@ -78,7 +78,7 @@ AUiKit
 ## Service
 
 ### AUiMicSeatServiceDelegate 
-#### MicSeat management protocol
+
 | API                | Describe                              |
 | ------------------ | --------------------------------- |
 | bindRespDelegate   | Bind response delegate           |
@@ -92,7 +92,7 @@ AUiKit
 | closeSeat          | Disable/enable a seat（Invoked by owner）     |
 
 ### AUiMicSeatRespDelegate
-#### MicSeat management response protocol
+
 | API               | Describe                                |
 | ----------------- | ----------------------------------- |
 | onAnchorEnterSeat | Member did enter seat |
@@ -102,7 +102,7 @@ AUiKit
 | onSeatClose       | The micSeat has been disabled/enable        |
 
 ### AUiUserServiceDelegate
-#### User management protocol 
+
 | API                | Describe                       |
 | ------------------ | -------------------------- |
 | bindRespDelegate   | Bind response delegate      |
@@ -112,7 +112,7 @@ AUiKit
 | muteUserVideo      | Disable/enable the camera for oneself  |
 
 ### AUiUserRespDelegate
-#### User management response protocol
+
 | API                | Describe                               |
 | ------------------ | ---------------------------------- |
 | onRoomUserSnapshot | All user information obtained after the user enters the room |
@@ -123,7 +123,7 @@ AUiKit
 | onUserVideoMute    | Callback when the user turns off/on the camera |
 
 ### AUiChorusServiceDelegate
-#### Chorus management protocol
+
 | API                | Describe             |
 | ------------------ | ---------------- |
 | bindRespDelegate   | Bind response delegate |
@@ -133,14 +133,14 @@ AUiKit
 | leaveChorus        | leave chorus         |
 
 ### AUiChorusRespDelegate
-#### Chorus management response protocol 
+
 | API                 | Describe       |
 | ------------------- | ---------- |
 | onChoristerDidEnter | chorus singer did enter |
 | onChoristerDidLeave | chorus singer did leave |
 
 ### AUiMusicServiceDelegate
-#### Music management protocol
+
 | API                  | Describe               |
 | -------------------- | ------------------ |
 | bindRespDelegate     | Bind Response Delegate  |
@@ -154,7 +154,7 @@ AUiKit
 | updatePlayStatus     | Update song playback status    |
 
 ### AUiMusicRespDelegate
-#### Music management response protocol
+
 | API                    | Describe                                    |
 | ---------------------- | --------------------------------------- |
 | onAddChooseSong        | Callback when adding a song     |
@@ -163,7 +163,6 @@ AUiKit
 | onUpdateAllChooseSongs | Callback when updating all songs（For example, pin song）             |
 
 ### AUiPlayerServiceDelegate
-#### Karaoke music player protocol 
 
 | API                            | Describe                               |
 | ------------------------------ | ---------------------------------- |
@@ -189,7 +188,7 @@ AUiKit
 | enableEarMonitoring            | Enables in-ear monitoring        |
 
 ### AUiPlayerRespDelegate
-#### Karaoke music player response protocol
+
 | API                       | Describe             |
 | ------------------------- | ---------------- |
 | onPreludeDidAppear        | Prelude start loading |
@@ -200,7 +199,7 @@ AUiKit
 | onPlayerStateChanged      | Callback when playback status changes   |
 
 ### AUiRoomManagerDelegate
-#### Room management protocol
+
 | API                | Describe                 |
 | ------------------ | -------------------- |
 | bindRespDelegate   | Bind Response Delegate    |
@@ -212,7 +211,7 @@ AUiKit
 | getRoomInfoList    | Get room list         |
 
 ### AUiRoomManagerRespDelegate
-#### Room management response protocol 
+
 | API              | Describe             |
 | ---------------- | ---------------- |
 | onRoomDestroy    | Callback when the room is destroyed  |

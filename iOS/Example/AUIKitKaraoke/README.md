@@ -2,7 +2,7 @@
 
 *English | [中文](README_zh.md)
 
-This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../../AScenesKit/README.md) and [AUiKit](../../../backend/README.md)
+This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../../AScenesKit/README.md) and [AUiKit](../../AUiKit/README.md)
 
 
 ## Directory
@@ -22,11 +22,8 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 ## Requirements
 
 - Xcode 13.0 and later
-
 - Minimum OS version: iOS 13.0
-
 - Please ensure that your project has a valid developer signature set up
-
 
 ## Getting Started
 
@@ -41,23 +38,20 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 ```
 static var HostUrl: String = <#Your HostUrl#>
 ```
-If you do not intend to deploy backend services temporarily, you can use the default domain name in KeyCenter.swift
 
 - Download the [ latest version of the RTC SDK containing RTM 2.0](https://download.agora.io/sdk/release/Agora_Native_SDK_for_iOS_hyf_63842_FULL_20230428_1607_263060.zip), extract it, and then copy the files from libs to [libs](libs)
-
 - Open the terminal and enter the [Podfile](Podfile) directory, run `pod install`
-
 - Finally, open AUIKitKaraoke. xcworkspace and run it to start your experience
-
 
 ## FAQ
 
 - [FAQ](../../doc/KaraokeFAQ.md)
-
 - If you have any other questions, please feedback to the [developer community](https://www.rtcdeveloper.cn/cn/community/discussion/0)
-
 
 ## License
 
 Copyright © Agora Corporation. All rights reserved.
 Licensed under the [MIT license](LICENSE).
+
+
+
