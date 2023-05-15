@@ -287,6 +287,9 @@ open class AUiKaraokeRoomView: UIView {
                           chorusService: service.chorusImpl)
         playerView.addActionHandler(playerViewActionHandler: self)
         
+        service.micSeatImpl.bindRespDelegate(delegate: self)
+        microphoneButton.isHidden = !AUiRoomContext.shared.isRoomOwner(channelName: service.channelName)
+        
         userBinder.bind(userView: membersView,
                         userService: service.userImpl,
                         micSeatService: service.micSeatImpl)
@@ -384,4 +387,31 @@ extension AUiKaraokeRoomView {
     }
 }
 
+extension AUiKaraokeRoomView: AUiMicSeatRespDelegate {
+    public func onAnchorEnterSeat(seatIndex: Int, user: AUiKit.AUiUserThumbnailInfo) {
+        if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
+            microphoneButton.isHidden = false
+        }
+    }
+    
+    public func onAnchorLeaveSeat(seatIndex: Int, user: AUiKit.AUiUserThumbnailInfo) {
+        if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
+            microphoneButton.isHidden = true
+        }
+    }
+    
+    public func onSeatAudioMute(seatIndex: Int, isMute: Bool) {
+        
+    }
+    
+    public func onSeatVideoMute(seatIndex: Int, isMute: Bool) {
+        
+    }
+    
+    public func onSeatClose(seatIndex: Int, isClose: Bool) {
+        
+    }
+    
+    
+}
 
