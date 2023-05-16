@@ -514,9 +514,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         // Check if the mic seat exists
         checkMicSeatNoNotExists("muteAudio", micSeatMap, micSeatAudioMuteReq.getRoomId(),
                 micSeatAudioMuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("muteAudio", micSeatMap, micSeatAudioMuteReq.getRoomId(),
-                micSeatAudioMuteReq.getMicSeatNo());
 
         // Set data
         MicSeatDomain micSeatMapModify = micSeatMap.get(micSeatAudioMuteReq.getMicSeatNo().toString());
@@ -559,9 +556,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         Map<String, MicSeatDomain> micSeatMap = getMicSeatMap(metadataItem);
         // Check if the mic seat exists
         checkMicSeatNoNotExists("muteVideo", micSeatMap, micSeatVideoMuteReq.getRoomId(),
-                micSeatVideoMuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("muteVideo", micSeatMap, micSeatVideoMuteReq.getRoomId(),
                 micSeatVideoMuteReq.getMicSeatNo());
 
         // Set data
@@ -700,9 +694,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         // Check if the mic seat exists
         checkMicSeatNoNotExists("unmuteAudio", micSeatMap, micSeatAudioUnmuteReq.getRoomId(),
                 micSeatAudioUnmuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("unmuteAudio", micSeatMap, micSeatAudioUnmuteReq.getRoomId(),
-                micSeatAudioUnmuteReq.getMicSeatNo());
 
         // Set data
         MicSeatDomain micSeatMapModify = micSeatMap.get(micSeatAudioUnmuteReq.getMicSeatNo().toString());
@@ -746,9 +737,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         Map<String, MicSeatDomain> micSeatMap = getMicSeatMap(metadataItem);
         // Check if the mic seat exists
         checkMicSeatNoNotExists("unmuteVideo", micSeatMap, micSeatVideoUnmuteReq.getRoomId(),
-                micSeatVideoUnmuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("unmuteVideo", micSeatMap, micSeatVideoUnmuteReq.getRoomId(),
                 micSeatVideoUnmuteReq.getMicSeatNo());
 
         // Set data
