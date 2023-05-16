@@ -7,7 +7,9 @@
 
 import UIKit
 import AgoraRtcKit
+import AUiKit
 
+let kMicSeatCount = 8
 public class AUiMicSeatViewBinder: NSObject {
     private var micSeatArray: [AUiMicSeatInfo] = []
     private var userMap: [String: AUiUserInfo] = [:]
@@ -299,11 +301,11 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
 
 //MARK: AUiMicSeatViewDelegate
 extension AUiMicSeatViewBinder: AUiMicSeatViewDelegate {
-    func seatItems(view: AUiMicSeatView) -> [AUiMicSeatCellDataProtocol] {
+    public func seatItems(view: AUiMicSeatView) -> [AUiMicSeatCellDataProtocol] {
         return micSeatArray
     }
     
-    func onItemDidClick(view: AUiMicSeatView, seatIndex: Int) {
+    public func onItemDidClick(view: AUiMicSeatView, seatIndex: Int) {
         let micSeat = micSeatArray[seatIndex]
 
         let dialogItems = getDialogItems(seatInfo: micSeat) {
@@ -324,7 +326,7 @@ extension AUiMicSeatViewBinder: AUiMicSeatViewDelegate {
         AUiCommonDialog.show(contentView: dialogView, theme: AUiCommonDialogTheme())
     }
     
-    func onMuteVideo(view: AUiMicSeatView, seatIndex: Int, canvas: UIView, isMuteVideo: Bool) {
+    public func onMuteVideo(view: AUiMicSeatView, seatIndex: Int, canvas: UIView, isMuteVideo: Bool) {
         aui_info("onMuteVideo  seatIdx: \(seatIndex) mute: \(isMuteVideo)", tag: "AUiMicSeatViewBinder")
         let videoCanvas = AgoraRtcVideoCanvas()
         let micSeat = micSeatArray[seatIndex]

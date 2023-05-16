@@ -7,6 +7,7 @@
 
 import Foundation
 import AgoraRtcKit
+import AUiKit
 
 open class AUiPlayerViewBinder: NSObject {
     
@@ -301,12 +302,12 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
 }
 
 extension AUiPlayerViewBinder: AUiLrcViewDelegate {
-    func onKaraokeView( didDragTo position: Int) {
+    public func onKaraokeView( didDragTo position: Int) {
         //歌词滚动
         playerServiceDelegate?.seekSing(time: position)
     }
     
-    func onKaraokeView(score: Int, totalScore: Int, lineScore: Int, lineIndex: Int) {
+    public func onKaraokeView(score: Int, totalScore: Int, lineScore: Int, lineIndex: Int) {
         //更新分数
         if singerRole == .audience {return}
         let realScore = singerRole == .coSinger ? cosingerDegree + lineScore : score
@@ -533,7 +534,7 @@ extension AUiPlayerViewBinder: IMusicLoadStateListener {
 //加入合唱，离开合唱
 extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
     
-    func didJoinChorus() {
+    public func didJoinChorus() {
         if isOnSeat {
             _joinChorus()
             return
@@ -576,7 +577,7 @@ extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
         
     }
     
-    func didLeaveChorus() {
+    public func didLeaveChorus() {
         guard let currentSong = currentSong else {return}
         playerView?.joinState = .before
         guard let local = getLocalUserId() else {return}
