@@ -233,6 +233,9 @@ public class RoomServiceImpl implements IRoomService {
     public void destroyForNcs(RoomDestroyReq roomDestroyReq) throws Exception {
         log.info("destroyForNcs, start, roomDestroyReq:{}", roomDestroyReq);
 
+        // Remove room list
+        removeRoomList(roomDestroyReq);
+
         // Acquire lock
         acquireLock(roomDestroyReq.getRoomId());
         // Get data
@@ -248,8 +251,6 @@ public class RoomServiceImpl implements IRoomService {
             log.error("destroyForNcs, removeChannelMetadata failed, roomDestroyReq:{}", roomDestroyReq);
             throw new BusinessException(HttpStatus.OK.value(), ReturnCodeEnum.RTM_REMOVE_CHANNEL_METADATA_ERROR);
         }
-        // Remove room list
-        removeRoomList(roomDestroyReq);
         log.info("destroyForNcs, success, roomDestroyReq:{}", roomDestroyReq);
     }
 
