@@ -43,7 +43,5 @@ class AUiInvitationServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getContext() = roomContext
-
     override fun getChannelName() = channelName
 }

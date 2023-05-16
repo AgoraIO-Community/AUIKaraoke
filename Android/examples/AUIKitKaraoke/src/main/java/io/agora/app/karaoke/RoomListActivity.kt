@@ -37,6 +37,7 @@ class RoomListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initView()
         initService()
+        fetchRoomList()
     }
 
     private fun initService() {
@@ -47,14 +48,12 @@ class RoomListActivity : AppCompatActivity() {
         config.userName = "user_$mUserId"
         config.userAvatar = randomAvatar()
         // init AUiKit
-        KaraokeUiKit.init(
+        KaraokeUiKit.setup(
             config = config, // must
-            rtmClient = null, // option
+            ktvApi = null,// option
             rtcEngineEx = null, // option
-            ktvApi = null // option
+            rtmClient = null // option
         )
-
-        fetchRoomList()
     }
 
     private fun initView() {

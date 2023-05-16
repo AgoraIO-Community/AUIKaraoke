@@ -12,7 +12,9 @@ import io.agora.auikit.service.IAUiMusicPlayerService
 import io.agora.auikit.service.IAUiRoomManager
 import io.agora.auikit.service.IAUiUserService
 import io.agora.auikit.service.callback.AUiException
+import io.agora.auikit.service.imp.*
 import io.agora.auikit.service.ktv.KTVApi
+import io.agora.auikit.service.rtm.AUiRtmManager
 import io.agora.auikit.utils.AUiLogger.Companion.logger
 import io.agora.auikit.utils.DelegateHelper
 import io.agora.rtc2.ChannelMediaOptions
@@ -21,18 +23,24 @@ import io.agora.rtc2.RtcEngine
 
 
 class KaraokeRoomService(
-    private val mRoomContext: AUiRoomContext,
     private val mRtcEngine: RtcEngine,
+    private val ktvApi: KTVApi,
+    private val roomManager: AUiRoomManagerImpl,
     private val roomConfig: AUiRoomConfig,
-    private val roomInfo: AUiRoomInfo,
-    private val roomManager: IAUiRoomManager,
-    private val userService: IAUiUserService,
-    private val micSeatService: IAUiMicSeatService,
-    private val jukeboxService: IAUiJukeboxService,
-    private val musicPlayerService: IAUiMusicPlayerService,
-    private val chorusService: IAUiChorusService,
-    private val ktvApi: KTVApi
+    private val roomInfo: AUiRoomInfo
 ) : IKaraokeRoomService {
+
+    private val rtmManager: AUiRtmManager = roomManager.rtmManager
+
+    private val userImpl: IAUiUserService = AUiUserServiceImpl(roomInfo.roomId, rtmManager)
+
+    private val micSeatImpl: IAUiMicSeatService = AUiMicSeatServiceImpl(roomInfo.roomId, rtmManager)
+
+    private val jukeboxService: IAUiJukeboxService = AUiJukeboxServiceImpl(AUiRoomContext.shared(), roomInfo.roomId, rtmManager, ktvApi)
+
+    private val playerImpl: IAUiMusicPlayerService = AUiMusicPlayerServiceImpl(AUiRoomContext.shared(), mRtcEngine, roomInfo.roomId, ktvApi)
+
+    private val chorusImpl: IAUiChorusService = AUiChorusServiceImpl(AUiRoomContext.shared(), roomInfo.roomId, rtmManager, ktvApi)
 
     private val mDelegateHelper = DelegateHelper<IKaraokeRoomService.KaraokeRoomRoomRespDelegate>()
 
@@ -43,16 +51,13 @@ class KaraokeRoomService(
     override fun unbindRespDelegate(delegate: IKaraokeRoomService.KaraokeRoomRoomRespDelegate?) {
         mDelegateHelper.unBindDelegate(delegate)
     }
-
-    override fun getContext() = roomManager.context
     override fun getChannelName() = roomInfo.roomId
     override fun getRoomManager() = roomManager
-    override fun getUserService() = userService
-    override fun getMicSeatsService() = micSeatService
+    override fun getUserService() = userImpl
+    override fun getMicSeatsService() = micSeatImpl
     override fun getJukeboxService() = jukeboxService
-    override fun getChorusService() = chorusService
-
-    override fun getMusicPlayerService() = musicPlayerService
+    override fun getChorusService() = chorusImpl
+    override fun getMusicPlayerService() = playerImpl
 
     override fun enterRoom(success: (AUiRoomInfo) -> Unit, failure: (AUiException) -> Unit) {
         logger().d("EnterRoom", "enterRoom $channelName start ...")
@@ -72,7 +77,6 @@ class KaraokeRoomService(
         }
     }
 
-
     override fun exitRoom(fromUser: Boolean) {
         roomManager.exitRoom(channelName) {}
         ktvApi.release()
@@ -81,7 +85,6 @@ class KaraokeRoomService(
         } else {
             mDelegateHelper.notifyDelegate { it.onRoomDestroyed() }
         }
-
         leaveRtcRoom()
     }
 
@@ -95,7 +98,7 @@ class KaraokeRoomService(
     override fun getRoomInfo() = roomInfo
 
     override fun getUserList(callback: (List<AUiUserInfo>) -> Unit) {
-        userService.getUserInfoList(channelName, null) { error, userList ->
+        userImpl.getUserInfoList(channelName, null) { error, userList ->
             if (error != null || userList == null) {
                 logger().e(
                     "KaraokeRoomService",
@@ -154,12 +157,12 @@ class KaraokeRoomService(
             Constants.AUDIO_SCENARIO_GAME_STREAMING
         )
         mRtcEngine.enableAudioVolumeIndication(50, 10, true)
-        mRtcEngine.setClientRole(if (context.isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
+        mRtcEngine.setClientRole(if (roomContext.isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
         val ret: Int = mRtcEngine.joinChannel(
             roomConfig.rtcRtcToken006,
             roomConfig.rtcChannelName,
             null,
-            mRoomContext.commonConfig.userId.toInt()
+            AUiRoomContext.shared().commonConfig.userId.toInt()
         )
 
         if (ret == Constants.ERR_OK) {

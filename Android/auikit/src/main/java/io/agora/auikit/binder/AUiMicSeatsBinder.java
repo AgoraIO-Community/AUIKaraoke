@@ -227,12 +227,12 @@ public class AUiMicSeatsBinder implements
         AUiMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(index);
         dialogView.setUserInfo(seatInfo.user);
         boolean isEmptySeat = (seatInfo.user == null || seatInfo.user.userId.length() == 0);
-        boolean isCurrentUser = seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getContext().currentUserInfo.userId);
-        boolean isRoomOwner = micSeatService.getContext().isRoomOwner(micSeatService.getChannelName());
+        boolean isCurrentUser = seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
+        boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         boolean inSeat = false;
         for (int i = 0; i <= 7; i++) {
             AUiMicSeatInfo info = micSeatService.getMicSeatInfo(i);
-            if (info.user != null && info.user.userId.equals(micSeatService.getContext().currentUserInfo.userId)) {
+            if (info.user != null && info.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId)) {
                 inSeat = true;
                 break;
             }

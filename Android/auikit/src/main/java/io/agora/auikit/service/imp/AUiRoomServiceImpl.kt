@@ -35,8 +35,6 @@ class AUiRoomManagerImpl(
     private val rtmClient: RtmClient? = null
 ) : IAUiRoomManager, AUiRtmMsgProxyDelegate {
 
-    private val roomContext by lazy { AUiRoomContext.shared() }
-
     public val rtmManager by lazy {
 
         val rtm = rtmClient ?: AgoraEngineCreator.createRtmClient(
@@ -87,10 +85,10 @@ class AUiRoomManagerImpl(
                         val info = AUiRoomInfo().apply {
                             this.roomId = rsp.roomId
                             this.roomName = rsp.roomName
-                            this.roomOwner = context.currentUserInfo
+                            this.roomOwner = roomContext.currentUserInfo
                             this.seatCount = micSeatCount
                         }
-                        context.insertRoomInfo(info)
+                        roomContext.insertRoomInfo(info)
                         // success
                         callback?.onResult(null, info)
                     } else {
@@ -164,7 +162,7 @@ class AUiRoomManagerImpl(
                 override fun onResponse(call: Call<CommonResp<RoomListResp>>, response: Response<CommonResp<RoomListResp>>) {
                     val roomList = response.body()?.data?.list
                     if (roomList != null) {
-                        context.resetRoomMap(roomList)
+                        roomContext.resetRoomMap(roomList)
                         callback?.onResult(null, roomList)
                     } else {
                         callback?.onResult(Utils.errorFromResponse(response), null)
@@ -177,7 +175,6 @@ class AUiRoomManagerImpl(
             })
     }
 
-    override fun getContext() = roomContext
     override fun getChannelName() = mChannelName ?: ""
 
     override fun onMsgDidChanged(channelName: String, key: String, value: Any) {

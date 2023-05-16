@@ -79,7 +79,7 @@ public class AUiJukeboxBinder implements IAUiBindable, IAUiJukeboxService.AUiJuk
         // 1. 是房主可以删除歌曲，可以置顶
         // 2. 不是房主只能删除自己的歌曲
         // 3. 第二个歌曲能删除但是不能 切歌/置顶
-        AUiRoomContext context = jukeboxService.getContext();
+        AUiRoomContext context = jukeboxService.getRoomContext();
         boolean isRoomOwner = context.isRoomOwner(jukeboxService.getChannelName());
         itemView.setViewStatus(
                 (position == 0),

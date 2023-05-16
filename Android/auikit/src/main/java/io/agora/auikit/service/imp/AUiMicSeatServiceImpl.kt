@@ -24,7 +24,6 @@ import retrofit2.Response
 
 private const val kSeatAttrKey = "micSeat"
 class AUiMicSeatServiceImpl(
-    private val roomContext: AUiRoomContext,
     private val channelName: String,
     private val rtmManager: AUiRtmManager
 ) : IAUiMicSeatService, AUiRtmMsgProxyDelegate {
@@ -85,7 +84,7 @@ class AUiMicSeatServiceImpl(
 
     override fun leaveSeat(callback: AUiCallback?) {
         HttpManager.getService(SeatInterface::class.java)
-            .seatLeave(SeatLeaveReq(channelName, context.currentUserInfo.userId))
+            .seatLeave(SeatLeaveReq(channelName, roomContext.currentUserInfo.userId))
             .enqueue(object : retrofit2.Callback<CommonResp<Any>> {
                 override fun onResponse(call: Call<CommonResp<Any>>, response: Response<CommonResp<Any>>) {
                     if (response.body()?.code == 0) {
@@ -119,7 +118,7 @@ class AUiMicSeatServiceImpl(
 
     override fun kickSeat(seatIndex: Int, callback: AUiCallback?) {
         HttpManager.getService(SeatInterface::class.java)
-            .seatKick(SeatInfoReq(channelName, context.currentUserInfo.userId, seatIndex))
+            .seatKick(SeatInfoReq(channelName, roomContext.currentUserInfo.userId, seatIndex))
             .enqueue(object : retrofit2.Callback<CommonResp<Any>> {
                 override fun onResponse(call: Call<CommonResp<Any>>, response: Response<CommonResp<Any>>) {
                     if (response.body()?.code == 0) {
@@ -135,7 +134,7 @@ class AUiMicSeatServiceImpl(
     }
 
     override fun muteAudioSeat(seatIndex: Int, isMute: Boolean, callback: AUiCallback?) {
-        val param = SeatInfoReq(channelName, context.currentUserInfo.userId, seatIndex)
+        val param = SeatInfoReq(channelName, roomContext.currentUserInfo.userId, seatIndex)
         val service = HttpManager.getService(SeatInterface::class.java)
         val req = if (isMute) {
             service.seatAudioMute(param)
@@ -157,7 +156,7 @@ class AUiMicSeatServiceImpl(
     }
 
     override fun muteVideoSeat(seatIndex: Int, isMute: Boolean, callback: AUiCallback?) {
-        val param = SeatInfoReq(channelName, context.currentUserInfo.userId, seatIndex)
+        val param = SeatInfoReq(channelName, roomContext.currentUserInfo.userId, seatIndex)
         val service = HttpManager.getService(SeatInterface::class.java)
         val req = if (isMute) {
             service.seatVideoMute(param)
@@ -179,7 +178,7 @@ class AUiMicSeatServiceImpl(
     }
 
     override fun closeSeat(seatIndex: Int, isClose: Boolean, callback: AUiCallback?) {
-        val param = SeatInfoReq(channelName, context.currentUserInfo.userId, seatIndex)
+        val param = SeatInfoReq(channelName, roomContext.currentUserInfo.userId, seatIndex)
         val service = HttpManager.getService(SeatInterface::class.java)
         val req = if (isClose) {
             service.seatLock(param)
@@ -203,8 +202,6 @@ class AUiMicSeatServiceImpl(
     override fun getMicSeatInfo(seatIndex: Int): AUiMicSeatInfo? {
         return micSeats[seatIndex]
     }
-    override fun getContext() = roomContext
-
     override fun getChannelName() = channelName
 
     /** AUiRtmMsgProxyDelegate */

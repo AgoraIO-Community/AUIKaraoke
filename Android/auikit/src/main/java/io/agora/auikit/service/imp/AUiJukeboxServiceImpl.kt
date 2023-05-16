@@ -303,8 +303,6 @@ class AUiJukeboxServiceImpl constructor(
             })
     }
 
-    override fun getContext() = roomContext
-
     override fun getChannelName() = channelName
 
     private fun isSuccess(resp: CommonResp<Any>): Boolean {

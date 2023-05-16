@@ -21,11 +21,11 @@ public interface IAUiCommonService<Delegate> {
      */
     void unbindRespDelegate(@Nullable Delegate delegate);
 
-    /**
+    /** 获取当前房间上下文
      *
      * @return
      */
-    @NonNull AUiRoomContext getContext();
+    default @NonNull AUiRoomContext getRoomContext() { return AUiRoomContext.shared(); }
 
     @NonNull String getChannelName();
 

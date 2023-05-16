@@ -13,7 +13,6 @@ import io.agora.auikit.utils.DelegateHelper
 import io.agora.auikit.utils.GsonTools
 
 class AUiUserServiceImpl constructor(
-    private val roomContext: AUiRoomContext,
     private val channelName: String,
     private val rtmManager: AUiRtmManager
 ) : IAUiUserService, AUiRtmUserProxyDelegate {
@@ -61,7 +60,7 @@ class AUiUserServiceImpl constructor(
     }
 
     override fun muteUserAudio(isMute: Boolean, callback: AUiCallback?) {
-        val currentUserId = context.currentUserInfo.userId
+        val currentUserId = roomContext.currentUserInfo.userId
         val user = mUserList.first { it.userId == currentUserId }
         user.muteAudio = if (isMute) 1 else 0
         val map = GsonTools.beanToMap(user)
@@ -78,7 +77,7 @@ class AUiUserServiceImpl constructor(
     }
 
     override fun muteUserVideo(isMute: Boolean, callback: AUiCallback?) {
-        val currentUserId = context.currentUserInfo.userId
+        val currentUserId = roomContext.currentUserInfo.userId
         val user = mUserList.firstOrNull { it.userId == currentUserId }
         if (user == null) {
             callback?.onResult(AUiException(-1, "can't find current user from users"))
@@ -99,7 +98,7 @@ class AUiUserServiceImpl constructor(
         return mUserList.firstOrNull { it.userId == userId }
     }
 
-    override fun getContext() = roomContext
+    override fun getRoomContext(): AUiRoomContext { return AUiRoomContext.shared() }
 
     override fun getChannelName() = channelName
 
@@ -177,11 +176,11 @@ class AUiUserServiceImpl constructor(
     }
 
     private fun setupUserAttr(roomId: String){
-        val userId = roomContext.currentUserInfo.userId
+        val userId = AUiRoomContext.shared().currentUserInfo.userId
         val userInfo = mUserList.firstOrNull { it.userId == userId } ?: AUiUserInfo()
-        userInfo.userId = roomContext.currentUserInfo.userId
-        userInfo.userName = roomContext.currentUserInfo.userName
-        userInfo.userAvatar = roomContext.currentUserInfo.userAvatar
+        userInfo.userId = AUiRoomContext.shared().currentUserInfo.userId
+        userInfo.userName = AUiRoomContext.shared().currentUserInfo.userName
+        userInfo.userAvatar = AUiRoomContext.shared().currentUserInfo.userAvatar
 
         val userAttr = GsonTools.beanToMap(userInfo)
         AUiLogger.logger().d(TAG, "setupUserAttr: $roomId : $userAttr")

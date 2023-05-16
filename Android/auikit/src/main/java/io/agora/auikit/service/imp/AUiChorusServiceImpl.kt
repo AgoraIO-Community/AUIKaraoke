@@ -55,8 +55,6 @@ class AUiChorusServiceImpl constructor(
         delegateHelper.unBindDelegate(delegate)
     }
 
-    override fun getContext() = roomContext
-
     override fun getChannelName() = channelName
 
     override fun getChoristersList(callback: AUiChoristerListCallback?) {

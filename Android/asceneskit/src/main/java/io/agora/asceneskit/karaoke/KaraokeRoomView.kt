@@ -16,6 +16,7 @@ import io.agora.auikit.binder.AUiMicSeatsBinder
 import io.agora.auikit.binder.AUiMusicPlayerBinder
 import io.agora.auikit.binder.IAUiBindable
 import io.agora.auikit.model.AUiMicSeatInfo
+import io.agora.auikit.model.AUiRoomContext
 import io.agora.auikit.model.AUiUserInfo
 import io.agora.auikit.model.AUiUserThumbnailInfo
 import io.agora.auikit.service.IAUiMicSeatService
@@ -202,8 +203,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         }
     }
 
-    private fun isRoomOwner() =
-        mRoomService?.context?.isRoomOwner(mRoomService?.channelName) ?: false
+    private fun isRoomOwner() = AUiRoomContext.shared().isRoomOwner(mRoomService?.channelName)
 
     private fun updateUserPreview() {
         val members = mMemberMap.values.toList()
@@ -269,7 +269,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
     }
 
     override fun onUserAudioMute(userId: String, mute: Boolean) {
-        val localUserId = mRoomService?.context?.currentUserInfo?.userId ?: ""
+        val localUserId = AUiRoomContext.shared().currentUserInfo.userId
         if (localUserId != userId) {
             return
         }
@@ -298,7 +298,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
     /** IAUiMicSeatService.AUiMicSeatRespDelegate */
     override fun onAnchorEnterSeat(seatIndex: Int, userInfo: AUiUserThumbnailInfo) {
         mSeatMap[seatIndex] = userInfo.userId
-        val localUserId = mRoomService?.context?.currentUserInfo?.userId ?: ""
+        val localUserId = AUiRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户上麦
             mRoomViewBinding.bottomNavLayout.btnMic.visibility = View.VISIBLE
             mRoomService?.setupLocalStreamOn(true)
@@ -313,7 +313,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         if (mSeatMap[seatIndex].equals(userInfo.userId)) {
             mSeatMap.remove(seatIndex)
         }
-        val localUserId = mRoomService?.context?.currentUserInfo?.userId ?: ""
+        val localUserId = AUiRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户下麦
             mRoomViewBinding.bottomNavLayout.btnMic.visibility = View.INVISIBLE
             setLocalMute(true)
@@ -330,7 +330,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
             return
         }
         val userInfo = mRoomService?.getUserService()?.getUserInfo(seatUserId) ?: return
-        val localUserId = mRoomService?.context?.currentUserInfo?.userId ?: ""
+        val localUserId = AUiRoomContext.shared().currentUserInfo.userId
         val mute = isMute || (userInfo.muteAudio == 1)
         if (seatUserId == localUserId) {
             setLocalMute(mute)

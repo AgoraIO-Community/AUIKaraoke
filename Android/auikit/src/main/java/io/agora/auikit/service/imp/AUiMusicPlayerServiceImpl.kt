@@ -52,8 +52,6 @@ class AUiMusicPlayerServiceImpl constructor(
         delegateHelper.unBindDelegate(delegate)
     }
 
-    override fun getContext(): AUiRoomContext = roomContext
-
     override fun getChannelName() = channelName
 
     override fun loadMusic(

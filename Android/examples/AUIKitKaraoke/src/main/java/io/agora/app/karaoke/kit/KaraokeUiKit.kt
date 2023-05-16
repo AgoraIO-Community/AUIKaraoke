@@ -13,12 +13,7 @@ import io.agora.auikit.service.http.HttpManager
 import io.agora.auikit.service.http.application.ApplicationInterface
 import io.agora.auikit.service.http.application.TokenGenerateReq
 import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.imp.AUiChorusServiceImpl
-import io.agora.auikit.service.imp.AUiJukeboxServiceImpl
-import io.agora.auikit.service.imp.AUiMicSeatServiceImpl
-import io.agora.auikit.service.imp.AUiMusicPlayerServiceImpl
 import io.agora.auikit.service.imp.AUiRoomManagerImpl
-import io.agora.auikit.service.imp.AUiUserServiceImpl
 import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.ktv.KTVApiConfig
 import io.agora.auikit.utils.AUiLogger
@@ -37,7 +32,6 @@ object KaraokeUiKit {
     private var mRoomManager: AUiRoomManagerImpl? = null
 
     private var shouldReleaseRtc = true
-    private var mRtmClient: RtmClient? = null
     private var mRtcEngineEx: RtcEngineEx? = null
     private var mKTVApi: KTVApi? = null
 
@@ -47,27 +41,23 @@ object KaraokeUiKit {
      *      当外部没传时内部会自行创建，并在release方法调用时销毁；
      *      当外部传入时在release时不会销毁
      */
-    fun init(
+    fun setup(
         config: AUiCommonConfig,
-        rtmClient: RtmClient? = null,
+        ktvApi: KTVApi? = null,
         rtcEngineEx: RtcEngineEx? = null,
-        ktvApi: KTVApi? = null
+        rtmClient: RtmClient? = null
     ) {
         if (mRoomManager != null) {
             throw initedException
         }
         HttpManager.setBaseURL(BuildConfig.SERVER_HOST)
         AUiRoomContext.shared().commonConfig = config
-
-        mRoomManager = AUiRoomManagerImpl(config, rtmClient)
-
+        mKTVApi = ktvApi
         if (rtcEngineEx != null) { // 用户塞进来的engine由用户自己管理生命周期
             mRtcEngineEx = rtcEngineEx
             shouldReleaseRtc = false
         }
-        if (ktvApi != null) {
-            mKTVApi = ktvApi
-        }
+        mRoomManager = AUiRoomManagerImpl(config, rtmClient)
         AUiLogger.initLogger(AUiLogger.Config(AUiRoomContext.shared().commonConfig.context, "Karaoke"))
     }
 
@@ -79,7 +69,6 @@ object KaraokeUiKit {
             RtcEngine.destroy()
         }
         mRtcEngineEx = null
-        mRtmClient = null
         mRoomManager = null
         mKTVApi = null
     }
@@ -143,7 +132,6 @@ object KaraokeUiKit {
             val roomManager = mRoomManager ?: throw notInitException
             val rtcEngine = mRtcEngineEx ?: throw notInitException
             val ktvApi = mKTVApi ?: throw notInitException
-            val channelName = roomInfo.roomId
             val rtmManager = roomManager.rtmManager
 
             // login rtm
@@ -167,17 +155,11 @@ object KaraokeUiKit {
 
                     // create room service
                     val roomService = KaraokeRoomService(
-                        AUiRoomContext.shared(),
                         rtcEngine,
-                        config,
-                        roomInfo,
+                        ktvApi,
                         roomManager,
-                        AUiUserServiceImpl(AUiRoomContext.shared(), channelName, rtmManager),
-                        AUiMicSeatServiceImpl(AUiRoomContext.shared(), channelName, rtmManager),
-                        AUiJukeboxServiceImpl(AUiRoomContext.shared(), channelName, rtmManager, ktvApi),
-                        AUiMusicPlayerServiceImpl(AUiRoomContext.shared(), rtcEngine, channelName, ktvApi),
-                        AUiChorusServiceImpl(AUiRoomContext.shared(), channelName, rtmManager, ktvApi),
-                        ktvApi
+                        config,
+                        roomInfo
                     )
 
                     // launch room activity

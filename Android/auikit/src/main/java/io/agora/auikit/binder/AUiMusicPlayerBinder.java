@@ -71,13 +71,13 @@ public class AUiMusicPlayerBinder implements IAUiBindable, IAUiMusicPlayerServic
         AUiMusicSettingInfo musicSettingInfo = new AUiMusicSettingInfo(false,100,50,0,0);
         musicPlayerView.setMusicSettingInfo(musicSettingInfo);
 
-        if (musicPlayerService.getContext().isRoomOwner(musicPlayerService.getChannelName())) {
+        if (musicPlayerService.getRoomContext().isRoomOwner(musicPlayerService.getChannelName())) {
             isOnSeat = true;
             isRoomOwner = true;
         }
         // TODO musicPlayerService.getChannelName() is always null
         //isRoomOwner = true;
-        localUid = musicPlayerService.getContext().currentUserInfo.userId;
+        localUid = musicPlayerService.getRoomContext().currentUserInfo.userId;
 
         initUI();
         initSong();
@@ -441,7 +441,7 @@ public class AUiMusicPlayerBinder implements IAUiBindable, IAUiMusicPlayerServic
         }
     }
     private void joinChorusWithSongCode(String code) {
-        chorusService.joinChorus(code, chorusService.getContext().currentUserInfo.userId, error -> {
+        chorusService.joinChorus(code, chorusService.getRoomContext().currentUserInfo.userId, error -> {
             if (error == null) {
                 AUiLoadMusicConfiguration config = new AUiLoadMusicConfiguration();
                 config.autoPlay = false;
@@ -481,7 +481,7 @@ public class AUiMusicPlayerBinder implements IAUiBindable, IAUiMusicPlayerServic
     private void innerLeaveChorus() {
         if (songPlayingModel == null) return;
 
-        chorusService.leaveChorus(songPlayingModel.songCode, chorusService.getContext().currentUserInfo.userId, error -> {
+        chorusService.leaveChorus(songPlayingModel.songCode, chorusService.getRoomContext().currentUserInfo.userId, error -> {
             if (error == null) {
                 chorusService.switchSingerRole(3, new AUiSwitchSingerRoleCallback() {
                     @Override

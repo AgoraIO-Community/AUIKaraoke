@@ -29,7 +29,6 @@ object AgoraEngineCreator {
         rtmConfig.context = context
         rtmConfig.userId = userId
         rtmConfig.appId = appId
-        rtmConfig.presenceTimeout = 30
         rtmConfig.eventListener = object : RtmEventListener {
             override fun onMessageEvent(event: MessageEvent?) {
 

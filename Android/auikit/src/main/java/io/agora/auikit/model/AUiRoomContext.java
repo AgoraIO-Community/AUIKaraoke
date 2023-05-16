@@ -20,14 +20,18 @@ public class AUiRoomContext {
     }
 
     public @NonNull AUiUserThumbnailInfo currentUserInfo = new AUiUserThumbnailInfo();
-    public @NonNull AUiCommonConfig commonConfig = new AUiCommonConfig();
+    private AUiCommonConfig mCommonConfig = new AUiCommonConfig();
     private final Map<String, AUiRoomInfo> roomInfoMap = new HashMap<>();
 
     public void setCommonConfig(@NonNull AUiCommonConfig config) {
-        commonConfig = config;
+        mCommonConfig = config;
         currentUserInfo.userId = config.userId;
         currentUserInfo.userName = config.userName;
         currentUserInfo.userAvatar = config.userAvatar;
+    }
+
+    public @NonNull AUiCommonConfig getCommonConfig() {
+        return mCommonConfig;
     }
 
     public boolean isRoomOwner(String channelName){
