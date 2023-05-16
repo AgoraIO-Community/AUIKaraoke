@@ -122,133 +122,68 @@ object KaraokeUiKit {
         config: AUiRoomConfig,
         eventHandler: RoomEventHandler? = null,
     ) {
-        generateTokenWithConfig(config) {
-            mRtcEngineEx = mRtcEngineEx ?: AgoraEngineCreator.createRtcEngine(
-                AUiRoomContext.shared().commonConfig.context,
-                AUiRoomContext.shared().commonConfig.appId
-            )
-            mKTVApi = mKTVApi ?: AgoraEngineCreator.createKTVApi()
+        mRtcEngineEx = mRtcEngineEx ?: AgoraEngineCreator.createRtcEngine(
+            AUiRoomContext.shared().commonConfig.context,
+            AUiRoomContext.shared().commonConfig.appId
+        )
+        mKTVApi = mKTVApi ?: AgoraEngineCreator.createKTVApi()
 
-            val roomManager = mRoomManager ?: throw notInitException
-            val rtcEngine = mRtcEngineEx ?: throw notInitException
-            val ktvApi = mKTVApi ?: throw notInitException
-            val rtmManager = roomManager.rtmManager
+        val roomManager = mRoomManager ?: throw notInitException
+        val rtcEngine = mRtcEngineEx ?: throw notInitException
+        val ktvApi = mKTVApi ?: throw notInitException
+        val rtmManager = roomManager.rtmManager
 
-            // login rtm
-            rtmManager.login(
-                config.rtmToken007
-            ) { error ->
-                if (error == null) {
-                    // init ktv api
-                    ktvApi.initialize(
-                        KTVApiConfig(
-                            AUiRoomContext.shared().commonConfig.appId,
-                            config.rtcRtmToken006,
-                            rtcEngine,
-                            config.rtcChannelName,
-                            AUiRoomContext.shared().commonConfig.userId.toInt(),
-                            config.rtcChorusChannelName,
-                            config.rtcChorusRtcToken007
-                        )
-                    )
-                    ktvApi.renewInnerDataStreamId()
-
-                    // create room service
-                    val roomService = KaraokeRoomService(
+        // login rtm
+        rtmManager.login(
+            config.rtmToken007
+        ) { error ->
+            if (error == null) {
+                // init ktv api
+                ktvApi.initialize(
+                    KTVApiConfig(
+                        AUiRoomContext.shared().commonConfig.appId,
+                        config.rtcRtmToken006,
                         rtcEngine,
-                        ktvApi,
-                        roomManager,
-                        config,
-                        roomInfo
+                        config.rtcChannelName,
+                        AUiRoomContext.shared().commonConfig.userId.toInt(),
+                        config.rtcChorusChannelName,
+                        config.rtcChorusRtcToken007
                     )
+                )
+                ktvApi.renewInnerDataStreamId()
 
-                    // launch room activity
-                    KaraokeRoomActivity.launch(
-                        AUiRoomContext.shared().commonConfig.context,
-                        config.themeId,
-                        roomService,
-                        onRoomCreated = {
-                            eventHandler?.onRoomLaunchSuccess?.invoke()
-                        },
-                        onRoomDestroy = { e ->
-                            ktvApi.release()
-                            mRoomManager?.rtmManager?.logout()
-                            if (e != null) {
-                                eventHandler?.onRoomLaunchFailure?.invoke(e)
-                            }
+                // create room service
+                val roomService = KaraokeRoomService(
+                    rtcEngine,
+                    ktvApi,
+                    roomManager,
+                    config,
+                    roomInfo
+                )
+
+                // launch room activity
+                KaraokeRoomActivity.launch(
+                    AUiRoomContext.shared().commonConfig.context,
+                    config.themeId,
+                    roomService,
+                    onRoomCreated = {
+                        eventHandler?.onRoomLaunchSuccess?.invoke()
+                    },
+                    onRoomDestroy = { e ->
+                        ktvApi.release()
+                        mRoomManager?.rtmManager?.logout()
+                        if (e != null) {
+                            eventHandler?.onRoomLaunchFailure?.invoke(e)
                         }
-                    )
-                } else {
-                    eventHandler?.onRoomLaunchFailure?.invoke(
-                        ErrorCode.RTM_LOGIN_FAILURE
-                    )
-                }
+                    }
+                )
+            } else {
+                eventHandler?.onRoomLaunchFailure?.invoke(
+                    ErrorCode.RTM_LOGIN_FAILURE
+                )
             }
         }
     }
-
-    private fun generateTokenWithConfig(config: AUiRoomConfig, onSuccess: () -> Unit) {
-        var response = 3
-        val trySuccess = {
-            response -= 1;
-            if (response == 0) {
-                onSuccess.invoke()
-            }
-        }
-
-        val userId = AUiRoomContext.shared().currentUserInfo.userId
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.channelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        config.rtcToken007 = rspObj.rtcToken
-                        config.rtmToken007 = rspObj.rtmToken
-                        AUiRoomContext.shared()?.commonConfig?.appId = rspObj.appId
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        //rtcRtcToken006
-                        config.rtcRtcToken006 = rspObj.rtcToken
-                        config.rtcRtmToken006 = rspObj.rtmToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        // rtcChorusRtcToken007
-                        config.rtcChorusRtcToken007 = rspObj.rtcToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-    }
-
     enum class ErrorCode(val value: Int, val message: String) {
         RTM_LOGIN_FAILURE(100, "Rtm login failed!"),
         ROOM_PERMISSIONS_LEAK(101, "The room leak required permissions!"),

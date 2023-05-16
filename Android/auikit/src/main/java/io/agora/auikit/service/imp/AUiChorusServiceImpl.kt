@@ -27,10 +27,9 @@ import retrofit2.Call
 import retrofit2.Response
 
 class AUiChorusServiceImpl constructor(
-    private val roomContext: AUiRoomContext,
     private val channelName: String,
-    private val rtmManager: AUiRtmManager,
-    private val ktvApi: KTVApi
+    private val ktvApi: KTVApi,
+    private val rtmManager: AUiRtmManager
 ) : IAUiChorusService, AUiRtmMsgProxyDelegate {
     private val TAG: String = "Chorus_LOG"
     private val kChorusKey = "chorus"

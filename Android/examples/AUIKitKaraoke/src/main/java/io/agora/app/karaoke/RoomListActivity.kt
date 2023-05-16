@@ -13,13 +13,16 @@ import com.bumptech.glide.request.RequestOptions
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
 import io.agora.app.karaoke.kit.KaraokeUiKit
-import io.agora.auikit.model.AUiCommonConfig
-import io.agora.auikit.model.AUiCreateRoomInfo
-import io.agora.auikit.model.AUiRoomConfig
-import io.agora.auikit.model.AUiRoomInfo
+import io.agora.auikit.model.*
+import io.agora.auikit.service.http.CommonResp
+import io.agora.auikit.service.http.HttpManager
+import io.agora.auikit.service.http.application.ApplicationInterface
+import io.agora.auikit.service.http.application.TokenGenerateReq
+import io.agora.auikit.service.http.application.TokenGenerateResp
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
 import io.agora.auikit.ui.basic.AUiAlertDialog
 import io.agora.auikit.utils.BindingViewHolder
+import retrofit2.Response
 import java.util.Random
 
 class RoomListActivity : AppCompatActivity() {
@@ -170,29 +173,93 @@ class RoomListActivity : AppCompatActivity() {
     }
 
     private fun gotoRoomDetailPage(roomInfo: AUiRoomInfo) {
-        val config = AUiRoomConfig(roomInfo.roomId)
-        config.themeId = ThemeId
-        KaraokeUiKit.launchRoom(roomInfo, config, KaraokeUiKit.RoomEventHandler(
-            onRoomLaunchSuccess = {
-                Toast.makeText(
-                    this@RoomListActivity,
-                    "Room ${roomInfo.roomName} launch success.",
-                    Toast.LENGTH_SHORT
-                ).show()
-            },
-            onRoomLaunchFailure = {
-                Toast.makeText(
-                    this@RoomListActivity,
-                    "Room ${roomInfo.roomName} launch failure: code=${it.value}, msg=${it.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        ))
+        generateTokenWithConfig(roomInfo) { config ->
+            KaraokeUiKit.launchRoom(roomInfo, config, KaraokeUiKit.RoomEventHandler(
+                onRoomLaunchSuccess = {
+                    Toast.makeText(
+                        this@RoomListActivity,
+                        "Room ${roomInfo.roomName} launch success.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                },
+                onRoomLaunchFailure = {
+                    Toast.makeText(
+                        this@RoomListActivity,
+                        "Room ${roomInfo.roomName} launch failure: code=${it.value}, msg=${it.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            ))
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         KaraokeUiKit.release()
+    }
+
+    private fun generateTokenWithConfig(roomInfo: AUiRoomInfo, onSuccess: (AUiRoomConfig) -> Unit) {
+        val config = AUiRoomConfig(roomInfo.roomId)
+        config.themeId = ThemeId
+        var response = 3
+        val trySuccess = {
+            response -= 1;
+            if (response == 0) {
+                onSuccess.invoke(config)
+            }
+        }
+
+        val userId = AUiRoomContext.shared().currentUserInfo.userId
+        HttpManager
+            .getService(ApplicationInterface::class.java)
+            .tokenGenerate(TokenGenerateReq(config.channelName, userId))
+            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
+                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
+                    val rspObj = response.body()?.data
+                    if (rspObj != null) {
+                        config.rtcToken007 = rspObj.rtcToken
+                        config.rtmToken007 = rspObj.rtmToken
+                        AUiRoomContext.shared()?.commonConfig?.appId = rspObj.appId
+                    }
+                    trySuccess.invoke()
+                }
+                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
+                    trySuccess.invoke()
+                }
+            })
+        HttpManager
+            .getService(ApplicationInterface::class.java)
+            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
+            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
+                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
+                    val rspObj = response.body()?.data
+                    if (rspObj != null) {
+                        //rtcRtcToken006
+                        config.rtcRtcToken006 = rspObj.rtcToken
+                        config.rtcRtmToken006 = rspObj.rtmToken
+                    }
+                    trySuccess.invoke()
+                }
+                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
+                    trySuccess.invoke()
+                }
+            })
+        HttpManager
+            .getService(ApplicationInterface::class.java)
+            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
+            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
+                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
+                    val rspObj = response.body()?.data
+                    if (rspObj != null) {
+                        // rtcChorusRtcToken007
+                        config.rtcChorusRtcToken007 = rspObj.rtcToken
+                    }
+                    trySuccess.invoke()
+                }
+                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
+                    trySuccess.invoke()
+                }
+            })
     }
 
     private fun randomAvatar(): String {

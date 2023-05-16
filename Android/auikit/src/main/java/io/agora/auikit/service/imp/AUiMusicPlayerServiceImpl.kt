@@ -19,7 +19,6 @@ import io.agora.mediaplayer.Constants.MediaPlayerState
 import io.agora.rtc2.RtcEngine
 
 class AUiMusicPlayerServiceImpl constructor(
-    private val roomContext: AUiRoomContext,
     private val rtcEngine: RtcEngine,
     private val channelName: String,
     private val ktvApi: KTVApi

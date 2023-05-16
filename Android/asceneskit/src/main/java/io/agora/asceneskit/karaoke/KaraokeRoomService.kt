@@ -36,11 +36,11 @@ class KaraokeRoomService(
 
     private val micSeatImpl: IAUiMicSeatService = AUiMicSeatServiceImpl(roomInfo.roomId, rtmManager)
 
-    private val jukeboxService: IAUiJukeboxService = AUiJukeboxServiceImpl(AUiRoomContext.shared(), roomInfo.roomId, rtmManager, ktvApi)
+    private val jukeboxService: IAUiJukeboxService = AUiJukeboxServiceImpl(roomInfo.roomId, rtmManager, ktvApi)
 
-    private val playerImpl: IAUiMusicPlayerService = AUiMusicPlayerServiceImpl(AUiRoomContext.shared(), mRtcEngine, roomInfo.roomId, ktvApi)
+    private val playerImpl: IAUiMusicPlayerService = AUiMusicPlayerServiceImpl(mRtcEngine, roomInfo.roomId, ktvApi)
 
-    private val chorusImpl: IAUiChorusService = AUiChorusServiceImpl(AUiRoomContext.shared(), roomInfo.roomId, rtmManager, ktvApi)
+    private val chorusImpl: IAUiChorusService = AUiChorusServiceImpl(roomInfo.roomId, ktvApi, rtmManager)
 
     private val mDelegateHelper = DelegateHelper<IKaraokeRoomService.KaraokeRoomRoomRespDelegate>()
 

@@ -33,7 +33,6 @@ import retrofit2.Call
 import retrofit2.Response
 
 class AUiJukeboxServiceImpl constructor(
-    private val roomContext: AUiRoomContext,
     private val channelName: String,
     private val rtmManager: AUiRtmManager,
     private val ktvApi: KTVApi

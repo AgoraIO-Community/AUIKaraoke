@@ -35,8 +35,7 @@ class AUiRoomManagerImpl(
     private val rtmClient: RtmClient? = null
 ) : IAUiRoomManager, AUiRtmMsgProxyDelegate {
 
-    public val rtmManager by lazy {
-
+    val rtmManager by lazy {
         val rtm = rtmClient ?: AgoraEngineCreator.createRtmClient(
             commonConfig.context,
             commonConfig.appId,
