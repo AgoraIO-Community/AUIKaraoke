@@ -25,7 +25,7 @@ open class AUiRoomManagerImpl: NSObject {
     }()
     
     deinit {
-        rtmManager.logout()
+        //rtmManager.logout()
         aui_info("deinit AUiRoomManagerImpl", tag: "AUiRoomManagerImpl")
     }
     
