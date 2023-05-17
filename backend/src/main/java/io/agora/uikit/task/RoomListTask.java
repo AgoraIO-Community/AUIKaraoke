@@ -34,7 +34,7 @@ public class RoomListTask {
 
     private String roomStatusQueue = "task_roomStatusQueue";
     private long waitSecond = 1;
-    private long createTimeGreaterThanMs = 60 * 1000;
+    private long createTimeDelayMs = 60 * 1000;
     private String updateRoomStatusQueueMetricName = "RoomListTask-updateRoomStatusQueue";
     private String updateRoomStatusMetricName = "RoomListTask-updateRoomStatus";
 
@@ -56,7 +56,7 @@ public class RoomListTask {
 
         // Get room list
         List<RoomListEntity> roomList = roomListRepository
-                .findByCreateTimeGreaterThan(System.currentTimeMillis() + createTimeGreaterThanMs);
+                .findByCreateTimeLessThan(System.currentTimeMillis() - createTimeDelayMs);
         log.info("updateRoomStatusQueue, total:{}", roomList.size());
 
         // Update queue
