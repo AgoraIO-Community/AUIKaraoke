@@ -8,6 +8,18 @@ PODS:
     - AgoraLyricsScore
     - AgoraRtcEngine_iOS
     - Alamofire
+    - AUiKit/AUiKit (= 0.1.0)
+    - Kingfisher (~> 7.6.2)
+    - MJRefresh
+    - ScoreEffectUI
+    - SwiftTheme
+    - SwiftyBeaver (~> 1.9.5)
+    - YYModel
+    - Zip
+  - AUiKit/AUiKit (0.1.0):
+    - AgoraLyricsScore
+    - AgoraRtcEngine_iOS
+    - Alamofire
     - Kingfisher (~> 7.6.2)
     - MJRefresh
     - ScoreEffectUI
@@ -54,7 +66,7 @@ SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: 7af3b344c55059556eeb05dc748ff124c593d4fb
   Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
   AScenesKit: 4369f85fbfb8d2e54c1c7d4ff77eaabd5a91e172
-  AUiKit: c77c78361232d841d7e41924cf4a22d903bc35eb
+  AUiKit: a5bf388f6ca23fcc619870698b32d18868c9d41a
   Kingfisher: 6c5449c6450c5239166510ba04afe374a98afc4f
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ScoreEffectUI: 1a3bbd83b17cfef1c16a3a4eede2854f89c9eb10
