@@ -2,7 +2,7 @@
 
 *[English](README.md) | 中文*
 
-本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../../AScenesKit/README_zh.md)和[AUiKit](../../AUiKit/README_zh.md)
+本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../AScenesKit/README_zh.md)和[AUiKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 
 ## 架构图
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
@@ -33,7 +33,7 @@
 
 ### 1. 一键部署Karaoke后端服务
 
-[如何部署Karaoke后端服务](../../../backend/README_zh.md)  
+[如何部署Karaoke后端服务](../../backend/README_zh.md)  
 
 ### 2. 项目运行
 - 克隆或者直接下载项目源码
