@@ -14,7 +14,19 @@ public class AUiMicSeatViewBinder: NSObject {
     private var micSeatArray: [AUiMicSeatInfo] = []
     private var userMap: [String: AUiUserInfo] = [:]
     private var rtcEngine: AgoraRtcEngineKit!
-    private var topSong: AUiChooseMusicModel?
+    private var topSong: AUiChooseMusicModel? {
+        didSet {
+            if topSong?.songCode == oldValue?.songCode { return }
+            let mainSingerIndex = getMicIndex(with: topSong?.userId ?? "")
+            micSeatArray.indices.forEach {(i) in
+                if mainSingerIndex != nil || topSong != nil {
+                    updateMic(with: i, role: i == mainSingerIndex ? .mainSinger : .offlineAudience)
+                }else{
+                    updateMic(with: i, role: .offlineAudience)
+                }
+            }
+        }
+    }
     private weak var micSeatView: AUiMicSeatView?
     private weak var micSeatDelegate: AUiMicSeatServiceDelegate? {
         didSet {
@@ -421,27 +433,7 @@ extension AUiMicSeatViewBinder: AUiMusicRespDelegate {
     }
     
     public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
-        // switch song or first add
-        let shouldRefresh = songs.first?.songCode != self.topSong?.songCode || self.topSong == nil
-        self.topSong = songs.first
-        guard let topSong = songs.first else {
-            //没有歌曲的话 在麦的用户都要变成onlineAudience
-            let _ = micSeatArray.map {[weak self] in
-                if ($0.user != nil) {
-                    self?.updateMic(with: Int($0.seatIndex), role: .onlineAudience)
-                }
-            }
-            return
-        }
-        guard let index = getMicIndex(with: topSong.userId ?? "") else {return}
-        updateMic(with: index, role: .mainSinger)
-        // refresh when switch song or first add
-        if shouldRefresh == false { return }
-        for (i, seat) in micSeatArray.enumerated() {
-            if i != index && seat.user != nil {
-                updateMic(with: i, role: .offlineAudience)
-            }
-        }
+        topSong = songs.first
     }
     
     
