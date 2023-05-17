@@ -28,6 +28,8 @@ AUIKitKaraoke provides the following core features:
 
 
 ## Demo
+![](https://download.agora.io/null/uikit_karaoke_demo_pic1.jpg)|![](https://download.agora.io/null/uikit_karaoke_demo_pic3.jpg)|
+---|---
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
