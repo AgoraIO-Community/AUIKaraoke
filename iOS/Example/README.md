@@ -13,12 +13,13 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 │  └─ AUIKitKaraoke            // Provide Karaoke's integrated page
 ├─ AUiScenesKit                // Scenario business assembly module, currently only including Karaoke
 │  ├─ AUiKaraokeRoomView       // Karaoke room container view, used to splice various basic components and bind them to services
-│  └─ AUiKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
+│  ├─ AUiKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
+│  └─ Binder                   // Business binding module that associates UI Components with Service
 └─ AUiKit                      // Including basic components and services
    ├─ Service                  // Related basic component services, including micseat, jukebox, user, choir, etc
    ├─ UI Widgets               // Basic UI component, supporting one click skin changing through configuration files
-   ├─ UI Components            // Related basic business UI modules, including micseat, jukebox, song playback, etc. These UI modules do not contain any business logic and are pure UI modules
-   └─ Binder                   // Business binding module that associates UI Components with Service
+   └─ UI Components            // Related basic business UI modules, including micseat, jukebox, song playback, etc. These UI modules do not contain any business logic and are pure UI modules
+   
 ```
 
 ## Requirements
@@ -38,7 +39,11 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 
 ### 2. Build
 - Clone or download  source code
-
+- Open the terminal and execute the following command in the root directory
+```
+git submodule init
+git submodule update
+```
 - Fill in the HostUrl for step 1 in the [KeyCenter. swift] (AUIKitKaraoke/KeyCenter. swift) of the project
 ```
 static var HostUrl: String = <#Your HostUrl#>
