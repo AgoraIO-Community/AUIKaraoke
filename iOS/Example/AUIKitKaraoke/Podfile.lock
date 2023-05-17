@@ -27,7 +27,7 @@ DEPENDENCIES:
   - AgoraLyricsScore (= 1.1.1-beta-3)
   - AgoraRtcEngine_iOS (from `./libs`)
   - AScenesKit (from `../../AScenesKit`)
-  - AUiKit (from `../../AUiKit`)
+  - AUiKit (from `../../../AUiKit/iOS`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -47,7 +47,7 @@ EXTERNAL SOURCES:
   AScenesKit:
     :path: "../../AScenesKit"
   AUiKit:
-    :path: "../../AUiKit"
+    :path: "../../../AUiKit/iOS"
 
 SPEC CHECKSUMS:
   AgoraLyricsScore: 7e25860ccecd3c6ed73f2b503f1d73d8849079e1
@@ -63,6 +63,6 @@ SPEC CHECKSUMS:
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 2bdc601f34eccd8325a92db993e8591045cc03bb
+PODFILE CHECKSUM: 123a336e74c79d333800bae1d1fc8f73af7df6aa
 
 COCOAPODS: 1.12.0
