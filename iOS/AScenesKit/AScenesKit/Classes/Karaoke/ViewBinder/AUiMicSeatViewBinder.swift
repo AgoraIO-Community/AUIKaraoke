@@ -14,6 +14,7 @@ public class AUiMicSeatViewBinder: NSObject {
     private var micSeatArray: [AUiMicSeatInfo] = []
     private var userMap: [String: AUiUserInfo] = [:]
     private var rtcEngine: AgoraRtcEngineKit!
+    private var topSong: AUiChooseMusicModel?
     private weak var micSeatView: AUiMicSeatView?
     private weak var micSeatDelegate: AUiMicSeatServiceDelegate? {
         didSet {
@@ -216,7 +217,6 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
         }
         micSeatArray[seatIndex] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
-  
         updateMic(with: seatIndex, role: .onlineAudience)
 
         //current user enter seat
@@ -244,7 +244,7 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
         micSeat.user = nil
         micSeatArray[seatIndex] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
-
+        
         updateMic(with: seatIndex, role: .offlineAudience)
  
         //current user enter seat
@@ -421,6 +421,9 @@ extension AUiMicSeatViewBinder: AUiMusicRespDelegate {
     }
     
     public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
+        // switch song or first add
+        let shouldRefresh = songs.first?.songCode != self.topSong?.songCode || self.topSong == nil
+        self.topSong = songs.first
         guard let topSong = songs.first else {
             //没有歌曲的话 在麦的用户都要变成onlineAudience
             let _ = micSeatArray.map {[weak self] in
@@ -432,6 +435,13 @@ extension AUiMicSeatViewBinder: AUiMusicRespDelegate {
         }
         guard let index = getMicIndex(with: topSong.userId ?? "") else {return}
         updateMic(with: index, role: .mainSinger)
+        // refresh when switch song or first add
+        if shouldRefresh == false { return }
+        for (i, seat) in micSeatArray.enumerated() {
+            if i != index && seat.user != nil {
+                updateMic(with: i, role: .offlineAudience)
+            }
+        }
     }
     
     
@@ -442,7 +452,11 @@ extension AUiMicSeatViewBinder: AUiChorusRespDelegate {
     public func onChoristerDidEnter(chorister: AUiChoristerModel) {
         //获取需要更新的麦位UI
         guard let index =  getMicIndex(with: chorister.userId) else {return}
-        updateMic(with: index, role: .coSinger)
+        if let currentSong = topSong {
+            updateMic(with: index, role: currentSong.owner?.userId == chorister.userId ? .mainSinger : .coSinger)
+        }else {
+            updateMic(with: index, role: .onlineAudience)
+        }
     }
     
     public func onChoristerDidLeave(chorister: AUiChoristerModel) {
