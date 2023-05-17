@@ -54,7 +54,7 @@ static var HostUrl: String = <#Your HostUrl#>
 
 ## 常见问题
 
-- [常见问题](../../doc/KaraokeFAQ_zh.md)
+- [常见问题](../doc/KaraokeFAQ_zh.md)
 - 如有其他问题请反馈至 [开发者社区](https://www.rtcdeveloper.cn/cn/community/discussion/0)
 
 ## 许可证

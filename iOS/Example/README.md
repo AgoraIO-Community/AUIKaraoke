@@ -34,7 +34,7 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 
 ### 1. Deployment backend services
 
-[How to deploy Karaoke backend services]((../../backend))  
+[How to deploy Karaoke backend services](../../backend)  
 
 ### 2. Build
 - Clone or download  source code
@@ -55,7 +55,7 @@ If you do not intend to deploy backend services temporarily, you can use the def
 
 ## FAQ
 
-- [FAQ](../../doc/KaraokeFAQ.md)
+- [FAQ](../doc/KaraokeFAQ.md)
 
 - If you have any other questions, please feedback to the [developer community](https://www.rtcdeveloper.cn/cn/community/discussion/0)
 
