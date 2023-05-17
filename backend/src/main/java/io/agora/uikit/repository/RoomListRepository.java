@@ -15,7 +15,7 @@ import io.agora.uikit.bean.entity.RoomListEntity;
 public interface RoomListRepository extends MongoRepository<RoomListEntity, String> {
     Page<RoomListEntity> findByCreateTimeLessThan(Long createTime, Pageable pageAble);
 
-    List<RoomListEntity> findByCreateTimeGreaterThan(Long createTime);
+    List<RoomListEntity> findByCreateTimeLessThan(Long createTime);
 
     @Query("{_id : ?0}")
     void updatById(String id, Update update);
