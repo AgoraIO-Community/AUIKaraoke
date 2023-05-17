@@ -2,7 +2,7 @@
 
 *English | [中文](README_zh.md)
 
-This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../../AScenesKit/README.md) and [AUiKit](../../../backend/README.md)
+This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../AScenesKit/README.md) and [AUiKit](https://github.com/AgoraIO-Community/AUIKit/tree/main/iOS)
 
 ## Architecture
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
@@ -34,7 +34,7 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 
 ### 1. Deployment backend services
 
-[How to deploy Karaoke backend services](https://bitbucket.agoralab.co/projects/ADUC/repos/uikit-backend/browse/README_zh.md?at=refs%2Fheads%2Fdevelop)  
+[How to deploy Karaoke backend services]((../../backend))  
 
 ### 2. Build
 - Clone or download  source code
