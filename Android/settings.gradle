@@ -17,7 +17,13 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "AUIKit"
-include ':auikit'
+
+def uiKitPath = new File(settingsDir, '../AUIKit/Android/auikit')
+print(uiKitPath)
+if(uiKitPath.exists()){
+    include ':auikit'
+    project(':auikit').projectDir = uiKitPath
+}
 include ':asceneskit'
 
 include ':examples:AUIKitKaraoke'

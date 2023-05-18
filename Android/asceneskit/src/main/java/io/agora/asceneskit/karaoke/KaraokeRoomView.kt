@@ -20,7 +20,7 @@ import io.agora.auikit.model.AUiRoomContext
 import io.agora.auikit.model.AUiUserInfo
 import io.agora.auikit.model.AUiUserThumbnailInfo
 import io.agora.auikit.service.IAUiMicSeatService
-import io.agora.auikit.service.IAUiRoomManager
+import io.agora.auikit.service.IAUiRoomManager.AUiRoomManagerRespDelegate
 import io.agora.auikit.service.IAUiUserService
 import io.agora.auikit.ui.basic.AUiAlertDialog
 import io.agora.auikit.ui.basic.AUiBottomDialog
@@ -29,10 +29,12 @@ import io.agora.auikit.ui.member.impl.AUiRoomMemberListView
 import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
 
 class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
-    IAUiMicSeatService.AUiMicSeatRespDelegate, IAUiRoomManager.AUiRoomRespDelegate {
+    IAUiMicSeatService.AUiMicSeatRespDelegate, AUiRoomManagerRespDelegate {
+
+    private var mOnClickShutDown: (() -> Unit)? = null
 
     private val mRoomViewBinding = AkaraokeRoomViewBinding.inflate(LayoutInflater.from(context))
-    private var mRoomService: IKaraokeRoomService? = null
+    private var mRoomService: AUiKaraokeRoomService? = null
 
     private var mMemberMap = mutableMapOf<String, AUiUserInfo>()
 
@@ -63,7 +65,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         }
     }
 
-    fun bindService(service: IKaraokeRoomService) {
+    fun bindService(service: AUiKaraokeRoomService) {
         mRoomService = service
         service.getUserService().bindRespDelegate(this)
         service.getMicSeatsService().bindRespDelegate(this)
@@ -82,7 +84,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
                     .into(mRoomViewBinding.topUserLayout.ivRoomCover)
 
                 mRoomViewBinding.topUserLayout.btnShutDown.setOnClickListener {
-                    showExitDialog()
+                    mOnClickShutDown?.invoke()
                 }
                 mRoomViewBinding.topUserLayout.btnUserMore.setOnClickListener {
                     showUserListDialog()
@@ -129,6 +131,10 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
             }
         })
     }
+    fun setOnShutDownClick(action: () -> Unit) {
+        mOnClickShutDown = action
+    }
+
     private fun setLocalMute(isMute: Boolean) {
         Log.d("local_mic","update rtc mute state: $isMute")
         mLocalMute = isMute
@@ -180,31 +186,6 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         }
     }
 
-    fun showExitDialog() {
-        AUiAlertDialog(context).apply {
-            setTitle("Tip")
-            if (isRoomOwner()) {
-                setMessage("是否离开并销毁房间？")
-            } else {
-                setMessage("是否离开房间？")
-            }
-            setPositiveButton("确认") {
-                if (isRoomOwner()) {
-                    mRoomService?.destroyRoom()
-                } else {
-                    mRoomService?.exitRoom()
-                }
-                dismiss()
-            }
-            setNegativeButton("取消") {
-                dismiss()
-            }
-            show()
-        }
-    }
-
-    private fun isRoomOwner() = AUiRoomContext.shared().isRoomOwner(mRoomService?.channelName)
-
     private fun updateUserPreview() {
         val members = mMemberMap.values.toList()
         when (members.size) {
@@ -249,9 +230,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
 
     /** IAUiUserService.AUiRoomRespDelegate */
     override fun onRoomDestroy(roomId: String) {
-        if (!isRoomOwner()) {
-            mRoomService?.exitRoom(false)
-        }
+
     }
 
     /** IAUiUserService.AUiUserRespDelegate */
@@ -269,23 +248,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
     }
 
     override fun onUserAudioMute(userId: String, mute: Boolean) {
-        val localUserId = AUiRoomContext.shared().currentUserInfo.userId
-        if (localUserId != userId) {
-            return
-        }
-        var localUserSeat: AUiMicSeatInfo? = null
-        for (i in 0..7) {
-            val seatInfo = mRoomService?.getMicSeatsService()?.getMicSeatInfo(i)
-            if (seatInfo?.user != null && seatInfo.user?.userId == userId) {
-                localUserSeat = seatInfo
-                break
-            }
-        }
-        if (localUserSeat != null) {
-            val userInfo = mRoomService?.getUserService()?.getUserInfo(userId)
-            val mute = (localUserSeat.muteAudio == 1) || (userInfo?.muteAudio == 1)
-            setLocalMute(mute)
-        }
+
     }
 
     override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUiUserInfo>?) {
@@ -302,9 +265,8 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         if (userInfo.userId == localUserId) { // 本地用户上麦
             mRoomViewBinding.bottomNavLayout.btnMic.visibility = View.VISIBLE
             mRoomService?.setupLocalStreamOn(true)
-            val micSeatInfo = mRoomService?.getMicSeatsService()?.getMicSeatInfo(seatIndex)
             val userInfo = mRoomService?.getUserService()?.getUserInfo(localUserId)
-            val isMute = (micSeatInfo?.muteAudio == 1) || (userInfo?.muteAudio == 1)
+            val isMute = (userInfo?.muteAudio == 1)
             setLocalMute(isMute)
         }
     }
@@ -332,9 +294,7 @@ class KaraokeRoomView : FrameLayout, IAUiUserService.AUiUserRespDelegate,
         val userInfo = mRoomService?.getUserService()?.getUserInfo(seatUserId) ?: return
         val localUserId = AUiRoomContext.shared().currentUserInfo.userId
         val mute = isMute || (userInfo.muteAudio == 1)
-        if (seatUserId == localUserId) {
-            setLocalMute(mute)
-        } else {
+        if (seatUserId != localUserId) {
             mRoomService?.setupRemoteAudioMute(seatUserId, mute)
         }
     }

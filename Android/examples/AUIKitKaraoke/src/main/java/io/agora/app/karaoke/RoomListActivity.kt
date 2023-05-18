@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
+import io.agora.app.karaoke.kit.KaraokeRoomActivity
 import io.agora.app.karaoke.kit.KaraokeUiKit
 import io.agora.auikit.model.*
 import io.agora.auikit.service.http.CommonResp
@@ -84,7 +85,7 @@ class RoomListActivity : AppCompatActivity() {
         viewBinding.btnCreateRoom.setOnClickListener {
             AUiAlertDialog(this@RoomListActivity).apply {
                 setTitle("房间主题")
-                setInput("房间主题", "", true)
+                setInput("房间主题", randomRoomName(), true)
                 setPositiveButton("一起嗨歌") {
                     dismiss()
                     createRoom(inputText)
@@ -109,7 +110,7 @@ class RoomListActivity : AppCompatActivity() {
         KaraokeUiKit.createRoom(
             createRoomInfo,
             success = { roomInfo ->
-                gotoRoomDetailPage(roomInfo)
+                KaraokeRoomActivity.launch(this, roomInfo)
             },
             failure = {
                 Toast.makeText(this@RoomListActivity, "Create room failed!", Toast.LENGTH_SHORT)
@@ -171,100 +172,19 @@ class RoomListActivity : AppCompatActivity() {
             }
         )
     }
-
-    private fun gotoRoomDetailPage(roomInfo: AUiRoomInfo) {
-        generateTokenWithConfig(roomInfo) { config ->
-            KaraokeUiKit.launchRoom(roomInfo, config, KaraokeUiKit.RoomEventHandler(
-                onRoomLaunchSuccess = {
-                    Toast.makeText(
-                        this@RoomListActivity,
-                        "Room ${roomInfo.roomName} launch success.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
-                onRoomLaunchFailure = {
-                    Toast.makeText(
-                        this@RoomListActivity,
-                        "Room ${roomInfo.roomName} launch failure: code=${it.value}, msg=${it.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            ))
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         KaraokeUiKit.release()
     }
 
-    private fun generateTokenWithConfig(roomInfo: AUiRoomInfo, onSuccess: (AUiRoomConfig) -> Unit) {
-        val config = AUiRoomConfig(roomInfo.roomId)
-        config.themeId = ThemeId
-        var response = 3
-        val trySuccess = {
-            response -= 1;
-            if (response == 0) {
-                onSuccess.invoke(config)
-            }
-        }
-
-        val userId = AUiRoomContext.shared().currentUserInfo.userId
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.channelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        config.rtcToken007 = rspObj.rtcToken
-                        config.rtmToken007 = rspObj.rtmToken
-                        AUiRoomContext.shared()?.commonConfig?.appId = rspObj.appId
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        //rtcRtcToken006
-                        config.rtcRtcToken006 = rspObj.rtcToken
-                        config.rtcRtmToken006 = rspObj.rtmToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        // rtcChorusRtcToken007
-                        config.rtcChorusRtcToken007 = rspObj.rtcToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-    }
-
     private fun randomAvatar(): String {
         val randomValue = Random().nextInt(8) + 1
         return "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/sample_avatar/sample_avatar_${randomValue}.png"
+    }
+
+    private fun randomRoomName(): String {
+        val randomValue = (Random().nextInt(9) + 1) * 10000 + Random().nextInt(10000)
+        return "room_${randomValue}"
     }
 
     enum class LoadingMoreState {
@@ -302,8 +222,7 @@ class RoomListActivity : AppCompatActivity() {
             holder.binding.tvRoomName.text = item.roomName
             holder.binding.tvRoomOwner.text = item.roomOwner?.userName ?: "unKnowUser"
             holder.binding.tvMember.text = "${item.onlineUsers}人正在嗨歌"
-            holder.binding.root.setOnClickListener { this@RoomListActivity.gotoRoomDetailPage(item) }
-
+            holder.binding.root.setOnClickListener { KaraokeRoomActivity.launch(this@RoomListActivity, item) }
             Glide.with(holder.binding.ivAvatar)
                 .load(item.roomOwner?.userAvatar)
                 .apply(RequestOptions.circleCropTransform())
