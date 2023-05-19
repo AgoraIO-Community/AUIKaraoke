@@ -151,6 +151,7 @@ class RoomViewController: UIViewController {
 
 extension RoomViewController: AUiRoomManagerRespDelegate {
     func onRoomDestroy(roomId: String) {
+        self.karaokeView?.onBackAction()
         AUiAlertView()
             .background(color: UIColor(red: 0.1055, green: 0.0062, blue: 0.4032, alpha: 1))
             .isShowCloseButton(isShow: false)
@@ -159,7 +160,6 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
             .rightButton(title: "确认")
             .rightButtonTapClosure(onTap: {[weak self] text in
                 guard let self = self else { return }
-                self.karaokeView?.onBackAction()
                 self.navigationController?.popViewController(animated: true)
             })
             .show(fromVC: self)
