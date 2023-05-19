@@ -69,12 +69,12 @@ open class AUiKaraokeRoomService: NSObject {
         } else {
             let userId = Int(roomManager.commonConfig.userId) ?? 0
             let config = KTVApiConfig(appId: roomManager.commonConfig.appId,
-                                      rtmToken: roomConfig.rtcRtmToken006,
+                                      rtmToken: roomConfig.rtcRtmToken,
                                       engine: self.rtcEngine,
                                       channelName: roomConfig.rtcChannelName,
                                       localUid: userId,
                                       chorusChannelName: roomConfig.rtcChorusChannelName,
-                                      chorusChannelToken: roomConfig.rtcChorusRtcToken007)
+                                      chorusChannelToken: roomConfig.rtcChorusRtcToken)
             self.ktvApi = KTVApiImpl.init(config: config)
             
             ktvApiCreateBySercice = true
@@ -90,7 +90,7 @@ open class AUiKaraokeRoomService: NSObject {
         AUiRoomContext.shared.roomConfigMap[channelName] = roomConfig
         
         //ktvapi renew
-        ktvApi.getMusicContentCenter()?.renewToken(roomConfig.rtcRtmToken006)
+        ktvApi.getMusicContentCenter()?.renewToken(roomConfig.rtcRtmToken)
         //TODO: 2nd chorus token renew
         
         //rtm renew
@@ -98,7 +98,7 @@ open class AUiKaraokeRoomService: NSObject {
         rtmManager.renewChannel(channelName: channelName, token: roomConfig.rtcToken007)
         
         //rtc renew
-        rtcEngine.renewToken(roomConfig.rtcRtcToken006)
+        rtcEngine.renewToken(roomConfig.rtcRtcToken)
     }
     
     func joinRtcChannel(completion: ((Error?)->())?) {
@@ -112,12 +112,12 @@ open class AUiKaraokeRoomService: NSObject {
         setEngineConfig(with: uid)
         
         let ret =
-        self.rtcEngine.joinChannel(byToken: roomConfig.rtcRtcToken006,
+        self.rtcEngine.joinChannel(byToken: roomConfig.rtcRtcToken,
                                    channelId: roomConfig.rtcChannelName,
                                    uid: uid,
                                    mediaOptions: channelMediaOptions())
 #if DEBUG
-        aui_info("joinChannel channelName ret: \(ret) channelName:\(roomConfig.rtcChannelName), uid: \(uid) token: \(roomConfig.rtcRtcToken006)", tag: "AUiKaraokeRoomService")
+        aui_info("joinChannel channelName ret: \(ret) channelName:\(roomConfig.rtcChannelName), uid: \(uid) token: \(roomConfig.rtcRtcToken)", tag: "AUiKaraokeRoomService")
 #endif
         
         if ret != 0 {

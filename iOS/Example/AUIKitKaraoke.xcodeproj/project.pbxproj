@@ -1,0 +1,757 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		C33E33C3593F9B71557E2FFA /* Pods_AUIKitKaraoke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 409001D7FC0B681248CE9F66 /* Pods_AUIKitKaraoke.framework */; };
+		DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44D2A0BAAD700797229 /* AppDelegate.swift */; };
+		DD00C4502A0BAAD700797229 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */; };
+		DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4512A0BAAD700797229 /* ViewController.swift */; };
+		DD00C4552A0BAAD700797229 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4532A0BAAD700797229 /* Main.storyboard */; };
+		DD00C4572A0BAAD800797229 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4562A0BAAD800797229 /* Assets.xcassets */; };
+		DD00C45A2A0BAAD800797229 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4582A0BAAD800797229 /* LaunchScreen.storyboard */; };
+		DD00C4652A0BAAD800797229 /* AUIKitKaraokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4642A0BAAD800797229 /* AUIKitKaraokeTests.swift */; };
+		DD00C46F2A0BAAD800797229 /* AUIKitKaraokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C46E2A0BAAD800797229 /* AUIKitKaraokeUITests.swift */; };
+		DD00C4712A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4702A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift */; };
+		DD00C4862A0BAC7A00797229 /* AUiRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */; };
+		DD00C4872A0BAC7A00797229 /* AUiRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */; };
+		DD00C4882A0BAC7A00797229 /* KaraokeUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */; };
+		DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4812A0BAC7A00797229 /* RoomViewController.swift */; };
+		DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4822A0BAC7A00797229 /* KeyCenter.swift */; };
+		DD00C48B2A0BAC7A00797229 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4852A0BAC7A00797229 /* UserInfo.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		DD00C4612A0BAAD800797229 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD00C4422A0BAAD700797229 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD00C4492A0BAAD700797229;
+			remoteInfo = AUIKitKaraoke;
+		};
+		DD00C46B2A0BAAD800797229 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD00C4422A0BAAD700797229 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD00C4492A0BAAD700797229;
+			remoteInfo = AUIKitKaraoke;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		30CED821FC8BF6B98B75C421 /* Pods-AUIKitKaraoke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AUIKitKaraoke.debug.xcconfig"; path = "Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke.debug.xcconfig"; sourceTree = "<group>"; };
+		409001D7FC0B681248CE9F66 /* Pods_AUIKitKaraoke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AUIKitKaraoke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85FC354C2FAAAC938EEFEAC3 /* Pods-AUIKitKaraoke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AUIKitKaraoke.release.xcconfig"; path = "Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke.release.xcconfig"; sourceTree = "<group>"; };
+		DD00C44A2A0BAAD700797229 /* AUIKitKaraoke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AUIKitKaraoke.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD00C44D2A0BAAD700797229 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		DD00C4512A0BAAD700797229 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DD00C4542A0BAAD700797229 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DD00C4562A0BAAD800797229 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DD00C4592A0BAAD800797229 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		DD00C45B2A0BAAD800797229 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DD00C4602A0BAAD800797229 /* AUIKitKaraokeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AUIKitKaraokeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD00C4642A0BAAD800797229 /* AUIKitKaraokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIKitKaraokeTests.swift; sourceTree = "<group>"; };
+		DD00C46A2A0BAAD800797229 /* AUIKitKaraokeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AUIKitKaraokeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD00C46E2A0BAAD800797229 /* AUIKitKaraokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIKitKaraokeUITests.swift; sourceTree = "<group>"; };
+		DD00C4702A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIKitKaraokeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUiRoomListCell.swift; sourceTree = "<group>"; };
+		DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUiRoomListViewController.swift; sourceTree = "<group>"; };
+		DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaraokeUIKit.swift; sourceTree = "<group>"; };
+		DD00C4812A0BAC7A00797229 /* RoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
+		DD00C4822A0BAC7A00797229 /* KeyCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCenter.swift; sourceTree = "<group>"; };
+		DD00C4852A0BAC7A00797229 /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DD00C4472A0BAAD700797229 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C33E33C3593F9B71557E2FFA /* Pods_AUIKitKaraoke.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C45D2A0BAAD800797229 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C4672A0BAAD800797229 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		105276F4CD1081A5D1E5511C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				30CED821FC8BF6B98B75C421 /* Pods-AUIKitKaraoke.debug.xcconfig */,
+				85FC354C2FAAAC938EEFEAC3 /* Pods-AUIKitKaraoke.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		ACD9592CA859ABE5D537E261 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				409001D7FC0B681248CE9F66 /* Pods_AUIKitKaraoke.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DD00C4412A0BAAD700797229 = {
+			isa = PBXGroup;
+			children = (
+				DD00C44C2A0BAAD700797229 /* AUIKitKaraoke */,
+				DD00C4632A0BAAD800797229 /* AUIKitKaraokeTests */,
+				DD00C46D2A0BAAD800797229 /* AUIKitKaraokeUITests */,
+				DD00C44B2A0BAAD700797229 /* Products */,
+				105276F4CD1081A5D1E5511C /* Pods */,
+				ACD9592CA859ABE5D537E261 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		DD00C44B2A0BAAD700797229 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C44A2A0BAAD700797229 /* AUIKitKaraoke.app */,
+				DD00C4602A0BAAD800797229 /* AUIKitKaraokeTests.xctest */,
+				DD00C46A2A0BAAD800797229 /* AUIKitKaraokeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DD00C44C2A0BAAD700797229 /* AUIKitKaraoke */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C47D2A0BAC7A00797229 /* List */,
+				DD00C4832A0BAC7A00797229 /* Model */,
+				DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */,
+				DD00C4822A0BAC7A00797229 /* KeyCenter.swift */,
+				DD00C4812A0BAC7A00797229 /* RoomViewController.swift */,
+				DD00C44D2A0BAAD700797229 /* AppDelegate.swift */,
+				DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */,
+				DD00C4512A0BAAD700797229 /* ViewController.swift */,
+				DD00C4532A0BAAD700797229 /* Main.storyboard */,
+				DD00C4562A0BAAD800797229 /* Assets.xcassets */,
+				DD00C4582A0BAAD800797229 /* LaunchScreen.storyboard */,
+				DD00C45B2A0BAAD800797229 /* Info.plist */,
+			);
+			path = AUIKitKaraoke;
+			sourceTree = "<group>";
+		};
+		DD00C4632A0BAAD800797229 /* AUIKitKaraokeTests */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C4642A0BAAD800797229 /* AUIKitKaraokeTests.swift */,
+			);
+			path = AUIKitKaraokeTests;
+			sourceTree = "<group>";
+		};
+		DD00C46D2A0BAAD800797229 /* AUIKitKaraokeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C46E2A0BAAD800797229 /* AUIKitKaraokeUITests.swift */,
+				DD00C4702A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift */,
+			);
+			path = AUIKitKaraokeUITests;
+			sourceTree = "<group>";
+		};
+		DD00C47D2A0BAC7A00797229 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */,
+				DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		DD00C4832A0BAC7A00797229 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C4842A0BAC7A00797229 /* User */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		DD00C4842A0BAC7A00797229 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				DD00C4852A0BAC7A00797229 /* UserInfo.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DD00C4492A0BAAD700797229 /* AUIKitKaraoke */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD00C4742A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraoke" */;
+			buildPhases = (
+				6BD014C2B4EBD7CA7360BB44 /* [CP] Check Pods Manifest.lock */,
+				DD00C4462A0BAAD700797229 /* Sources */,
+				DD00C4472A0BAAD700797229 /* Frameworks */,
+				DD00C4482A0BAAD700797229 /* Resources */,
+				CD2695062888764D1A5A97F0 /* [CP] Embed Pods Frameworks */,
+				A0F7096168358AAA28B2F23B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AUIKitKaraoke;
+			productName = AUIKitKaraoke;
+			productReference = DD00C44A2A0BAAD700797229 /* AUIKitKaraoke.app */;
+			productType = "com.apple.product-type.application";
+		};
+		DD00C45F2A0BAAD800797229 /* AUIKitKaraokeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD00C4772A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraokeTests" */;
+			buildPhases = (
+				DD00C45C2A0BAAD800797229 /* Sources */,
+				DD00C45D2A0BAAD800797229 /* Frameworks */,
+				DD00C45E2A0BAAD800797229 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD00C4622A0BAAD800797229 /* PBXTargetDependency */,
+			);
+			name = AUIKitKaraokeTests;
+			productName = AUIKitKaraokeTests;
+			productReference = DD00C4602A0BAAD800797229 /* AUIKitKaraokeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		DD00C4692A0BAAD800797229 /* AUIKitKaraokeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD00C47A2A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraokeUITests" */;
+			buildPhases = (
+				DD00C4662A0BAAD800797229 /* Sources */,
+				DD00C4672A0BAAD800797229 /* Frameworks */,
+				DD00C4682A0BAAD800797229 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DD00C46C2A0BAAD800797229 /* PBXTargetDependency */,
+			);
+			name = AUIKitKaraokeUITests;
+			productName = AUIKitKaraokeUITests;
+			productReference = DD00C46A2A0BAAD800797229 /* AUIKitKaraokeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DD00C4422A0BAAD700797229 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1420;
+				TargetAttributes = {
+					DD00C4492A0BAAD700797229 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+					DD00C45F2A0BAAD800797229 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DD00C4492A0BAAD700797229;
+					};
+					DD00C4692A0BAAD800797229 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = DD00C4492A0BAAD700797229;
+					};
+				};
+			};
+			buildConfigurationList = DD00C4452A0BAAD700797229 /* Build configuration list for PBXProject "AUIKitKaraoke" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DD00C4412A0BAAD700797229;
+			productRefGroup = DD00C44B2A0BAAD700797229 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DD00C4492A0BAAD700797229 /* AUIKitKaraoke */,
+				DD00C45F2A0BAAD800797229 /* AUIKitKaraokeTests */,
+				DD00C4692A0BAAD800797229 /* AUIKitKaraokeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DD00C4482A0BAAD700797229 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD00C45A2A0BAAD800797229 /* LaunchScreen.storyboard in Resources */,
+				DD00C4572A0BAAD800797229 /* Assets.xcassets in Resources */,
+				DD00C4552A0BAAD700797229 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C45E2A0BAAD800797229 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C4682A0BAAD800797229 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6BD014C2B4EBD7CA7360BB44 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AUIKitKaraoke-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A0F7096168358AAA28B2F23B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CD2695062888764D1A5A97F0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DD00C4462A0BAAD700797229 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD00C4862A0BAC7A00797229 /* AUiRoomListCell.swift in Sources */,
+				DD00C4882A0BAC7A00797229 /* KaraokeUIKit.swift in Sources */,
+				DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */,
+				DD00C4872A0BAC7A00797229 /* AUiRoomListViewController.swift in Sources */,
+				DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */,
+				DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */,
+				DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */,
+				DD00C48B2A0BAC7A00797229 /* UserInfo.swift in Sources */,
+				DD00C4502A0BAAD700797229 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C45C2A0BAAD800797229 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD00C4652A0BAAD800797229 /* AUIKitKaraokeTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00C4662A0BAAD800797229 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD00C4712A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift in Sources */,
+				DD00C46F2A0BAAD800797229 /* AUIKitKaraokeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		DD00C4622A0BAAD800797229 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD00C4492A0BAAD700797229 /* AUIKitKaraoke */;
+			targetProxy = DD00C4612A0BAAD800797229 /* PBXContainerItemProxy */;
+		};
+		DD00C46C2A0BAAD800797229 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD00C4492A0BAAD700797229 /* AUIKitKaraoke */;
+			targetProxy = DD00C46B2A0BAAD800797229 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DD00C4532A0BAAD700797229 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DD00C4542A0BAAD700797229 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		DD00C4582A0BAAD800797229 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DD00C4592A0BAAD800797229 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		DD00C4722A0BAAD800797229 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		DD00C4732A0BAAD800797229 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DD00C4752A0BAAD800797229 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 30CED821FC8BF6B98B75C421 /* Pods-AUIKitKaraoke.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "UIKit needs to apply for microphone access";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DD00C4762A0BAAD800797229 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 85FC354C2FAAAC938EEFEAC3 /* Pods-AUIKitKaraoke.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "UIKit needs to apply for microphone access";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		DD00C4782A0BAAD800797229 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AUIKitKaraoke.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AUIKitKaraoke";
+			};
+			name = Debug;
+		};
+		DD00C4792A0BAAD800797229 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AUIKitKaraoke.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AUIKitKaraoke";
+			};
+			name = Release;
+		};
+		DD00C47B2A0BAAD800797229 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AUIKitKaraoke;
+			};
+			name = Debug;
+		};
+		DD00C47C2A0BAAD800797229 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit.UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AUIKitKaraoke;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DD00C4452A0BAAD700797229 /* Build configuration list for PBXProject "AUIKitKaraoke" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00C4722A0BAAD800797229 /* Debug */,
+				DD00C4732A0BAAD800797229 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD00C4742A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraoke" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00C4752A0BAAD800797229 /* Debug */,
+				DD00C4762A0BAAD800797229 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD00C4772A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraokeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00C4782A0BAAD800797229 /* Debug */,
+				DD00C4792A0BAAD800797229 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD00C47A2A0BAAD800797229 /* Build configuration list for PBXNativeTarget "AUIKitKaraokeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00C47B2A0BAAD800797229 /* Debug */,
+				DD00C47C2A0BAAD800797229 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DD00C4422A0BAAD700797229 /* Project object */;
+}
