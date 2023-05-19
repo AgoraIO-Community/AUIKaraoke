@@ -14,7 +14,7 @@
 
 ## 3 Which music content are used in the karaoke room? Can I choose my own supplier?
 
-The music contetn of karaoke use Agora Content Center service, and currently do not support switching suppliers on your own. Please refer to the [版权音乐](https://docs.agora.io/cn/online-ktv/API Reference/ios_ng/API/toc_drm.html)
+The music contetn of karaoke use Agora Content Center service, and currently do not support switching suppliers on your own. Please refer to the [版权音乐](https://docportal.shengwang.cn/cn/online-ktv/API%20Reference/ios_ng/API/toc_drm.html)
 
 
 ## 4 How to contact Agora for assistance when encountering difficulties in integration
