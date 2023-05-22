@@ -31,7 +31,7 @@ AUIKitKaraoke provides the following core features:
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![](https://download.agora.io/null/iOS_uikit_karaoke_1.0.0.png) | ![](https://download.agora.io/null/android_uikit_karaoke_demo_1.0.0.png) |
+| ![](https://download.agora.io/null/iOS_uikit_karaoke_1.0.0.png) | ![](https://download.agora.io/demo/release/android_uikit_karaoke_demo_1.0.0.png) |
 
 ## Quick Start
 
