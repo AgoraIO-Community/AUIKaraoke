@@ -25,7 +25,6 @@ if(uiKitPath.exists()){
     project(':auikit').projectDir = uiKitPath
 }
 include ':asceneskit'
-
-include ':examples:AUIKitKaraoke'
+include ':app'
 
 

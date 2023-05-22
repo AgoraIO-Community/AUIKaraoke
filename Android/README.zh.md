@@ -10,7 +10,7 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 
 
 ## 特性
-- [KaraokeUiKit](examples/AUIKitKaraoke/src/main/java/io/agora/app/karaoke/kit) **([使用指南](doc/KaraokeUiKit.zh.md))**
+- [KaraokeUiKit](app/src/main/java/io/agora/app/karaoke/kit) **([使用指南](doc/KaraokeUiKit.zh.md))**
 - [AScenesKit](asceneskit)
     - [Karaoke](asceneskit/src/main/java/io/agora/asceneskit/karaoke)
         - [KaraokeRoomView](asceneskit/src/main/java/io/agora/asceneskit/karaoke/KaraokeRoomView.kt)
@@ -63,6 +63,10 @@ SERVER_HOST= （业务服务器域名）
 
 > 声网测试域名： https://service.agora.io/uikit-karaoke，
 
+- 在AUIKitKaraoke目录下执行
+```
+git submodule update --init
+```
 
 - 用 Android Studio 运行项目即可开始您的体验
 

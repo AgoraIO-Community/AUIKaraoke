@@ -14,16 +14,12 @@ import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
 import io.agora.app.karaoke.kit.KaraokeRoomActivity
 import io.agora.app.karaoke.kit.KaraokeUiKit
-import io.agora.auikit.model.*
-import io.agora.auikit.service.http.CommonResp
-import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.http.application.ApplicationInterface
-import io.agora.auikit.service.http.application.TokenGenerateReq
-import io.agora.auikit.service.http.application.TokenGenerateResp
+import io.agora.auikit.model.AUiCommonConfig
+import io.agora.auikit.model.AUiCreateRoomInfo
+import io.agora.auikit.model.AUiRoomInfo
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
 import io.agora.auikit.ui.basic.AUiAlertDialog
 import io.agora.auikit.utils.BindingViewHolder
-import retrofit2.Response
 import java.util.Random
 
 class RoomListActivity : AppCompatActivity() {

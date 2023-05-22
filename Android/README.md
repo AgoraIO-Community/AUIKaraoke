@@ -61,6 +61,11 @@ SERVER_HOST= （Domain name of the business server）
 
 > Agora Test Domain: https://service.agora.io/uikit-karaoke
 
+- Execute in the AUIKitKaraoke directory:
+```
+git submodule update --init
+```
+
 - Run the project with Android Studio to begin your experience.
 
 ## License
