@@ -28,6 +28,8 @@ AUIKitKaraoke 提供以下核心功能：
 
 
 ## Demo 体验
+![](https://download.agora.io/null/uikit_karaoke_demo_pic1.jpg)|![](https://download.agora.io/null/uikit_karaoke_demo_pic3.jpg)|
+---|---
 
 | iOS                                                          | Android                                                      |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
