@@ -69,6 +69,40 @@ public class ChorusServiceImpl implements IChorusService {
     }
 
     /**
+     * Clear chorus by user
+     * 
+     * @param method
+     * @param metadata
+     * @param roomId
+     * @param userId
+     * @return
+     */
+    @Override
+    public void clearByUser(String method, Metadata metadata, String roomId, String userId) throws Exception {
+        log.info("clearByUser-{}, start, roomId:{}, userId:{}", method, roomId, userId);
+
+        MetadataItem metadataItem = rtmUtil.getChannelMetadataByKey(metadata, METADATA_KEY);
+        // Check data
+        if (metadataItem == null) {
+            return;
+        }
+
+        // Get data
+        List<ChorusDomain> chorusList = JSON.parseArray(metadataItem.value, ChorusDomain.class);
+        // Remove chorus
+        List<ChorusDomain> chorusListNew = chorusList.stream()
+                .filter(o -> !Objects.equals(o.getUserId(), userId))
+                .collect(Collectors.toList());
+
+        metadataItem.value = JSON.toJSONString(chorusListNew);
+        metadata.setMetadataItem(metadataItem);
+
+        // Update data
+        roomService.updateMetadata("clearByUser", roomId, metadata, metadataItem, roomId, null);
+        log.info("clearByUser-{}, success, roomId:{}, userId:{}", method, roomId, userId);
+    }
+
+    /**
      * Create metadata
      * 
      * @param metadata

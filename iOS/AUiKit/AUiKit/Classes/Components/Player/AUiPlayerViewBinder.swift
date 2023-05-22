@@ -223,6 +223,8 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
     }
     
     public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
+        playerView?.originalButton.isSelected = false
+        playerView?.playOrPauseButton.isSelected = false
         playerView?.karaokeLrcView.resetShowOnce()
         guard let topSong = songs.first else {
             playerView?.musicInfo = nil

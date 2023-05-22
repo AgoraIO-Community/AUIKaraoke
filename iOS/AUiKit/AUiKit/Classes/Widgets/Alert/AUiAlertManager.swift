@@ -61,7 +61,14 @@ class AUiAlertManager: NSObject {
                 showAlertPostion(alertPostion: alertPostion, view: view)
             }
         } else {
-            showAlertPostion(alertPostion: alertPostion, view: view)
+            vc?.view.addSubview(containerView)
+            if let _ = vc?.view.superview {
+                showAlertPostion(alertPostion: alertPostion, view: view)
+            }else{
+                UIViewController.cl_topViewController()?.present(vc!, animated: false) {
+                    showAlertPostion(alertPostion: alertPostion, view: view)
+                }
+            }
         }
         //注册键盘出现通知
         NotificationCenter.default.addObserver(self,

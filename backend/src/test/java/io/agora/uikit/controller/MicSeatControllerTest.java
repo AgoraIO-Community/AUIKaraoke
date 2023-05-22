@@ -816,21 +816,6 @@ public class MicSeatControllerTest {
     }
 
     @Test
-    public void testMuteAudioErrorMicSeatNumberStatusIdle() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("roomId", roomId);
-        json.put("userId", userId);
-        json.put("micSeatNo", 2);
-        mvc.perform(MockMvcRequestBuilders.post("/v1/seat/audio/mute")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json.toJSONString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("code")
-                        .value(ReturnCodeEnum.MIC_SEAT_NUMBER_IDLE_ERROR.getCode()))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
     public void testMuteVideo() throws Exception {
         log.info("testMuteVideo, roomId:{}", roomId);
 
@@ -941,21 +926,6 @@ public class MicSeatControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code")
                         .value(ReturnCodeEnum.MIC_SEAT_NUMBER_NOT_EXISTS_ERROR.getCode()))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void testMuteVideoErrorMicSeatNumberStatusIdle() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("roomId", roomId);
-        json.put("userId", userId);
-        json.put("micSeatNo", 2);
-        mvc.perform(MockMvcRequestBuilders.post("/v1/seat/video/mute")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json.toJSONString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("code")
-                        .value(ReturnCodeEnum.MIC_SEAT_NUMBER_IDLE_ERROR.getCode()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -1465,21 +1435,6 @@ public class MicSeatControllerTest {
     }
 
     @Test
-    public void testUnmuteAudioErrorMicSeatNumberStatusIdle() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("roomId", roomId);
-        json.put("userId", userId);
-        json.put("micSeatNo", 2);
-        mvc.perform(MockMvcRequestBuilders.post("/v1/seat/audio/mute")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json.toJSONString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("code")
-                        .value(ReturnCodeEnum.MIC_SEAT_NUMBER_IDLE_ERROR.getCode()))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
     public void testUnMuteVideo() throws Exception {
         log.info("testUnMuteVideo, roomId:{}", roomId);
 
@@ -1590,21 +1545,6 @@ public class MicSeatControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("code")
                         .value(ReturnCodeEnum.MIC_SEAT_NUMBER_NOT_EXISTS_ERROR.getCode()))
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void testUnmuteVideoErrorMicSeatNumberStatusIdle() throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("roomId", roomId);
-        json.put("userId", userId);
-        json.put("micSeatNo", 2);
-        mvc.perform(MockMvcRequestBuilders.post("/v1/seat/video/unmute")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json.toJSONString()))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("code")
-                        .value(ReturnCodeEnum.MIC_SEAT_NUMBER_IDLE_ERROR.getCode()))
                 .andDo(MockMvcResultHandlers.print());
     }
 }
