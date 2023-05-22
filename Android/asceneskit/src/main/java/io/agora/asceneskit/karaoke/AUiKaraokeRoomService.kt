@@ -32,7 +32,9 @@ class AUiKaraokeRoomService(
     private val roomInfo: AUiRoomInfo
 ): AUiUserRespDelegate {
 
-    val channelName: String
+    private val TAG = "AUiKaraokeRoomService"
+
+    private val channelName: String
         get() { return  roomInfo.roomId }
 
     private val rtmManager: AUiRtmManager = roomManager.rtmManager
@@ -75,7 +77,7 @@ class AUiKaraokeRoomService(
     fun getMusicPlayerService() = playerImpl
     fun enterRoom(success: (AUiRoomInfo) -> Unit, failure: (AUiException) -> Unit) {
         roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
-            logger().d("EnterRoom", "enterRoom result : $error")
+            logger().d(TAG, "enterRoom result : $error")
             if (error != null) {
                 // failure
                 failure.invoke(error)
@@ -86,29 +88,13 @@ class AUiKaraokeRoomService(
                 // TODO Workaround: 在rtm加入成功之后才能加入rtc频道，且频道名不同，rtc频道为roomName+_rtc
                 joinRtcRoom()
             }
-            logger().d("EnterRoom", "enterRoom end ...")
+            logger().d(TAG, "enterRoom end ...")
         }
     }
     fun destroyRoom() {
         roomManager.destroyRoom(channelName) {}
         mKtvApi.release()
         mRtcEngine.leaveChannel()
-    }
-    fun getUserList(callback: (List<AUiUserInfo>) -> Unit) {
-        userImpl.getUserInfoList(channelName, null) { error, userList ->
-            if (error != null || userList == null) {
-                logger().e(
-                    "KaraokeRoomService",
-                    "getUserInfoList error : $error - $userList"
-                )
-            } else {
-                logger().d(
-                    "KaraokeRoomService",
-                    "getUserInfoList userList : $userList"
-                )
-                callback.invoke(userList)
-            }
-        }
     }
     fun setupLocalStreamOn(isOn: Boolean) {
         Log.d("rtc_publish_state", "isOn: $isOn")
@@ -144,7 +130,7 @@ class AUiKaraokeRoomService(
         mRtcEngine.muteRemoteAudioStream(userId.toInt(), isMute)
     }
 
-    fun joinRtcRoom() {
+    private fun joinRtcRoom() {
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING)
         mRtcEngine.enableVideo()
         mRtcEngine.enableLocalVideo(false)
@@ -163,9 +149,9 @@ class AUiKaraokeRoomService(
         )
 
         if (ret == Constants.ERR_OK) {
-            // join rtc room success
+            logger().d(TAG, "join rtc room success")
         }else{
-            // TODO LOG
+            logger().d(TAG, "join rtc room failed")
         }
     }
 
