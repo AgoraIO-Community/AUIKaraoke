@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "io.agora.uikit.karaoke",
+  "applicationId": "io.agora.karaoke.uikit",
   "variantName": "release",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "attributes": [],
       "versionCode": 1,
-      "versionName": "1.0",
+      "versionName": "0.1.1",
       "outputFile": "AUIKitKaraoke-release.apk"
     }
   ],
