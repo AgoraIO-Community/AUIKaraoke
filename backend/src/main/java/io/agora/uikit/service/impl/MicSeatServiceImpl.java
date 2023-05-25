@@ -32,6 +32,7 @@ import io.agora.uikit.bean.req.MicSeatUnlockReq;
 import io.agora.uikit.bean.req.MicSeatVideoMuteReq;
 import io.agora.uikit.bean.req.MicSeatVideoUnmuteReq;
 import io.agora.uikit.bean.req.RoomCreateReq;
+import io.agora.uikit.service.IChorusService;
 import io.agora.uikit.service.IMicSeatService;
 import io.agora.uikit.service.IRoomService;
 import io.agora.uikit.service.ISongService;
@@ -48,6 +49,9 @@ public class MicSeatServiceImpl implements IMicSeatService {
     @Autowired
     @Lazy(true)
     private ISongService songService;
+    @Autowired
+    @Lazy(true)
+    private IChorusService chorusService;
 
     // Metadata key
     public static final String METADATA_KEY = "micSeat";
@@ -343,6 +347,8 @@ public class MicSeatServiceImpl implements IMicSeatService {
 
         // Clear song by user
         songService.clearByUser("kick", metadata, micSeatKickReq.getRoomId(), ownerUserid);
+        // Clear chorus by user
+        chorusService.clearByUser("kick", metadata, micSeatKickReq.getRoomId(), ownerUserid);
 
         // Release lock
         roomService.releaseLock(micSeatKickReq.getRoomId());
@@ -386,6 +392,8 @@ public class MicSeatServiceImpl implements IMicSeatService {
 
         // Clear song by user
         songService.clearByUser("leave", metadata, micSeatLeaveReq.getRoomId(), micSeatLeaveReq.getUserId());
+        // Clear chorus by user
+        chorusService.clearByUser("leave", metadata, micSeatLeaveReq.getRoomId(), micSeatLeaveReq.getUserId());
 
         // Release lock
         roomService.releaseLock(micSeatLeaveReq.getRoomId());
@@ -506,9 +514,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         // Check if the mic seat exists
         checkMicSeatNoNotExists("muteAudio", micSeatMap, micSeatAudioMuteReq.getRoomId(),
                 micSeatAudioMuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("muteAudio", micSeatMap, micSeatAudioMuteReq.getRoomId(),
-                micSeatAudioMuteReq.getMicSeatNo());
 
         // Set data
         MicSeatDomain micSeatMapModify = micSeatMap.get(micSeatAudioMuteReq.getMicSeatNo().toString());
@@ -551,9 +556,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         Map<String, MicSeatDomain> micSeatMap = getMicSeatMap(metadataItem);
         // Check if the mic seat exists
         checkMicSeatNoNotExists("muteVideo", micSeatMap, micSeatVideoMuteReq.getRoomId(),
-                micSeatVideoMuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("muteVideo", micSeatMap, micSeatVideoMuteReq.getRoomId(),
                 micSeatVideoMuteReq.getMicSeatNo());
 
         // Set data
@@ -692,9 +694,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         // Check if the mic seat exists
         checkMicSeatNoNotExists("unmuteAudio", micSeatMap, micSeatAudioUnmuteReq.getRoomId(),
                 micSeatAudioUnmuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("unmuteAudio", micSeatMap, micSeatAudioUnmuteReq.getRoomId(),
-                micSeatAudioUnmuteReq.getMicSeatNo());
 
         // Set data
         MicSeatDomain micSeatMapModify = micSeatMap.get(micSeatAudioUnmuteReq.getMicSeatNo().toString());
@@ -738,9 +737,6 @@ public class MicSeatServiceImpl implements IMicSeatService {
         Map<String, MicSeatDomain> micSeatMap = getMicSeatMap(metadataItem);
         // Check if the mic seat exists
         checkMicSeatNoNotExists("unmuteVideo", micSeatMap, micSeatVideoUnmuteReq.getRoomId(),
-                micSeatVideoUnmuteReq.getMicSeatNo());
-        // Check mic seat no status, idle
-        checkMicSeatNoStatusIdle("unmuteVideo", micSeatMap, micSeatVideoUnmuteReq.getRoomId(),
                 micSeatVideoUnmuteReq.getMicSeatNo());
 
         // Set data

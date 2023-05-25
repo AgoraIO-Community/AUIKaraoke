@@ -28,6 +28,17 @@ public interface IChorusService extends IService<ChorusJoinReq> {
     void clear(Metadata metadata);
 
     /**
+     * Clear chorus by user
+     * 
+     * @param method
+     * @param metadata
+     * @param roomId
+     * @param userId
+     * @return
+     */
+    void clearByUser(String method, Metadata metadata, String roomId, String userId) throws Exception;
+
+    /**
      * Create metadata
      * 
      * @param metadata

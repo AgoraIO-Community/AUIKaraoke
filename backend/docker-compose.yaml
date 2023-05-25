@@ -6,7 +6,7 @@ networks:
 
 services:
     web:
-        image: sunshinexdocker/uikit-karaoke:0.1.2023050815
+        image: sunshinexdocker/uikit-karaoke:0.1.2023051513
         container_name: uikit-web
         ports:
             - 8080:8080

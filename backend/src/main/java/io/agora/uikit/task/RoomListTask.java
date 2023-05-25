@@ -34,6 +34,7 @@ public class RoomListTask {
 
     private String roomStatusQueue = "task_roomStatusQueue";
     private long waitSecond = 1;
+    private long createTimeDelayMs = 60 * 1000;
     private String updateRoomStatusQueueMetricName = "RoomListTask-updateRoomStatusQueue";
     private String updateRoomStatusMetricName = "RoomListTask-updateRoomStatus";
 
@@ -44,30 +45,31 @@ public class RoomListTask {
     public void updateRoomStatusQueue() throws Exception {
         prometheusMetric.getTaskCounter().labels(updateRoomStatusQueueMetricName, "start").inc();
 
-        log.debug("updateRoomStatusQueue start, roomStatusQueue:{}, waitSecond:{}", roomStatusQueue, waitSecond);
+        log.info("updateRoomStatusQueue start, roomStatusQueue:{}, waitSecond:{}", roomStatusQueue, waitSecond);
 
         // Acquire lock
         if (!redisUtil.tryLock(roomStatusQueue, waitSecond)) {
             prometheusMetric.getTaskCounter().labels(updateRoomStatusQueueMetricName, "tryLockFailed").inc();
-            log.debug("updateRoomStatusQueue, acquire lock failed");
+            log.info("updateRoomStatusQueue, acquire lock failed");
             return;
         }
 
         // Get room list
-        List<RoomListEntity> roomList = roomListRepository.findAll();
-        log.debug("updateRoomStatusQueue, total:{}", roomList.size());
+        List<RoomListEntity> roomList = roomListRepository
+                .findByCreateTimeLessThan(System.currentTimeMillis() - createTimeDelayMs);
+        log.info("updateRoomStatusQueue, total:{}", roomList.size());
 
         // Update queue
         for (RoomListEntity roomListEntity : roomList) {
             if (!redisUtil.zsetAdd(roomStatusQueue, roomListEntity.getRoomId(), roomListEntity.getCreateTime())) {
-                log.debug("updateRoomStatusQueue, failed, roomId:{}", roomListEntity.getRoomId());
+                log.info("updateRoomStatusQueue, failed, roomId:{}", roomListEntity.getRoomId());
             }
         }
 
         TimeUnit.SECONDS.sleep(waitSecond);
         // Release lock
         redisUtil.unlock(roomStatusQueue);
-        log.debug("updateRoomStatusQueue end, roomStatusQueue:{}, waitSecond:{}", roomStatusQueue, waitSecond);
+        log.info("updateRoomStatusQueue end, roomStatusQueue:{}, waitSecond:{}", roomStatusQueue, waitSecond);
         prometheusMetric.getTaskCounter().labels(updateRoomStatusQueueMetricName, "end").inc();
     }
 
@@ -77,7 +79,7 @@ public class RoomListTask {
     @Scheduled(fixedDelay = 5000)
     public void updateRoomStatus() throws Exception {
         prometheusMetric.getTaskCounter().labels(updateRoomStatusMetricName, "start").inc();
-        log.debug("updateRoomStatus start, roomStatusQueue:{}", roomStatusQueue);
+        log.info("updateRoomStatus start, roomStatusQueue:{}", roomStatusQueue);
 
         while (true) {
             prometheusMetric.getTaskCounter().labels(updateRoomStatusMetricName, "zsetPopMaxStart").inc();
@@ -86,7 +88,7 @@ public class RoomListTask {
             // Check data
             if (roomInfo == null) {
                 prometheusMetric.getTaskCounter().labels(updateRoomStatusMetricName, "zsetPopMaxRoomInfoNull").inc();
-                log.debug("updateRoomStatus, data empty, roomStatusQueue:{}", roomStatusQueue);
+                log.info("updateRoomStatus, data empty, roomStatusQueue:{}", roomStatusQueue);
                 break;
             }
 
@@ -117,11 +119,11 @@ public class RoomListTask {
             roomListRepository.updatById(roomId, update);
             prometheusMetric.getTaskCounter().labels(updateRoomStatusMetricName, "zsetPopMaxUpdateOnlineUsers").inc();
 
-            log.debug("updateRoomStatus update, roomStatusQueue:{}, roomId:{}, onlineUsers:{}", roomStatusQueue, roomId,
+            log.info("updateRoomStatus update, roomStatusQueue:{}, roomId:{}, onlineUsers:{}", roomStatusQueue, roomId,
                     onlineUsers);
         }
 
-        log.debug("updateRoomStatus end, roomStatusQueue:{}", roomStatusQueue);
+        log.info("updateRoomStatus end, roomStatusQueue:{}", roomStatusQueue);
         prometheusMetric.getTaskCounter().labels(updateRoomStatusMetricName, "end").inc();
     }
 }
