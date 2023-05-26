@@ -1,8 +1,8 @@
-# KaraokeUiKit
+# KaraokeUIKit
 
-*English | [中文](KaraokeUiKit_zh.md)*
+*English | [中文](KaraokeUIKit_zh.md)*
 
-KaraokeUiKit is a Karaoke scenario component that provides room management and the ability to pull up room pages. Developers can use this component to quickly build a Karaoke application。
+KaraokeUIKit is a Karaoke scenario component that provides room management and the ability to pull up room pages. Developers can use this component to quickly build a Karaoke application。
 
 
 ## Quick Started
@@ -12,19 +12,19 @@ KaraokeUiKit is a Karaoke scenario component that provides room management and t
 
 **Copy the following source code into your own project：**
 
-- [AUiKit](../AUiKit)
+- [AUIKit](../AUIKit)
 - [AScenesKit](../AScenesKit)
-- [KaraokeUiKit.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KaraokeUIKit.swift)
+- [KaraokeUIKit.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KaraokeUIKit.swift)
 - [KeyCenter.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KeyCenter.swift)
 
-**Add dependencies on AScenesKit and AUiKit in the Podfile file (for example, when AUiKit and AScenesKit are placed in the same level directory as the Podfile)**
+**Add dependencies on AScenesKit and AUIKit in the Podfile file (for example, when AUIKit and AScenesKit are placed in the same level directory as the Podfile)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUiKit', :path => './AUiKit'
+  pod 'AUIKit', :path => './AUIKit'
 ```
 
-**Drag KaraokeUiKit.swift into the project**
+**Drag KaraokeUIKit.swift into the project**
 
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_keycenter_ios.png) 
 
@@ -33,10 +33,10 @@ KaraokeUiKit is a Karaoke scenario component that provides room management and t
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_app_privacy_ios.png)
 
 
-### 2. Initialize KaraokeUiKit
+### 2. Initialize KaraokeUIKit
 ```swift
 //Set basic information to KaraokeUIKit
-let commonConfig = AUiCommonConfig()
+let commonConfig = AUICommonConfig()
 commonConfig.host = KeyCenter.HostUrl
 commonConfig.userId = userInfo.userId
 commonConfig.userName = userInfo.userName
@@ -58,7 +58,7 @@ KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: nil,
 
 ### 4. Create room
 ```swift
-let room = AUiCreateRoomInfo()
+let room = AUICreateRoomInfo()
 room.roomName = text
 room.thumbnail = self.userInfo.userAvatar
 room.seatCount = 8
@@ -75,7 +75,7 @@ KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
 ```swift
 let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
 //Creating Room Containers
-let karaokeView = AUiKaraokeRoomView(frame: self.view.bounds)
+let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
 //Obtain the necessary token and appid through the generateToken method
 generateToken { roomConfig, appId in
     KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
@@ -89,7 +89,7 @@ generateToken { roomConfig, appId in
 ### 6. Exit the room
 #### 6.1 Proactively exiting
 ```swift
-//AUiKaraokeRoomView provides a closure for onClickOffButton
+//AUIKaraokeRoomView provides a closure for onClickOffButton
 karaokeView.onClickOffButton = { [weak self] in
     self.navigationController?.popViewController(animated: true)
     KaraokeUIKit.shared.destoryRoom(roomId: self.roomInfo?.roomId ?? "") 
@@ -103,13 +103,13 @@ Please refer to [Room Destruction] (# 7.2-Room-Destruction)
 ### 7. Exception handling
 #### 7.1 Token expiration processing
 ```swift
-//Subscribe to the callback for AUiRtmErrorProxyDelegate after KaraokeUIKit.shared.launchRoom
+//Subscribe to the callback for AUIRtmErrorProxyDelegate after KaraokeUIKit.shared.launchRoom
 KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
 
 //Unsubscribe when exiting the room
 KaraokeUIKit.shared.unsubscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
 
-//Then use the onTokenPrivilegeWillExpire callback method in the AUiRtmErrorProxyDelegate callback to renew all tokens
+//Then use the onTokenPrivilegeWillExpire callback method in the AUIRtmErrorProxyDelegate callback to renew all tokens
 @objc func onTokenPrivilegeWillExpire(channelName: String?) {
     generatorToken { config, _ in
         KaraokeUIKit.shared.renew(config: config)
@@ -119,34 +119,34 @@ KaraokeUIKit.shared.unsubscribeError(roomId: self.roomInfo?.roomId ?? "", delega
 
 #### 7.2 Room destruction
 ```swift
-//Subscribe to the callback for AUiRoomManagerRespDelegate after KaraokeUIKit. shared. launchRoom
+//Subscribe to the callback for AUIRoomManagerRespDelegate after KaraokeUIKit. shared. launchRoom
 KaraokeUIKit.shared.bindRespDelegate(delegate: self)
 
 //Unsubscribe when exiting the room
 KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
 
-//Process room destruction through onRoomDestroy in the AUiRoomManagerRespDelegate callback method
+//Process room destruction through onRoomDestroy in the AUIRoomManagerRespDelegate callback method
 func onRoomDestroy(roomId: String) {
     //Processing room was destroyed
 }
 ```
 
 ### 8 Skin changing
-- AUiKit supports one click skin changing, and you can set the skin using the following methods
+- AUIKit supports one click skin changing, and you can set the skin using the following methods
 ```swift
 //Reset to default theme
-AUiRoomContext.shared.resetTheme()
+AUIRoomContext.shared.resetTheme()
 ```
 ```swift
 //Switch to the next theme
-AUiRoomContext.shared.switchThemeToNext()
+AUIRoomContext.shared.switchThemeToNext()
 ```
 
 ```swift
 //Specify a theme
-AUiRoomContext.shared.switchTheme(themeName: "UIKit")
+AUIRoomContext.shared.switchTheme(themeName: "UIKit")
 ```
-- You can also change the skin of the component by modifying the [configuration file](../AUiKit/AUiKit/Resource/auiTheme.bundle/UIKit/theme) or replacing the [resource file](../AUiKit/AUiKit/Resource/auiTheme.bundle/UIKit/resource)
+- You can also change the skin of the component by modifying the [configuration file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme) or replacing the [resource file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)
 - For more skin changing issues, please refer to [Skin Settings](./KaraokeTheme.md)
 
 ## License

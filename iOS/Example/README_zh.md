@@ -2,7 +2,7 @@
 
 *[English](README.md) | 中文*
 
-本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUiScenesKit](../AScenesKit/README_zh.md)和[AUiKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
+本文档主要介绍如何快速跑通 AUIKitKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUIScenesKit](../AScenesKit/README_zh.md)和[AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 
 ## 架构图
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
@@ -13,8 +13,8 @@
 ┌─ Example                     // Demo代码集成目录
 │  └─ AUIKitKaraoke            // 主要提供 Karaoke 的集成页面
 ├─ AUiScenesKit                // 场景业务组装模块，目前只包含Karaoke
-│  ├─ AUiKaraokeRoomView       // Karaoke房间容器View，用于拼接各个基础组件以及基础组件与Service的绑定
-│  ├─ AUiKaraokeRoomService    // Karaoke房间Service，用于创建各个基础Service以及RTC/RTM/KTVAPi等的初始化
+│  ├─ AUIKaraokeRoomView       // Karaoke房间容器View，用于拼接各个基础组件以及基础组件与Service的绑定
+│  ├─ AUIKaraokeRoomService    // Karaoke房间Service，用于创建各个基础Service以及RTC/RTM/KTVAPi等的初始化
 │	 └─ Binder                   // 把UI Components和Service关联起来的业务绑定模块
 └─ AUiKit                      // 包含基础组件和基础服务
    ├─ Service                  // 相关基础组件服务类，包括麦位、点歌器、用户管理、合唱等
