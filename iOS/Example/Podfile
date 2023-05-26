@@ -6,7 +6,7 @@ target 'AUIKitKaraoke' do
   use_frameworks!
   
   pod 'AScenesKit', :path => '../AScenesKit'
-  pod 'AUiKit', :path => '../../AUiKit/iOS'
+  pod 'AUIKit', :path => '../../AUIKit/iOS'
   pod 'AgoraRtcEngine_iOS', :path => './libs'
   pod 'AgoraLyricsScore', '1.1.1-beta-3'
 

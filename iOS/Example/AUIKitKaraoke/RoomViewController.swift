@@ -9,12 +9,12 @@
 import Foundation
 import UIKit
 import AScenesKit
-import AUiKit
+import AUIKit
 
 class RoomViewController: UIViewController {
-    var roomInfo: AUiRoomInfo?
+    var roomInfo: AUIRoomInfo?
     var themeIdx = 0
-    private var karaokeView: AUiKaraokeRoomView?
+    private var karaokeView: AUIKaraokeRoomView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,11 +25,11 @@ class RoomViewController: UIViewController {
         
         let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
         //创建房间容器
-        let karaokeView = AUiKaraokeRoomView(frame: self.view.bounds)
+        let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
         let isOwner = roomInfo?.owner?.userId == uid ? true : false
         karaokeView.onClickOffButton = { [weak self] in
             aui_info("onClickOffButton", tag: "RoomViewController")
-            AUiAlertView.theme_defaultAlert()
+            AUIAlertView.theme_defaultAlert()
                 .contentTextAligment(textAlignment: .center)
                 .title(title: isOwner ? "解散房间" : "离开房间")
                 .content(content: isOwner ? "确定解散该房间吗?" : "确定离开该房间吗？")
@@ -83,12 +83,12 @@ class RoomViewController: UIViewController {
         }
     }
     
-    private func generateToken(completion:@escaping ((AUiRoomConfig, String)->())) {
+    private func generateToken(completion:@escaping ((AUIRoomConfig, String)->())) {
         let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
         let channelName = roomInfo?.roomId ?? ""
         let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
-        let roomConfig = AUiRoomConfig()
+        let roomConfig = AUIRoomConfig()
         roomConfig.channelName = channelName
         roomConfig.rtcChannelName = rtcChannelName
         roomConfig.rtcChorusChannelName = rtcChorusChannelName
@@ -99,7 +99,7 @@ class RoomViewController: UIViewController {
         let group = DispatchGroup()
         
         group.enter()
-        let tokenModel1 = AUiTokenGenerateNetworkModel()
+        let tokenModel1 = AUITokenGenerateNetworkModel()
         tokenModel1.channelName = channelName
         tokenModel1.userId = uid
         tokenModel1.request { error, result in
@@ -115,7 +115,7 @@ class RoomViewController: UIViewController {
         }
         
         group.enter()
-        let tokenModel2 = AUiTokenGenerateNetworkModel()
+        let tokenModel2 = AUITokenGenerateNetworkModel()
         tokenModel2.channelName = rtcChannelName
         tokenModel2.userId = uid
         tokenModel2.request { error, result in
@@ -130,7 +130,7 @@ class RoomViewController: UIViewController {
         }
         
         group.enter()
-        let tokenModel3 = AUiTokenGenerateNetworkModel()
+        let tokenModel3 = AUITokenGenerateNetworkModel()
         tokenModel3.channelName = rtcChorusChannelName
         tokenModel3.userId = uid
         tokenModel3.request { error, result in
@@ -149,10 +149,10 @@ class RoomViewController: UIViewController {
     }
 }
 
-extension RoomViewController: AUiRoomManagerRespDelegate {
+extension RoomViewController: AUIRoomManagerRespDelegate {
     func onRoomDestroy(roomId: String) {
         self.karaokeView?.onBackAction()
-        AUiAlertView()
+        AUIAlertView()
             .background(color: UIColor(red: 0.1055, green: 0.0062, blue: 0.4032, alpha: 1))
             .isShowCloseButton(isShow: false)
             .title(title: "房间已销毁")
@@ -165,13 +165,13 @@ extension RoomViewController: AUiRoomManagerRespDelegate {
             .show(fromVC: self)
     }
     
-    func onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo) {
+    func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
         
     }
 }
 
 
-extension RoomViewController: AUiRtmErrorProxyDelegate {
+extension RoomViewController: AUIRtmErrorProxyDelegate {
     @objc func onTokenPrivilegeWillExpire(channelName: String?) {
         generateToken { config, _ in
             KaraokeUIKit.shared.renew(config: config)

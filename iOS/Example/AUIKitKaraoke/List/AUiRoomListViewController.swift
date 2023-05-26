@@ -1,21 +1,21 @@
 //
-//  AUiRoomListViewController.swift
-//  AUiCell
+//  AUIRoomListViewController.swift
+//  AUICell
 //
 //  Created by zhaoyongqiang on 2023/4/11.
 //
 
 import UIKit
 import AScenesKit
-import AUiKit
+import AUIKit
 import MJRefresh
 import SwiftTheme
 
 
 private let kButtonWidth: CGFloat = 327
 private let kListCountPerPage: Int = 10
-class AUiRoomListViewController: UIViewController {
-    private var roomList: [AUiRoomInfo] = []
+class AUIRoomListViewController: UIViewController {
+    private var roomList: [AUIRoomInfo] = []
     private var userInfo: UserInfo = UserInfo()
     
     private lazy var collectionView: UICollectionView = {
@@ -28,14 +28,14 @@ class AUiRoomListViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(AUiRoomListCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(AUIRoomListCell.self, forCellWithReuseIdentifier: "cell")
         collectionView.backgroundColor = .clear
         return collectionView
     }()
     
-    private lazy var createButton: AUiButton = {
-        let button = AUiButton()
-        let style = AUiButtonDynamicTheme()
+    private lazy var createButton: AUIButton = {
+        let button = AUIButton()
+        let style = AUIButtonDynamicTheme()
         style.backgroundColor = "CommonColor.primary"
         style.buttonWitdth = ThemeCGFloatPicker(floats: 327)
         button.style = style
@@ -45,9 +45,9 @@ class AUiRoomListViewController: UIViewController {
         return button
     }()
     
-    private lazy var themeButton: AUiButton = {
-        let button = AUiButton()
-        let style = AUiButtonDynamicTheme()
+    private lazy var themeButton: AUIButton = {
+        let button = AUIButton()
+        let style = AUIButtonDynamicTheme()
         style.backgroundColor = "CommonColor.primary"
         style.buttonWitdth = ThemeCGFloatPicker(floats: 327)
         button.style = style
@@ -67,11 +67,11 @@ class AUiRoomListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AUiRoomContext.shared.resetTheme()
+        AUIRoomContext.shared.resetTheme()
         UIScrollView.appearance().contentInsetAdjustmentBehavior = .never
         view.layer.addSublayer(gradientLayer)
         gradientLayer.frame = view.bounds
-        gradientLayer.theme_colors = AUiGradientColor("CommonColor.normalGradient")
+        gradientLayer.theme_colors = AUIGradientColor("CommonColor.normalGradient")
 
         collectionView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
             self?.onRefreshAction()
@@ -92,7 +92,7 @@ class AUiRoomListViewController: UIViewController {
     
     private func initEngine() {
         //设置基础信息到KaraokeUIKit里
-        let commonConfig = AUiCommonConfig()
+        let commonConfig = AUICommonConfig()
         commonConfig.host = KeyCenter.HostUrl
         commonConfig.userId = userInfo.userId
         commonConfig.userName = userInfo.userName
@@ -126,7 +126,7 @@ class AUiRoomListViewController: UIViewController {
                 self.collectionView.mj_header?.endRefreshing()
             }
             if let error = error {
-                AUiToast.show(text: error.localizedDescription)
+                AUIToast.show(text: error.localizedDescription)
                 return
             }
             self.roomList = list ?? []
@@ -158,7 +158,7 @@ class AUiRoomListViewController: UIViewController {
     
     
     @objc func onCreateAction() {
-        AUiAlertView()
+        AUIAlertView()
             .theme_background(color: "CommonColor.black")
             .isShowCloseButton(isShow: true)
             .title(title: "房间主题")
@@ -168,11 +168,11 @@ class AUiRoomListViewController: UIViewController {
             .rightButtonTapClosure(onTap: {[weak self] text in
                 guard let self = self else { return }
                 guard let text = text, text.count > 0 else {
-                    AUiToast.show(text: "请输入房间名")
+                    AUIToast.show(text: "请输入房间名")
                     return
                 }
                 print("create room with name(\(text))")
-                let room = AUiCreateRoomInfo()
+                let room = AUICreateRoomInfo()
                 room.roomName = text
                 room.thumbnail = self.userInfo.userAvatar
                 room.seatCount = 8
@@ -181,7 +181,7 @@ class AUiRoomListViewController: UIViewController {
                     vc.roomInfo = roomInfo
                     self.navigationController?.pushViewController(vc, animated: true)
                 } failure: { error in
-                    AUiToast.show(text: error.localizedDescription)
+                    AUIToast.show(text: error.localizedDescription)
                 }
             })
             .textFieldPlaceholder(placeholder: "房间主题")
@@ -195,23 +195,23 @@ class AUiRoomListViewController: UIViewController {
     }
     
     @objc func onThemeChangeAction() {
-        AUiRoomContext.shared.switchThemeToNext()
+        AUIRoomContext.shared.switchThemeToNext()
     }
 }
 
-//extension AUiRoomListViewController: AgoraRtmClientDelegate {
+//extension AUIRoomListViewController: AgoraRtmClientDelegate {
 //    func rtmKit(_ rtmKit: AgoraRtmClientKit, onTokenPrivilegeWillExpire channel: String?) {
 //        print("rtm token WillExpire channel: \(channel ?? "")")
 //    }
 //}
 
 
-extension AUiRoomListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+extension AUIRoomListViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         self.roomList.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! AUiRoomListCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! AUIRoomListCell
         cell.roomInfo = self.roomList[indexPath.row]
         return cell
     }

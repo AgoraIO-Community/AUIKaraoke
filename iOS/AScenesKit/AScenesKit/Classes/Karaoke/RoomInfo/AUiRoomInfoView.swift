@@ -1,18 +1,18 @@
 //
-//  AUiOwnerInfoView.swift
+//  AUIOwnerInfoView.swift
 //  AgoraLyricsScore
 //
 //  Created by FanPengpeng on 2023/4/3.
 //
 
-import AUiKit
+import AUIKit
 import Kingfisher
 import SwiftTheme
 
 private let headImageWidth: CGFloat = 40
 
 /// 房间信息展示
-public class AUiRoomInfoView: UIView {
+public class AUIRoomInfoView: UIView {
     
     private var headImageView: UIImageView = {
         let imgview = UIImageView()
@@ -25,7 +25,7 @@ public class AUiRoomInfoView: UIView {
     private var roomNameLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.theme_textColor = AUiColor("Room.roomInfoTitleColor")
+        label.theme_textColor = AUIColor("Room.roomInfoTitleColor")
         label.theme_font = "CommonFont.middle"
         label.text =  auikaraoke_localized("roomInfoRoomName")
         return label
@@ -34,7 +34,7 @@ public class AUiRoomInfoView: UIView {
     private var roomIdLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 1
-        label.theme_textColor = AUiColor("Room.roomInfoSubTitleColor")
+        label.theme_textColor = AUIColor("Room.roomInfoSubTitleColor")
         label.theme_font = "CommonFont.small"
         label.text = auikaraoke_localized("roomInfoRoomID")
         return label
@@ -89,7 +89,7 @@ public class AUiRoomInfoView: UIView {
 }
 
 
-extension AUiRoomInfoView {
+extension AUIRoomInfoView {
     
     public func updateRoomInfo(withRoomId roomId:String, roomName: String?, ownerHeadImg:String?){
         roomNameLabel.text = (roomName ?? "") + auikaraoke_localized("roomInfoRoomName")

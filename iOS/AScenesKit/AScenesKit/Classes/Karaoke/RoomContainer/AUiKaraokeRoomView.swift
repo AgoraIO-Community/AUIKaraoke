@@ -1,11 +1,11 @@
 //
-//  AUiKaraokeRoomView.swift
-//  AUiScenesKit
+//  AUIKaraokeRoomView.swift
+//  AUIScenesKit
 //
 //  Created by wushengtao on 2023/2/23.
 //
 
-import AUiKit
+import AUIKit
 import SwiftTheme
 import UIKit
 import AgoraRtcKit
@@ -13,21 +13,21 @@ import AgoraRtcKit
 private let kSeatRoomPadding: CGFloat = 16
 
 /// 卡拉OK 房间容器，负责初始化卡拉OK Service和各个子组件，并负责子组件和子Service的绑定工作
-open class AUiKaraokeRoomView: UIView {
-    private var service: AUiKaraokeRoomService?
+open class AUIKaraokeRoomView: UIView {
+    private var service: AUIKaraokeRoomService?
     
     /// 房间信息UI
-    private lazy var roomInfoView: AUiRoomInfoView = AUiRoomInfoView(frame: CGRect(x: 16, y: 35, width: 175, height: 56))
+    private lazy var roomInfoView: AUIRoomInfoView = AUIRoomInfoView(frame: CGRect(x: 16, y: 35, width: 175, height: 56))
     
     /// 歌词播放UI
-    private lazy var playerView: AUiPlayerView = AUiPlayerView(frame: CGRect(x: kSeatRoomPadding, y: 107, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 252))
-    private lazy var playerBinder: AUiPlayerViewBinder = AUiPlayerViewBinder()
+    private lazy var playerView: AUIPlayerView = AUIPlayerView(frame: CGRect(x: kSeatRoomPadding, y: 107, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 252))
+    private lazy var playerBinder: AUIPlayerViewBinder = AUIPlayerViewBinder()
     
     //麦位UI
-    private lazy var micSeatView: AUiMicSeatView = AUiMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 375, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 220))
-    private lazy var micSeatBinder: AUiMicSeatViewBinder = AUiMicSeatViewBinder(rtcEngine: service!.rtcEngine)
+    private lazy var micSeatView: AUIMicSeatView = AUIMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 375, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 220))
+    private lazy var micSeatBinder: AUIMicSeatViewBinder = AUIMicSeatViewBinder(rtcEngine: service!.rtcEngine)
     
-//    private lazy var invitationView: AUiInvitationView = AUiInvitationView()
+//    private lazy var invitationView: AUIInvitationView = AUIInvitationView()
     
     /// 背景图片
     private lazy var bgImageView: UIImageView = UIImageView(frame: bounds)
@@ -36,17 +36,17 @@ open class AUiKaraokeRoomView: UIView {
     private lazy var bgMaskView: UIView = UIView(frame: bounds)
     
     /// 点歌器UI
-    private lazy var jukeBoxView: AUiJukeBoxView = AUiJukeBoxView()
-    private lazy var jukeBoxBinder: AUiJukeBoxViewBinder = AUiJukeBoxViewBinder()
+    private lazy var jukeBoxView: AUIJukeBoxView = AUIJukeBoxView()
+    private lazy var jukeBoxBinder: AUIJukeBoxViewBinder = AUIJukeBoxViewBinder()
     
     
     /// 用户列表UI
-    private lazy var membersView: AUiRoomMembersView = AUiRoomMembersView()
-    private lazy var userBinder: AUiUserViewBinder = AUiUserViewBinder()
+    private lazy var membersView: AUIRoomMembersView = AUIRoomMembersView()
+    private lazy var userBinder: AUIUserViewBinder = AUIUserViewBinder()
     
     // 关闭按钮
-    private lazy var closeButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var closeButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.icon = auiThemeImage("Room.offBtnIcon")
         theme.iconWidth = "Room.offBtnIconWidth"
         theme.iconHeight = "Room.offBtnIconHeight"
@@ -55,7 +55,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.offBtnBgColor"
         theme.cornerRadius = "Room.offBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(didClickOffButton), for: .touchUpInside)
         
@@ -63,8 +63,8 @@ open class AUiKaraokeRoomView: UIView {
     }()
     
     // 聊天按钮
-    private lazy var chatButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var chatButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.icon = auiThemeImage("Room.chatBtnIcon")
         theme.iconWidth = "Room.chatBtnIconWidth"
         theme.iconHeight = "Room.chatBtnIconHeight"
@@ -73,7 +73,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.chatBtnBgColor"
         theme.cornerRadius = "Room.chatBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(didClickChatButton), for: .touchUpInside)
         
@@ -81,8 +81,8 @@ open class AUiKaraokeRoomView: UIView {
     }()
     
     // 麦克风开关按钮
-    private lazy var microphoneButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var microphoneButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.selectedIcon = auiThemeImage("Room.microphoneMuteBtnIcon")
         theme.icon = auiThemeImage("Room.microphoneUnmuteBtnIcon")
         theme.iconWidth = "Room.microphoneBtnIconWidth"
@@ -92,7 +92,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.microphoneBtnBgColor"
         theme.cornerRadius = "Room.microphoneBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(didClickVoiceChatButton(_:)), for: .touchUpInside)
         
@@ -101,8 +101,8 @@ open class AUiKaraokeRoomView: UIView {
     
     
     /// 摄像头开关
-    private lazy var cameraButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var cameraButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.selectedIcon = auiThemeImage("Room.cameraMuteBtnIcon")
         theme.icon = auiThemeImage("Room.cameraUnmuteBtnIcon")
         theme.iconWidth = "Room.cameraBtnIconWidth"
@@ -112,7 +112,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.cameraBtnBgColor"
         theme.cornerRadius = "Room.cameraBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.isSelected = true
         button.style = theme
         button.addTarget(self, action: #selector(onMuteCameraAction(_:)), for: .touchUpInside)
@@ -121,8 +121,8 @@ open class AUiKaraokeRoomView: UIView {
     }()
     
     /// 更多按钮
-    private lazy var moreButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var moreButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.icon = auiThemeImage("Room.moreBtnIcon")
         theme.iconWidth = "Room.moreBtnIconWidth"
         theme.iconHeight = "Room.moreBtnIconHeight"
@@ -131,7 +131,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.moreBtnBgColor"
         theme.cornerRadius = "Room.moreBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(onMoreAction(_:)), for: .touchUpInside)
         
@@ -139,8 +139,8 @@ open class AUiKaraokeRoomView: UIView {
     }()
     
     // 礼物按钮
-    private lazy var giftButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
+    private lazy var giftButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
         theme.icon = auiThemeImage("Room.giftBtnIcon")
         theme.iconWidth = "Room.giftBtnIconWidth"
         theme.iconHeight = "Room.giftBtnIconHeight"
@@ -149,7 +149,7 @@ open class AUiKaraokeRoomView: UIView {
         theme.backgroundColor = "Room.giftBtnBgColor"
         theme.cornerRadius = "Room.giftBtnCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(didClickGiftChatButton), for: .touchUpInside)
         
@@ -160,16 +160,16 @@ open class AUiKaraokeRoomView: UIView {
     public var onClickOffButton: (()->())?
     
     deinit {
-        aui_info("deinit AUiKaraokeRoomView", tag: "AUiKaraokeRoomView")
+        aui_info("deinit AUIKaraokeRoomView", tag: "AUIKaraokeRoomView")
     }
     
     public override init(frame: CGRect) {
-        aui_info("init AUiKaraokeRoomView", tag: "AUiKaraokeRoomView")
+        aui_info("init AUIKaraokeRoomView", tag: "AUIKaraokeRoomView")
         super.init(frame: frame)
         
         //设置皮肤路径
         if let folderPath = Bundle.main.path(forResource: "auiKaraokeTheme", ofType: "bundle") {
-            AUiRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
         }
         
         loadBg()
@@ -180,7 +180,7 @@ open class AUiKaraokeRoomView: UIView {
     }
     
     private func loadBg() {
-        aui_info("loadBg", tag: "AUiKaraokeRoomView")
+        aui_info("loadBg", tag: "AUIKaraokeRoomView")
         
         //背景图片
         addSubview(bgImageView)
@@ -196,26 +196,26 @@ open class AUiKaraokeRoomView: UIView {
         closeButton.aui_right = aui_width - 15
     }
     
-    public func bindService(service: AUiKaraokeRoomService) {
+    public func bindService(service: AUIKaraokeRoomService) {
         self.service = service
         loadSubviews()
         viewBinderConnected()
         
         let channelName:String = service.channelName
-        aui_info("enter room: \(channelName)", tag: "AUiKaraokeRoomView")
+        aui_info("enter room: \(channelName)", tag: "AUIKaraokeRoomView")
         service.roomManagerImpl.enterRoom(roomId: channelName) { error in
-            aui_info("enter room success", tag: "AUiKaraokeRoomView")
+            aui_info("enter room success", tag: "AUIKaraokeRoomView")
         }
         service.joinRtcChannel { error in
-            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: "AUiKaraokeRoomView")
+            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: "AUIKaraokeRoomView")
         }
     }
     
     private func loadSubviews() {
-        aui_info("load karaoke room subview", tag: "AUiKaraokeRoomView")
+        aui_info("load karaoke room subview", tag: "AUIKaraokeRoomView")
         
 //        let folderPath = Bundle.main.path(forResource: "auiTheme", ofType: "bundle")
-//        AUiThemeManager.shared.loadTheme(themeFolderPath: folderPath!)
+//        AUIThemeManager.shared.loadTheme(themeFolderPath: folderPath!)
         
         //歌词组件
         playerView.selectSongButton.addTarget(self, action: #selector(onSelectedMusic), for: .touchUpInside)
@@ -262,11 +262,11 @@ open class AUiKaraokeRoomView: UIView {
     }
     
     private func viewBinderConnected() {
-        aui_info("viewBinderConnected", tag: "AUiKaraokeRoomView")
+        aui_info("viewBinderConnected", tag: "AUIKaraokeRoomView")
         
         guard let service = service else {
             assert(false, "service is empty")
-            aui_error("service is empty", tag: "AUiKaraokeRoomView")
+            aui_error("service is empty", tag: "AUIKaraokeRoomView")
             return
         }
         
@@ -288,22 +288,22 @@ open class AUiKaraokeRoomView: UIView {
         playerView.addActionHandler(playerViewActionHandler: self)
         
         service.micSeatImpl.bindRespDelegate(delegate: self)
-        microphoneButton.isHidden = !AUiRoomContext.shared.isRoomOwner(channelName: service.channelName)
+        microphoneButton.isHidden = !AUIRoomContext.shared.isRoomOwner(channelName: service.channelName)
         
         userBinder.bind(userView: membersView,
                         userService: service.userImpl,
                         micSeatService: service.micSeatImpl)
         
-        if let roomInfo = AUiRoomContext.shared.roomInfoMap[service.channelName] {
+        if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
             self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
         }
     }
 }
 
-extension AUiKaraokeRoomView {
+extension AUIKaraokeRoomView {
     @objc public func onBackAction() {
         guard let service = service else {return}
-        if AUiRoomContext.shared.isRoomOwner(channelName: service.channelName) {
+        if AUIRoomContext.shared.isRoomOwner(channelName: service.channelName) {
             service.roomManagerImpl.destroyRoom(roomId: service.channelName) { err in
             }
         } else {
@@ -311,28 +311,28 @@ extension AUiKaraokeRoomView {
             }
         }
         service.destory()
-        AUiRoomContext.shared.clean(channelName: service.channelName)
+        AUIRoomContext.shared.clean(channelName: service.channelName)
     }
     
     @objc func onSelectedMusic() {
-        aui_info("onSelectedMusic", tag: "AUiKaraokeRoomView")
+        aui_info("onSelectedMusic", tag: "AUIKaraokeRoomView")
     }
 }
 
-//MARK: AUiPlayerViewDelegate
-extension AUiKaraokeRoomView: AUiPlayerViewDelegate {
-    public func onButtonTapAction(playerView: AUiPlayerView, actionType: AUiPlayerViewButtonType) {
+//MARK: AUIPlayerViewDelegate
+extension AUIKaraokeRoomView: AUIPlayerViewDelegate {
+    public func onButtonTapAction(playerView: AUIPlayerView, actionType: AUIPlayerViewButtonType) {
         if actionType == .selectSong {
-            AUiCommonDialog.show(contentView: jukeBoxView, theme: AUiCommonDialogTheme())
+            AUICommonDialog.show(contentView: jukeBoxView, theme: AUICommonDialogTheme())
         }
     }
     
-    public func onVoiceConversionDidChanged(playerView: AUiPlayerView, index: Int) {
+    public func onVoiceConversionDidChanged(playerView: AUIPlayerView, index: Int) {
     }
 }
 
 
-extension AUiKaraokeRoomView {
+extension AUIKaraokeRoomView {
     @objc private func didClickOffButton(){
         onClickOffButton?()
     }
@@ -340,7 +340,7 @@ extension AUiKaraokeRoomView {
     @objc private func didClickChatButton(){
         //Mock
 //        if playerView.musicInfo == nil {
-//            let musicInfo = AUiChooseMusicModel()
+//            let musicInfo = AUIChooseMusicModel()
 //            musicInfo.name = "I Get the bag (feat. Migos)"
 //            playerView.musicInfo = musicInfo
 //        } else {
@@ -362,39 +362,39 @@ extension AUiKaraokeRoomView {
     
     @objc private func onMoreAction(_ button: UIButton){
 
-        let item = AUiActionSheetThemeItem.vertical()
+        let item = AUIActionSheetThemeItem.vertical()
         item.backgroundIcon = "Player.voiceConversionDialogItemBackgroundIcon"
         item.icon = "Room.moreDialogLrcBackgroundIcon"
         item.title = auikaraoke_localized("lrcBackground")
         item.callback = { [weak self] in
-            aui_info("onMoreAction click", tag: "AUiKaraokeRoomView")
+            aui_info("onMoreAction click", tag: "AUIKaraokeRoomView")
             guard let self = self else {return}
             
         }
         
-        let theme = AUiActionSheetTheme()
+        let theme = AUIActionSheetTheme()
         theme.itemType = "Player.voiceConversionDialogItemType"
         theme.itemHeight = "Player.voiceConversionDialogItemHeight"
         theme.collectionViewTopEdge = "Player.collectionViewTopEdge"
-        let dialogView = AUiActionSheet(title: auikaraoke_localized("more"),
+        let dialogView = AUIActionSheet(title: auikaraoke_localized("more"),
                                         items: [item],
                                         headerInfo: nil)
         dialogView.setTheme(theme: theme)
-        AUiCommonDialog.show(contentView: dialogView, theme: AUiCommonDialogTheme())
+        AUICommonDialog.show(contentView: dialogView, theme: AUICommonDialogTheme())
     }
     
     @objc private func didClickGiftChatButton(){
     }
 }
 
-extension AUiKaraokeRoomView: AUiMicSeatRespDelegate {
-    public func onAnchorEnterSeat(seatIndex: Int, user: AUiKit.AUiUserThumbnailInfo) {
+extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
+    public func onAnchorEnterSeat(seatIndex: Int, user: AUIKit.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = false
         }
     }
     
-    public func onAnchorLeaveSeat(seatIndex: Int, user: AUiKit.AUiUserThumbnailInfo) {
+    public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKit.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = true
         }

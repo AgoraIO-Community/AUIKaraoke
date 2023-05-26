@@ -1,17 +1,17 @@
 //
-//  AUiRoomListCell.swift
-//  AUiCell
+//  AUIRoomListCell.swift
+//  AUICell
 //
 //  Created by zhaoyongqiang on 2023/4/11.
 //
 
 import UIKit
 import AScenesKit
-import AUiKit
+import AUIKit
 import Kingfisher
 
-class AUiRoomListCell: UICollectionViewCell {
-    var roomInfo: AUiRoomInfo? {
+class AUIRoomListCell: UICollectionViewCell {
+    var roomInfo: AUIRoomInfo? {
         didSet {
             titleLabel.text = roomInfo?.roomName
             statusLabel.text = "\(roomInfo?.memberCount ?? 0)人正在嗨歌"

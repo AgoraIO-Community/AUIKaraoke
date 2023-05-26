@@ -1,11 +1,11 @@
 //
-//  AUiUserInfo+UI.swift
-//  AUiKit
+//  AUIUserInfo+UI.swift
+//  AUIKit
 //
 //  Created by wushengtao on 2023/4/11.
 //
 
-import AUiKit
+import AUIKit
 
-extension AUiUserInfo: AUiUserCellUserDataProtocol {
+extension AUIUserInfo: AUIUserCellUserDataProtocol {
 }
