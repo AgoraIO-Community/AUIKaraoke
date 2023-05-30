@@ -10,11 +10,11 @@
         <item name="aui_micSeatItem_appearance">@style/AUIMicSeatItem.Appearance.KTV</item>
 
         <!-- 点歌器组件 -->
-        <item name="aui_jukebox_appearance">@style/AUiJukebox.Appearance.KTV</item>
-        <item name="aui_jukeboxChoose_appearance">@style/AUiJukeboxChoose.Appearance.KTV</item>
-        <item name="aui_jukeboxChosen_appearance">@style/AUiJukeboxChosen.Appearance.KTV</item>
-        <item name="aui_jukeboxChooseItem_appearance">@style/AUiJukeboxChooseItem.Appearance.KTV</item>
-        <item name="aui_jukeboxChosenItem_appearance">@style/AUiJukeboxChosenItem.Appearance.KTV</item>
+        <item name="aui_jukebox_appearance">@style/AUIJukebox.Appearance.KTV</item>
+        <item name="aui_jukeboxChoose_appearance">@style/AUIJukeboxChoose.Appearance.KTV</item>
+        <item name="aui_jukeboxChosen_appearance">@style/AUIJukeboxChosen.Appearance.KTV</item>
+        <item name="aui_jukeboxChooseItem_appearance">@style/AUIJukeboxChooseItem.Appearance.KTV</item>
+        <item name="aui_jukeboxChosenItem_appearance">@style/AUIJukeboxChosenItem.Appearance.KTV</item>
 
         <!--  播放器组件      -->
         <item name="aui_musicPlayer_appearance">@style/AUIMusicPlayer.Appearance.KTV</item>

@@ -1,20 +1,20 @@
 package io.agora.app.karaoke.kit
 
 import io.agora.app.karaoke.BuildConfig
-import io.agora.asceneskit.karaoke.AUiKaraokeRoomService
+import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
 import io.agora.asceneskit.karaoke.KaraokeRoomView
-import io.agora.auikit.model.AUiCommonConfig
-import io.agora.auikit.model.AUiCreateRoomInfo
-import io.agora.auikit.model.AUiRoomConfig
-import io.agora.auikit.model.AUiRoomContext
-import io.agora.auikit.model.AUiRoomInfo
-import io.agora.auikit.service.IAUiRoomManager.AUiRoomManagerRespDelegate
-import io.agora.auikit.service.callback.AUiException
+import io.agora.auikit.model.AUICommonConfig
+import io.agora.auikit.model.AUICreateRoomInfo
+import io.agora.auikit.model.AUIRoomConfig
+import io.agora.auikit.model.AUIRoomContext
+import io.agora.auikit.model.AUIRoomInfo
+import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
+import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.imp.AUiRoomManagerImpl
+import io.agora.auikit.service.imp.AUIRoomManagerImpl
 import io.agora.auikit.service.ktv.KTVApi
-import io.agora.auikit.service.rtm.AUiRtmErrorProxyDelegate
-import io.agora.auikit.utils.AUiLogger
+import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
+import io.agora.auikit.utils.AUILogger
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineEx
 import io.agora.rtm.RtmClient
@@ -25,13 +25,13 @@ object KaraokeUiKit {
     private val initedException =
         RuntimeException("The KaraokeServiceManager has been initialized!")
 
-    private var mRoomManager: AUiRoomManagerImpl? = null
+    private var mRoomManager: AUIRoomManagerImpl? = null
 
     private var shouldReleaseRtc = true
     private var mRtcEngineEx: RtcEngineEx? = null
     private var mKTVApi: KTVApi? = null
 
-    private var mService: AUiKaraokeRoomService? = null
+    private var mService: AUIKaraokeRoomService? = null
 
     /**
      * 初始化。
@@ -40,7 +40,7 @@ object KaraokeUiKit {
      *      当外部传入时在release时不会销毁
      */
     fun setup(
-        config: AUiCommonConfig,
+        config: AUICommonConfig,
         ktvApi: KTVApi? = null,
         rtcEngineEx: RtcEngineEx? = null,
         rtmClient: RtmClient? = null
@@ -49,14 +49,14 @@ object KaraokeUiKit {
             throw initedException
         }
         HttpManager.setBaseURL(BuildConfig.SERVER_HOST)
-        AUiRoomContext.shared().commonConfig = config
+        AUIRoomContext.shared().commonConfig = config
         mKTVApi = ktvApi
         if (rtcEngineEx != null) { // 用户塞进来的engine由用户自己管理生命周期
             mRtcEngineEx = rtcEngineEx
             shouldReleaseRtc = false
         }
-        mRoomManager = AUiRoomManagerImpl(config, rtmClient)
-        AUiLogger.initLogger(AUiLogger.Config(AUiRoomContext.shared().commonConfig.context, "Karaoke"))
+        mRoomManager = AUIRoomManagerImpl(config, rtmClient)
+        AUILogger.initLogger(AUILogger.Config(AUIRoomContext.shared().commonConfig.context, "Karaoke"))
     }
 
     /**
@@ -77,8 +77,8 @@ object KaraokeUiKit {
     fun getRoomList(
         startTime: Long?,
         pageSize: Int,
-        success: (List<AUiRoomInfo>) -> Unit,
-        failure: (AUiException) -> Unit
+        success: (List<AUIRoomInfo>) -> Unit,
+        failure: (AUIException) -> Unit
     ) {
         val roomManager = mRoomManager ?: throw notInitException
         roomManager.getRoomInfoList(
@@ -96,9 +96,9 @@ object KaraokeUiKit {
      * 创建房间
      */
     fun createRoom(
-        createRoomInfo: AUiCreateRoomInfo,
-        success: (AUiRoomInfo) -> Unit,
-        failure: (AUiException) -> Unit
+        createRoomInfo: AUICreateRoomInfo,
+        success: (AUIRoomInfo) -> Unit,
+        failure: (AUIException) -> Unit
     ) {
         val roomManager = mRoomManager ?: throw notInitException
         roomManager.createRoom(
@@ -107,20 +107,20 @@ object KaraokeUiKit {
             if (error == null && roomInfo != null) {
                 success.invoke(roomInfo)
             } else {
-                failure.invoke(error ?: AUiException(-999, "RoomInfo return null"))
+                failure.invoke(error ?: AUIException(-999, "RoomInfo return null"))
             }
         }
     }
 
     fun launchRoom(
-        roomInfo: AUiRoomInfo,
-        config: AUiRoomConfig,
+        roomInfo: AUIRoomInfo,
+        config: AUIRoomConfig,
         karaokeView: KaraokeRoomView,
         eventHandler: RoomEventHandler? = null,
     ) {
-        AUiRoomContext.shared().roomConfig = config
+        AUIRoomContext.shared().roomConfig = config
         val roomManager = mRoomManager ?: throw notInitException
-        val roomService = AUiKaraokeRoomService(
+        val roomService = AUIKaraokeRoomService(
             mRtcEngineEx,
             mKTVApi,
             roomManager,
@@ -137,19 +137,19 @@ object KaraokeUiKit {
         mService = null
     }
 
-    fun subscribeError(roomId: String, delegate: AUiRtmErrorProxyDelegate) {
+    fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
         mRoomManager?.rtmManager?.proxy?.subscribeError(roomId, delegate)
     }
 
-    fun unsubscribeError(roomId: String, delegate: AUiRtmErrorProxyDelegate) {
+    fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
         mRoomManager?.rtmManager?.proxy?.unsubscribeError(roomId, delegate)
     }
 
-    fun bindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+    fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         mRoomManager?.bindRespDelegate(delegate)
     }
 
-    fun unbindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+    fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         mRoomManager?.unbindRespDelegate(delegate)
     }
 

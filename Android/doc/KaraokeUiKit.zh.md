@@ -12,9 +12,9 @@ KaraokeUiKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 **将以下源码复制到自己项目里：**
 
-- [auikit](auikit)
-- [asceneskit](asceneskit)
-- [KaraokeUiKit](examples/AUIKitKaraoke/src/main/java/io/agora/app/karaoke/kit)
+- [auikit](../../AUIKit/Android/auikit)
+- [asceneskit](../asceneskit)
+- [KaraokeUiKit](../app/src/main/java/io/agora/app/karaoke/kit)
 
 **在settings.gradle里添加库**
 ```groovy
