@@ -6,7 +6,7 @@
 //
 
 import AUIKit
-import Kingfisher
+import SDWebImage
 import SwiftTheme
 
 private let headImageWidth: CGFloat = 40
@@ -94,7 +94,7 @@ extension AUIRoomInfoView {
     public func updateRoomInfo(withRoomId roomId:String, roomName: String?, ownerHeadImg:String?){
         roomNameLabel.text = (roomName ?? "") + auikaraoke_localized("roomInfoRoomName")
         roomIdLabel.text = auikaraoke_localized("roomInfoRoomID") + roomId
-        headImageView.kf.setImage(with: URL(string: ownerHeadImg ?? ""))
+        headImageView.sd_setImage(with: URL(string: ownerHeadImg ?? ""))
     }
 }
 

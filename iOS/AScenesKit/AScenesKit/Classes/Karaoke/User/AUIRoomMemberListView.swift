@@ -77,7 +77,7 @@ public class AUIRoomMemberUserCell: UITableViewCell {
     }
     
     public func setUserInfo(withAvatar avatar: String?, title: String?, subTitle: String) {
-        avatarImageView.kf.setImage(with: URL(string: avatar ?? ""), placeholder: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
+        avatarImageView.sd_setImage(with: URL(string: avatar ?? ""), placeholderImage: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
         userNameLabel.text = title
         seatNoLabel.text = subTitle
         userNameLabel.sizeToFit()

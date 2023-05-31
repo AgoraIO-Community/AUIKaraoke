@@ -50,7 +50,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.offBtnIcon")
         theme.iconWidth = "Room.offBtnIconWidth"
         theme.iconHeight = "Room.offBtnIconHeight"
-        theme.buttonWitdth = "Room.offBtnWidth"
+        theme.buttonWidth = "Room.offBtnWidth"
         theme.buttonHeight = "Room.offBtnHeight"
         theme.backgroundColor = "Room.offBtnBgColor"
         theme.cornerRadius = "Room.offBtnCornerRadius"
@@ -68,7 +68,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.chatBtnIcon")
         theme.iconWidth = "Room.chatBtnIconWidth"
         theme.iconHeight = "Room.chatBtnIconHeight"
-        theme.buttonWitdth = "Room.chatBtnWidth"
+        theme.buttonWidth = "Room.chatBtnWidth"
         theme.buttonHeight = "Room.chatBtnHeight"
         theme.backgroundColor = "Room.chatBtnBgColor"
         theme.cornerRadius = "Room.chatBtnCornerRadius"
@@ -87,7 +87,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.microphoneUnmuteBtnIcon")
         theme.iconWidth = "Room.microphoneBtnIconWidth"
         theme.iconHeight = "Room.microphoneBtnIconHeight"
-        theme.buttonWitdth = "Room.microphoneBtnWidth"
+        theme.buttonWidth = "Room.microphoneBtnWidth"
         theme.buttonHeight = "Room.microphoneBtnHeight"
         theme.backgroundColor = "Room.microphoneBtnBgColor"
         theme.cornerRadius = "Room.microphoneBtnCornerRadius"
@@ -107,7 +107,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.cameraUnmuteBtnIcon")
         theme.iconWidth = "Room.cameraBtnIconWidth"
         theme.iconHeight = "Room.cameraBtnIconHeight"
-        theme.buttonWitdth = "Room.cameraBtnWidth"
+        theme.buttonWidth = "Room.cameraBtnWidth"
         theme.buttonHeight = "Room.cameraBtnHeight"
         theme.backgroundColor = "Room.cameraBtnBgColor"
         theme.cornerRadius = "Room.cameraBtnCornerRadius"
@@ -126,7 +126,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.moreBtnIcon")
         theme.iconWidth = "Room.moreBtnIconWidth"
         theme.iconHeight = "Room.moreBtnIconHeight"
-        theme.buttonWitdth = "Room.moreBtnWidth"
+        theme.buttonWidth = "Room.moreBtnWidth"
         theme.buttonHeight = "Room.moreBtnHeight"
         theme.backgroundColor = "Room.moreBtnBgColor"
         theme.cornerRadius = "Room.moreBtnCornerRadius"
@@ -144,7 +144,7 @@ open class AUIKaraokeRoomView: UIView {
         theme.icon = auiThemeImage("Room.giftBtnIcon")
         theme.iconWidth = "Room.giftBtnIconWidth"
         theme.iconHeight = "Room.giftBtnIconHeight"
-        theme.buttonWitdth = "Room.giftBtnWidth"
+        theme.buttonWidth = "Room.giftBtnWidth"
         theme.buttonHeight = "Room.giftBtnHeight"
         theme.backgroundColor = "Room.giftBtnBgColor"
         theme.cornerRadius = "Room.giftBtnCornerRadius"

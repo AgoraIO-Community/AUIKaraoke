@@ -31,9 +31,9 @@ public class AUIRoomMembersView: UIView {
     private lazy var moreButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
         theme.icon = auiThemeImage("Room.membersMoreIcon")
-        theme.iconWidth = "Room.membersMoreIconWidth"
+        theme.iconWidth = "Room.membersMoreIconWidth" 
         theme.iconHeight = "Room.membersMoreIconHeight"
-        theme.buttonWitdth = "Room.membersMoreWidth"
+        theme.buttonWidth = "Room.membersMoreWidth"
         theme.buttonHeight = "Room.membersMoreHeight"
         theme.backgroundColor = "Room.membersMoreBgColor"
         theme.cornerRadius = "Room.membersMoreCornerRadius"
@@ -106,7 +106,7 @@ public class AUIRoomMembersView: UIView {
         for (i, imgView) in [rightImgView, leftImgView].enumerated() {
             imgView.isHidden = false
             if imgs.count > i {
-                imgView.kf.setImage(with: URL(string: imgs[i]), placeholder: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
+                imgView.sd_setImage(with: URL(string: imgs[i]), placeholderImage: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
             }else{
                 imgView.isHidden = true
             }

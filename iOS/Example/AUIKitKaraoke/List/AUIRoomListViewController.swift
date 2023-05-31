@@ -37,7 +37,7 @@ class AUIRoomListViewController: UIViewController {
         let button = AUIButton()
         let style = AUIButtonDynamicTheme()
         style.backgroundColor = "CommonColor.primary"
-        style.buttonWitdth = ThemeCGFloatPicker(floats: 327)
+        style.buttonWidth = ThemeCGFloatPicker(floats: 327)
         button.style = style
         button.layoutIfNeeded()
         button.setTitle("创建房间", for: .normal)
@@ -49,7 +49,7 @@ class AUIRoomListViewController: UIViewController {
         let button = AUIButton()
         let style = AUIButtonDynamicTheme()
         style.backgroundColor = "CommonColor.primary"
-        style.buttonWitdth = ThemeCGFloatPicker(floats: 327)
+        style.buttonWidth = ThemeCGFloatPicker(floats: 327)
         button.style = style
         button.layoutIfNeeded()
         button.setTitle("换肤", for: .normal)
