@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AUiJukebox.Appearance.KTV">
+    <style name="AUIJukebox.Appearance.KTV">
         <item name="aui_jukebox_background">@drawable/ktv_dialog_bg</item>
         <item name="aui_jukebox_titleTabMode">scrollable</item>
         <item name="aui_jukebox_titleTabGravity">start</item>
@@ -13,7 +13,7 @@
 
     </style>
 
-    <style name="AUiJukeboxChoose.Appearance.KTV">
+    <style name="AUIJukeboxChoose.Appearance.KTV">
         <!-- 搜索输入框 -->
         <item name="aui_jukeboxChoose_searchBackground">@drawable/ktv_jukebox_search_bg</item>
         <item name="aui_jukeboxChoose_searchHintTextColor">#88ffffff</item>
@@ -29,7 +29,7 @@
         <item name="aui_jukeboxChoose_listDivider">@drawable/ktv_jukebox_divider</item>
     </style>
 
-    <style name="AUiJukeboxChooseItem.Appearance.KTV">
+    <style name="AUIJukeboxChooseItem.Appearance.KTV">
 
         <item name="aui_jukeboxChooseItem_coverDefaultImg">@drawable/ktv_ic_song_default</item>
         <item name="aui_jukeboxChooseItem_songNameTextColor">@android:color/white</item>
@@ -40,11 +40,11 @@
 
     </style>
 
-    <style name="AUiJukeboxChosen.Appearance.KTV">
+    <style name="AUIJukeboxChosen.Appearance.KTV">
         <item name="aui_jukeboxChosen_listDivider">@drawable/ktv_jukebox_chosen_divider</item>
     </style>
 
-    <style name="AUiJukeboxChosenItem.Appearance.KTV">
+    <style name="AUIJukeboxChosenItem.Appearance.KTV">
         <item name="aui_jukeboxChosenItem_paddingHorizontal">0dp</item>
         <item name="aui_jukeboxChosenItem_coverDefaultImg">@drawable/ktv_ic_song_default</item>
         <item name="aui_jukeboxChosenItem_songNameTextColor">@android:color/white</item>

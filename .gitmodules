@@ -1,3 +1,4 @@
 [submodule "AUIKit"]
 	path = AUIKit
 	url = https://github.com/AgoraIO-Community/AUIKit.git
+	branch = dev/karaoke/0.1.1

@@ -29,7 +29,7 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <io.agora.auikit.ui.basic.AUiButton
+    <io.agora.auikit.ui.basic.AUIButton
         android:id="@+id/btnCreateRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toStartOf="@id/btnSwitchTheme"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <io.agora.auikit.ui.basic.AUiButton
+    <io.agora.auikit.ui.basic.AUIButton
         android:id="@+id/btnSwitchTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

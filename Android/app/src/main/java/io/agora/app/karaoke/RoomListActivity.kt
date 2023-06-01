@@ -14,11 +14,11 @@ import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
 import io.agora.app.karaoke.kit.KaraokeRoomActivity
 import io.agora.app.karaoke.kit.KaraokeUiKit
-import io.agora.auikit.model.AUiCommonConfig
-import io.agora.auikit.model.AUiCreateRoomInfo
-import io.agora.auikit.model.AUiRoomInfo
+import io.agora.auikit.model.AUICommonConfig
+import io.agora.auikit.model.AUICreateRoomInfo
+import io.agora.auikit.model.AUIRoomInfo
+import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
-import io.agora.auikit.ui.basic.AUiAlertDialog
 import io.agora.auikit.utils.BindingViewHolder
 import java.util.Random
 
@@ -26,7 +26,7 @@ class RoomListActivity : AppCompatActivity() {
 
     private var viewBinding: RoomListActivityBinding? = null
     private val listAdapter by lazy { RoomListAdapter() }
-    private var mList = listOf<AUiRoomInfo>()
+    private var mList = listOf<AUIRoomInfo>()
     private val mUserId = Random().nextInt(99999999).toString()
 
     companion object {
@@ -42,12 +42,12 @@ class RoomListActivity : AppCompatActivity() {
 
     private fun initService() {
         // Create Common Config
-        val config = AUiCommonConfig()
+        val config = AUICommonConfig()
         config.context = application
         config.userId = mUserId
         config.userName = "user_$mUserId"
         config.userAvatar = randomAvatar()
-        // init AUiKit
+        // init AUIKit
         KaraokeUiKit.setup(
             config = config, // must
             ktvApi = null,// option
@@ -79,7 +79,7 @@ class RoomListActivity : AppCompatActivity() {
             refreshRoomList()
         }
         viewBinding.btnCreateRoom.setOnClickListener {
-            AUiAlertDialog(this@RoomListActivity).apply {
+            AUIAlertDialog(this@RoomListActivity).apply {
                 setTitle("房间主题")
                 setInput("房间主题", randomRoomName(), true)
                 setPositiveButton("一起嗨歌") {
@@ -101,7 +101,7 @@ class RoomListActivity : AppCompatActivity() {
     }
 
     private fun createRoom(roomName: String) {
-        val createRoomInfo = AUiCreateRoomInfo()
+        val createRoomInfo = AUICreateRoomInfo()
         createRoomInfo.roomName = roomName
         KaraokeUiKit.createRoom(
             createRoomInfo,
@@ -145,7 +145,7 @@ class RoomListActivity : AppCompatActivity() {
                 mList = if (viewBinding.swipeRefresh.isRefreshing) { // 下拉刷新则重新设置数据
                     roomList
                 } else {
-                    val temp = mutableListOf<AUiRoomInfo>()
+                    val temp = mutableListOf<AUIRoomInfo>()
                     temp.addAll(mList)
                     temp.addAll(roomList)
                     temp
@@ -190,15 +190,15 @@ class RoomListActivity : AppCompatActivity() {
     }
 
     inner class RoomListAdapter :
-        ListAdapter<AUiRoomInfo, BindingViewHolder<RoomListItemBinding>>(object :
-            ItemCallback<AUiRoomInfo>() {
+        ListAdapter<AUIRoomInfo, BindingViewHolder<RoomListItemBinding>>(object :
+            ItemCallback<AUIRoomInfo>() {
 
-            override fun areItemsTheSame(oldItem: AUiRoomInfo, newItem: AUiRoomInfo) =
+            override fun areItemsTheSame(oldItem: AUIRoomInfo, newItem: AUIRoomInfo) =
                 oldItem.roomId == newItem.roomId
 
             override fun areContentsTheSame(
-                oldItem: AUiRoomInfo,
-                newItem: AUiRoomInfo
+                oldItem: AUIRoomInfo,
+                newItem: AUIRoomInfo
             ) = false
         }) {
 
