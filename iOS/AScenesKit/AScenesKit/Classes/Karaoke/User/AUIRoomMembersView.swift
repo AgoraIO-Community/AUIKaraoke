@@ -30,7 +30,7 @@ public class AUIRoomMembersView: UIView {
     
     private lazy var moreButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImage("Room.membersMoreIcon")
+        theme.icon = auiThemeImageURL("Room.membersMoreIcon")
         theme.iconWidth = "Room.membersMoreIconWidth" 
         theme.iconHeight = "Room.membersMoreIconHeight"
         theme.buttonWidth = "Room.membersMoreWidth"
