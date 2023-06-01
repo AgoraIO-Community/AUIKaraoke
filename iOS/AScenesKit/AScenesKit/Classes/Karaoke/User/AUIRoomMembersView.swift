@@ -1,22 +1,23 @@
 //
-//  AUiRoomMemberListView.swift
-//  AUiKit
+//  AUIRoomMemberListView.swift
+//  AUIKit
 //
 //  Created by FanPengpeng on 2023/4/3.
 //
 
-import AUiKit
+import AUIKit
+import SwiftTheme
 
 private let headImageWidth: CGFloat = 32
 
-public typealias AUiRoomMembersViewMoreBtnAction = (_ members: [AUiUserInfo])->()
+public typealias AUIRoomMembersViewMoreBtnAction = (_ members: [AUIUserInfo])->()
 
 //用户头像展示
-public class AUiRoomMembersView: UIView {
-    private var onClickMoreButtonAction: AUiRoomMembersViewMoreBtnAction?
-    private weak var memberListView: AUiRoomMemberListView?
+public class AUIRoomMembersView: UIView {
+    private var onClickMoreButtonAction: AUIRoomMembersViewMoreBtnAction?
+    private weak var memberListView: AUIRoomMemberListView?
     
-    public var members: [AUiUserCellUserDataProtocol] = [] {
+    public var members: [AUIUserCellUserDataProtocol] = [] {
         didSet {
             let imgs = members.map({$0.userAvatar})
             updateWithMemberImgs(imgs)
@@ -28,17 +29,17 @@ public class AUiRoomMembersView: UIView {
     
     public var roomId: String?
     
-    private lazy var moreButton: AUiButton = {
-        let theme = AUiButtonDynamicTheme()
-        theme.icon = auiThemeImage("Room.membersMoreIcon")
-        theme.iconWidth = "Room.membersMoreIconWidth"
+    private lazy var moreButton: AUIButton = {
+        let theme = AUIButtonDynamicTheme()
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.membersMoreIcon")
+        theme.iconWidth = "Room.membersMoreIconWidth" 
         theme.iconHeight = "Room.membersMoreIconHeight"
-        theme.buttonWitdth = "Room.membersMoreWidth"
+        theme.buttonWidth = "Room.membersMoreWidth"
         theme.buttonHeight = "Room.membersMoreHeight"
         theme.backgroundColor = "Room.membersMoreBgColor"
         theme.cornerRadius = "Room.membersMoreCornerRadius"
         
-        let button = AUiButton()
+        let button = AUIButton()
         button.style = theme
         button.addTarget(self, action: #selector(didClickMoreMemberButton), for: .touchUpInside)
         return button
@@ -99,14 +100,14 @@ public class AUiRoomMembersView: UIView {
     
     public func updateWithMemberImgs(_ imgs: [String]) {
         if imgs.count < 1 {
-            aui_error("err = empty member", tag: "AUiRoomMembersView")
+            aui_error("err = empty member", tag: "AUIRoomMembersView")
             return
         }
         
         for (i, imgView) in [rightImgView, leftImgView].enumerated() {
             imgView.isHidden = false
             if imgs.count > i {
-                imgView.kf.setImage(with: URL(string: imgs[i]), placeholder: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
+                imgView.sd_setImage(with: URL(string: imgs[i]), placeholderImage: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
             }else{
                 imgView.isHidden = true
             }
@@ -125,7 +126,7 @@ public class AUiRoomMembersView: UIView {
 //        })
 //        /*
 //        for _ in 0...5 {
-//            let user = AUiUserInfo()
+//            let user = AUIUserInfo()
 //            user.userName = "user"
 //            user.userAvatar = "https://img1.baidu.com/it/u=413643897,2296924942&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1680627600&t=e945c37a601f9ee7ca3be932c73e605a"
 //            members.append(user)
@@ -134,20 +135,20 @@ public class AUiRoomMembersView: UIView {
 //    }
 }
 
-extension AUiRoomMembersView {
+extension AUIRoomMembersView {
     
-    public func clickMoreButtonAction(_ action: AUiRoomMembersViewMoreBtnAction?) {
+    public func clickMoreButtonAction(_ action: AUIRoomMembersViewMoreBtnAction?) {
         onClickMoreButtonAction = action
     }
 }
 
-extension AUiRoomMembersView {
+extension AUIRoomMembersView {
     @objc private func didClickMoreMemberButton(){
-        let listView = AUiRoomMemberListView()
+        let listView = AUIRoomMemberListView()
         listView.aui_size =  CGSize(width: UIScreen.main.bounds.width, height: 562)
         listView.memberList = members
         listView.seatMap = seatMap
-        AUiCommonDialog.show(contentView: listView, theme: AUiCommonDialogTheme())
+        AUICommonDialog.show(contentView: listView, theme: AUICommonDialogTheme())
         self.memberListView = listView
     }
 }

@@ -2,7 +2,7 @@
 
 *English | [中文](README_zh.md)
 
-This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUiScenesKit](../AScenesKit/README.md) and [AUiKit](https://github.com/AgoraIO-Community/AUIKit/tree/main/iOS)
+This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUIScenesKit](../AScenesKit/README.md) and [AUIKit](https://github.com/AgoraIO-Community/AUIKit/tree/main/iOS)
 
 ## Architecture
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
@@ -11,11 +11,11 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 ```
 ┌─ Example                     // Demo Code Integration Catalog
 │  └─ AUIKitKaraoke            // Provide Karaoke's integrated page
-├─ AUiScenesKit                // Scenario business assembly module, currently only including Karaoke
-│  ├─ AUiKaraokeRoomView       // Karaoke room container view, used to splice various basic components and bind them to services
-│  ├─ AUiKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
+├─ AUIScenesKit                // Scenario business assembly module, currently only including Karaoke
+│  ├─ AUIKaraokeRoomView       // Karaoke room container view, used to splice various basic components and bind them to services
+│  ├─ AUIKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
 │  └─ Binder                   // Business binding module that associates UI Components with Service
-└─ AUiKit                      // Including basic components and services
+└─ AUIKit                      // Including basic components and services
    ├─ Service                  // Related basic component services, including micseat, jukebox, user, choir, etc
    ├─ UI Widgets               // Basic UI component, supporting one click skin changing through configuration files
    └─ UI Components            // Related basic business UI modules, including micseat, jukebox, song playback, etc. These UI modules do not contain any business logic and are pure UI modules

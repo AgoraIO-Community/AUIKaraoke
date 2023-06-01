@@ -1,21 +1,21 @@
 //
-//  AUiRoomListCell.swift
-//  AUiCell
+//  AUIRoomListCell.swift
+//  AUICell
 //
 //  Created by zhaoyongqiang on 2023/4/11.
 //
 
 import UIKit
 import AScenesKit
-import AUiKit
-import Kingfisher
+import AUIKit
+import SDWebImage
 
-class AUiRoomListCell: UICollectionViewCell {
-    var roomInfo: AUiRoomInfo? {
+class AUIRoomListCell: UICollectionViewCell {
+    var roomInfo: AUIRoomInfo? {
         didSet {
             titleLabel.text = roomInfo?.roomName
             statusLabel.text = "\(roomInfo?.memberCount ?? 0)人正在嗨歌"
-            avatarImageView.kf.setImage(with: URL(string:roomInfo?.owner?.userAvatar ?? ""), placeholder: UIImage(systemName: "person.circle"))
+            avatarImageView.sd_setImage(with: URL(string:roomInfo?.owner?.userAvatar ?? ""), placeholderImage: UIImage(systemName: "person.circle"))
             ownerLabel.text = "\(roomInfo?.owner?.userName ?? "")的房间"
         }
     }

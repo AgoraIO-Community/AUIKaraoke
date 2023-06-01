@@ -1,20 +1,20 @@
 //
-//  AUiMicSeatViewBinder.swift
-//  AUiKit
+//  AUIMicSeatViewBinder.swift
+//  AUIKit
 //
 //  Created by wushengtao on 2023/4/6.
 //
 
 import UIKit
 import AgoraRtcKit
-import AUiKit
+import AUIKit
 
 let kMicSeatCount = 8
-public class AUiMicSeatViewBinder: NSObject {
-    private var micSeatArray: [AUiMicSeatInfo] = []
-    private var userMap: [String: AUiUserInfo] = [:]
+public class AUIMicSeatViewBinder: NSObject {
+    private var micSeatArray: [AUIMicSeatInfo] = []
+    private var userMap: [String: AUIUserInfo] = [:]
     private var rtcEngine: AgoraRtcEngineKit!
-    private var topSong: AUiChooseMusicModel? {
+    private var topSong: AUIChooseMusicModel? {
         didSet {
             if topSong?.songCode == oldValue?.songCode { return }
             let mainSingerIndex = getMicIndex(with: topSong?.userId ?? "")
@@ -27,26 +27,26 @@ public class AUiMicSeatViewBinder: NSObject {
             }
         }
     }
-    private weak var micSeatView: AUiMicSeatView?
-    private weak var micSeatDelegate: AUiMicSeatServiceDelegate? {
+    private weak var micSeatView: AUIMicSeatView?
+    private weak var micSeatDelegate: AUIMicSeatServiceDelegate? {
         didSet {
             micSeatDelegate?.unbindRespDelegate(delegate: self)
             micSeatDelegate?.bindRespDelegate(delegate: self)
         }
     }
-    private weak var userDelegate: AUiUserServiceDelegate? {
+    private weak var userDelegate: AUIUserServiceDelegate? {
         didSet {
             userDelegate?.unbindRespDelegate(delegate: self)
             userDelegate?.bindRespDelegate(delegate: self)
         }
     }
-    private weak var musicDelegate: AUiMusicServiceDelegate? {
+    private weak var musicDelegate: AUIMusicServiceDelegate? {
         didSet {
             musicDelegate?.unbindRespDelegate(delegate: self)
             musicDelegate?.bindRespDelegate(delegate: self)
         }
     }
-    private weak var chorusDelegate: AUiChorusServiceDelegate? {
+    private weak var chorusDelegate: AUIChorusServiceDelegate? {
         didSet {
             chorusDelegate?.unbindRespDelegate(delegate: self)
             chorusDelegate?.bindRespDelegate(delegate: self)
@@ -57,17 +57,17 @@ public class AUiMicSeatViewBinder: NSObject {
         self.init()
         self.rtcEngine = rtcEngine
         for i in 0...(kMicSeatCount - 1) {
-            let seatInfo = AUiMicSeatInfo()
+            let seatInfo = AUIMicSeatInfo()
             seatInfo.seatIndex = UInt(i)
             micSeatArray.append(seatInfo)
         }
     }
     
-    public func bind(micSeatView: AUiMicSeatView,
-                     micSeatService: AUiMicSeatServiceDelegate,
-                     userService: AUiUserServiceDelegate,
-                     musicSeatService: AUiMusicServiceDelegate,
-                     chorusService: AUiChorusServiceDelegate) {
+    public func bind(micSeatView: AUIMicSeatView,
+                     micSeatService: AUIMicSeatServiceDelegate,
+                     userService: AUIUserServiceDelegate,
+                     musicSeatService: AUIMusicServiceDelegate,
+                     chorusService: AUIChorusServiceDelegate) {
         self.micSeatView = micSeatView
         micSeatView.uiDelegate = self
         self.micSeatDelegate = micSeatService
@@ -76,52 +76,52 @@ public class AUiMicSeatViewBinder: NSObject {
         self.chorusDelegate = chorusService
     }
     
-    private func enterDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) -> AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func enterDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) -> AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = aui_localized("enterSeat")
         item.titleColor = "ActionSheet.normalColor"
         item.callback = { [weak self] in
             self?.micSeatDelegate?.enterSeat(seatIndex: Int(seatInfo.seatIndex), callback: { err in
                 guard let err = err else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
         return item
     }
     
-    private func kickDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) -> AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func kickDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) -> AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = aui_localized("kickSeat")
         item.titleColor = "ActionSheet.normalColor"
         item.callback = { [weak self] in
             self?.micSeatDelegate?.kickSeat(seatIndex: Int(seatInfo.seatIndex),
                                             callback: { error in
                 guard let err = error else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
         return item
     }
     
-    private func leaveDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) -> AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func leaveDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) -> AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = aui_localized("leaveSeat")
         item.icon = "ActionSheetCell.normalIcon"
         item.titleColor = "ActionSheet.normalColor"
         item.callback = { [weak self] in
             self?.micSeatDelegate?.leaveSeat(callback: { error in
                 guard let err = error else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
         return item
     }
     
-    private func muteAudioDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) ->AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func muteAudioDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) ->AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = seatInfo.muteAudio ? aui_localized("unmuteAudio") : aui_localized("muteAudio")
 //        item.icon = "ActionSheetCell.warnIcon"
         item.titleColor = "ActionSheet.normalColor"
@@ -130,7 +130,7 @@ public class AUiMicSeatViewBinder: NSObject {
                                                  isMute: !seatInfo.muteAudio,
                                                  callback: { error in
                 guard let err = error else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
@@ -138,8 +138,8 @@ public class AUiMicSeatViewBinder: NSObject {
         return item
     }
     
-    private func closeDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) -> AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func closeDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) -> AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = seatInfo.lockSeat == .locked ? aui_localized("closeSeat") : aui_localized("openSeat")
         item.titleColor = "CommonColor.danger"
         item.callback = { [weak self] in
@@ -147,7 +147,7 @@ public class AUiMicSeatViewBinder: NSObject {
                                              isClose: seatInfo.lockSeat != .locked,
                                              callback: { error in
                 guard let err = error else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
@@ -155,8 +155,8 @@ public class AUiMicSeatViewBinder: NSObject {
         return item
     }
     
-    private func lockDialogItem(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) -> AUiActionSheetItem {
-        let item = AUiActionSheetThemeItem()
+    private func lockDialogItem(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) -> AUIActionSheetItem {
+        let item = AUIActionSheetThemeItem()
         item.title = seatInfo.lockSeat == .locked ? aui_localized("unlockSeat") : aui_localized("lockSeat")
         item.titleColor = "CommonColor.danger"
         item.callback = { [weak self] in
@@ -164,7 +164,7 @@ public class AUiMicSeatViewBinder: NSObject {
                                              isClose: seatInfo.lockSeat != .locked,
                                              callback: { error in
                 guard let err = error else {return}
-                AUiToast.show(text: err.localizedDescription)
+                AUIToast.show(text: err.localizedDescription)
             })
             callback()
         }
@@ -172,8 +172,8 @@ public class AUiMicSeatViewBinder: NSObject {
         return item
     }
     
-    public func getDialogItems(seatInfo: AUiMicSeatInfo, callback: @escaping ()->()) ->[AUiActionSheetItem] {
-        var items = [AUiActionSheetItem]()
+    public func getDialogItems(seatInfo: AUIMicSeatInfo, callback: @escaping ()->()) ->[AUIActionSheetItem] {
+        var items = [AUIActionSheetItem]()
         
         let channelName: String = micSeatDelegate?.getChannelName() ?? ""
         let currentUserId: String = micSeatDelegate?.getRoomContext().currentUserInfo.userId ?? ""
@@ -217,10 +217,10 @@ public class AUiMicSeatViewBinder: NSObject {
     }
 }
 
-extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
+extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
     
-    public func onAnchorEnterSeat(seatIndex: Int, user: AUiUserThumbnailInfo) {
-        aui_info("onAnchorEnterSeat seat: \(seatIndex)", tag: "AUiMicSeatViewBinder")
+    public func onAnchorEnterSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
+        aui_info("onAnchorEnterSeat seat: \(seatIndex)", tag: "AUIMicSeatViewBinder")
         let micSeat = micSeatArray[seatIndex]
         if let fullUser = userMap[user.userId] {
             micSeat.user = fullUser
@@ -237,21 +237,21 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
             mediaOption.clientRoleType = .broadcaster
             mediaOption.publishMicrophoneTrack = true
             rtcEngine.updateChannel(with: mediaOption)
-            aui_info("update clientRoleType: \(mediaOption.clientRoleType.rawValue)", tag: "AUiMicSeatViewBinder")
+            aui_info("update clientRoleType: \(mediaOption.clientRoleType.rawValue)", tag: "AUIMicSeatViewBinder")
             return
         }
         
         guard let uid = UInt(micSeat.user?.userId ?? "") else {
             return
         }
-        aui_info("mute audio uid: \(uid) isMute: \(micSeat.muteAudio)", tag: "AUiMicSeatViewBinder")
+        aui_info("mute audio uid: \(uid) isMute: \(micSeat.muteAudio)", tag: "AUIMicSeatViewBinder")
         self.rtcEngine.muteRemoteAudioStream(uid, mute: micSeat.muteAudio)
-        aui_info("mute video uid: \(uid) isMute: \(micSeat.muteVideo)", tag: "AUiMicSeatViewBinder")
+        aui_info("mute video uid: \(uid) isMute: \(micSeat.muteVideo)", tag: "AUIMicSeatViewBinder")
         self.rtcEngine.muteRemoteVideoStream(uid, mute: micSeat.muteVideo)
     }
     
-    public func onAnchorLeaveSeat(seatIndex: Int, user: AUiUserThumbnailInfo) {
-        aui_info("onAnchorLeaveSeat seat: \(seatIndex)", tag: "AUiMicSeatViewBinder")
+    public func onAnchorLeaveSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
+        aui_info("onAnchorLeaveSeat seat: \(seatIndex)", tag: "AUIMicSeatViewBinder")
         let micSeat = micSeatArray[seatIndex]
         micSeat.user = nil
         micSeatArray[seatIndex] = micSeat
@@ -268,11 +268,11 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
         mediaOption.clientRoleType = .audience
         rtcEngine.updateChannel(with: mediaOption)
         
-        aui_info("update clientRoleType: \(mediaOption.clientRoleType.rawValue)", tag: "AUiMicSeatViewBinder")
+        aui_info("update clientRoleType: \(mediaOption.clientRoleType.rawValue)", tag: "AUIMicSeatViewBinder")
     }
     
     public func onSeatAudioMute(seatIndex: Int, isMute: Bool) {
-        aui_info("onSeatAudioMute seat: \(seatIndex) isMute: \(isMute)", tag: "AUiMicSeatViewBinder")
+        aui_info("onSeatAudioMute seat: \(seatIndex) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
         let micSeat = micSeatArray[seatIndex]
         micSeat.muteAudio = isMute
         micSeatArray[seatIndex] = micSeat
@@ -283,12 +283,12 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
               micSeat.user?.userId != micSeatDelegate?.getRoomContext().currentUserInfo.userId else {
             return
         }
-        aui_info("mute audio uid: \(uid) isMute: \(isMute)", tag: "AUiMicSeatViewBinder")
+        aui_info("mute audio uid: \(uid) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
         self.rtcEngine.muteRemoteAudioStream(uid, mute: isMute)
     }
     
     public func onSeatVideoMute(seatIndex: Int, isMute: Bool) {
-        aui_info("onSeatVideoMute  seat: \(seatIndex) isMute: \(isMute)", tag: "AUiMicSeatViewBinder")
+        aui_info("onSeatVideoMute  seat: \(seatIndex) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
         let micSeat = micSeatArray[seatIndex]
         micSeat.muteVideo = isMute
         micSeatArray[seatIndex] = micSeat
@@ -298,48 +298,48 @@ extension AUiMicSeatViewBinder: AUiMicSeatRespDelegate {
               micSeat.user?.userId != micSeatDelegate?.getRoomContext().currentUserInfo.userId else {
             return
         }
-        aui_info("mute video uid: \(uid) isMute: \(isMute)", tag: "AUiMicSeatViewBinder")
+        aui_info("mute video uid: \(uid) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
         self.rtcEngine.muteRemoteVideoStream(UInt(micSeat.user?.userId ?? "") ?? 0, mute: isMute)
     }
     
     public func onSeatClose(seatIndex: Int, isClose: Bool) {
-        aui_info("onSeatClose seat:\(seatIndex) isClose: \(isClose)", tag: "AUiMicSeatViewBinder")
+        aui_info("onSeatClose seat:\(seatIndex) isClose: \(isClose)", tag: "AUIMicSeatViewBinder")
         let micSeat = micSeatArray[seatIndex]
-        micSeat.lockSeat = isClose ? AUiLockSeatStatus.locked : AUiLockSeatStatus.idle
+        micSeat.lockSeat = isClose ? AUILockSeatStatus.locked : AUILockSeatStatus.idle
         micSeatArray[seatIndex] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
     }
 }
 
-//MARK: AUiMicSeatViewDelegate
-extension AUiMicSeatViewBinder: AUiMicSeatViewDelegate {
-    public func seatItems(view: AUiMicSeatView) -> [AUiMicSeatCellDataProtocol] {
+//MARK: AUIMicSeatViewDelegate
+extension AUIMicSeatViewBinder: AUIMicSeatViewDelegate {
+    public func seatItems(view: AUIMicSeatView) -> [AUIMicSeatCellDataProtocol] {
         return micSeatArray
     }
     
-    public func onItemDidClick(view: AUiMicSeatView, seatIndex: Int) {
+    public func onItemDidClick(view: AUIMicSeatView, seatIndex: Int) {
         let micSeat = micSeatArray[seatIndex]
 
         let dialogItems = getDialogItems(seatInfo: micSeat) {
-            AUiCommonDialog.hidden()
+            AUICommonDialog.hidden()
         }
         guard dialogItems.count > 0 else {return}
-        var headerInfo: AUiActionSheetHeaderInfo? = nil
+        var headerInfo: AUIActionSheetHeaderInfo? = nil
         if let user = micSeat.user, user.userId.count > 0 {
-            headerInfo = AUiActionSheetHeaderInfo()
+            headerInfo = AUIActionSheetHeaderInfo()
             headerInfo?.avatar = user.userAvatar
             headerInfo?.title = user.userName
             headerInfo?.subTitle = micSeat.seatIndexDesc()
         }
-        let dialogView = AUiActionSheet(title: aui_localized("managerSeat"),
+        let dialogView = AUIActionSheet(title: aui_localized("managerSeat"),
                                         items: dialogItems,
                                         headerInfo: headerInfo)
-        dialogView.setTheme(theme: AUiActionSheetTheme())
-        AUiCommonDialog.show(contentView: dialogView, theme: AUiCommonDialogTheme())
+        dialogView.setTheme(theme: AUIActionSheetTheme())
+        AUICommonDialog.show(contentView: dialogView, theme: AUICommonDialogTheme())
     }
     
-    public func onMuteVideo(view: AUiMicSeatView, seatIndex: Int, canvas: UIView, isMuteVideo: Bool) {
-        aui_info("onMuteVideo  seatIdx: \(seatIndex) mute: \(isMuteVideo)", tag: "AUiMicSeatViewBinder")
+    public func onMuteVideo(view: AUIMicSeatView, seatIndex: Int, canvas: UIView, isMuteVideo: Bool) {
+        aui_info("onMuteVideo  seatIdx: \(seatIndex) mute: \(isMuteVideo)", tag: "AUIMicSeatViewBinder")
         let videoCanvas = AgoraRtcVideoCanvas()
         let micSeat = micSeatArray[seatIndex]
         if let userId = micSeat.user?.userId, let uid = UInt(userId), !isMuteVideo {
@@ -351,7 +351,7 @@ extension AUiMicSeatViewBinder: AUiMicSeatViewDelegate {
             } else {
                 rtcEngine.setupRemoteVideo(videoCanvas)
             }
-            aui_info("onMuteVideo user[\(userId)] seatIdx: \(seatIndex) mute: \(isMuteVideo)", tag: "AUiMicSeatViewBinder")
+            aui_info("onMuteVideo user[\(userId)] seatIdx: \(seatIndex) mute: \(isMuteVideo)", tag: "AUIMicSeatViewBinder")
         } else {
             self.rtcEngine.setupRemoteVideo(videoCanvas)
         }
@@ -359,10 +359,10 @@ extension AUiMicSeatViewBinder: AUiMicSeatViewDelegate {
     }
 }
 
-//MARK: AUiUserRespDelegate
-extension AUiMicSeatViewBinder: AUiUserRespDelegate {
-    public func onRoomUserSnapshot(roomId: String, userList: [AUiUserInfo]) {
-        aui_info("onRoomUserSnapshot", tag: "AUiMicSeatViewBinder")
+//MARK: AUIUserRespDelegate
+extension AUIMicSeatViewBinder: AUIUserRespDelegate {
+    public func onRoomUserSnapshot(roomId: String, userList: [AUIUserInfo]) {
+        aui_info("onRoomUserSnapshot", tag: "AUIMicSeatViewBinder")
         userMap.removeAll()
         userList.forEach { user in
             self.userMap[user.userId] = user
@@ -376,23 +376,23 @@ extension AUiMicSeatViewBinder: AUiUserRespDelegate {
         micSeatView?.collectionView.reloadData()
     }
     
-    public func onRoomUserEnter(roomId: String, userInfo: AUiUserInfo) {
-        aui_info("onRoomUserEnter: \(userInfo.userId)", tag: "AUiMicSeatViewBinder")
+    public func onRoomUserEnter(roomId: String, userInfo: AUIUserInfo) {
+        aui_info("onRoomUserEnter: \(userInfo.userId)", tag: "AUIMicSeatViewBinder")
         userMap[userInfo.userId] = userInfo
     }
     
-    public func onRoomUserLeave(roomId: String, userInfo: AUiUserInfo) {
-        aui_info("onRoomUserLeave: \(userInfo.userId)", tag: "AUiMicSeatViewBinder")
+    public func onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
+        aui_info("onRoomUserLeave: \(userInfo.userId)", tag: "AUIMicSeatViewBinder")
         userMap[userInfo.userId] = nil
     }
     
-    public func onRoomUserUpdate(roomId: String, userInfo: AUiUserInfo) {
-        aui_info("onRoomUserUpdate: \(userInfo.userId)", tag: "AUiMicSeatViewBinder")
+    public func onRoomUserUpdate(roomId: String, userInfo: AUIUserInfo) {
+        aui_info("onRoomUserUpdate: \(userInfo.userId)", tag: "AUIMicSeatViewBinder")
         userMap[userInfo.userId] = userInfo
     }
     
     public func onUserAudioMute(userId: String, mute: Bool) {
-        aui_info("onUserAudioMute userId: \(userId) mute: \(mute)", tag: "AUiMicSeatViewBinder")
+        aui_info("onUserAudioMute userId: \(userId) mute: \(mute)", tag: "AUIMicSeatViewBinder")
         userMap[userId]?.muteAudio = mute
         
         for (seatIndex, micSeat) in micSeatArray.enumerated() {
@@ -405,7 +405,7 @@ extension AUiMicSeatViewBinder: AUiUserRespDelegate {
     }
     
     public func onUserVideoMute(userId: String, mute: Bool) {
-        aui_info("onUserVideoMute userId: \(userId) mute: \(mute)", tag: "AUiMicSeatViewBinder")
+        aui_info("onUserVideoMute userId: \(userId) mute: \(mute)", tag: "AUIMicSeatViewBinder")
         userMap[userId]?.muteVideo = mute
         
         for (seatIndex, micSeat) in micSeatArray.enumerated() {
@@ -418,30 +418,30 @@ extension AUiMicSeatViewBinder: AUiUserRespDelegate {
     }
 }
 
-//MARK: AUiMusicRespDelegate
-extension AUiMicSeatViewBinder: AUiMusicRespDelegate {
-    public func onAddChooseSong(song: AUiChooseMusicModel) {
+//MARK: AUIMusicRespDelegate
+extension AUIMicSeatViewBinder: AUIMusicRespDelegate {
+    public func onAddChooseSong(song: AUIChooseMusicModel) {
         
     }
     
-    public func onRemoveChooseSong(song: AUiChooseMusicModel) {
+    public func onRemoveChooseSong(song: AUIChooseMusicModel) {
         
     }
     
-    public func onUpdateChooseSong(song: AUiChooseMusicModel) {
+    public func onUpdateChooseSong(song: AUIChooseMusicModel) {
         
     }
     
-    public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
+    public func onUpdateAllChooseSongs(songs: [AUIChooseMusicModel]) {
         topSong = songs.first
     }
     
     
 }
 
-//MARK: AUiChorusRespDelegate
-extension AUiMicSeatViewBinder: AUiChorusRespDelegate {
-    public func onChoristerDidEnter(chorister: AUiChoristerModel) {
+//MARK: AUIChorusRespDelegate
+extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
+    public func onChoristerDidEnter(chorister: AUIChoristerModel) {
         //获取需要更新的麦位UI
         guard let index =  getMicIndex(with: chorister.userId) else {return}
         if let currentSong = topSong {
@@ -451,7 +451,7 @@ extension AUiMicSeatViewBinder: AUiChorusRespDelegate {
         }
     }
     
-    public func onChoristerDidLeave(chorister: AUiChoristerModel) {
+    public func onChoristerDidLeave(chorister: AUIChoristerModel) {
         //获取需要更新的麦位UI
         guard let index =  getMicIndex(with: chorister.userId) else {return}
         updateMic(with: index, role: .onlineAudience)
@@ -465,7 +465,7 @@ extension AUiMicSeatViewBinder: AUiChorusRespDelegate {
     }
     
     private func getLocalUserId() -> String? {
-        guard let commonConfig = AUiRoomContext.shared.commonConfig else {return nil}
+        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return nil}
         return commonConfig.userId
     }
     
