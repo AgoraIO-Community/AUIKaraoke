@@ -6,6 +6,7 @@
 //
 
 import AUIKit
+import SwiftTheme
 
 private let headImageWidth: CGFloat = 32
 
@@ -30,7 +31,7 @@ public class AUIRoomMembersView: UIView {
     
     private lazy var moreButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImageURL("Room.membersMoreIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.membersMoreIcon")
         theme.iconWidth = "Room.membersMoreIconWidth" 
         theme.iconHeight = "Room.membersMoreIconHeight"
         theme.buttonWidth = "Room.membersMoreWidth"

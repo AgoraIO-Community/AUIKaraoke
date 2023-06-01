@@ -47,7 +47,7 @@ open class AUIKaraokeRoomView: UIView {
     // 关闭按钮
     private lazy var closeButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImageURL("Room.offBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.offBtnIcon")
         theme.iconWidth = "Room.offBtnIconWidth"
         theme.iconHeight = "Room.offBtnIconHeight"
         theme.buttonWidth = "Room.offBtnWidth"
@@ -65,7 +65,7 @@ open class AUIKaraokeRoomView: UIView {
     // 聊天按钮
     private lazy var chatButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImageURL("Room.chatBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.chatBtnIcon")
         theme.iconWidth = "Room.chatBtnIconWidth"
         theme.iconHeight = "Room.chatBtnIconHeight"
         theme.buttonWidth = "Room.chatBtnWidth"
@@ -83,8 +83,8 @@ open class AUIKaraokeRoomView: UIView {
     // 麦克风开关按钮
     private lazy var microphoneButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.selectedIcon = auiThemeImageURL("Room.microphoneMuteBtnIcon")
-        theme.icon = auiThemeImageURL("Room.microphoneUnmuteBtnIcon")
+        theme.selectedIcon =  ThemeAnyPicker(keyPath:"Room.microphoneMuteBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.microphoneUnmuteBtnIcon")
         theme.iconWidth = "Room.microphoneBtnIconWidth"
         theme.iconHeight = "Room.microphoneBtnIconHeight"
         theme.buttonWidth = "Room.microphoneBtnWidth"
@@ -103,8 +103,8 @@ open class AUIKaraokeRoomView: UIView {
     /// 摄像头开关
     private lazy var cameraButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.selectedIcon = auiThemeImageURL("Room.cameraMuteBtnIcon")
-        theme.icon = auiThemeImageURL("Room.cameraUnmuteBtnIcon")
+        theme.selectedIcon =  ThemeAnyPicker(keyPath:"Room.cameraMuteBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.cameraUnmuteBtnIcon")
         theme.iconWidth = "Room.cameraBtnIconWidth"
         theme.iconHeight = "Room.cameraBtnIconHeight"
         theme.buttonWidth = "Room.cameraBtnWidth"
@@ -123,7 +123,7 @@ open class AUIKaraokeRoomView: UIView {
     /// 更多按钮
     private lazy var moreButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImageURL("Room.moreBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.moreBtnIcon")
         theme.iconWidth = "Room.moreBtnIconWidth"
         theme.iconHeight = "Room.moreBtnIconHeight"
         theme.buttonWidth = "Room.moreBtnWidth"
@@ -141,7 +141,7 @@ open class AUIKaraokeRoomView: UIView {
     // 礼物按钮
     private lazy var giftButton: AUIButton = {
         let theme = AUIButtonDynamicTheme()
-        theme.icon = auiThemeImageURL("Room.giftBtnIcon")
+        theme.icon =  ThemeAnyPicker(keyPath:"Room.giftBtnIcon")
         theme.iconWidth = "Room.giftBtnIconWidth"
         theme.iconHeight = "Room.giftBtnIconHeight"
         theme.buttonWidth = "Room.giftBtnWidth"
