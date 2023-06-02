@@ -9,26 +9,26 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import io.agora.app.karaoke.RoomListActivity
 import io.agora.app.karaoke.databinding.KaraokeRoomActivityBinding
-import io.agora.auikit.model.AUiRoomConfig
-import io.agora.auikit.model.AUiRoomContext
-import io.agora.auikit.model.AUiRoomInfo
-import io.agora.auikit.service.IAUiRoomManager.AUiRoomManagerRespDelegate
+import io.agora.auikit.model.AUIRoomConfig
+import io.agora.auikit.model.AUIRoomContext
+import io.agora.auikit.model.AUIRoomInfo
+import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
 import io.agora.auikit.service.http.CommonResp
 import io.agora.auikit.service.http.HttpManager
 import io.agora.auikit.service.http.application.ApplicationInterface
 import io.agora.auikit.service.http.application.TokenGenerateReq
 import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.rtm.AUiRtmErrorProxyDelegate
-import io.agora.auikit.ui.basic.AUiAlertDialog
+import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
+import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.scene.show.utils.PermissionHelp
 import retrofit2.Response
 
-class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUiRtmErrorProxyDelegate {
+class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErrorProxyDelegate {
     companion object {
-        private var roomInfo: AUiRoomInfo? = null
+        private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
 
-        fun launch(context: Context, roomInfo: AUiRoomInfo) {
+        fun launch(context: Context, roomInfo: AUIRoomInfo) {
             Companion.roomInfo = roomInfo
 
             val intent = Intent(context, KaraokeRoomActivity::class.java)
@@ -67,8 +67,8 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
         )
     }
 
-    private fun generateToken(onSuccess: (AUiRoomConfig) -> Unit) {
-        val config = AUiRoomConfig( roomInfo?.roomId ?: "")
+    private fun generateToken(onSuccess: (AUIRoomConfig) -> Unit) {
+        val config = AUIRoomConfig( roomInfo?.roomId ?: "")
         config.themeId = RoomListActivity.ThemeId
         var response = 3
         val trySuccess = {
@@ -78,7 +78,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
             }
         }
 
-        val userId = AUiRoomContext.shared().currentUserInfo.userId
+        val userId = AUIRoomContext.shared().currentUserInfo.userId
         HttpManager
             .getService(ApplicationInterface::class.java)
             .tokenGenerate(TokenGenerateReq(config.channelName, userId))
@@ -88,7 +88,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
                     if (rspObj != null) {
                         config.rtcToken007 = rspObj.rtcToken
                         config.rtmToken007 = rspObj.rtmToken
-                        AUiRoomContext.shared()?.commonConfig?.appId = rspObj.appId
+                        AUIRoomContext.shared()?.commonConfig?.appId = rspObj.appId
                     }
                     trySuccess.invoke()
                 }
@@ -137,7 +137,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
             return
         }
         mRoomDestroyAlert = true
-        AUiAlertDialog(this).apply {
+        AUIAlertDialog(this).apply {
             setTitle("Tip")
             setMessage("房间已销毁")
             setPositiveButton("确认") {
@@ -148,7 +148,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
         }
     }
 
-    override fun onRoomInfoChange(roomId: String, roomInfo: AUiRoomInfo) {
+    override fun onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
 
     }
 
@@ -160,8 +160,8 @@ class KaraokeRoomActivity : AppCompatActivity(), AUiRoomManagerRespDelegate, AUi
     }
 
     private fun onUserLeaveRoom() {
-        val owner = (roomInfo?.roomOwner?.userId == AUiRoomContext.shared().currentUserInfo.userId)
-        AUiAlertDialog(this).apply {
+        val owner = (roomInfo?.roomOwner?.userId == AUIRoomContext.shared().currentUserInfo.userId)
+        AUIAlertDialog(this).apply {
             setTitle("Tip")
             if (owner) {
                 setMessage("是否离开并销毁房间？")

@@ -1,22 +1,22 @@
 //
-//  AUiJukeBoxViewBinder.swift
-//  AUiKit
+//  AUIJukeBoxViewBinder.swift
+//  AUIKit
 //
 //  Created by wushengtao on 2023/4/10.
 //
 
 import Foundation
-import AUiKit
+import AUIKit
 
 private let kChartIds = [3, 4, 2, 6]
 let kListPageCount: Int = 10
-open class AUiJukeBoxViewBinder: NSObject {
-    private weak var jukeBoxView: AUiJukeBoxView? {
+open class AUIJukeBoxViewBinder: NSObject {
+    private weak var jukeBoxView: AUIJukeBoxView? {
         didSet {
             jukeBoxView?.uiDelegate = self
         }
     }
-    private weak var serviceDelegate: AUiMusicServiceDelegate? {
+    private weak var serviceDelegate: AUIMusicServiceDelegate? {
         didSet {
             oldValue?.unbindRespDelegate(delegate: self)
             serviceDelegate?.bindRespDelegate(delegate: self)
@@ -24,11 +24,11 @@ open class AUiJukeBoxViewBinder: NSObject {
     }
     
     //歌曲查询列表
-    private var searchMusicList: [AUiMusicModel]? 
+    private var searchMusicList: [AUIMusicModel]?
     //点歌列表
-    private var musicListMap: [Int: [AUiMusicModel]] = [:]
+    private var musicListMap: [Int: [AUIMusicModel]] = [:]
     //已点列表
-    private var addedMusicList: [AUiChooseMusicModel] = [] {
+    private var addedMusicList: [AUIChooseMusicModel] = [] {
         didSet {
             if let topSong = addedMusicList.first,
                 topSong.userId == serviceDelegate?.getRoomContext().currentUserInfo.userId,
@@ -50,31 +50,31 @@ open class AUiJukeBoxViewBinder: NSObject {
     private var deleteEnableSet: NSMutableSet = NSMutableSet()
     
     deinit {
-        aui_info("AUiJukeBoxViewBinder deinit", tag: "AUiJukeBoxViewBinder")
+        aui_info("AUIJukeBoxViewBinder deinit", tag: "AUIJukeBoxViewBinder")
     }
     
     public override init() {
         super.init()
-        aui_info("AUiJukeBoxViewBinder init", tag: "AUiJukeBoxViewBinder")
+        aui_info("AUIJukeBoxViewBinder init", tag: "AUIJukeBoxViewBinder")
     }
     
-    public func bind(jukeBoxView: AUiJukeBoxView, service: AUiMusicServiceDelegate) {
+    public func bind(jukeBoxView: AUIJukeBoxView, service: AUIMusicServiceDelegate) {
         self.jukeBoxView = jukeBoxView
         self.serviceDelegate = service
     }
 }
 
-extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
+extension AUIJukeBoxViewBinder: AUIJukeBoxViewDelegate {
 
-    public func cleanSearchText(view: AUiJukeBoxView) {
+    public func cleanSearchText(view: AUIJukeBoxView) {
         self.searchMusicList = nil
     }
     
-    public func search(view: AUiJukeBoxView, text: String, completion: @escaping ([AUiJukeBoxItemDataProtocol]?)->()) {
+    public func search(view: AUIJukeBoxView, text: String, completion: @escaping ([AUIJukeBoxItemDataProtocol]?)->()) {
         serviceDelegate?.searchMusic(keyword: text, page: 1, pageSize: kListPageCount, completion: {[weak self] error, list in
             guard let self = self else {return}
             if let err = error {
-                AUiToast.show(text:err.localizedDescription)
+                AUIToast.show(text:err.localizedDescription)
                 return
             }
             self.searchMusicList = list ?? []
@@ -82,32 +82,32 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
         })
     }
     
-    public func onSegmentedChanged(view: AUiJukeBoxView, segmentIndex: Int) -> Bool {
+    public func onSegmentedChanged(view: AUIJukeBoxView, segmentIndex: Int) -> Bool {
         return false
     }
     
-    public func onTabsDidChanged(view: AUiJukeBoxView, tabIndex: Int) -> Bool {
+    public func onTabsDidChanged(view: AUIJukeBoxView, tabIndex: Int) -> Bool {
         return false
     }
     
-    public func onSelectSong(view: AUiJukeBoxView, tabIndex: Int, index: Int) {
+    public func onSelectSong(view: AUIJukeBoxView, tabIndex: Int, index: Int) {
         guard let model = searchMusicList == nil ? musicListMap[tabIndex]?[index] : searchMusicList?[index] else {return}
         self.serviceDelegate?.chooseSong(songModel: model, completion: { error in
             guard let err = error else {return}
-            AUiToast.show(text:err.localizedDescription)
+            AUIToast.show(text:err.localizedDescription)
         })
     }
     
-    public func onRemoveSong(view: AUiJukeBoxView, index: Int) {
+    public func onRemoveSong(view: AUIJukeBoxView, index: Int) {
         let song = self.addedMusicList[index]
         self.serviceDelegate?.removeSong(songCode: song.songCode, completion: { error in
             guard let err = error else {return}
-            AUiToast.show(text:err.localizedDescription)
+            AUIToast.show(text:err.localizedDescription)
         })
     }
     
-    public func onNextSong(view: AUiJukeBoxView, index: Int) {
-        AUiAlertView.theme_defaultAlert()
+    public func onNextSong(view: AUIJukeBoxView, index: Int) {
+        AUIAlertView.theme_defaultAlert()
             .isShowCloseButton(isShow: false)
             .title(title: aui_localized("switchToNextSong"))
             .rightButton(title: "确认")
@@ -119,48 +119,48 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
             .show()
     }
     
-    public func onPinSong(view: AUiJukeBoxView, index: Int) {
+    public func onPinSong(view: AUIJukeBoxView, index: Int) {
         let song = self.addedMusicList[index]
         self.serviceDelegate?.pinSong(songCode: song.songCode, completion: { error in
             guard let err = error else {return}
-            AUiToast.show(text:err.localizedDescription)
+            AUIToast.show(text:err.localizedDescription)
         })
     }
     
-    public func songIsSelected(view: AUiJukeBoxView, songCode: String) -> Bool {
+    public func songIsSelected(view: AUIJukeBoxView, songCode: String) -> Bool {
         return addedMusicSet.contains(songCode)
     }
     
-    public func pingEnable(view: AUiJukeBoxView, songCode: String) -> Bool {
+    public func pingEnable(view: AUIJukeBoxView, songCode: String) -> Bool {
         return pinEnableSet.contains(songCode)
     }
     
-    public func deleteEnable(view: AUiJukeBoxView, songCode: String) -> Bool {
+    public func deleteEnable(view: AUIJukeBoxView, songCode: String) -> Bool {
         return deleteEnableSet.contains(songCode)
     }
     
-    public func getSearchMusicList(view: AUiJukeBoxView) -> [AUiJukeBoxItemDataProtocol]? {
+    public func getSearchMusicList(view: AUIJukeBoxView) -> [AUIJukeBoxItemDataProtocol]? {
         return self.searchMusicList
     }
     
-    public func getMusicList(view: AUiJukeBoxView, tabIndex: Int) -> [AUiJukeBoxItemDataProtocol] {
+    public func getMusicList(view: AUIJukeBoxView, tabIndex: Int) -> [AUIJukeBoxItemDataProtocol] {
         return self.musicListMap[tabIndex] ?? []
     }
     
-    public func getSelectedSongList(view: AUiJukeBoxView) -> [AUiJukeBoxItemSelectedDataProtocol] {
+    public func getSelectedSongList(view: AUIJukeBoxView) -> [AUIJukeBoxItemSelectedDataProtocol] {
         return self.addedMusicList
     }
     
-    public func onRefreshMusicList(view: AUiJukeBoxView, tabIndex: Int, completion: @escaping ([AUiJukeBoxItemDataProtocol]?)->()) {
+    public func onRefreshMusicList(view: AUIJukeBoxView, tabIndex: Int, completion: @escaping ([AUIJukeBoxItemDataProtocol]?)->()) {
         let idx = tabIndex
-        aui_info("onRefreshMusicList tabIndex: \(idx)", tag: "AUiJukeBoxViewBinder")
+        aui_info("onRefreshMusicList tabIndex: \(idx)", tag: "AUIJukeBoxViewBinder")
         self.serviceDelegate?.getMusicList(chartId: kChartIds[idx],
                                            page: 1,
                                            pageSize: kListPageCount,
                                            completion: {[weak self] error, list in
             guard let self = self else {return}
             if let err = error {
-                AUiToast.show(text:err.localizedDescription)
+                AUIToast.show(text:err.localizedDescription)
                 return
             }
             self.musicListMap[idx] = list ?? []
@@ -168,7 +168,7 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
         })
     }
     
-    public func onLoadMoreMusicList(view: AUiJukeBoxView, tabIndex: Int, completion: @escaping ([AUiJukeBoxItemDataProtocol]?)->()) {
+    public func onLoadMoreMusicList(view: AUIJukeBoxView, tabIndex: Int, completion: @escaping ([AUIJukeBoxItemDataProtocol]?)->()) {
         let idx = tabIndex
         let musicListCount = musicListMap[idx]?.count ?? 0
         let page = 1 + musicListCount / kListPageCount
@@ -177,14 +177,14 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
             completion(nil)
             return
         }
-        aui_info("onLoadMoreMusicList tabIndex: \(idx) page: \(page)", tag: "AUiJukeBoxViewBinder")
+        aui_info("onLoadMoreMusicList tabIndex: \(idx) page: \(page)", tag: "AUIJukeBoxViewBinder")
         self.serviceDelegate?.getMusicList(chartId: kChartIds[idx],
                                            page: page,
                                            pageSize: kListPageCount,
                                            completion: {[weak self] error, list in
             guard let self = self else {return}
             if let err = error {
-                AUiToast.show(text:err.localizedDescription)
+                AUIToast.show(text:err.localizedDescription)
                 return
             }
             if let list = list {
@@ -195,12 +195,12 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
         })
     }
     
-    public func onRefreshAddedMusicList(view: AUiJukeBoxView, completion: @escaping ([AUiJukeBoxItemSelectedDataProtocol]?) -> ()) {
-        aui_info("onRefreshAddedMusicList", tag: "AUiJukeBoxViewBinder")
+    public func onRefreshAddedMusicList(view: AUIJukeBoxView, completion: @escaping ([AUIJukeBoxItemSelectedDataProtocol]?) -> ()) {
+        aui_info("onRefreshAddedMusicList", tag: "AUIJukeBoxViewBinder")
         self.serviceDelegate?.getAllChooseSongList(completion: { [weak self] error, list in
             guard let self = self else {return}
             if let err = error {
-                AUiToast.show(text:err.localizedDescription)
+                AUIToast.show(text:err.localizedDescription)
                 return
             }
             self.addedMusicList = list ?? []
@@ -210,9 +210,9 @@ extension AUiJukeBoxViewBinder: AUiJukeBoxViewDelegate {
 }
 
 
-extension AUiJukeBoxViewBinder: AUiMusicRespDelegate {
+extension AUIJukeBoxViewBinder: AUIMusicRespDelegate {
     
-    public func _notifySongDidAdded(song: AUiChooseMusicModel) {
+    public func _notifySongDidAdded(song: AUIChooseMusicModel) {
         addedMusicSet.add(song.songCode)
         if serviceDelegate?.currentUserIsRoomOwner() ?? false == true {
             deleteEnableSet.add(song.songCode)
@@ -221,30 +221,30 @@ extension AUiJukeBoxViewBinder: AUiMusicRespDelegate {
             deleteEnableSet.add(song.songCode)
         }
     }
-    public func _notifySongDidRemove(song: AUiChooseMusicModel) {
+    public func _notifySongDidRemove(song: AUIChooseMusicModel) {
         addedMusicSet.remove(song.songCode)
         deleteEnableSet.remove(song.songCode)
         pinEnableSet.remove(song.songCode)
     }
     
-    public func onAddChooseSong(song: AUiChooseMusicModel) {
-        aui_info("onAddChooseSong \(song.name)", tag: "AUiJukeBoxViewBinder")
+    public func onAddChooseSong(song: AUIChooseMusicModel) {
+        aui_info("onAddChooseSong \(song.name)", tag: "AUIJukeBoxViewBinder")
         addedMusicList.append(song)
         _notifySongDidAdded(song: song)
         jukeBoxView?.addedMusicTableView.reloadData()
         jukeBoxView?.allMusicTableView.reloadData()
     }
     
-    public func onRemoveChooseSong(song: AUiChooseMusicModel) {
-        aui_info("onRemoveChooseSong \(song.name)", tag: "AUiJukeBoxViewBinder")
+    public func onRemoveChooseSong(song: AUIChooseMusicModel) {
+        aui_info("onRemoveChooseSong \(song.name)", tag: "AUIJukeBoxViewBinder")
         self.addedMusicList.removeAll(where: {$0.songCode == song.songCode})
         _notifySongDidRemove(song: song)
         self.jukeBoxView?.addedMusicTableView.reloadData()
         self.jukeBoxView?.allMusicTableView.reloadData()
     }
     
-    public func onUpdateChooseSong(song: AUiChooseMusicModel) {
-        aui_info("onUpdateChooseSong \(song.name)", tag: "AUiJukeBoxViewBinder")
+    public func onUpdateChooseSong(song: AUIChooseMusicModel) {
+        aui_info("onUpdateChooseSong \(song.name)", tag: "AUIJukeBoxViewBinder")
         if let index = self.addedMusicList.firstIndex(where: {$0.songCode == song.songCode}) {
             self.addedMusicList.remove(at: index)
             self.addedMusicList.insert(song, at: index)
@@ -256,8 +256,8 @@ extension AUiJukeBoxViewBinder: AUiMusicRespDelegate {
         self.jukeBoxView?.allMusicTableView.reloadData()
     }
     
-    public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
-        aui_info("onUpdateAllChooseSongs", tag: "AUiJukeBoxViewBinder")
+    public func onUpdateAllChooseSongs(songs: [AUIChooseMusicModel]) {
+        aui_info("onUpdateAllChooseSongs", tag: "AUIJukeBoxViewBinder")
         self.addedMusicList = songs
         addedMusicSet.removeAllObjects()
         pinEnableSet.removeAllObjects()

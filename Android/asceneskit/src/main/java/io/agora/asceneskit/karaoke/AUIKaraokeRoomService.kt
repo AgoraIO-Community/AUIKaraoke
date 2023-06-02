@@ -1,69 +1,74 @@
 package io.agora.asceneskit.karaoke
 
 import android.util.Log
-import io.agora.auikit.model.AUiRoomConfig
-import io.agora.auikit.model.AUiRoomContext
-import io.agora.auikit.model.AUiRoomInfo
-import io.agora.auikit.model.AUiUserInfo
-import io.agora.auikit.service.IAUiChorusService
-import io.agora.auikit.service.IAUiJukeboxService
-import io.agora.auikit.service.IAUiMicSeatService
-import io.agora.auikit.service.IAUiMusicPlayerService
-import io.agora.auikit.service.IAUiUserService
-import io.agora.auikit.service.IAUiUserService.AUiUserRespDelegate
-import io.agora.auikit.service.callback.AUiException
-import io.agora.auikit.service.imp.*
+import io.agora.auikit.model.AUIRoomConfig
+import io.agora.auikit.model.AUIRoomContext
+import io.agora.auikit.model.AUIRoomInfo
+import io.agora.auikit.model.AUIUserInfo
+import io.agora.auikit.service.IAUIChorusService
+import io.agora.auikit.service.IAUIJukeboxService
+import io.agora.auikit.service.IAUIMicSeatService
+import io.agora.auikit.service.IAUIMusicPlayerService
+import io.agora.auikit.service.IAUIUserService
+import io.agora.auikit.service.IAUIUserService.AUIUserRespDelegate
+import io.agora.auikit.service.callback.AUIException
+import io.agora.auikit.service.imp.AUIChorusServiceImpl
+import io.agora.auikit.service.imp.AUIJukeboxServiceImpl
+import io.agora.auikit.service.imp.AUIMicSeatServiceImpl
+import io.agora.auikit.service.imp.AUIMusicPlayerServiceImpl
+import io.agora.auikit.service.imp.AUIRoomManagerImpl
+import io.agora.auikit.service.imp.AUIUserServiceImpl
 import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.ktv.KTVApiConfig
 import io.agora.auikit.service.ktv.KTVApiImpl
-import io.agora.auikit.service.rtm.AUiRtmManager
-import io.agora.auikit.utils.AUiLogger.Companion.logger
+import io.agora.auikit.service.rtm.AUIRtmManager
+import io.agora.auikit.utils.AUILogger.Companion.logger
 import io.agora.auikit.utils.AgoraEngineCreator
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.RtcEngine
 
 
-class AUiKaraokeRoomService(
+class AUIKaraokeRoomService(
     private val rtcEngine: RtcEngine?,
     private val ktvApi: KTVApi?,
-    private val roomManager: AUiRoomManagerImpl,
-    private val roomConfig: AUiRoomConfig,
-    private val roomInfo: AUiRoomInfo
-): AUiUserRespDelegate {
+    private val roomManager: AUIRoomManagerImpl,
+    private val roomConfig: AUIRoomConfig,
+    private val roomInfo: AUIRoomInfo
+): AUIUserRespDelegate {
 
-    private val TAG = "AUiKaraokeRoomService"
+    private val TAG = "AUIKaraokeRoomService"
 
     private val channelName: String
         get() { return  roomInfo.roomId }
 
-    private val rtmManager: AUiRtmManager = roomManager.rtmManager
+    private val rtmManager: AUIRtmManager = roomManager.rtmManager
 
-    private val userImpl: IAUiUserService by lazy {
-        val user = AUiUserServiceImpl(roomInfo.roomId, rtmManager)
+    private val userImpl: IAUIUserService by lazy {
+        val user = AUIUserServiceImpl(roomInfo.roomId, rtmManager)
         user.bindRespDelegate(this)
         user
     }
 
-    private val micSeatImpl: IAUiMicSeatService by lazy { AUiMicSeatServiceImpl(roomInfo.roomId, rtmManager) }
+    private val micSeatImpl: IAUIMicSeatService by lazy { AUIMicSeatServiceImpl(roomInfo.roomId, rtmManager) }
 
-    private val playerImpl: IAUiMusicPlayerService by lazy { AUiMusicPlayerServiceImpl(mRtcEngine, roomInfo.roomId, mKtvApi) }
+    private val playerImpl: IAUIMusicPlayerService by lazy { AUIMusicPlayerServiceImpl(mRtcEngine, roomInfo.roomId, mKtvApi) }
 
-    private val chorusImpl: IAUiChorusService by lazy { AUiChorusServiceImpl(roomInfo.roomId, mKtvApi, rtmManager) }
+    private val chorusImpl: IAUIChorusService by lazy { AUIChorusServiceImpl(roomInfo.roomId, mKtvApi, rtmManager) }
 
-    private val jukeboxImpl: IAUiJukeboxService by lazy { AUiJukeboxServiceImpl(roomInfo.roomId, rtmManager, mKtvApi) }
+    private val jukeboxImpl: IAUIJukeboxService by lazy { AUIJukeboxServiceImpl(roomInfo.roomId, rtmManager, mKtvApi) }
 
     private val mRtcEngine: RtcEngine = rtcEngine ?: AgoraEngineCreator.createRtcEngine(
-        AUiRoomContext.shared().commonConfig.context,
-        AUiRoomContext.shared().commonConfig.appId
+        AUIRoomContext.shared().commonConfig.context,
+        AUIRoomContext.shared().commonConfig.appId
     )
     private val mKtvApi: KTVApi = ktvApi ?: run {
         val config = KTVApiConfig(
-            AUiRoomContext.shared().commonConfig.appId,
+            AUIRoomContext.shared().commonConfig.appId,
             roomConfig.rtcRtmToken006,
             mRtcEngine,
             roomConfig.rtcChannelName,
-            AUiRoomContext.shared().commonConfig.userId.toInt(),
+            AUIRoomContext.shared().commonConfig.userId.toInt(),
             roomConfig.rtcChorusChannelName,
             roomConfig.rtcChorusRtcToken007
         )
@@ -75,7 +80,7 @@ class AUiKaraokeRoomService(
     fun getJukeboxService() = jukeboxImpl
     fun getChorusService() = chorusImpl
     fun getMusicPlayerService() = playerImpl
-    fun enterRoom(success: (AUiRoomInfo) -> Unit, failure: (AUiException) -> Unit) {
+    fun enterRoom(success: (AUIRoomInfo) -> Unit, failure: (AUIException) -> Unit) {
         roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
             logger().d(TAG, "enterRoom result : $error")
             if (error != null) {
@@ -140,12 +145,12 @@ class AUiKaraokeRoomService(
             Constants.AUDIO_SCENARIO_GAME_STREAMING
         )
         mRtcEngine.enableAudioVolumeIndication(50, 10, true)
-        mRtcEngine.setClientRole(if (AUiRoomContext.shared().isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
+        mRtcEngine.setClientRole(if (AUIRoomContext.shared().isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
         val ret: Int = mRtcEngine.joinChannel(
             roomConfig.rtcRtcToken006,
             roomConfig.rtcChannelName,
             null,
-            AUiRoomContext.shared().commonConfig.userId.toInt()
+            AUIRoomContext.shared().commonConfig.userId.toInt()
         )
 
         if (ret == Constants.ERR_OK) {
@@ -155,23 +160,23 @@ class AUiKaraokeRoomService(
         }
     }
 
-    /** AUiUserRespDelegate */
-    override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUiUserInfo>?) {
-        userList?.firstOrNull { it.userId == AUiRoomContext.shared().currentUserInfo.userId }?.let { user ->
+    /** AUIUserRespDelegate */
+    override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUIUserInfo>?) {
+        userList?.firstOrNull { it.userId == AUIRoomContext.shared().currentUserInfo.userId }?.let { user ->
             onUserAudioMute(user.userId, (user.muteAudio == 1))
             onUserVideoMute(user.userId, (user.muteVideo == 1))
         }
     }
 
     override fun onUserAudioMute(userId: String, mute: Boolean) {
-        if (userId != AUiRoomContext.shared().currentUserInfo.userId) {
+        if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
             return
         }
         rtcEngine?.adjustRecordingSignalVolume(if (mute) 0 else 100)
     }
 
     override fun onUserVideoMute(userId: String, mute: Boolean) {
-        if (userId != AUiRoomContext.shared().currentUserInfo.userId) {
+        if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
             return
         }
         rtcEngine?.enableLocalVideo(!mute)

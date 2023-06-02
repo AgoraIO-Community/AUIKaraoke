@@ -17,8 +17,8 @@
 		DD00C4652A0BAAD800797229 /* AUIKitKaraokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4642A0BAAD800797229 /* AUIKitKaraokeTests.swift */; };
 		DD00C46F2A0BAAD800797229 /* AUIKitKaraokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C46E2A0BAAD800797229 /* AUIKitKaraokeUITests.swift */; };
 		DD00C4712A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4702A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift */; };
-		DD00C4862A0BAC7A00797229 /* AUiRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */; };
-		DD00C4872A0BAC7A00797229 /* AUiRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */; };
+		DD00C4862A0BAC7A00797229 /* AUIRoomListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47E2A0BAC7A00797229 /* AUIRoomListCell.swift */; };
+		DD00C4872A0BAC7A00797229 /* AUIRoomListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C47F2A0BAC7A00797229 /* AUIRoomListViewController.swift */; };
 		DD00C4882A0BAC7A00797229 /* KaraokeUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */; };
 		DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4812A0BAC7A00797229 /* RoomViewController.swift */; };
 		DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4822A0BAC7A00797229 /* KeyCenter.swift */; };
@@ -59,8 +59,8 @@
 		DD00C46A2A0BAAD800797229 /* AUIKitKaraokeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AUIKitKaraokeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD00C46E2A0BAAD800797229 /* AUIKitKaraokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIKitKaraokeUITests.swift; sourceTree = "<group>"; };
 		DD00C4702A0BAAD800797229 /* AUIKitKaraokeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIKitKaraokeUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUiRoomListCell.swift; sourceTree = "<group>"; };
-		DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUiRoomListViewController.swift; sourceTree = "<group>"; };
+		DD00C47E2A0BAC7A00797229 /* AUIRoomListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUIRoomListCell.swift; sourceTree = "<group>"; };
+		DD00C47F2A0BAC7A00797229 /* AUIRoomListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AUIRoomListViewController.swift; sourceTree = "<group>"; };
 		DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaraokeUIKit.swift; sourceTree = "<group>"; };
 		DD00C4812A0BAC7A00797229 /* RoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		DD00C4822A0BAC7A00797229 /* KeyCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCenter.swift; sourceTree = "<group>"; };
@@ -171,8 +171,8 @@
 		DD00C47D2A0BAC7A00797229 /* List */ = {
 			isa = PBXGroup;
 			children = (
-				DD00C47E2A0BAC7A00797229 /* AUiRoomListCell.swift */,
-				DD00C47F2A0BAC7A00797229 /* AUiRoomListViewController.swift */,
+				DD00C47E2A0BAC7A00797229 /* AUIRoomListCell.swift */,
+				DD00C47F2A0BAC7A00797229 /* AUIRoomListViewController.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -386,10 +386,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD00C4862A0BAC7A00797229 /* AUiRoomListCell.swift in Sources */,
+				DD00C4862A0BAC7A00797229 /* AUIRoomListCell.swift in Sources */,
 				DD00C4882A0BAC7A00797229 /* KaraokeUIKit.swift in Sources */,
 				DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */,
-				DD00C4872A0BAC7A00797229 /* AUiRoomListViewController.swift in Sources */,
+				DD00C4872A0BAC7A00797229 /* AUIRoomListViewController.swift in Sources */,
 				DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */,
 				DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */,
 				DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */,
@@ -573,7 +573,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YS397FG5PA;
+				DEVELOPMENT_TEAM = JDPG69R49Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
@@ -609,7 +609,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YS397FG5PA;
+				DEVELOPMENT_TEAM = JDPG69R49Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";

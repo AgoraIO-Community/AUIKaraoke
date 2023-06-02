@@ -8,20 +8,20 @@
 
 import Foundation
 import AScenesKit
-import AUiKit
+import AUIKit
 import AgoraRtcKit
 
 class KaraokeUIKit: NSObject {
     static let shared: KaraokeUIKit = KaraokeUIKit()
-    public var roomConfig: AUiCommonConfig?
+    public var roomConfig: AUICommonConfig?
     private var ktvApi: KTVApiDelegate?
     private var rtcEngine: AgoraRtcEngineKit?
     private var rtmClient: AgoraRtmClientKit?
-    private var service: AUiKaraokeRoomService?
+    private var service: AUIKaraokeRoomService?
     
-    private var roomManager: AUiRoomManagerImpl?
+    private var roomManager: AUIRoomManagerImpl?
     
-    func setup(roomConfig: AUiCommonConfig,
+    func setup(roomConfig: AUICommonConfig,
                ktvApi: KTVApiDelegate? = nil,
                rtcEngine: AgoraRtcEngineKit? = nil,
                rtmClient: AgoraRtmClientKit? = nil) {
@@ -29,10 +29,10 @@ class KaraokeUIKit: NSObject {
         self.ktvApi = ktvApi
         self.rtcEngine = rtcEngine
         self.rtmClient = rtmClient
-        self.roomManager = AUiRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
+        self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
-    func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUiRoomListCallback) {
+    func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUIRoomListCallback) {
         guard let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
@@ -40,12 +40,12 @@ class KaraokeUIKit: NSObject {
         roomManager.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: pageSize, callback: callback)
     }
     
-    func renew(config: AUiRoomConfig) {
+    func renew(config: AUIRoomConfig) {
         service?.renew(config: config)
     }
     
-    func createRoom(roomInfo: AUiCreateRoomInfo,
-                    success: ((AUiRoomInfo?)->())?,
+    func createRoom(roomInfo: AUICreateRoomInfo,
+                    success: ((AUIRoomInfo?)->())?,
                     failure: ((Error)->())?) {
         guard let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
@@ -61,17 +61,17 @@ class KaraokeUIKit: NSObject {
         }
     }
     
-    func launchRoom(roomInfo: AUiRoomInfo,
+    func launchRoom(roomInfo: AUIRoomInfo,
                     appId: String,
-                    config: AUiRoomConfig,
-                    karaokeView: AUiKaraokeRoomView,
+                    config: AUIRoomConfig,
+                    karaokeView: AUIKaraokeRoomView,
                     completion: @escaping ((Int)->())) {
         guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
         }
-        AUiRoomContext.shared.commonConfig?.appId = appId
-        let service = AUiKaraokeRoomService(rtcEngine: rtcEngine,
+        AUIRoomContext.shared.commonConfig?.appId = appId
+        let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
                                             ktvApi: ktvApi,
                                             roomManager: roomManager,
                                             roomConfig: config,
@@ -86,19 +86,19 @@ class KaraokeUIKit: NSObject {
         service = nil
     }
     
-    func subscribeError(roomId: String, delegate: AUiRtmErrorProxyDelegate) {
+    func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
         roomManager?.rtmManager.subscribeError(channelName: roomId, delegate: delegate)
     }
     
-    func unsubscribeError(roomId: String, delegate: AUiRtmErrorProxyDelegate) {
+    func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
         roomManager?.rtmManager.unsubscribeError(channelName: roomId, delegate: delegate)
     }
     
-    func bindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+    func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         roomManager?.bindRespDelegate(delegate: delegate)
     }
     
-    func unbindRespDelegate(delegate: AUiRoomManagerRespDelegate) {
+    func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         roomManager?.unbindRespDelegate(delegate: delegate)
     }
 }

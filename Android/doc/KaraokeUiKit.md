@@ -11,9 +11,9 @@ KaraokeUiKit is a Karaoke scene component that provides room management and the 
 ### 1. Add Source Code
 **Copy the following source code into your own project:**
 
-- [auikit](auikit)
-- [asceneskit](asceneskit)
-- [KaraokeUiKit](examples/AUIKitKaraoke/src/main/java/io/agora/app/karaoke/kit)
+- [auikit](../../AUIKit/Android/auikit)
+- [asceneskit](../asceneskit)
+- [KaraokeUiKit](../app/src/main/java/io/agora/app/karaoke/kit)
 
 **Configure libraries in settings.gradle**
 ```groovy
@@ -70,13 +70,13 @@ dependencies {
 ### 2. Initialize KaraokeUiKit
 ```kotlin
 // Create Common Config
-val config = AUiCommonConfig()
+val config = AUICommonConfig()
 config.context = application
 config.appId = "Agora APP ID"
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
-// init AUiKit. If you have your own rtmClient, rtcEngine or ktvApi, you can pass them to KaraokeUiKit.
+// init AUIKit. If you have your own rtmClient, rtcEngine or ktvApi, you can pass them to KaraokeUiKit.
 KaraokeUiKit.init(
     config = config, // must
     rtmClient = null, // option
@@ -103,7 +103,7 @@ KaraokeUiKit.getRoomList(lastCreateTime, 10,
 
 ### 4. Create Karaoke Room
 ```kotlin
-val createRoomInfo = AUiCreateRoomInfo()
+val createRoomInfo = AUICreateRoomInfo()
 createRoomInfo.roomName = roomName
 KaraokeUiKit.createRoom(
     createRoomInfo,
@@ -118,7 +118,7 @@ KaraokeUiKit.createRoom(
 
 ### 5. Launch Karaoke Room
 ```kotlin
-val config = AUiRoomConfig(roomInfo.roomId)
+val config = AUIRoomConfig(roomInfo.roomId)
 config.themeId = io.agora.asceneskit.R.style.Theme_AKaraoke
 
 KaraokeUiKit.launchRoom(

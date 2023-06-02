@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.swift
-//  AUiKaraokeApp
+//  AUIKaraokeApp
 //
 //  Created by wushengtao on 2023/5/4.
 //

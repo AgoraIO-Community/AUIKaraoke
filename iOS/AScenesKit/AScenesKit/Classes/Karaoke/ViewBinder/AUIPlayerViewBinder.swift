@@ -1,15 +1,15 @@
 //
-//  AUiPlayerViewBinder.swift
-//  AUiKit
+//  AUIPlayerViewBinder.swift
+//  AUIKit
 //
 //  Created by wushengtao on 2023/4/11.
 //
 
 import Foundation
 import AgoraRtcKit
-import AUiKit
+import AUIKit
 
-open class AUiPlayerViewBinder: NSObject {
+open class AUIPlayerViewBinder: NSObject {
     
     var singerRole: KTVSingRole = .audience {
         didSet {
@@ -22,7 +22,7 @@ open class AUiPlayerViewBinder: NSObject {
     var isMainSinger: Bool = false
     var isOnSeat: Bool = false
     
-    var currentSong: AUiChooseMusicModel?
+    var currentSong: AUIChooseMusicModel?
     var preparedToCosinger: Bool = false
     var coSingerCount: Int = 0 {
         didSet {
@@ -30,7 +30,7 @@ open class AUiPlayerViewBinder: NSObject {
         }
     }
     
-    private var micSeatArray: [AUiMicSeatInfo] = []
+    private var micSeatArray: [AUIMicSeatInfo] = []
     
     private var cosingerDegree: Int = 0
     
@@ -39,33 +39,33 @@ open class AUiPlayerViewBinder: NSObject {
     private var recordVol: CGFloat = 1
     private var enableEarMonitoring: Bool = false
     
-    private weak var playerView: AUiPlayerView? {
+    private weak var playerView: AUIPlayerView? {
         didSet {
 //            playerView?.uiDelegate = self
         }
     }
-    private weak var musicServiceDelegate: AUiMusicServiceDelegate? {
+    private weak var musicServiceDelegate: AUIMusicServiceDelegate? {
         didSet {
             oldValue?.unbindRespDelegate(delegate: self)
             musicServiceDelegate?.bindRespDelegate(delegate: self)
         }
     }
     
-    private weak var micSeatServiceDelegate: AUiMicSeatServiceDelegate? {
+    private weak var micSeatServiceDelegate: AUIMicSeatServiceDelegate? {
         didSet {
             oldValue?.unbindRespDelegate(delegate: self)
             micSeatServiceDelegate?.bindRespDelegate(delegate: self)
         }
     }
     
-    private weak var playerServiceDelegate: AUiPlayerServiceDelegate? {
+    private weak var playerServiceDelegate: AUIPlayerServiceDelegate? {
         didSet {
             oldValue?.unbindRespDelegate(delegate: self)
             playerServiceDelegate?.bindRespDelegate(delegate: self)
         }
     }
     
-    private weak var chorusServiceDelegate: AUiChorusServiceDelegate? {
+    private weak var chorusServiceDelegate: AUIChorusServiceDelegate? {
         didSet {
             oldValue?.unbindRespDelegate(delegate: self)
             chorusServiceDelegate?.bindRespDelegate(delegate: self)
@@ -75,17 +75,17 @@ open class AUiPlayerViewBinder: NSObject {
      public override init() {
         super.init()
         for i in 0...(kMicSeatCount - 1) {
-            let seatInfo = AUiMicSeatInfo()
+            let seatInfo = AUIMicSeatInfo()
             seatInfo.seatIndex = UInt(i)
             micSeatArray.append(seatInfo)
         }
     }
     
-    public func bind(playerView: AUiPlayerView,
-              playerService: AUiPlayerServiceDelegate,
-              micSeatService: AUiMicSeatServiceDelegate,
-              musicService: AUiMusicServiceDelegate,
-              chorusService: AUiChorusServiceDelegate) {
+    public func bind(playerView: AUIPlayerView,
+              playerService: AUIPlayerServiceDelegate,
+              micSeatService: AUIMicSeatServiceDelegate,
+              musicService: AUIMusicServiceDelegate,
+              chorusService: AUIChorusServiceDelegate) {
         self.playerView = playerView
         self.musicServiceDelegate = musicService
         self.micSeatServiceDelegate = micSeatService
@@ -119,8 +119,8 @@ open class AUiPlayerViewBinder: NSObject {
     }
 }
 
-extension AUiPlayerViewBinder: AUiPlayerViewDelegate {
-    public func onButtonTapAction(playerView: AUiPlayerView, actionType: AUiPlayerViewButtonType) {
+extension AUIPlayerViewBinder: AUIPlayerViewDelegate {
+    public func onButtonTapAction(playerView: AUIPlayerView, actionType: AUIPlayerViewButtonType) {
         if actionType == .acc {
             playerServiceDelegate?.selectMusicPlayerTrackMode(mode: .acc)
         } else if actionType == .original {
@@ -164,7 +164,7 @@ extension AUiPlayerViewBinder: AUiPlayerViewDelegate {
     }
     
     //音乐 人声 升降调
-    public func onSliderValueDidChanged(value: CGFloat, item: AUiPlayerAudioSettingItem) {
+    public func onSliderValueDidChanged(value: CGFloat, item: AUIPlayerAudioSettingItem) {
         let type = item.uniqueId
         switch type {
         case 1://音乐音量
@@ -183,7 +183,7 @@ extension AUiPlayerViewBinder: AUiPlayerViewDelegate {
     }
     
     //耳返
-    public func onSwitchValueDidChanged(isSwitch: Bool, item: AUiPlayerAudioSettingItem) {
+    public func onSwitchValueDidChanged(isSwitch: Bool, item: AUIPlayerAudioSettingItem) {
         playerServiceDelegate?.enableEarMonitoring(inEarMonitoring: isSwitch)
         enableEarMonitoring = isSwitch
     }
@@ -194,7 +194,7 @@ extension AUiPlayerViewBinder: AUiPlayerViewDelegate {
         playerView?.audioMixinIdx = audioMixIndex
     }
     
-    public func onSliderCellWillLoad(playerView: AUiPlayerAudioSettingView, item: AUiPlayerAudioSettingItem) {
+    public func onSliderCellWillLoad(playerView: AUIPlayerAudioSettingView, item: AUIPlayerAudioSettingItem) {
         if item.uniqueId == 1 {//伴奏音量
             item.sliderCurrentValue = playerVol
         } else if item.uniqueId == 2 {//人声
@@ -204,26 +204,26 @@ extension AUiPlayerViewBinder: AUiPlayerViewDelegate {
         }
     }
     
-    public func onSwitchCellWillLoad(playerView: AUiPlayerAudioSettingView, item: AUiPlayerAudioSettingItem) {
+    public func onSwitchCellWillLoad(playerView: AUIPlayerAudioSettingView, item: AUIPlayerAudioSettingItem) {
         item.aui_isSwitchOn = enableEarMonitoring
     }
 }
 
-//MARK: AUiMusicServiceDelegate
-extension AUiPlayerViewBinder: AUiMusicRespDelegate {
-    public func onAddChooseSong(song: AUiChooseMusicModel) {
+//MARK: AUIMusicServiceDelegate
+extension AUIPlayerViewBinder: AUIMusicRespDelegate {
+    public func onAddChooseSong(song: AUIChooseMusicModel) {
        
     }
     
-    public func onRemoveChooseSong(song: AUiChooseMusicModel) {
+    public func onRemoveChooseSong(song: AUIChooseMusicModel) {
     }
     
-    public func onUpdateChooseSong(song: AUiChooseMusicModel) {
-        aui_info("onUpdateChooseSong \(song.name) isPlayer:\(song.isPlaying)", tag: "AUiPlayerViewBinder")
+    public func onUpdateChooseSong(song: AUIChooseMusicModel) {
+        aui_info("onUpdateChooseSong \(song.name) isPlayer:\(song.isPlaying)", tag: "AUIPlayerViewBinder")
         
     }
     
-    public func onUpdateAllChooseSongs(songs: [AUiChooseMusicModel]) {
+    public func onUpdateAllChooseSongs(songs: [AUIChooseMusicModel]) {
         playerView?.originalButton.isSelected = false
         playerView?.playOrPauseButton.isSelected = false
         playerView?.karaokeLrcView.resetShowOnce()
@@ -250,10 +250,10 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
     }
     
     //处理各种身份的加入合唱逻辑
-    private func handleKtvLogic(with song: AUiChooseMusicModel) {
+    private func handleKtvLogic(with song: AUIChooseMusicModel) {
         //判断当前用户是否是点歌者
         let songOwnerUid = currentSong?.owner?.userId
-        guard let commonConfig = AUiRoomContext.shared.commonConfig else {return}
+        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return}
         let local = commonConfig.userId
         let isSongOwner = local == songOwnerUid
         self.singerRole = isSongOwner ? .soloSinger : .audience
@@ -266,7 +266,7 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
         }
     }
     
-    private func mainSingerJoinKtv(with song: AUiChooseMusicModel) {
+    private func mainSingerJoinKtv(with song: AUIChooseMusicModel) {
         let config = KTVSongConfiguration()
         config.autoPlay = true
         config.mainSingerUid = Int(song.owner?.userId ?? "0") ?? 0
@@ -280,7 +280,7 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
         
     }
     
-    private func audienceJoinKtv(with song: AUiChooseMusicModel) {
+    private func audienceJoinKtv(with song: AUIChooseMusicModel) {
         let config = KTVSongConfiguration()
         config.autoPlay = false
         config.mainSingerUid = Int(song.owner?.userId ?? "0") ?? 0
@@ -290,7 +290,7 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
         singerRole = .audience
     }
     
-    private func audienceToCosinger(with song: AUiChooseMusicModel) {
+    private func audienceToCosinger(with song: AUIChooseMusicModel) {
         let config = KTVSongConfiguration()
         config.autoPlay = false
         config.mainSingerUid = Int(song.owner?.userId ?? "0") ?? 0
@@ -301,7 +301,7 @@ extension AUiPlayerViewBinder: AUiMusicRespDelegate {
 
 }
 
-extension AUiPlayerViewBinder: AUiLrcViewDelegate {
+extension AUIPlayerViewBinder: AUILrcViewDelegate {
     public func onKaraokeView( didDragTo position: Int) {
         //歌词滚动
         playerServiceDelegate?.seekSing(time: position)
@@ -326,9 +326,9 @@ extension AUiPlayerViewBinder: AUiLrcViewDelegate {
     }
 }
 
-extension AUiPlayerViewBinder: AUiMicSeatRespDelegate {
-    public func onAnchorEnterSeat(seatIndex: Int, user: AUiUserThumbnailInfo) {
-        aui_info("onAnchorEnterSeat: \(seatIndex)", tag: "AUiPlayerViewBinder")
+extension AUIPlayerViewBinder: AUIMicSeatRespDelegate {
+    public func onAnchorEnterSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
+        aui_info("onAnchorEnterSeat: \(seatIndex)", tag: "AUIPlayerViewBinder")
         let micSeat = micSeatArray[seatIndex]
         micSeat.user = user
         micSeatArray[seatIndex] = micSeat
@@ -346,8 +346,8 @@ extension AUiPlayerViewBinder: AUiMicSeatRespDelegate {
         playerView?.musicInfo = currentSong
     }
     
-    public func onAnchorLeaveSeat(seatIndex: Int, user: AUiUserThumbnailInfo) {
-        aui_info("onAnchorLeaveSeat: \(seatIndex)", tag: "AUiPlayerViewBinder")
+    public func onAnchorLeaveSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
+        aui_info("onAnchorLeaveSeat: \(seatIndex)", tag: "AUIPlayerViewBinder")
         let micSeat = micSeatArray[seatIndex]
         micSeat.user = nil
         micSeatArray[seatIndex] = micSeat
@@ -376,15 +376,15 @@ extension AUiPlayerViewBinder: AUiMicSeatRespDelegate {
     }
     
     public func onSeatClose(seatIndex: Int, isClose: Bool) {
-        aui_info("onSeatClose: \(seatIndex)", tag: "AUiPlayerViewBinder")
+        aui_info("onSeatClose: \(seatIndex)", tag: "AUIPlayerViewBinder")
         let micSeat = micSeatArray[seatIndex]
-        micSeat.lockSeat = isClose ? AUiLockSeatStatus.locked : AUiLockSeatStatus.idle
+        micSeat.lockSeat = isClose ? AUILockSeatStatus.locked : AUILockSeatStatus.idle
         micSeatArray[seatIndex] = micSeat
     }
 }
 
-//MARK: AUiPlayerServiceDelegate
-extension AUiPlayerViewBinder: AUiPlayerRespDelegate {
+//MARK: AUIPlayerServiceDelegate
+extension AUIPlayerViewBinder: AUIPlayerRespDelegate {
     public func onPreludeDidAppear() {
         
     }
@@ -429,15 +429,15 @@ extension AUiPlayerViewBinder: AUiPlayerRespDelegate {
             let json = try JSONSerialization.jsonObject(with: data, options: [])
             return json as? [String: Any]
         } catch {
-            aui_info("Error decoding data: \(error.localizedDescription)", tag: "AUiPlayerViewBinder")
+            aui_info("Error decoding data: \(error.localizedDescription)", tag: "AUIPlayerViewBinder")
             return nil
         }
     }
 }
 
-//MARK: AUiChorusRespDelegate
-extension AUiPlayerViewBinder: AUiChorusRespDelegate {
-    public func onChoristerDidEnter(chorister: AUiChoristerModel) {
+//MARK: AUIChorusRespDelegate
+extension AUIPlayerViewBinder: AUIChorusRespDelegate {
+    public func onChoristerDidEnter(chorister: AUIChoristerModel) {
         coSingerCount += 1
         if singerRole == .soloSinger && coSingerCount == 1 {
             playerServiceDelegate?.switchSingerRole(newRole: .leadSinger, onSwitchRoleState: {[weak self] state, reason in
@@ -446,7 +446,7 @@ extension AUiPlayerViewBinder: AUiChorusRespDelegate {
         }
     }
     
-    public func onChoristerDidLeave(chorister: AUiChoristerModel) {
+    public func onChoristerDidLeave(chorister: AUIChoristerModel) {
         coSingerCount -= 1
         if coSingerCount == 0 && singerRole == .leadSinger {
             playerServiceDelegate?.switchSingerRole(newRole: .soloSinger, onSwitchRoleState: {[weak self] state, reason in
@@ -459,7 +459,7 @@ extension AUiPlayerViewBinder: AUiChorusRespDelegate {
     }
 }
 
-extension AUiPlayerViewBinder: KTVApiEventHandlerDelegate {
+extension AUIPlayerViewBinder: KTVApiEventHandlerDelegate {
     public func onMusicPlayerStateChanged(state: AgoraMediaPlayerState, error: AgoraMediaPlayerError, isLocal: Bool) {
         if state == .playBackCompleted || state == .playBackAllLoopsCompleted {
             if isLocal {
@@ -492,7 +492,7 @@ extension AUiPlayerViewBinder: KTVApiEventHandlerDelegate {
     }
 }
 
-extension AUiPlayerViewBinder: IMusicLoadStateListener {
+extension AUIPlayerViewBinder: IMusicLoadStateListener {
     public func onMusicLoadProgress(songCode: Int, percent: Int, status: AgoraMusicContentCenterPreloadStatus, msg: String?, lyricUrl: String?) {
         if singerRole == .soloSinger {
             playerView?.updateLoadingView(with: status == .OK ? 100 : percent)
@@ -500,11 +500,11 @@ extension AUiPlayerViewBinder: IMusicLoadStateListener {
     }
     
     public func onMusicLoadSuccess(songCode: Int, lyricUrl: String) {
-        aui_info("load music success", tag: "AUiPlayerViewBinder")
+        aui_info("load music success", tag: "AUIPlayerViewBinder")
         //想办法去掉preparedToCosinger
         if preparedToCosinger {
             playerServiceDelegate?.switchSingerRole(newRole: .coSinger, onSwitchRoleState: {[weak self] state, reason in
-                aui_info("switch role state:\(state) reason:\(reason.rawValue)", tag: "AUiPlayerViewBinder")
+                aui_info("switch role state:\(state) reason:\(reason.rawValue)", tag: "AUIPlayerViewBinder")
                 guard let self = self else {return}
                 self.playerView?.joinState = .after
                 self.singerRole = .coSinger
@@ -521,7 +521,7 @@ extension AUiPlayerViewBinder: IMusicLoadStateListener {
     }
     
     public func onMusicLoadFail(songCode: Int, reason: KTVLoadSongFailReason) {
-        aui_info("load music failed", tag: "AUiPlayerViewBinder")
+        aui_info("load music failed", tag: "AUIPlayerViewBinder")
         if preparedToCosinger {
             singerRole = .audience
             playerView?.joinState = .before
@@ -532,7 +532,7 @@ extension AUiPlayerViewBinder: IMusicLoadStateListener {
 }
 
 //加入合唱，离开合唱
-extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
+extension AUIPlayerViewBinder: AUIKaraokeLrcViewDelegate {
     
     public func didJoinChorus() {
         if isOnSeat {
@@ -550,13 +550,13 @@ extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
         }
         guard idleIndex > 0 else {
             //TODO(chenpan): 麦位提示
-            AUiToast.show(text: "麦位已满")
+            AUIToast.show(text: "麦位已满")
             return
         }
-        aui_info("join chorus after enterSeat: \(idleIndex)", tag: "AUiPlayerViewBinder")
+        aui_info("join chorus after enterSeat: \(idleIndex)", tag: "AUIPlayerViewBinder")
         micSeatServiceDelegate?.enterSeat(seatIndex: idleIndex, callback: {[weak self] error in
             if let error = error {
-                AUiToast.show(text: error.localizedDescription)
+                AUIToast.show(text: error.localizedDescription)
                 return
             }
             self?._joinChorus()
@@ -584,7 +584,7 @@ extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
         leaveChorus(uid: local, currentSong: currentSong)
     }
     
-    private func leaveChorus(uid: String?, currentSong: AUiChooseMusicModel) {
+    private func leaveChorus(uid: String?, currentSong: AUIChooseMusicModel) {
         chorusServiceDelegate?.leaveChorus(songCode: currentSong.songCode, userId: uid, completion: {[weak self] error in
             self?.singerRole = .audience
             self?.audienceJoinKtv(with: currentSong)
@@ -592,7 +592,7 @@ extension AUiPlayerViewBinder: AUiKaraokeLrcViewDelegate {
     }
     
     func getLocalUserId() -> String? {
-        guard let commonConfig = AUiRoomContext.shared.commonConfig else {return nil}
+        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return nil}
         return commonConfig.userId
     }
 }

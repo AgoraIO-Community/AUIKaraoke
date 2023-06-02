@@ -1,15 +1,15 @@
 //
-//  AUiRoomMemberListView.swift
-//  AUiKit
+//  AUIRoomMemberListView.swift
+//  AUIKit
 //
 //  Created by FanPengpeng on 2023/4/4.
 //
 
-import AUiKit
+import AUIKit
 
 private let kMemberListCellID = "kMemberListCellID"
 
-public protocol AUiUserCellUserDataProtocol: NSObjectProtocol {
+public protocol AUIUserCellUserDataProtocol: NSObjectProtocol {
     var userAvatar: String {get}
     var userId: String {get}
     var userName: String {get}
@@ -17,7 +17,7 @@ public protocol AUiUserCellUserDataProtocol: NSObjectProtocol {
 
 
 /// 用户列表cell
-public class AUiRoomMemberUserCell: UITableViewCell {
+public class AUIRoomMemberUserCell: UITableViewCell {
     
     public lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
@@ -77,7 +77,7 @@ public class AUiRoomMemberUserCell: UITableViewCell {
     }
     
     public func setUserInfo(withAvatar avatar: String?, title: String?, subTitle: String) {
-        avatarImageView.kf.setImage(with: URL(string: avatar ?? ""), placeholder: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
+        avatarImageView.sd_setImage(with: URL(string: avatar ?? ""), placeholderImage: UIImage.aui_Image(named: "aui_micseat_dialog_avatar_idle"))
         userNameLabel.text = title
         seatNoLabel.text = subTitle
         userNameLabel.sizeToFit()
@@ -88,9 +88,9 @@ public class AUiRoomMemberUserCell: UITableViewCell {
 
 
 /// 用户列表
-public class AUiRoomMemberListView: UIView {
+public class AUIRoomMemberListView: UIView {
     
-    public var memberList: [AUiUserCellUserDataProtocol] = [] {
+    public var memberList: [AUIUserCellUserDataProtocol] = [] {
         didSet {
             tableView.reloadData()
         }
@@ -114,17 +114,17 @@ public class AUiRoomMemberListView: UIView {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.theme_backgroundColor = "MemberList.backgroundColor"
         tableView.theme_separatorColor = "MemberList.separatorColor"
-        tableView.register(AUiRoomMemberUserCell.self, forCellReuseIdentifier: kMemberListCellID)
+        tableView.register(AUIRoomMemberUserCell.self, forCellReuseIdentifier: kMemberListCellID)
         tableView.allowsSelection = false
         return tableView
     }()
 
     deinit {
-        aui_info("deinit AUiRoomMemberListView", tag:"AUiRoomMemberListView")
+        aui_info("deinit AUIRoomMemberListView", tag:"AUIRoomMemberListView")
     }
     override init(frame: CGRect) {
         super.init(frame: frame)
-        aui_info("init AUiRoomMemberListView", tag:"AUiRoomMemberListView")
+        aui_info("init AUIRoomMemberListView", tag:"AUIRoomMemberListView")
         _loadSubViews()
     }
     
@@ -151,7 +151,7 @@ public class AUiRoomMemberListView: UIView {
     }
 }
 
-extension AUiRoomMemberListView: UITableViewDelegate, UITableViewDataSource {
+extension AUIRoomMemberListView: UITableViewDelegate, UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
@@ -163,7 +163,7 @@ extension AUiRoomMemberListView: UITableViewDelegate, UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell: AUiRoomMemberUserCell = tableView.dequeueReusableCell(withIdentifier: kMemberListCellID, for: indexPath) as! AUiRoomMemberUserCell
+        let cell: AUIRoomMemberUserCell = tableView.dequeueReusableCell(withIdentifier: kMemberListCellID, for: indexPath) as! AUIRoomMemberUserCell
         let user = memberList[indexPath.row]
         let seatIdx = seatMap[user.userId] ?? -1
         let subTitle = seatIdx >= 0 ? String(format: auikaraoke_localized("micSeatDesc1Format"), seatIdx + 1) : ""

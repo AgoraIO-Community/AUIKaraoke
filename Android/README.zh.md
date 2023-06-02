@@ -14,28 +14,7 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 - [AScenesKit](asceneskit)
     - [Karaoke](asceneskit/src/main/java/io/agora/asceneskit/karaoke)
         - [KaraokeRoomView](asceneskit/src/main/java/io/agora/asceneskit/karaoke/KaraokeRoomView.kt)
-        - [KaraokeRoomService](asceneskit/src/main/java/io/agora/asceneskit/karaoke/IKaraokeRoomService.kt)
-- [AUiKit](auikit)
-    - [Service](auikit/src/main/java/io/agora/auikit/service)**([使用指南](doc/AUiKit-Service.zh.md))**
-        - [AUiRoomManager](auikit/src/main/java/io/agora/auikit/service/IAUiRoomManager.java)
-        - [AUiUserService](auikit/src/main/java/io/agora/auikit/service/IAUiUserService.java)
-        - [AUiMicSeatService](auikit/src/main/java/io/agora/auikit/service/IAUiMicSeatService.java)
-        - [AUiMusicPlayerService](auikit/src/main/java/io/agora/auikit/service/IAUiMusicPlayerService.java)
-        - [AUiChorusService](auikit/src/main/java/io/agora/auikit/service/IAUiChorusService.java)
-        - [AUiJukeboxService](auikit/src/main/java/io/agora/auikit/service/IAUiJukeboxService.java)
-    - [Ui](auikit/src/main/java/io/agora/auikit/ui)**([使用指南](doc/AUiKit-Ui.zh.md))**
-        - [Feature Ui Widgets](auikit/src/main/java/io/agora/auikit/ui)
-            - [AUiMicSeatsView](auikit/src/main/java/io/agora/auikit/ui/micseats/impl/AUIMicSeatsView.java)
-            - [AUiJukeboxView](auikit/src/main/java/io/agora/auikit/ui/jukebox/impl/AUiJukeboxView.java)
-            - [AUiMusicPlayerView](auikit/src/main/java/io/agora/auikit/ui/musicplayer/impl/AUiMusicPlayerView.java)
-            - [AUiMemberView](auikit/src/main/java/io/agora/auikit/ui/member/impl/AUiRoomMemberListView.kt)
-        - [Basic Ui Widgets](auikit/src/main/java/io/agora/auikit/ui/basic)
-            - [AUiButton](auikit/src/main/java/io/agora/auikit/ui/basic/AUiButton.java)
-            - [AUiBottomDialog](auikit/src/main/java/io/agora/auikit/ui/basic/AUiBottomDialog.java)
-            - [AUiAlertDialog](auikit/src/main/java/io/agora/auikit/ui/basic/AUiAlertDialog.java)
-            - [AUiTabLayout](auikit/src/main/java/io/agora/auikit/ui/basic/AUiTabLayout.java)
-            - [AUiEditText](auikit/src/main/java/io/agora/auikit/ui/basic/AUiEditText.java)
-            - ...
+        - [KaraokeRoomService](asceneskit/src/main/java/io/agora/asceneskit/karaoke/AUIKaraokeRoomService.kt)
 
 ## 快速跑通
 
@@ -55,8 +34,8 @@ git submodule update --init
 
 - 获取声网sdk
   下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/null/Agora_Native_SDK_for_Android_rel.v4.1.1.30_49294_FULL_20230512_1606_264137.zip)并将文件解压到以下目录
-  [AUIKitKaraoke/auikit/libs](../auikit/libs) : agora-rtc-sdk.jar
-  [AUIKitKaraoke/auikit/src/main/jniLibs](../uikit/src/main/jniLibs) : so(arm64-v8a/armeabi-v7a/x86/x86_64)
+  [AUIKit/Android/auikit/libs](../AUIKit/Android/auikit/libs) : agora-rtc-sdk.jar
+  [AUIKit/Android/src/main/jniLibs](../AUIKit/Android/auikit/src/main/jniLibs) : so(arm64-v8a/armeabi-v7a/x86/x86_64)
 
 - 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
 

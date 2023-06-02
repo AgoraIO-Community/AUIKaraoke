@@ -1,3 +1,4 @@
 [submodule "AUIKit"]
 	path = AUIKit
 	url = https://github.com/AgoraIO-Community/AUIKit.git
+	tag = karaoke_0.1.1
