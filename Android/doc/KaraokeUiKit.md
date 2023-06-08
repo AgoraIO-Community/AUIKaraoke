@@ -11,7 +11,7 @@ KaraokeUiKit is a Karaoke scene component that provides room management and the 
 ### 1. Add Source Code
 **Copy the following source code into your own project:**
 
-- [auikit](../../AUIKit/Android/auikit)
+- [auikit](https://github.com/AgoraIO-Community/AUIKit/tree/main/Android/auikit)
 - [asceneskit](../asceneskit)
 - [KaraokeUiKit](../app/src/main/java/io/agora/app/karaoke/kit)
 
