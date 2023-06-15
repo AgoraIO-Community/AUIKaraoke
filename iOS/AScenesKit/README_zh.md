@@ -6,17 +6,18 @@
 AScenesKit是基于AUIKit提供的UI和Service整合成的K歌房容器组件，为开发者提供快速搭建K歌场景的方案。
 
 ### 目录结构
+```
 AScenesKit  
-├─ Binder                                      // Binder
-│  ├─ AUiUserViewBinder            // 用户管理Binder
+├─ Binder                       // Binder
+│  ├─ AUiUserViewBinder         // 用户管理Binder
 │  ├─ AUiJukeBoxViewBinder      // 点歌器Binder
-│  ├─ AUiMicSeatViewBinder       // 麦位管理Binder    
-│  └─ AUiPlayerViewBinder          // 播放管理Binder
+│  ├─ AUiMicSeatViewBinder      // 麦位管理Binder    
+│  └─ AUiPlayerViewBinder       // 播放管理Binder
 │
-├─ RoomContainer                         // K歌整合容器
-   ├─ AUIKaraokeRoomView           // K歌容器View，负责组件的创建、拼装和绑定   
-   └─ AUIKaraokeRoomService      // K歌容器Service，负责基础service的创建
-
+└─ RoomContainer                // K歌整合容器
+   ├─ AUIKaraokeRoomView        // K歌容器View，负责组件的创建、拼装和绑定   
+   └─ AUIKaraokeRoomService     // K歌容器Service，负责基础service的创建
+```
 ###  组件和Service依赖的关系
 ![](https://fullapp.oss-cn-beijing.aliyuncs.com/pic/KaraokeRoom.png)
 
