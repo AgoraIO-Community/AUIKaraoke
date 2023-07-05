@@ -167,6 +167,11 @@ open class AUIKaraokeRoomView: UIView {
         return button
     }()
     
+    private lazy var membersList: AUIRoomMemberListView = {
+        let listView = AUIRoomMemberListView()
+        listView.aui_size =  CGSize(width: UIScreen.main.bounds.width, height: 562)
+        return listView
+    }()
     
     public var onClickOffButton: (()->())?
     
@@ -308,6 +313,12 @@ open class AUIKaraokeRoomView: UIView {
         
         if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
             self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
+        }
+        
+        membersView.onClickMoreButtonAction = { [weak self] in
+            guard let `self` = self else { return }
+            self.membersList.memberList = $0
+            AUICommonDialog.show(contentView: self.membersList, theme: AUICommonDialogTheme())
         }
     }
 }
