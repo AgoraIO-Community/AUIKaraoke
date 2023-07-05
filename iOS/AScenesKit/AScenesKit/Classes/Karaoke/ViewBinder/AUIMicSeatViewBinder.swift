@@ -361,6 +361,10 @@ extension AUIMicSeatViewBinder: AUIMicSeatViewDelegate {
 
 //MARK: AUIUserRespDelegate
 extension AUIMicSeatViewBinder: AUIUserRespDelegate {
+    public func onUserBeKicked(roomId: String, userId: String) {
+        
+    }
+    
     public func onRoomUserSnapshot(roomId: String, userList: [AUIUserInfo]) {
         aui_info("onRoomUserSnapshot", tag: "AUIMicSeatViewBinder")
         userMap.removeAll()

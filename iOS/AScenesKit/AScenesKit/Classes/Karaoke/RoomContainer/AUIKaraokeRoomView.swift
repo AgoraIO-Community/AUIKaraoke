@@ -24,7 +24,18 @@ open class AUIKaraokeRoomView: UIView {
     private lazy var playerBinder: AUIPlayerViewBinder = AUIPlayerViewBinder()
     
     //麦位UI
-    private lazy var micSeatView: AUIMicSeatView = AUIMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 375, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 220))
+    private lazy var micSeatView: AUIMicSeatView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        let width: CGFloat = 80
+        let height: CGFloat = 92
+        let hPadding = Int((self.frame.size.width - 16 * 2 - width * 4) / 3)
+        flowLayout.itemSize = CGSize(width: width, height: height)
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = CGFloat(hPadding)
+        let view = AUIMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 375, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 220), layout: flowLayout)
+        
+        return view
+    }()
     private lazy var micSeatBinder: AUIMicSeatViewBinder = AUIMicSeatViewBinder(rtcEngine: service!.rtcEngine)
     
 //    private lazy var invitationView: AUIInvitationView = AUIInvitationView()
@@ -167,6 +178,7 @@ open class AUIKaraokeRoomView: UIView {
         aui_info("init AUIKaraokeRoomView", tag: "AUIKaraokeRoomView")
         super.init(frame: frame)
         
+        AUIRoomContext.shared.themeNames = ["UIKit", "KTV"]
         //设置皮肤路径
         if let folderPath = Bundle.main.path(forResource: "auiKaraokeTheme", ofType: "bundle") {
             AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )

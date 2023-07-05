@@ -252,6 +252,9 @@ extension AUIKaraokeRoomService: AgoraRtmClientDelegate {
 }
 
 extension AUIKaraokeRoomService: AUIUserRespDelegate {
+    public func onUserBeKicked(roomId: String, userId: String) {
+        
+    }
     
     public func onRoomUserSnapshot(roomId: String, userList: [AUIUserInfo]) {
         guard let user = userList.filter({$0.userId == AUIRoomContext.shared.currentUserInfo.userId }).first else {return}

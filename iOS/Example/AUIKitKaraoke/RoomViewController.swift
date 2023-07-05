@@ -150,6 +150,14 @@ class RoomViewController: UIViewController {
 }
 
 extension RoomViewController: AUIRoomManagerRespDelegate {
+    func onRoomAnnouncementChange(roomId: String, announcement: String) {
+        
+    }
+    
+    func onRoomUserBeKicked(roomId: String, userId: String) {
+        
+    }
+    
     func onRoomDestroy(roomId: String) {
         self.karaokeView?.onBackAction()
         AUIAlertView()
