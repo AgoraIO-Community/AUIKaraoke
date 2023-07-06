@@ -1,37 +1,45 @@
 PODS:
+  - Agora_Chat_iOS (1.1.0)
   - AgoraLyricsScore (1.1.1-beta-3)
   - AgoraRtcEngine_iOS (1.0)
   - Alamofire (5.7.1)
   - AScenesKit (0.1.0):
     - AUIKit
+    - libpag
   - AUIKit (0.1.0):
+    - Agora_Chat_iOS
     - AgoraLyricsScore
     - AgoraRtcEngine_iOS
     - Alamofire
     - AUIKit/AUIKit (= 0.1.0)
     - MJRefresh
     - ScoreEffectUI
-    - SDWebImage (~> 5.12.6)
+    - SDWebImage
     - SwiftTheme
-    - SwiftyBeaver (~> 1.9.5)
+    - SwiftyBeaver (= 1.9.5)
     - YYModel
     - Zip
   - AUIKit/AUIKit (0.1.0):
+    - Agora_Chat_iOS
     - AgoraLyricsScore
     - AgoraRtcEngine_iOS
     - Alamofire
     - MJRefresh
     - ScoreEffectUI
-    - SDWebImage (~> 5.12.6)
+    - SDWebImage
     - SwiftTheme
-    - SwiftyBeaver (~> 1.9.5)
+    - SwiftyBeaver (= 1.9.5)
     - YYModel
     - Zip
+  - libpag (4.2.92)
+  - LookinServer (1.1.7):
+    - LookinServer/Core (= 1.1.7)
+  - LookinServer/Core (1.1.7)
   - MJRefresh (3.7.5)
   - ScoreEffectUI (1.0.1)
-  - SDWebImage (5.12.6):
-    - SDWebImage/Core (= 5.12.6)
-  - SDWebImage/Core (5.12.6)
+  - SDWebImage (5.16.0):
+    - SDWebImage/Core (= 5.16.0)
+  - SDWebImage/Core (5.16.0)
   - SwiftTheme (0.6.4)
   - SwiftyBeaver (1.9.5)
   - YYModel (1.0.4)
@@ -41,12 +49,16 @@ DEPENDENCIES:
   - AgoraLyricsScore (= 1.1.1-beta-3)
   - AgoraRtcEngine_iOS (from `./libs`)
   - AScenesKit (from `../AScenesKit`)
-  - AUIKit (from `../../AUIKit/iOS`)
+  - AUIKit (from `../../../AUIKit/iOS`)
+  - LookinServer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
+    - Agora_Chat_iOS
     - AgoraLyricsScore
     - Alamofire
+    - libpag
+    - LookinServer
     - MJRefresh
     - ScoreEffectUI
     - SDWebImage
@@ -61,22 +73,25 @@ EXTERNAL SOURCES:
   AScenesKit:
     :path: "../AScenesKit"
   AUIKit:
-    :path: "../../AUIKit/iOS"
+    :path: "../../../AUIKit/iOS"
 
 SPEC CHECKSUMS:
+  Agora_Chat_iOS: 78b181ded388278e88d40e256a4fc659e62c3115
   AgoraLyricsScore: 7e25860ccecd3c6ed73f2b503f1d73d8849079e1
   AgoraRtcEngine_iOS: 7af3b344c55059556eeb05dc748ff124c593d4fb
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
-  AScenesKit: f383d4a7c28bed7eda771e7435e0a55466ffd823
-  AUIKit: 8f7efec99a1f2c56e8458f65eb9cc897558c74d0
+  AScenesKit: 172d23dea16be296aee41024e722eef1d386d40f
+  AUIKit: dce879a72897e4fc44a6eff30b1fe171cc0b2290
+  libpag: f241ce26187b505bf17e68db6c1495619af88a6a
+  LookinServer: 4ce0469b066871525611d009d8d16a7a50c23491
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ScoreEffectUI: 1a3bbd83b17cfef1c16a3a4eede2854f89c9eb10
-  SDWebImage: a47aea9e3d8816015db4e523daff50cfd294499d
+  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
   SwiftTheme: 007cbaf1f9e171caf6448a4657533e54c682b285
   SwiftyBeaver: 84069991dd5dca07d7069100985badaca7f0ce82
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: f5112220c5d9abd7deb7838dd355b2bd44fe2631
+PODFILE CHECKSUM: 5431cc48d30b2585e0ada9a3bb9b864473105ef1
 
 COCOAPODS: 1.12.0

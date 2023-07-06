@@ -31,6 +31,14 @@ open class AUIKaraokeRoomService: NSObject {
                                                                          rtcKit: rtcEngine,
                                                                          ktvApi: ktvApi,
                                                                          rtmManager: rtmManager)
+    
+    lazy var chatImplement: AUIMManagerServiceDelegate = AUIIMManagerServiceImplement(channelName: channelName,
+                                                                                      rtmManager: rtmManager)
+    
+    lazy var giftImplement: AUIGiftServiceImplement = AUIGiftServiceImplement(channelName: channelName,
+                                                                              rtmManager: rtmManager)
+    
+    
     var roomManagerImpl: AUIRoomManagerImpl!
     private(set) var channelName: String!
     private var roomConfig: AUIRoomConfig!
