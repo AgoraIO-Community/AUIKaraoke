@@ -10,6 +10,10 @@
         <!-- KaraokeRoom组件 -->
         <item name="akaraoke_room_appearance">@style/AKaraokeRoomView</item>
 
+        <item name="aui_primary_appearance">@style/AVoiceRoomPrimaryView</item>
+
+        <item name="aui_barrage_appearance">@style/AVoiceRoomBarrageView</item>
+
     </style>
 
 </resources>

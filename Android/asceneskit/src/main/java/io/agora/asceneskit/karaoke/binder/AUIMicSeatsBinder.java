@@ -260,7 +260,7 @@ public class AUIMicSeatsBinder implements
                 if (inSeat) {
                     return false;
                 } else {
-                    dialogView.addEnterSeat();
+                    dialogView.addEnterSeat(true);
                 }
             } else {
                 if (isCurrentUser) {

@@ -27,9 +27,11 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
     companion object {
         private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
+        private var isCreateRoom = false
 
-        fun launch(context: Context, roomInfo: AUIRoomInfo) {
+        fun launch(context: Context, isCreateRoom: Boolean, roomInfo: AUIRoomInfo) {
             Companion.roomInfo = roomInfo
+            Companion.isCreateRoom = isCreateRoom
 
             val intent = Intent(context, KaraokeRoomActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
@@ -47,13 +49,15 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         }
         setContentView(mViewBinding.root)
         val roomInfo = roomInfo ?: return
+        mViewBinding.karaokeRoomView.setFragmentActivity(this)
         mViewBinding.karaokeRoomView.setOnShutDownClick {
             onUserLeaveRoom()
         }
         mPermissionHelp.checkMicPerm(
             {
                 generateToken { config ->
-                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
+                    val launchType = if (isCreateRoom) KaraokeUiKit.LaunchType.CREATE else KaraokeUiKit.LaunchType.JOIN
+                    KaraokeUiKit.launchRoom(launchType, roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
 
                     })
                     KaraokeUiKit.subscribeError(roomInfo.roomId, this)

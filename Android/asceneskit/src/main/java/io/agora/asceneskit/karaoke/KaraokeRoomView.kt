@@ -7,21 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import io.agora.asceneskit.R
 import io.agora.asceneskit.databinding.AkaraokeRoomViewBinding
-import io.agora.asceneskit.karaoke.binder.AUIJukeboxBinder
-import io.agora.asceneskit.karaoke.binder.AUIMicSeatsBinder
-import io.agora.asceneskit.karaoke.binder.AUIMusicPlayerBinder
-import io.agora.asceneskit.karaoke.binder.IAUIBindable
+import io.agora.asceneskit.karaoke.binder.*
+import io.agora.asceneskit.voice.binder.AUIChatListBinder
+import io.agora.asceneskit.karaoke.binder.AUIGiftBarrageBinder
+import io.agora.auikit.model.AUIGiftTabEntity
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserInfo
 import io.agora.auikit.model.AUIUserThumbnailInfo
 import io.agora.auikit.service.IAUIMicSeatService
 import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
 import io.agora.auikit.service.IAUIUserService
+import io.agora.auikit.service.callback.AUIException
+import io.agora.auikit.service.callback.AUIGiftListCallback
 import io.agora.auikit.ui.basic.AUIBottomDialog
+import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
 import io.agora.auikit.ui.jukebox.impl.AUIJukeboxView
 import io.agora.auikit.ui.member.impl.AUIRoomMemberListView
 import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
@@ -40,7 +44,10 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
 
     private val mBinders = mutableListOf<IAUIBindable>()
 
+    private var activity: FragmentActivity?= null
     private var mLocalMute = true
+    private var auiGiftBarrageBinder: AUIGiftBarrageBinder? = null
+    private var listener: AUISoftKeyboardHeightChangeListener? = null
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -49,6 +56,10 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         defStyleAttr
     ) {
         addView(mRoomViewBinding.root)
+    }
+
+    fun setFragmentActivity(activity: FragmentActivity){
+        this.activity = activity
     }
 
     override fun onDetachedFromWindow() {
@@ -68,9 +79,26 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         service.getUserService().bindRespDelegate(this)
         service.getMicSeatsService().bindRespDelegate(this)
         service.getRoomManager().bindRespDelegate(this)
+        val giftService = service.getGiftService()
 
         // 加入房间
         service.enterRoom({
+            /** 获取礼物列表 初始化礼物Binder */
+            giftService.getGiftsFromService(object : AUIGiftListCallback {
+                override fun onResult(error: AUIException?, giftList: List<AUIGiftTabEntity>) {
+                    auiGiftBarrageBinder = AUIGiftBarrageBinder(
+                        activity,
+                        mRoomViewBinding.giftView,
+                        giftList,
+                        giftService,
+                        service.getChatService()
+                    )
+                    auiGiftBarrageBinder?.let {
+                        it.bind()
+                        mBinders.add(it)
+                    }
+                }
+            })
             // success
             post {
                 mRoomViewBinding.topUserLayout.tvRoomName.text = it.roomName
@@ -97,6 +125,40 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 )
                 micSeatsBinder.bind()
                 mBinders.add(micSeatsBinder)
+
+                val chatListBinder = AUIChatListBinder(
+                    mRoomViewBinding.chatListView,
+                    mRoomViewBinding.chatBottomBar,
+                    service.getChatService(),
+                    service.getRoomInfo()
+                )
+                chatListBinder.let {
+                    it.bind()
+                    mBinders.add(it)
+                }
+
+                val chatBottomBarBinder = AUIChatBottomBarBinder(
+                    service,
+                    mRoomViewBinding.chatBottomBar,
+                    mRoomViewBinding.chatListView,
+                    object : AUIChatBottomBarBinder.AUIChatBottomBarEventDelegate{
+                        override fun onClickGift(view: View?) {
+                            auiGiftBarrageBinder?.showBottomGiftDialog()
+                        }
+
+                        override fun onClickLike(view: View?) {
+                            mRoomViewBinding.likeView.addFavor()
+                        }
+
+                        override fun onClickMore(view: View?) {}
+                        override fun onClickMic(view: View?) {}
+                    })
+
+                chatBottomBarBinder.let {
+                    it.bind()
+                    mBinders.add(it)
+                    listener = it.getSoftKeyboardHeightChangeListener()
+                }
 
                 mRoomViewBinding.bottomNavLayout.btnGift.setOnClickListener {
 //                    showJukeboxDialog()

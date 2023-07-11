@@ -25,5 +25,13 @@
 
     </style>
 
+    <style name="AVoiceRoomPrimaryView" parent="AUIPrimaryView.Appearance">
+
+    </style>
+
+    <style name="AVoiceRoomBarrageView" parent="AUIBarrageView.Appearance">
+
+    </style>
+
 
 </resources>
