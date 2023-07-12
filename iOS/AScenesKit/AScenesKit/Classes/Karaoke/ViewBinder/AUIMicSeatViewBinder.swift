@@ -17,16 +17,12 @@ public class AUIMicSeatViewBinder: NSObject {
     private var topSong: AUIChooseMusicModel? {
         didSet {
             if topSong?.songCode == oldValue?.songCode { return }
-            let mainSingerIndex = getMicIndex(with: topSong?.userId ?? "")
-            micSeatArray.indices.forEach {(i) in
-                if mainSingerIndex != nil || topSong != nil {
-                    updateMic(with: i, role: i == mainSingerIndex ? .mainSinger : .offlineAudience)
-                }else{
-                    updateMic(with: i, role: .offlineAudience)
-                }
-            }
+            updateMicSeatRole()
         }
     }
+    
+    private var choristerList: [AUIChoristerModel] = [AUIChoristerModel]()
+    
     private weak var micSeatView: AUIMicSeatView?
     private weak var micSeatDelegate: AUIMicSeatServiceDelegate? {
         didSet {
@@ -181,6 +177,8 @@ public class AUIMicSeatViewBinder: NSObject {
         let isCurrentUser: Bool = seatInfo.user?.userId == currentUserId
         //是否空麦位
         let isEmptySeat: Bool = seatInfo.user == nil || seatInfo.user?.userId.count == 0
+        //麦位是否锁定
+        let isLocked = seatInfo.isLock
         //是否房主
         let isRoomOwner: Bool = micSeatDelegate?.getRoomContext().isRoomOwner(channelName: channelName) ?? false
         //当前用户是否在麦位上
@@ -195,14 +193,16 @@ public class AUIMicSeatViewBinder: NSObject {
                 } else {  //other user
                     items.append(kickDialogItem(seatInfo: seatInfo, callback:callback))
                     items.append(muteAudioDialogItem(seatInfo: seatInfo, callback:callback))
-                    items.append(closeDialogItem(seatInfo: seatInfo, callback:callback))
+//                    items.append(closeDialogItem(seatInfo: seatInfo, callback:callback))
                 }
             }
         } else {
             if isEmptySeat {
                 if currentUserAlreadyEnterSeat {
                 } else {
-                    items.append(enterDialogItem(seatInfo: seatInfo, callback:callback))
+                    if !isLocked {
+                        items.append(enterDialogItem(seatInfo: seatInfo, callback:callback))
+                    }
                 }
             } else {
                 if isCurrentUser {
@@ -229,6 +229,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         }
         micSeatArray[seatIndex] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
+        print("updateRoleUI(with: \(seatIndex) role = \(micSeat.micRole)  line = 236")
         updateMic(with: seatIndex, role: .onlineAudience)
 
         //current user enter seat
@@ -446,19 +447,23 @@ extension AUIMicSeatViewBinder: AUIMusicRespDelegate {
 //MARK: AUIChorusRespDelegate
 extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
     public func onChoristerDidEnter(chorister: AUIChoristerModel) {
+        choristerList.append(chorister)
+        updateMicSeatRole()
         //获取需要更新的麦位UI
-        guard let index =  getMicIndex(with: chorister.userId) else {return}
-        if let currentSong = topSong {
-            updateMic(with: index, role: currentSong.owner?.userId == chorister.userId ? .mainSinger : .coSinger)
-        }else {
-            updateMic(with: index, role: .onlineAudience)
-        }
+//        guard let index =  getMicIndex(with: chorister.userId) else {return}
+//        if let currentSong = topSong {
+//            updateMic(with: index, role: currentSong.owner?.userId == chorister.userId ? .mainSinger : .coSinger)
+//        }else {
+//            updateMic(with: index, role: .onlineAudience)
+//        }
     }
     
     public func onChoristerDidLeave(chorister: AUIChoristerModel) {
+        choristerList.removeAll(where: {$0.userId == chorister.userId})
+        updateMicSeatRole()
         //获取需要更新的麦位UI
-        guard let index =  getMicIndex(with: chorister.userId) else {return}
-        updateMic(with: index, role: .onlineAudience)
+//        guard let index =  getMicIndex(with: chorister.userId) else {return}
+//        updateMic(with: index, role: .onlineAudience)
     }
     
     private func getMicIndex(with userId: String) -> Int? {
@@ -478,6 +483,22 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
         micSeat.micRole = role
         micSeatArray[index] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+    }
+    
+    private func updateMicSeatRole() {
+        for(i, seatInfo) in micSeatArray.enumerated() {
+            if let topSong = topSong {
+                if topSong.owner?.userId == seatInfo.user?.userId {
+                    updateMic(with: i, role: .mainSinger)
+                }else if let chorister = choristerList.first(where: {$0.userId == seatInfo.user?.userId}) {
+                    updateMic(with: i, role: .coSinger)
+                }else{
+                    updateMic(with: i, role: seatInfo.micRole)
+                }
+            }else{
+                updateMic(with: i, role: seatInfo.micRole)
+            }
+        }
     }
 
 }

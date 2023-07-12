@@ -238,6 +238,17 @@ open class AUIKaraokeRoomView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        for view in subviews.reversed() {
+            if view.isKind(of: AUIGiftBarrageView.self),view.frame.contains(point),self.micSeatView.frame.contains(point){
+                let childPoint = self.convert(point, to: self.micSeatView)
+                let childView = self.micSeatView.hitTest(childPoint, with: event)
+                return childView
+            }
+        }
+        return super.hitTest(point, with: event)
+    }
+    
     private func loadBg() {
         aui_info("loadBg", tag: "AUIKaraokeRoomView")
         
@@ -322,7 +333,7 @@ open class AUIKaraokeRoomView: UIView {
         
         
         microphoneButton.aui_bottom = chatButton.aui_bottom
-        microphoneButton.aui_right = giftButton.aui_left - 8
+        microphoneButton.aui_left = chatButton.aui_right + 8
         
         
         addSubview(inputBar)

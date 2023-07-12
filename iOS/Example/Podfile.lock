@@ -49,7 +49,7 @@ DEPENDENCIES:
   - AgoraLyricsScore (= 1.1.1-beta-3)
   - AgoraRtcEngine_iOS (from `./libs`)
   - AScenesKit (from `../AScenesKit`)
-  - AUIKit (from `../../../AUIKit/iOS`)
+  - AUIKit (from `../../AUIKit/iOS`)
   - LookinServer
 
 SPEC REPOS:
@@ -73,7 +73,7 @@ EXTERNAL SOURCES:
   AScenesKit:
     :path: "../AScenesKit"
   AUIKit:
-    :path: "../../../AUIKit/iOS"
+    :path: "../../AUIKit/iOS"
 
 SPEC CHECKSUMS:
   Agora_Chat_iOS: 78b181ded388278e88d40e256a4fc659e62c3115
@@ -92,6 +92,6 @@ SPEC CHECKSUMS:
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 5431cc48d30b2585e0ada9a3bb9b864473105ef1
+PODFILE CHECKSUM: 565041615034c3bea2aa30dac5ae3f957c4c00c6
 
 COCOAPODS: 1.12.0
