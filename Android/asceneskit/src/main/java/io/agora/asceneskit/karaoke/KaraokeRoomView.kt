@@ -10,11 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import io.agora.asceneskit.R
 import io.agora.asceneskit.databinding.AkaraokeRoomViewBinding
-import io.agora.asceneskit.karaoke.binder.*
-import io.agora.asceneskit.voice.binder.AUIChatListBinder
+import io.agora.asceneskit.karaoke.binder.AUIChatBottomBarBinder
 import io.agora.asceneskit.karaoke.binder.AUIGiftBarrageBinder
+import io.agora.asceneskit.karaoke.binder.AUIJukeboxBinder
+import io.agora.asceneskit.karaoke.binder.AUIMicSeatsBinder
+import io.agora.asceneskit.karaoke.binder.AUIMusicPlayerBinder
+import io.agora.asceneskit.karaoke.binder.IAUIBindable
+import io.agora.asceneskit.voice.binder.AUIChatListBinder
 import io.agora.auikit.model.AUIGiftTabEntity
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserInfo
@@ -25,6 +28,7 @@ import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.callback.AUIGiftListCallback
 import io.agora.auikit.ui.basic.AUIBottomDialog
+import io.agora.auikit.ui.chatBottomBar.impl.AUIKeyboardStatusWatcher
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
 import io.agora.auikit.ui.jukebox.impl.AUIJukeboxView
 import io.agora.auikit.ui.member.impl.AUIRoomMemberListView
@@ -56,10 +60,14 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         defStyleAttr
     ) {
         addView(mRoomViewBinding.root)
+        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowLike(false)
+        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMore(false)
+        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(false)
     }
 
     fun setFragmentActivity(activity: FragmentActivity){
         this.activity = activity
+        getSoftKeyboardHeight()
     }
 
     override fun onDetachedFromWindow() {
@@ -88,7 +96,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 override fun onResult(error: AUIException?, giftList: List<AUIGiftTabEntity>) {
                     auiGiftBarrageBinder = AUIGiftBarrageBinder(
                         activity,
-                        mRoomViewBinding.giftView,
+                        mRoomViewBinding.bottomNavLayout.giftView,
                         giftList,
                         giftService,
                         service.getChatService()
@@ -127,8 +135,8 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 mBinders.add(micSeatsBinder)
 
                 val chatListBinder = AUIChatListBinder(
-                    mRoomViewBinding.chatListView,
-                    mRoomViewBinding.chatBottomBar,
+                    mRoomViewBinding.bottomNavLayout.chatListView,
+                    mRoomViewBinding.bottomNavLayout.chatBottomBar,
                     service.getChatService(),
                     service.getRoomInfo()
                 )
@@ -139,19 +147,21 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
 
                 val chatBottomBarBinder = AUIChatBottomBarBinder(
                     service,
-                    mRoomViewBinding.chatBottomBar,
-                    mRoomViewBinding.chatListView,
+                    mRoomViewBinding.bottomNavLayout.chatBottomBar,
+                    mRoomViewBinding.bottomNavLayout.chatListView,
                     object : AUIChatBottomBarBinder.AUIChatBottomBarEventDelegate{
                         override fun onClickGift(view: View?) {
                             auiGiftBarrageBinder?.showBottomGiftDialog()
                         }
 
                         override fun onClickLike(view: View?) {
-                            mRoomViewBinding.likeView.addFavor()
+                            // mRoomViewBinding.likeView.addFavor()
                         }
 
                         override fun onClickMore(view: View?) {}
-                        override fun onClickMic(view: View?) {}
+                        override fun onClickMic(view: View?) {
+                            changeMuteState(!mLocalMute)
+                        }
                     })
 
                 chatBottomBarBinder.let {
@@ -160,12 +170,6 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                     listener = it.getSoftKeyboardHeightChangeListener()
                 }
 
-                mRoomViewBinding.bottomNavLayout.btnGift.setOnClickListener {
-//                    showJukeboxDialog()
-                }
-                mRoomViewBinding.bottomNavLayout.btnMic.setOnClickListener {
-                    changeMuteState(!mLocalMute)
-                }
                 val musicPlayerBinder =
                     AUIMusicPlayerBinder(
                         mRoomViewBinding.musicPlayerView,
@@ -199,13 +203,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         Log.d("local_mic","update rtc mute state: $isMute")
         mLocalMute = isMute
         mRoomService?.setupLocalAudioMute(isMute)
-        if (isMute) {
-            val drawable = resources.getDrawable(R.mipmap.ic_nav_mic_off)
-            mRoomViewBinding.bottomNavLayout.btnMic.setCenterDrawable(drawable)
-        } else {
-            val drawable = resources.getDrawable(R.mipmap.ic_nav_mic_on)
-            mRoomViewBinding.bottomNavLayout.btnMic.setCenterDrawable(drawable)
-        }
+        mRoomViewBinding.bottomNavLayout.chatBottomBar.setEnableMic(isMute)
     }
 
     private fun changeMuteState(isMute: Boolean) {
@@ -288,6 +286,17 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         }
     }
 
+    private fun getSoftKeyboardHeight(){
+        activity?.let {
+            AUIKeyboardStatusWatcher(
+                it, activity!!
+            ) { isKeyboardShowed: Boolean, keyboardHeight: Int? ->
+                Log.e("apex", "isKeyboardShowed: $isKeyboardShowed $keyboardHeight")
+                listener?.onSoftKeyboardHeightChanged(isKeyboardShowed,keyboardHeight)
+            }
+        }
+    }
+
     /** IAUIUserService.AUIRoomRespDelegate */
     override fun onRoomDestroy(roomId: String) {
 
@@ -323,7 +332,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         mSeatMap[seatIndex] = userInfo.userId
         val localUserId = AUIRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户上麦
-            mRoomViewBinding.bottomNavLayout.btnMic.visibility = View.VISIBLE
+            mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(true)
             mRoomService?.setupLocalStreamOn(true)
             val userInfo = mRoomService?.getUserService()?.getUserInfo(localUserId)
             val isMute = (userInfo?.muteAudio == 1)
@@ -337,7 +346,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         }
         val localUserId = AUIRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户下麦
-            mRoomViewBinding.bottomNavLayout.btnMic.visibility = View.INVISIBLE
+            mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(true)
             setLocalMute(true)
             mRoomService?.setupLocalStreamOn(false)
         }
