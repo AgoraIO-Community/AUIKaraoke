@@ -229,7 +229,6 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         }
         micSeatArray[seatIndex] = micSeat
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
-        print("updateRoleUI(with: \(seatIndex) role = \(micSeat.micRole)  line = 236")
         updateMic(with: seatIndex, role: .onlineAudience)
 
         //current user enter seat
@@ -490,7 +489,7 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
             if let topSong = topSong {
                 if topSong.owner?.userId == seatInfo.user?.userId {
                     updateMic(with: i, role: .mainSinger)
-                }else if let chorister = choristerList.first(where: {$0.userId == seatInfo.user?.userId}) {
+                }else if choristerList.first(where: {$0.userId == seatInfo.user?.userId}) != nil {
                     updateMic(with: i, role: .coSinger)
                 }else{
                     updateMic(with: i, role: seatInfo.micRole)

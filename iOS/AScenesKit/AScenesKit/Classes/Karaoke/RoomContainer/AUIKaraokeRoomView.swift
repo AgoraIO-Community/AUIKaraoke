@@ -402,6 +402,8 @@ extension AUIKaraokeRoomView {
         }
         service.destory()
         AUIRoomContext.shared.clean(channelName: service.channelName)
+        AUICommonDialog.hidden()
+        AUIToast.hidden()
     }
     
     @objc func onSelectedMusic() {
@@ -424,6 +426,7 @@ extension AUIKaraokeRoomView: AUIPlayerViewDelegate {
 
 extension AUIKaraokeRoomView {
     @objc private func didClickOffButton(){
+        self.inputBar.dismissKeyboard()
         onClickOffButton?()
     }
     
