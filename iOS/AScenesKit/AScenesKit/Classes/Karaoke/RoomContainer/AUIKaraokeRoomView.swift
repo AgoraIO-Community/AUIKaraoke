@@ -240,6 +240,12 @@ open class AUIKaraokeRoomView: UIView {
     
     open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
         for view in subviews.reversed() {
+            if view.isKind(of: AUIChatInputBar.self),view.frame.contains(point){
+                let childPoint = self.convert(point, to: view)
+                let childView = view.hitTest(childPoint, with: event)
+                return childView
+            }
+            
             if view.isKind(of: AUIGiftBarrageView.self),view.frame.contains(point),self.micSeatView.frame.contains(point){
                 let childPoint = self.convert(point, to: self.micSeatView)
                 let childView = self.micSeatView.hitTest(childPoint, with: event)
