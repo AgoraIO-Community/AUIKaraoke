@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import io.agora.asceneskit.R
 import io.agora.asceneskit.databinding.AkaraokeRoomViewBinding
 import io.agora.asceneskit.karaoke.binder.AUIChatBottomBarBinder
 import io.agora.asceneskit.karaoke.binder.AUIGiftBarrageBinder
@@ -22,20 +23,24 @@ import io.agora.auikit.model.AUIGiftTabEntity
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserInfo
 import io.agora.auikit.model.AUIUserThumbnailInfo
+import io.agora.auikit.service.IAUIChatService
 import io.agora.auikit.service.IAUIMicSeatService
 import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
 import io.agora.auikit.service.IAUIUserService
+import io.agora.auikit.service.callback.AUIChatMsgCallback
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.callback.AUIGiftListCallback
+import io.agora.auikit.service.imp.AUIChatServiceImpl
 import io.agora.auikit.ui.basic.AUIBottomDialog
 import io.agora.auikit.ui.chatBottomBar.impl.AUIKeyboardStatusWatcher
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
 import io.agora.auikit.ui.jukebox.impl.AUIJukeboxView
 import io.agora.auikit.ui.member.impl.AUIRoomMemberListView
 import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
+import io.agora.chat.ChatMessage
 
 class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
-    IAUIMicSeatService.AUIMicSeatRespDelegate, AUIRoomManagerRespDelegate {
+    IAUIMicSeatService.AUIMicSeatRespDelegate, AUIRoomManagerRespDelegate, IAUIChatService.AUIChatRespDelegate {
 
     private var mOnClickShutDown: (() -> Unit)? = null
 
@@ -87,7 +92,16 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         service.getUserService().bindRespDelegate(this)
         service.getMicSeatsService().bindRespDelegate(this)
         service.getRoomManager().bindRespDelegate(this)
+        service.getChatService().bindRespDelegate(this)
         val giftService = service.getGiftService()
+
+        (service.getChatService() as? AUIChatServiceImpl )?.let {
+            if (it.isOwner()){
+                it.getCurrentRoom()?.let { chatRoomId ->
+                    joinChatRoom(chatRoomId)
+                }
+            }
+        }
 
         // 加入房间
         service.enterRoom({
@@ -303,8 +317,6 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
     }
 
     /** IAUIUserService.AUIUserRespDelegate */
-    override fun onRoomUserEnter(roomId: String, userInfo: AUIUserInfo) {
-    }
 
     override fun onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
         mMemberMap.remove(userInfo.userId)
@@ -316,9 +328,6 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         updateUserPreview()
     }
 
-    override fun onUserAudioMute(userId: String, mute: Boolean) {
-
-    }
 
     override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUIUserInfo>?) {
         userList?.forEach { userInfo ->
@@ -366,5 +375,28 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         if (seatUserId != localUserId) {
             mRoomService?.setupRemoteAudioMute(seatUserId, mute)
         }
+    }
+
+
+    override fun onUpdateChatRoomId(roomId: String) {
+        val chatService = mRoomService?.getChatService() as? AUIChatServiceImpl ?: return
+        if (!chatService.isOwner()){
+            Log.d("VoiceRoomView","onUpdateChatRoomId $roomId")
+            chatService.setChatRoomId(roomId)
+            joinChatRoom(roomId)
+        }
+    }
+
+    private fun joinChatRoom(roomId:String){
+        val chatService = mRoomService?.getChatService() as? AUIChatServiceImpl ?: return
+        chatService.joinedChatRoom(roomId,object : AUIChatMsgCallback {
+            override fun onOriginalResult(error: AUIException?, message: ChatMessage?) {
+                if (error == null){
+                    chatService.saveWelcomeMsg(context.getString(R.string.voice_room_welcome))
+                    message?.let { chatService.parseMsgChatEntity(it) }
+                    mRoomViewBinding.bottomNavLayout.chatListView.refreshSelectLast(chatService.getMsgList())
+                }
+            }
+        })
     }
 }
