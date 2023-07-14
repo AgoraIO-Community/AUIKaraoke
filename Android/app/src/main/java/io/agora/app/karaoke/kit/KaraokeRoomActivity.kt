@@ -29,9 +29,10 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         private var themeId: Int = View.NO_ID
         private var isCreateRoom = false
 
-        fun launch(context: Context, isCreateRoom: Boolean, roomInfo: AUIRoomInfo) {
+        fun launch(context: Context, isCreateRoom: Boolean, roomInfo: AUIRoomInfo, themeId: Int = View.NO_ID) {
             Companion.roomInfo = roomInfo
             Companion.isCreateRoom = isCreateRoom
+            Companion.themeId = themeId
 
             val intent = Intent(context, KaraokeRoomActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)

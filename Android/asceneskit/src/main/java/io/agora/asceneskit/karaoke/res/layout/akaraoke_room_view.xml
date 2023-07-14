@@ -3,42 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="?attr/akaraoke_room_appearance"
+    android:orientation="vertical"
     android:background="?attr/akaraoke_room_background"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    android:theme="?attr/akaraoke_room_appearance">
 
     <include
         android:id="@+id/topUserLayout"
         layout="@layout/akaraoke_room_view_top_user"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
 
     <io.agora.auikit.ui.musicplayer.impl.AUIMusicPlayerView
         android:id="@+id/musicPlayerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_height="150dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/topUserLayout"/>
+        app:layout_constraintTop_toBottomOf="@id/topUserLayout"/>
 
     <io.agora.auikit.ui.micseats.impl.AUIMicSeatsView
         android:id="@+id/micSeatsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:layout_height="150dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/musicPlayerView"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/musicPlayerView"/>
 
-    <include
-        android:id="@+id/bottomNavLayout"
-        layout="@layout/akaraoke_room_view_bottom_nav"
+
+    <io.agora.auikit.ui.chatList.impl.AUIChatListView
+        android:id="@+id/chatListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_weight="1"
+        android:paddingEnd="60dp"
+        app:layout_constraintTop_toBottomOf="@id/micSeatsView"
+        app:layout_constraintBottom_toTopOf="@id/chatBottomBar"
+        android:layout_marginBottom="10dp" />
+
+    <io.agora.auikit.ui.chatBottomBar.impl.AUIChatBottomBarView
+        android:id="@+id/chatBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <io.agora.auikit.ui.gift.impl.AUIGiftBarrageView
+        android:id="@+id/giftView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toTopOf="@id/chatListView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

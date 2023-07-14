@@ -65,9 +65,9 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         defStyleAttr
     ) {
         addView(mRoomViewBinding.root)
-        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowLike(false)
-        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMore(false)
-        mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(false)
+        mRoomViewBinding.chatBottomBar.setShowLike(false)
+        mRoomViewBinding.chatBottomBar.setShowMore(false)
+        mRoomViewBinding.chatBottomBar.setShowMic(false)
     }
 
     fun setFragmentActivity(activity: FragmentActivity){
@@ -110,7 +110,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 override fun onResult(error: AUIException?, giftList: List<AUIGiftTabEntity>) {
                     auiGiftBarrageBinder = AUIGiftBarrageBinder(
                         activity,
-                        mRoomViewBinding.bottomNavLayout.giftView,
+                        mRoomViewBinding.giftView,
                         giftList,
                         giftService,
                         service.getChatService()
@@ -149,8 +149,8 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 mBinders.add(micSeatsBinder)
 
                 val chatListBinder = AUIChatListBinder(
-                    mRoomViewBinding.bottomNavLayout.chatListView,
-                    mRoomViewBinding.bottomNavLayout.chatBottomBar,
+                    mRoomViewBinding.chatListView,
+                    mRoomViewBinding.chatBottomBar,
                     service.getChatService(),
                     service.getRoomInfo()
                 )
@@ -161,8 +161,8 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
 
                 val chatBottomBarBinder = AUIChatBottomBarBinder(
                     service,
-                    mRoomViewBinding.bottomNavLayout.chatBottomBar,
-                    mRoomViewBinding.bottomNavLayout.chatListView,
+                    mRoomViewBinding.chatBottomBar,
+                    mRoomViewBinding.chatListView,
                     object : AUIChatBottomBarBinder.AUIChatBottomBarEventDelegate{
                         override fun onClickGift(view: View?) {
                             auiGiftBarrageBinder?.showBottomGiftDialog()
@@ -217,7 +217,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         Log.d("local_mic","update rtc mute state: $isMute")
         mLocalMute = isMute
         mRoomService?.setupLocalAudioMute(isMute)
-        mRoomViewBinding.bottomNavLayout.chatBottomBar.setEnableMic(isMute)
+        mRoomViewBinding.chatBottomBar.setEnableMic(isMute)
     }
 
     private fun changeMuteState(isMute: Boolean) {
@@ -341,7 +341,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         mSeatMap[seatIndex] = userInfo.userId
         val localUserId = AUIRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户上麦
-            mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(true)
+            mRoomViewBinding.chatBottomBar.setShowMic(true)
             mRoomService?.setupLocalStreamOn(true)
             val userInfo = mRoomService?.getUserService()?.getUserInfo(localUserId)
             val isMute = (userInfo?.muteAudio == 1)
@@ -355,7 +355,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         }
         val localUserId = AUIRoomContext.shared().currentUserInfo.userId
         if (userInfo.userId == localUserId) { // 本地用户下麦
-            mRoomViewBinding.bottomNavLayout.chatBottomBar.setShowMic(true)
+            mRoomViewBinding.chatBottomBar.setShowMic(true)
             setLocalMute(true)
             mRoomService?.setupLocalStreamOn(false)
         }
@@ -394,7 +394,7 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
                 if (error == null){
                     chatService.saveWelcomeMsg(context.getString(R.string.voice_room_welcome))
                     message?.let { chatService.parseMsgChatEntity(it) }
-                    mRoomViewBinding.bottomNavLayout.chatListView.refreshSelectLast(chatService.getMsgList())
+                    mRoomViewBinding.chatListView.refreshSelectLast(chatService.getMsgList())
                 }
             }
         })

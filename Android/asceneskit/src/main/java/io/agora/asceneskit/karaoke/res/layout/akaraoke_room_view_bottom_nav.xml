@@ -5,21 +5,6 @@
     android:orientation="vertical"
     android:layout_gravity="bottom">
 
-    <io.agora.auikit.ui.gift.impl.AUIGiftBarrageView
-        android:id="@+id/giftView"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
 
-    <io.agora.auikit.ui.chatList.impl.AUIChatListView
-        android:id="@+id/chatListView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:paddingEnd="60dp"
-        android:layout_marginBottom="10dp" />
-
-    <io.agora.auikit.ui.chatBottomBar.impl.AUIChatBottomBarView
-        android:id="@+id/chatBottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>
