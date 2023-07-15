@@ -7,10 +7,10 @@
       "avatarWidth": 56,
       "avatarHeight": 56,
       "avatarCornerRadius": 28,
-      "titleColor": "#ffffff",
+      "titleColor": "#F9FAFA",
       "bigTitleFont": "PingFangSC-Regular,17",
       "smallTitleFont": "PingFangSC-Regular,14",
-      "subTitleColor": "#ffffff80",
+      "subTitleColor": "#F9FAFA",
       "selectedButtonColor": "#00000000",
       "defalut_avatar":"aui_micseat_dialog_avatar_idle",
   }

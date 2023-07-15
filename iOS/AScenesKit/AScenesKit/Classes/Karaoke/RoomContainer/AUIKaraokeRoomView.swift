@@ -318,7 +318,7 @@ open class AUIKaraokeRoomView: UIView {
         
         addSubview(membersView)
         membersView.aui_centerY = roomInfoView.aui_centerY
-        membersView.aui_right = closeButton.aui_left - 8
+        membersView.aui_right = closeButton.aui_left - 2
         
         
         chatButton.aui_bottom = bounds.height - 15 - UIDevice.current.aui_SafeDistanceBottom

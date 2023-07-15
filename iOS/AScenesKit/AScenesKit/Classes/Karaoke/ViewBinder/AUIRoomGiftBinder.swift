@@ -68,7 +68,7 @@ extension AUIRoomGiftBinder {
         let effectName = gift.effectMD5
         let path = String.documentsPath
         let documentPath = path + "AUIKitGiftEffect/\(effectName)"
-        if effectName.isEmpty,!FileManager.default.fileExists(atPath: documentPath) {
+        if effectName.isEmpty || !FileManager.default.fileExists(atPath: documentPath) {
             return
         }
         let file = PAGFile.load(documentPath)
