@@ -63,6 +63,7 @@ open class AUIKaraokeRoomView: UIView {
                                                  y: top,
                                                  width: self.aui_width,
                                                  height: self.frame.height - top - 65 - CGFloat(ABottomBarHeight)))
+        view.showNewMessage(entity: startMessage(nil))
         return view
     }()
     lazy var inputBar: AUIChatInputBar = {
@@ -339,8 +340,7 @@ open class AUIKaraokeRoomView: UIView {
         
         
         microphoneButton.aui_bottom = chatButton.aui_bottom
-        microphoneButton.aui_left = chatButton.aui_right + 8
-        
+        microphoneButton.aui_right = giftButton.aui_left - 8
         
         addSubview(inputBar)
         inputBar.isHidden = true
@@ -393,6 +393,22 @@ open class AUIKaraokeRoomView: UIView {
         
         giftBinder.bind(send: self.giftsView, receive: self.receiveGift, giftService: service.giftImplement)
         giftsView.addActionHandler(actionHandler: self)
+    }
+}
+
+extension AUIKaraokeRoomView {
+    
+    @objc func startMessage(_ text: String?) -> AUIChatEntity {
+        let entity = AUIChatEntity()
+        guard let channelName = self.service?.channelName else {return entity}
+        let user = AUIRoomContext.shared.roomInfoMap[channelName]?.owner ?? AUIUserThumbnailInfo()
+        entity.user = user
+        entity.content = text == nil ? aui_localized("startMessage", bundleName: "auiLocalizable"):text
+        entity.attributeContent = entity.attributeContent
+        entity.width = entity.width
+        entity.height = entity.height
+        entity.joined = false
+        return entity
     }
 }
 

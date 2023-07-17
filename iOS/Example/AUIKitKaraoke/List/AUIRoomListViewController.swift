@@ -67,7 +67,7 @@ class AUIRoomListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        AUIRoomContext.shared.themeNames = ["UIKit", "KTV"]
+        AUIRoomContext.shared.themeNames = ["UIKit", "KTV"]
         AUIRoomContext.shared.resetTheme()
         UIScrollView.appearance().contentInsetAdjustmentBehavior = .never
         view.layer.addSublayer(gradientLayer)
