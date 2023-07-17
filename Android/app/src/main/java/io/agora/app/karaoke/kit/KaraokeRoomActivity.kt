@@ -103,14 +103,13 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
+            .tokenGenerate(TokenGenerateReq(config.rtcChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
-                        //rtcRtcToken006
-                        config.rtcRtcToken006 = rspObj.rtcToken
-                        config.rtcRtmToken006 = rspObj.rtmToken
+                        config.rtcRtcToken = rspObj.rtcToken
+                        config.rtcRtmToken = rspObj.rtmToken
                     }
                     trySuccess.invoke()
                 }

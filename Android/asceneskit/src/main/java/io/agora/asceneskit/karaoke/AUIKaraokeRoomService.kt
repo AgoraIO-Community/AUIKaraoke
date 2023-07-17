@@ -75,7 +75,7 @@ class AUIKaraokeRoomService(
     private val mKtvApi: KTVApi = ktvApi ?: run {
         val config = KTVApiConfig(
             AUIRoomContext.shared().commonConfig.appId,
-            roomConfig.rtcRtmToken006,
+            roomConfig.rtcRtmToken,
             mRtcEngine,
             roomConfig.rtcChannelName,
             AUIRoomContext.shared().commonConfig.userId.toInt(),
@@ -160,7 +160,7 @@ class AUIKaraokeRoomService(
         mRtcEngine.enableAudioVolumeIndication(50, 10, true)
         mRtcEngine.setClientRole(if (AUIRoomContext.shared().isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
         val ret: Int = mRtcEngine.joinChannel(
-            roomConfig.rtcRtcToken006,
+            roomConfig.rtcRtcToken,
             roomConfig.rtcChannelName,
             null,
             AUIRoomContext.shared().commonConfig.userId.toInt()

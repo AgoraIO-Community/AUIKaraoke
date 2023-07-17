@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="aui_primary_appearance" parent="AUIPrimaryView.Appearance">
-
+        <item name="aui_primary_input_width">45dp</item>
+        <item name="aui_primary_input_height">45dp</item>
     </style>
 </resources>
