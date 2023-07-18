@@ -492,10 +492,10 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
                 }else if choristerList.first(where: {$0.userId == seatInfo.user?.userId}) != nil {
                     updateMic(with: i, role: .coSinger)
                 }else{
-                    updateMic(with: i, role: seatInfo.micRole)
+                    updateMic(with: i, role: .onlineAudience)
                 }
             }else{
-                updateMic(with: i, role: seatInfo.micRole)
+                updateMic(with: i, role: .onlineAudience)
             }
         }
     }
