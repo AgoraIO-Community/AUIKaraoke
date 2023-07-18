@@ -392,7 +392,7 @@ open class AUIKaraokeRoomView: UIView {
         chatBinder.bind(chat: chatListView, chatService: service.chatImplement)
         
         giftBinder.bind(send: self.giftsView, receive: self.receiveGift, giftService: service.giftImplement)
-        giftsView.addActionHandler(actionHandler: self)
+//        giftsView.addActionHandler(actionHandler: self)
     }
 }
 
