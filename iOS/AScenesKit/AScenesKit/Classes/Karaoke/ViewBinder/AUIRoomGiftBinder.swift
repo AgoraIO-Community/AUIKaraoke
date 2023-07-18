@@ -10,11 +10,26 @@ import AUIKit
 import libpag
 import Alamofire
 
+
 public class AUIRoomGiftBinder: NSObject {
+    
+    private lazy var effectView: AUIGiftEffectView = {
+        let pag = AUIGiftEffectView(frame:CGRect(x: 0, y: 0, width: AScreenWidth, height: AScreenHeight))
+        pag.isHidden = true
+        pag.isUserInteractionEnabled = false
+        pag.setScaleMode(PAGScaleModeZoom)
+        pag.setRepeatCount(1)
+        pag.add(self)
+        return pag
+    }()
     
     private weak var send: IAUIRoomGiftDialog?
     
     private weak var receive: IAUIGiftBarrageView?
+    
+    private var queue: AnimationQueue = AnimationQueue()
+    
+    private var animationPaths = [String]()
     
     private weak var giftDelegate: AUIGiftsManagerServiceDelegate? {
         didSet {
@@ -26,6 +41,7 @@ public class AUIRoomGiftBinder: NSObject {
     public func bind(send: IAUIRoomGiftDialog, receive: IAUIGiftBarrageView, giftService: AUIGiftsManagerServiceDelegate) {
         self.send = send
         self.receive = receive
+        self.send?.addActionHandler(actionHandler: self)
         self.giftDelegate = giftService
         self.giftDelegate?.giftsFromService(roomId: giftService.getChannelName(), completion: { [weak self] tabs, error in
             if error == nil {
@@ -33,8 +49,13 @@ public class AUIRoomGiftBinder: NSObject {
                 self?.downloadEffectResource(tabs: tabs)
             }
         })
+        
+        getWindow()?.addSubview(self.effectView)
     }
 
+    deinit {
+        effectView.removeFromSuperview()
+    }
 }
 
 extension String {
@@ -45,20 +66,49 @@ extension String {
 }
 
 
-extension AUIRoomGiftBinder: AUIGiftsManagerRespDelegate,PAGViewListener {
+extension AUIRoomGiftBinder: AUIGiftsManagerRespDelegate,PAGViewListener,AUIRoomGiftDialogEventsDelegate {
+    public func sendGiftAction(gift: AUIKit.AUIGiftEntity) {
+        if !gift.giftEffect.isEmpty {
+            AUICommonDialog.hidden()
+            AUIToast.hidden()
+        }
+        self.sendGift(gift: gift) { error in
+            AUIToast.show(text: error == nil ? "Sent successful!":"Sent failed!")
+            if error == nil {
+                self.receiveGift(gift: gift)
+            }
+        }
+    }
+    
     
     public func receiveGift(gift: AUIGiftEntity) {
         self.receive?.receiveGift(gift: gift)
-        if !gift.giftEffect.isEmpty {
+        if !gift.effectMD5.isEmpty {
+            AUICommonDialog.hidden()
+            AUIToast.hidden()
             self.effectAnimation(gift: gift)
 //            self.notifyHorizontalTextCarousel(gift: gift)
+        } else {
+            self.effectView.isHidden = true
         }
         
     }
     
     public func onAnimationEnd(_ pagView: PAGView!) {
-        aui_info("gift effect animation end.")
-        pagView.removeFromSuperview()
+        self.animationPaths.removeFirst()
+        if self.animationPaths.count <= 0 {
+            self.effectView.isHidden = true
+        } else {
+            self.playDelayAnimation()
+        }
+    }
+    
+    public func onAnimationCancel(_ pagView: PAGView!) {
+        self.effectView.isHidden = true
+    }
+    
+    public func onAnimationRepeat(_ pagView: PAGView!) {
+        self.effectView.isHidden = true
     }
     
 }
@@ -69,16 +119,32 @@ extension AUIRoomGiftBinder {
         let path = String.documentsPath
         let documentPath = path + "AUIKitGiftEffect/\(effectName)"
         if effectName.isEmpty || !FileManager.default.fileExists(atPath: documentPath) {
+            aui_info("effectMD5 is empty!")
             return
         }
-        let file = PAGFile.load(documentPath)
-        let pagView = PAGView(frame:CGRect(x: 0, y: 0, width: AScreenWidth, height: AScreenHeight))
-        getWindow()?.addSubview(pagView)
-        pagView.setComposition(file)
-        pagView.setRepeatCount(1)
-        pagView.add(self)
-        pagView.play()
-        
+        self.effectView.isHidden = false
+        if !self.animationPaths.contains(documentPath) {
+            self.animationPaths.append(documentPath)
+        }
+        if !self.effectView.isPlaying() {
+            self.playAnimation(path: documentPath)
+        }
+    }
+    
+    private func playAnimation(path: String) {
+        aui_info("play effect animation")
+        let file = PAGFile.load(path)
+        self.effectView.setComposition(file)
+        self.effectView.play()
+    }
+    
+    private func playDelayAnimation() {
+        if let animationPath = self.animationPaths.first {
+            aui_info("playDelayAnimation animation")
+            let file = PAGFile.load(animationPath)
+            self.effectView.setComposition(file)
+            self.effectView.play()
+        }
     }
     
     func refreshGifts(tabs: [AUIGiftTabEntity]) {
@@ -131,3 +197,35 @@ extension AUIRoomGiftBinder {
 }
 
 
+final class AnimationQueue {
+    var animations: [() -> Void] = []
+    private var isAnimating: Bool = false
+    
+    func addAnimation(animation: @escaping () -> Void, delay: TimeInterval = 3) {
+        let delayedAnimation = {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                animation()
+                self.startNextAnimation()
+            }
+        }
+        
+        self.animations.append(delayedAnimation)
+        if !self.isAnimating {
+            self.startNextAnimation()
+        }
+    }
+    
+    private func startNextAnimation() {
+        guard !self.isAnimating else {
+            return
+        }
+        
+        if let animation = self.animations.first {
+            self.isAnimating = true
+            animation()
+            self.animations.removeFirst()
+        } else {
+            self.isAnimating = false
+        }
+    }
+}

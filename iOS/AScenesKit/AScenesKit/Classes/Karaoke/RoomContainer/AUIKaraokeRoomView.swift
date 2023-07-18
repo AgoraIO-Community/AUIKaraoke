@@ -495,6 +495,7 @@ extension AUIKaraokeRoomView {
     @objc private func didClickGiftChatButton(){
         AUICommonDialog.hidden()
         let theme = AUICommonDialogTheme()
+        theme.contentControlColor = AUIColor("CommonColor.white")
         AUICommonDialog.show(contentView: self.giftsView, theme: theme)
     }
 }
