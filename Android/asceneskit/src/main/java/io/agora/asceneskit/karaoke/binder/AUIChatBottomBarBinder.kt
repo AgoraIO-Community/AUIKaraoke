@@ -3,7 +3,6 @@ package io.agora.asceneskit.karaoke.binder
 import android.util.Log
 import android.view.View
 import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
-import io.agora.auikit.R
 import io.agora.auikit.model.AUIMicSeatInfo
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserThumbnailInfo
@@ -15,6 +14,7 @@ import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.service.callback.AUIChatMsgCallback
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.imp.AUIChatServiceImpl
+import io.agora.auikit.ui.R
 import io.agora.auikit.ui.chatBottomBar.IAUIChatBottomBarView
 import io.agora.auikit.ui.chatBottomBar.listener.AUIMenuItemClickListener
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
