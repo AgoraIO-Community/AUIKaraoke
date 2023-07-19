@@ -403,7 +403,7 @@ extension AUIKaraokeRoomView {
         guard let channelName = self.service?.channelName else {return entity}
         let user = AUIRoomContext.shared.roomInfoMap[channelName]?.owner ?? AUIUserThumbnailInfo()
         entity.user = user
-        entity.content = text == nil ? aui_localized("startMessage", bundleName: "auiLocalizable"):text
+        entity.content = text == nil ? aui_localized("startMessage", bundleName: "auiKaraokeLocalizable"):text
         entity.attributeContent = entity.attributeContent
         entity.width = entity.width
         entity.height = entity.height
