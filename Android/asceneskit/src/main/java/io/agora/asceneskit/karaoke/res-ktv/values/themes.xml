@@ -21,6 +21,9 @@
         <item name="aui_musicPlayerControllerDialog_appearance">@style/AUIMusicPlayerControllerDialog.Appearance.KTV</item>
         <item name="aui_musicPlayerEffectPresetItem_appearance">@style/AUIMusicPlayerEffectPresetItem.Appearance.KTV</item>
 
+        <!--VoiceRoom input组件 -->
+        <item name="aui_primary_appearance">@style/aui_primary_appearance</item>
+
     </style>
 
 </resources>

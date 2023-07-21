@@ -153,6 +153,11 @@ public class AUIMicSeatsBinder implements
         seatView.setMicSeatState(seatInfo.seatStatus);
     }
 
+    @Override
+    public void onShowInvited(int index) {
+        IAUIMicSeatService.AUIMicSeatRespDelegate.super.onShowInvited(index);
+    }
+
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
         if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
@@ -255,7 +260,7 @@ public class AUIMicSeatsBinder implements
                 if (inSeat) {
                     return false;
                 } else {
-                    dialogView.addEnterSeat();
+                    dialogView.addEnterSeat(true);
                 }
             } else {
                 if (isCurrentUser) {
@@ -298,6 +303,12 @@ public class AUIMicSeatsBinder implements
     public void onClickMuteVideo(int index, boolean mute) {
         micSeatService.muteVideoSeat(index, mute, null);
     }
+
+    @Override
+    public void onClickInvited(int index) {
+        micSeatService.onClickInvited(index);
+    }
+
     /** IAUIMicSeatService.AUIChorusRespDelegate implements. */
     @Override
     public void onChoristerDidEnter(AUIChoristerModel chorister) {
