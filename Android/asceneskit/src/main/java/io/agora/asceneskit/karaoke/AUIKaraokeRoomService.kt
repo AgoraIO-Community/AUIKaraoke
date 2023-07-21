@@ -5,14 +5,18 @@ import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.model.AUIUserInfo
+import io.agora.auikit.service.IAUIChatService
 import io.agora.auikit.service.IAUIChorusService
+import io.agora.auikit.service.IAUIGiftsService
 import io.agora.auikit.service.IAUIJukeboxService
 import io.agora.auikit.service.IAUIMicSeatService
 import io.agora.auikit.service.IAUIMusicPlayerService
 import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.service.IAUIUserService.AUIUserRespDelegate
 import io.agora.auikit.service.callback.AUIException
+import io.agora.auikit.service.imp.AUIChatServiceImpl
 import io.agora.auikit.service.imp.AUIChorusServiceImpl
+import io.agora.auikit.service.imp.AUIGiftServiceImpl
 import io.agora.auikit.service.imp.AUIJukeboxServiceImpl
 import io.agora.auikit.service.imp.AUIMicSeatServiceImpl
 import io.agora.auikit.service.imp.AUIMusicPlayerServiceImpl
@@ -42,6 +46,11 @@ class AUIKaraokeRoomService(
     private val channelName: String
         get() { return  roomInfo.roomId }
 
+    private val mRtcEngine: RtcEngine = rtcEngine ?: AgoraEngineCreator.createRtcEngine(
+        AUIRoomContext.shared().commonConfig.context,
+        AUIRoomContext.shared().commonConfig.appId
+    )
+
     private val rtmManager: AUIRtmManager = roomManager.rtmManager
 
     private val userImpl: IAUIUserService by lazy {
@@ -49,6 +58,8 @@ class AUIKaraokeRoomService(
         user.bindRespDelegate(this)
         user
     }
+
+    private val chatImpl: IAUIChatService by lazy { AUIChatServiceImpl(roomInfo.roomId, rtmManager) }
 
     private val micSeatImpl: IAUIMicSeatService by lazy { AUIMicSeatServiceImpl(roomInfo.roomId, rtmManager) }
 
@@ -58,14 +69,13 @@ class AUIKaraokeRoomService(
 
     private val jukeboxImpl: IAUIJukeboxService by lazy { AUIJukeboxServiceImpl(roomInfo.roomId, rtmManager, mKtvApi) }
 
-    private val mRtcEngine: RtcEngine = rtcEngine ?: AgoraEngineCreator.createRtcEngine(
-        AUIRoomContext.shared().commonConfig.context,
-        AUIRoomContext.shared().commonConfig.appId
-    )
+    private val giftImpl: IAUIGiftsService by lazy { AUIGiftServiceImpl(roomInfo.roomId, rtmManager,chatImpl) }
+
+
     private val mKtvApi: KTVApi = ktvApi ?: run {
         val config = KTVApiConfig(
             AUIRoomContext.shared().commonConfig.appId,
-            roomConfig.rtcRtmToken006,
+            roomConfig.rtcRtmToken,
             mRtcEngine,
             roomConfig.rtcChannelName,
             AUIRoomContext.shared().commonConfig.userId.toInt(),
@@ -79,7 +89,10 @@ class AUIKaraokeRoomService(
     fun getMicSeatsService() = micSeatImpl
     fun getJukeboxService() = jukeboxImpl
     fun getChorusService() = chorusImpl
+    fun getChatService() = chatImpl
     fun getMusicPlayerService() = playerImpl
+    fun getRoomInfo() = roomInfo
+    fun getGiftService() = giftImpl
     fun enterRoom(success: (AUIRoomInfo) -> Unit, failure: (AUIException) -> Unit) {
         roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
             logger().d(TAG, "enterRoom result : $error")
@@ -147,7 +160,7 @@ class AUIKaraokeRoomService(
         mRtcEngine.enableAudioVolumeIndication(50, 10, true)
         mRtcEngine.setClientRole(if (AUIRoomContext.shared().isRoomOwner(channelName)) Constants.CLIENT_ROLE_BROADCASTER else Constants.CLIENT_ROLE_AUDIENCE)
         val ret: Int = mRtcEngine.joinChannel(
-            roomConfig.rtcRtcToken006,
+            roomConfig.rtcRtcToken,
             roomConfig.rtcChannelName,
             null,
             AUIRoomContext.shared().commonConfig.userId.toInt()

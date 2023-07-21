@@ -27,9 +27,12 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
     companion object {
         private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
+        private var isCreateRoom = false
 
-        fun launch(context: Context, roomInfo: AUIRoomInfo) {
+        fun launch(context: Context, isCreateRoom: Boolean, roomInfo: AUIRoomInfo, themeId: Int = View.NO_ID) {
             Companion.roomInfo = roomInfo
+            Companion.isCreateRoom = isCreateRoom
+            Companion.themeId = themeId
 
             val intent = Intent(context, KaraokeRoomActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
@@ -47,13 +50,15 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         }
         setContentView(mViewBinding.root)
         val roomInfo = roomInfo ?: return
+        mViewBinding.karaokeRoomView.setFragmentActivity(this)
         mViewBinding.karaokeRoomView.setOnShutDownClick {
             onUserLeaveRoom()
         }
         mPermissionHelp.checkMicPerm(
             {
                 generateToken { config ->
-                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
+                    val launchType = if (isCreateRoom) KaraokeUiKit.LaunchType.CREATE else KaraokeUiKit.LaunchType.JOIN
+                    KaraokeUiKit.launchRoom(launchType, roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
 
                     })
                     KaraokeUiKit.subscribeError(roomInfo.roomId, this)
@@ -98,14 +103,13 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate006(TokenGenerateReq(config.rtcChannelName, userId))
+            .tokenGenerate(TokenGenerateReq(config.rtcChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
-                        //rtcRtcToken006
-                        config.rtcRtcToken006 = rspObj.rtcToken
-                        config.rtcRtmToken006 = rspObj.rtmToken
+                        config.rtcRtcToken = rspObj.rtcToken
+                        config.rtcRtmToken = rspObj.rtmToken
                     }
                     trySuccess.invoke()
                 }

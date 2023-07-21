@@ -67,6 +67,7 @@ class AUIRoomListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        AUIRoomContext.shared.themeNames = ["UIKit", "KTV"]
         AUIRoomContext.shared.resetTheme()
         UIScrollView.appearance().contentInsetAdjustmentBehavior = .never
         view.layer.addSublayer(gradientLayer)
@@ -175,7 +176,7 @@ class AUIRoomListViewController: UIViewController {
                 let room = AUICreateRoomInfo()
                 room.roomName = text
                 room.thumbnail = self.userInfo.userAvatar
-                room.seatCount = 8
+                room.micSeatCount = 8
                 KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
                     let vc = RoomViewController()
                     vc.roomInfo = roomInfo

@@ -30,6 +30,10 @@ open class AUIUserViewBinder: NSObject {
 }
 
 extension AUIUserViewBinder: AUIUserRespDelegate {
+    public func onUserBeKicked(roomId: String, userId: String) {
+        
+    }
+    
     public func onUserAudioMute(userId: String, mute: Bool) {
         
     }
