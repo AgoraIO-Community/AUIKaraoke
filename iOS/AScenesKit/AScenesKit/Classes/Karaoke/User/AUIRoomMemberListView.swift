@@ -9,13 +9,6 @@ import AUIKit
 
 private let kMemberListCellID = "kMemberListCellID"
 
-public protocol AUIUserCellUserDataProtocol: NSObjectProtocol {
-    var userAvatar: String {get}
-    var userId: String {get}
-    var userName: String {get}
-}
-
-
 /// 用户列表cell
 public class AUIRoomMemberUserCell: UITableViewCell {
     

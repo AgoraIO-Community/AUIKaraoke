@@ -17,14 +17,25 @@ open class AUIKaraokeRoomView: UIView {
     private var service: AUIKaraokeRoomService?
     
     /// 房间信息UI
-    private lazy var roomInfoView: AUIRoomInfoView = AUIRoomInfoView(frame: CGRect(x: 16, y: 35, width: 175, height: 56))
+    private lazy var roomInfoView: AUIRoomInfoView = AUIRoomInfoView(frame: CGRect(x: 16, y: 35, width: 185, height: 40))
     
     /// 歌词播放UI
-    private lazy var playerView: AUIPlayerView = AUIPlayerView(frame: CGRect(x: kSeatRoomPadding, y: 107, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 252))
+    private lazy var playerView: AUIPlayerView = AUIPlayerView(frame: CGRect(x: kSeatRoomPadding, y: 83, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 240))
     private lazy var playerBinder: AUIPlayerViewBinder = AUIPlayerViewBinder()
     
     //麦位UI
-    private lazy var micSeatView: AUIMicSeatView = AUIMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 375, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 220))
+    private lazy var micSeatView: AUIMicSeatView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        let width: CGFloat = 80
+        let height: CGFloat = 92
+        let hPadding = Int((self.frame.size.width - 16 * 2 - width * 4) / 3)
+        flowLayout.itemSize = CGSize(width: width, height: height)
+        flowLayout.minimumLineSpacing = 0
+        flowLayout.minimumInteritemSpacing = CGFloat(hPadding)
+        let view = AUIMicSeatView(frame: CGRect(x: kSeatRoomPadding, y: 331, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 190), layout: flowLayout)
+        
+        return view
+    }()
     private lazy var micSeatBinder: AUIMicSeatViewBinder = AUIMicSeatViewBinder(rtcEngine: service!.rtcEngine)
     
 //    private lazy var invitationView: AUIInvitationView = AUIInvitationView()
@@ -43,6 +54,41 @@ open class AUIKaraokeRoomView: UIView {
     /// 用户列表UI
     private lazy var membersView: AUIRoomMembersView = AUIRoomMembersView()
     private lazy var userBinder: AUIUserViewBinder = AUIUserViewBinder()
+    
+    //chat
+    private lazy var chatBinder: AUIIMViewBinder = AUIIMViewBinder()
+    private lazy var chatListView: AUIChatListView = {
+        let top = self.micSeatView.aui_bottom + 8
+        let view = AUIChatListView(frame: CGRect(x: 0,
+                                                 y: top,
+                                                 width: self.aui_width,
+                                                 height: self.frame.height - top - 65 - CGFloat(ABottomBarHeight)))
+        view.showNewMessage(entity: startMessage(nil))
+        return view
+    }()
+    lazy var inputBar: AUIChatInputBar = {
+        let bar =
+        AUIChatInputBar(frame: CGRect(x: 0, y: AScreenHeight, width: AScreenWidth, height: 60),config: AUIChatInputBarConfig()).theme_backgroundColor(color: "InputBar.backgroundColor")
+        bar.sendClosure = { [weak self] text in
+            guard let self = self else {return}
+            self.chatBinder.sendTextMessage(text: text)
+            self.inputBar.inputField.text = ""
+        }
+        
+        return bar
+    }()
+    
+    //礼物
+    private lazy var giftBinder: AUIRoomGiftBinder = AUIRoomGiftBinder()
+    private lazy var receiveGift: AUIGiftBarrageView = {
+        let height = AScreenWidth / 9.0 * 2.5
+        let view = AUIGiftBarrageView(frame: CGRect(x: 10, y: self.chatListView.aui_top - height, width: AScreenWidth / 3.0 * 2 + 20, height: height),source: nil).backgroundColor(.clear).tag(1111)
+        return view
+    }()
+
+    private lazy var giftsView: AUIRoomGiftDialog = {
+        AUIRoomGiftDialog(frame: CGRect(x: 0, y: 0, width: AScreenWidth, height: 390), tabs: [AUIGiftTabEntity]())
+    }()
     
     // 关闭按钮
     private lazy var closeButton: AUIButton = {
@@ -156,6 +202,11 @@ open class AUIKaraokeRoomView: UIView {
         return button
     }()
     
+    private lazy var membersList: AUIRoomMemberListView = {
+        let listView = AUIRoomMemberListView()
+        listView.aui_size =  CGSize(width: UIScreen.main.bounds.width, height: 562)
+        return listView
+    }()
     
     public var onClickOffButton: (()->())?
     
@@ -171,12 +222,38 @@ open class AUIKaraokeRoomView: UIView {
         if let folderPath = Bundle.main.path(forResource: "auiKaraokeTheme", ofType: "bundle") {
             AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
         }
+        if let folderPath = Bundle.main.path(forResource: "Gift", ofType: "bundle") {
+            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+        }
+        if let folderPath = Bundle.main.path(forResource: "ChatResource", ofType: "bundle") {
+            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+        }
+//        if let folderPath = Bundle.main.path(forResource: "Invitation", ofType: "bundle") {
+//            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+//        }
         
         loadBg()
     }
     
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    open override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        for view in subviews.reversed() {
+            if view.isKind(of: AUIChatInputBar.self),view.frame.contains(point){
+                let childPoint = self.convert(point, to: view)
+                let childView = view.hitTest(childPoint, with: event)
+                return childView
+            }
+            
+            if view.isKind(of: AUIGiftBarrageView.self),view.frame.contains(point),self.micSeatView.frame.contains(point){
+                let childPoint = self.convert(point, to: self.micSeatView)
+                let childView = self.micSeatView.hitTest(childPoint, with: event)
+                return childView
+            }
+        }
+        return super.hitTest(point, with: event)
     }
     
     private func loadBg() {
@@ -224,6 +301,12 @@ open class AUIKaraokeRoomView: UIView {
         //麦位组件
         addSubview(micSeatView)
         
+        //chat list
+        addSubview(chatListView)
+        
+        //gift
+        addSubview(receiveGift)
+        
         jukeBoxView.aui_size = CGSize(width: aui_width, height: 562)
         
         addSubview(roomInfoView)
@@ -236,7 +319,7 @@ open class AUIKaraokeRoomView: UIView {
         
         addSubview(membersView)
         membersView.aui_centerY = roomInfoView.aui_centerY
-        membersView.aui_right = closeButton.aui_left - 8
+        membersView.aui_right = closeButton.aui_left - 2
         
         
         chatButton.aui_bottom = bounds.height - 15 - UIDevice.current.aui_SafeDistanceBottom
@@ -259,6 +342,8 @@ open class AUIKaraokeRoomView: UIView {
         microphoneButton.aui_bottom = chatButton.aui_bottom
         microphoneButton.aui_right = giftButton.aui_left - 8
         
+        addSubview(inputBar)
+        inputBar.isHidden = true
     }
     
     private func viewBinderConnected() {
@@ -297,6 +382,33 @@ open class AUIKaraokeRoomView: UIView {
         if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
             self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
         }
+        
+        membersView.onClickMoreButtonAction = { [weak self] in
+            guard let `self` = self else { return }
+            self.membersList.memberList = $0
+            AUICommonDialog.show(contentView: self.membersList, theme: AUICommonDialogTheme())
+        }
+        
+        chatBinder.bind(chat: chatListView, chatService: service.chatImplement)
+        
+        giftBinder.bind(send: self.giftsView, receive: self.receiveGift, giftService: service.giftImplement)
+//        giftsView.addActionHandler(actionHandler: self)
+    }
+}
+
+extension AUIKaraokeRoomView {
+    
+    @objc func startMessage(_ text: String?) -> AUIChatEntity {
+        let entity = AUIChatEntity()
+        guard let channelName = self.service?.channelName else {return entity}
+        let user = AUIRoomContext.shared.roomInfoMap[channelName]?.owner ?? AUIUserThumbnailInfo()
+        entity.user = user
+        entity.content = text == nil ? aui_localized("startMessage", bundleName: "auiKaraokeLocalizable"):text
+        entity.attributeContent = entity.attributeContent
+        entity.width = entity.width
+        entity.height = entity.height
+        entity.joined = false
+        return entity
     }
 }
 
@@ -312,6 +424,8 @@ extension AUIKaraokeRoomView {
         }
         service.destory()
         AUIRoomContext.shared.clean(channelName: service.channelName)
+        AUICommonDialog.hidden()
+        AUIToast.hidden()
     }
     
     @objc func onSelectedMusic() {
@@ -334,18 +448,13 @@ extension AUIKaraokeRoomView: AUIPlayerViewDelegate {
 
 extension AUIKaraokeRoomView {
     @objc private func didClickOffButton(){
+        self.inputBar.dismissKeyboard()
         onClickOffButton?()
     }
     
     @objc private func didClickChatButton(){
-        //Mock
-//        if playerView.musicInfo == nil {
-//            let musicInfo = AUIChooseMusicModel()
-//            musicInfo.name = "I Get the bag (feat. Migos)"
-//            playerView.musicInfo = musicInfo
-//        } else {
-//            playerView.musicInfo = nil
-//        }
+        self.inputBar.isHidden = false
+        self.inputBar.inputField.becomeFirstResponder()
     }
     
     @objc private func didClickVoiceChatButton(_ button: UIButton){
@@ -384,6 +493,10 @@ extension AUIKaraokeRoomView {
     }
     
     @objc private func didClickGiftChatButton(){
+        AUICommonDialog.hidden()
+        let theme = AUICommonDialogTheme()
+        theme.contentControlColor = AUIColor("CommonColor.white")
+        AUICommonDialog.show(contentView: self.giftsView, theme: theme)
     }
 }
 
@@ -415,3 +528,16 @@ extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
     
 }
 
+
+//TODO: implement by gift binder
+extension AUIKaraokeRoomView: AUIRoomGiftDialogEventsDelegate {
+    
+    public func sendGiftAction(gift: AUIGiftEntity) {
+        self.giftBinder.sendGift(gift: gift) { error in
+            AUIToast.show(text: error == nil ? "Sent successful!":"Sent failed!")
+            let sent = gift
+            sent.sendUser = AUIRoomContext.shared.currentUserInfo
+            self.receiveGift.gifts.append(sent)
+        }
+    }
+}

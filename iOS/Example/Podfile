@@ -9,5 +9,7 @@ target 'AUIKitKaraoke' do
   pod 'AUIKit', :path => '../../AUIKit/iOS'
   pod 'AgoraRtcEngine_iOS', :path => './libs'
   pod 'AgoraLyricsScore', '1.1.1-beta-3'
+  pod 'LookinServer', :configurations => ['Debug']
 
+  
 end
