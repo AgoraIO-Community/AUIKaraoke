@@ -33,6 +33,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".SettingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="behind"/>
+
         <activity
             android:name=".kit.KaraokeRoomActivity"
             android:launchMode="singleTop"

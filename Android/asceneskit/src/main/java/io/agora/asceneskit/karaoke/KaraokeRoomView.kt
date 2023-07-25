@@ -65,8 +65,8 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         defStyleAttr
     ) {
         addView(mRoomViewBinding.root)
-        mRoomViewBinding.chatBottomBar.setShowLike(false)
-        mRoomViewBinding.chatBottomBar.setShowMore(false)
+        // mRoomViewBinding.chatBottomBar.setShowLike(false)
+        // mRoomViewBinding.chatBottomBar.setShowMore(false)
         mRoomViewBinding.chatBottomBar.setShowMic(false)
     }
 
@@ -236,7 +236,6 @@ class KaraokeRoomView : FrameLayout, IAUIUserService.AUIUserRespDelegate,
         val membersView = AUIRoomMemberListView(context)
         membersView.setMembers(mMemberMap.values.toList(), mSeatMap)
         AUIBottomDialog(context).apply {
-            setBackground(null)
             setCustomView(membersView)
             show()
         }

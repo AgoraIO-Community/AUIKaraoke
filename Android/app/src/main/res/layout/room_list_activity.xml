@@ -5,12 +5,16 @@
     android:id="@+id/room_list_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground"
+    tools:background="?android:attr/windowBackground"
     tools:context=".RoomListActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:paddingBottom="100dp"
+        android:clipToPadding="false"
+        android:clipChildren="false"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -28,25 +32,45 @@
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    
+    <io.agora.auikit.ui.basic.AUIButton
+        android:id="@+id/btnSetting"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        style="?attr/aui_button_appearance_circle"
+        app:aui_button_background="@android:color/transparent"
+        app:aui_button_drawableCenter="@mipmap/ic_setting"
+        app:aui_button_drawableTint="#75828A"
+        app:aui_button_drawablePressedTint="@color/aui_black"
+        />
 
+    <TextView
+        android:id="@+id/tvEmptyList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="暂无房间列表"
+        android:textColor="#ACB4B9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:gravity="center"
+        tools:visibility="visible"
+        android:drawableTop="@mipmap/ic_empty_light"
+        android:drawablePadding="10dp"
+        app:layout_constraintTop_toTopOf="parent" />
+    
     <io.agora.auikit.ui.basic.AUIButton
         android:id="@+id/btnCreateRoom"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="24dp"
         app:aui_button_text="创建房间"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnSwitchTheme"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <io.agora.auikit.ui.basic.AUIButton
-        android:id="@+id/btnSwitchTheme"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:aui_button_text="切换主题"
+        app:aui_button_drawableStart="@mipmap/ic_plus_in_house"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnCreateRoom" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

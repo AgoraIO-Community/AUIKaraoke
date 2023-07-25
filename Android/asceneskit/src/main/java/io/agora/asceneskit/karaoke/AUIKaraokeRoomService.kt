@@ -14,6 +14,7 @@ import io.agora.auikit.service.IAUIMusicPlayerService
 import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.service.IAUIUserService.AUIUserRespDelegate
 import io.agora.auikit.service.callback.AUIException
+import io.agora.auikit.service.im.AUIChatManager
 import io.agora.auikit.service.imp.AUIChatServiceImpl
 import io.agora.auikit.service.imp.AUIChorusServiceImpl
 import io.agora.auikit.service.imp.AUIGiftServiceImpl
@@ -59,6 +60,8 @@ class AUIKaraokeRoomService(
         user
     }
 
+    private val chatManager = AUIChatManager(channelName, AUIRoomContext.shared())
+
     private val chatImpl: IAUIChatService by lazy { AUIChatServiceImpl(roomInfo.roomId, rtmManager) }
 
     private val micSeatImpl: IAUIMicSeatService by lazy { AUIMicSeatServiceImpl(roomInfo.roomId, rtmManager) }
@@ -69,7 +72,7 @@ class AUIKaraokeRoomService(
 
     private val jukeboxImpl: IAUIJukeboxService by lazy { AUIJukeboxServiceImpl(roomInfo.roomId, rtmManager, mKtvApi) }
 
-    private val giftImpl: IAUIGiftsService by lazy { AUIGiftServiceImpl(roomInfo.roomId, rtmManager,chatImpl) }
+    private val giftImpl: IAUIGiftsService by lazy { AUIGiftServiceImpl(roomInfo.roomId, rtmManager,chatManager) }
 
 
     private val mKtvApi: KTVApi = ktvApi ?: run {
@@ -93,6 +96,7 @@ class AUIKaraokeRoomService(
     fun getMusicPlayerService() = playerImpl
     fun getRoomInfo() = roomInfo
     fun getGiftService() = giftImpl
+    fun getChatManager() = chatManager
     fun enterRoom(success: (AUIRoomInfo) -> Unit, failure: (AUIException) -> Unit) {
         roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
             logger().d(TAG, "enterRoom result : $error")

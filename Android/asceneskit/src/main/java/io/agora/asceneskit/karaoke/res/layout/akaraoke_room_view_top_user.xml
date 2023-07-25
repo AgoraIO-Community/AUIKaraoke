@@ -100,7 +100,7 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="4dp"
-        app:aui_button_backgroundNormalColor="?attr/akaraoke_roomButton_normalColor"
+        app:aui_button_background="@drawable/bg_top_user_btn"
         app:aui_button_drawableCenter="?attr/akaraoke_roomMoreUser_drawable" />
 
     <io.agora.auikit.ui.basic.AUIButton
@@ -109,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        app:aui_button_backgroundNormalColor="?attr/akaraoke_roomButton_normalColor"
+        app:aui_button_background="@drawable/bg_top_user_btn"
         app:aui_button_drawableCenter="?attr/akaraoke_roomClose_drawable" />
 
 </LinearLayout>
