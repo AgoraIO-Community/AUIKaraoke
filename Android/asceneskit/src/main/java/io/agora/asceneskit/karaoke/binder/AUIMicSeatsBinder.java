@@ -244,14 +244,13 @@ public class AUIMicSeatsBinder implements
         }
         if (isRoomOwner) {
             if (isEmptySeat) {
-                dialogView.addMuteAudio((seatInfo.muteAudio != 0));
                 dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
             } else {
                 if (isCurrentUser) {
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
                 } else {
                     dialogView.addKickSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0) || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0);
                     dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
                 }
             }
@@ -265,7 +264,7 @@ public class AUIMicSeatsBinder implements
             } else {
                 if (isCurrentUser) {
                     dialogView.addLeaveSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
                 } else {
                     return false;
                 }
@@ -296,7 +295,12 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onClickMuteAudio(int index, boolean mute) {
-        micSeatService.muteAudioSeat(index, mute, null);
+        boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
+        if (isRoomOwner) {
+            micSeatService.muteAudioSeat(index, mute, null);
+        } else {
+            userService.muteUserAudio(mute, null);
+        }
     }
 
     @Override
