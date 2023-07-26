@@ -57,8 +57,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         mPermissionHelp.checkMicPerm(
             {
                 generateToken { config ->
-                    val launchType = if (isCreateRoom) KaraokeUiKit.LaunchType.CREATE else KaraokeUiKit.LaunchType.JOIN
-                    KaraokeUiKit.launchRoom(launchType, roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
+                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
 
                     })
                     KaraokeUiKit.subscribeError(roomInfo.roomId, this)

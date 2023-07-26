@@ -1,7 +1,5 @@
 package io.agora.app.karaoke.kit
 
-import android.util.Log
-import io.agora.CallBack
 import io.agora.app.karaoke.BuildConfig
 import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
 import io.agora.asceneskit.karaoke.KaraokeRoomView
@@ -11,15 +9,12 @@ import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
-import io.agora.auikit.service.callback.AUICreateChatRoomCallback
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.imp.AUIChatServiceImpl
 import io.agora.auikit.service.imp.AUIRoomManagerImpl
 import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
 import io.agora.auikit.utils.AUILogger
-import io.agora.auikit.utils.ThreadManager
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineEx
 import io.agora.rtm.RtmClient
@@ -118,7 +113,6 @@ object KaraokeUiKit {
     }
 
     fun launchRoom(
-        launchType: LaunchType,
         roomInfo: AUIRoomInfo,
         config: AUIRoomConfig,
         karaokeView: KaraokeRoomView,
@@ -134,57 +128,11 @@ object KaraokeUiKit {
             roomInfo
         )
         mService = roomService
-
-        val auiChatServiceImpl = roomService.getChatService() as AUIChatServiceImpl
-        auiChatServiceImpl.getChatUser {
-            auiChatServiceImpl.initChatService()
-            if (!auiChatServiceImpl.isLoggedIn()){
-                auiChatServiceImpl.loginChat(object : CallBack {
-                    override fun onSuccess() {
-                        Log.d("VoiceRoomUikit","loginChat suc")
-                        if (it == null && launchType == LaunchType.CREATE){
-                            Log.e("apex-wt","op5 ${roomInfo.roomId}")
-                            auiChatServiceImpl.createChatRoom(roomInfo.roomId,object :
-                                AUICreateChatRoomCallback {
-                                override fun onResult(error: AUIException?, chatRoomId: String?) {
-                                    if (error == null){
-                                        chatRoomId.let {
-                                            ThreadManager.getInstance().runOnMainThread{
-                                                karaokeView.bindService(roomService)
-                                            }
-                                            Log.d("VoiceRoomUikit","setChatRoomId suc")
-                                        }
-                                    }else{
-                                        Log.e("VoiceRoomUikit","createChatRoom fail ${error.message}")
-                                    }
-                                }
-                            })
-                        }else{
-                            karaokeView.bindService(roomService)
-                        }
-                    }
-                    override fun onError(code: Int, error: String?) {
-                        Log.e("VoiceRoomUikit","loginChat error $code  $error")
-                    }
-                })
-            }
-
-        }
-
+        karaokeView.bindService(roomService)
         eventHandler?.onRoomLaunchSuccess
     }
 
     fun destroyRoom(roomId: String?) {
-        (mService?.getChatService() as AUIChatServiceImpl).logoutChat()
-        mService?.getChatService()?.userQuitRoom(object : CallBack {
-            override fun onSuccess() {
-
-            }
-
-            override fun onError(code: Int, error: String?) {
-                Log.e("apex","userQuitRoom $code $error")
-            }
-        })
         mService?.destroyRoom()
         mService = null
     }
@@ -216,9 +164,4 @@ object KaraokeUiKit {
         val onRoomLaunchFailure: ((ErrorCode) -> Unit)? = null,
     )
 
-    enum class LaunchType{
-        UNKNOWN,
-        CREATE,
-        JOIN
-    }
 }
