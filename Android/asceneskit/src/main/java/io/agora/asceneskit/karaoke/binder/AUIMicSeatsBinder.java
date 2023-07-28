@@ -251,7 +251,6 @@ public class AUIMicSeatsBinder implements
                 } else {
                     dialogView.addKickSeat();
                     dialogView.addMuteAudio((seatInfo.muteAudio != 0) || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0);
-                    dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
                 }
             }
         } else {

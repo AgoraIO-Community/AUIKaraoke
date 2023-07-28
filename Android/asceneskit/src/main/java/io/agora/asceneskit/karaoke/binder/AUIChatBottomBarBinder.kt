@@ -2,6 +2,7 @@ package io.agora.asceneskit.karaoke.binder
 
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
 import io.agora.auikit.model.AUIMicSeatInfo
 import io.agora.auikit.model.AUIRoomContext
@@ -68,10 +69,29 @@ class AUIChatBottomBarBinder constructor(
                 event?.onClickMore(view)
             }
             R.id.voice_extend_item_mic -> {
-                //点击下方麦克风
-                Log.e("apex","mic")
-                mLocalMute = !mLocalMute
-                userService.muteUserAudio(mLocalMute, null)
+                if(isRoomOwner){
+                    mLocalMute = !mLocalMute
+                    micSeatService.muteAudioSeat(0, mLocalMute, null)
+                }else{
+                    if(mLocalMute){
+                        // 检查是否被房主禁麦
+                        for (seatIndex in 0 until micSeatService.micSeatSize){
+                            val seatInfo = micSeatService.getMicSeatInfo(seatIndex)
+                            if (seatInfo?.user?.userId == roomContext.currentUserInfo.userId) {
+                                val isMuteByHost = seatInfo.muteAudio != 0
+                                if(isMuteByHost){
+                                    Toast.makeText(roomContext.commonConfig.context, "当前麦位已被房主禁麦", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+                            }
+                        }
+                    }
+                    //点击下方麦克风
+                    Log.e("apex","mic")
+                    mLocalMute = !mLocalMute
+                    userService.muteUserAudio(mLocalMute, null)
+                }
+
                 event?.onClickMic(view)
             }
             R.id.voice_extend_item_gift -> {
