@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:paddingHorizontal="18dp"
-    android:paddingVertical="8dp">
+    android:paddingTop="8dp"
+    tools:theme="?attr/akaraoke_room_appearance">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/akaraoke_roomInfo_background"
-        android:padding="8dp">
+        android:padding="3dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivRoomCover"
             style="@style/ShapeAppearance.MaterialComponents.RoundComponent"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/aui_micseat_dialog_avatar_idle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,18 +34,24 @@
             android:textColor="?attr/akaraoke_roomInfo_nameTextColor"
             android:textSize="?attr/akaraoke_roomInfo_nameTextSize"
             app:layout_constraintStart_toEndOf="@id/ivRoomCover"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvRoomId"
+            tools:text="Room Name" />
 
         <TextView
             android:id="@+id/tvRoomId"
-            android:layout_width="120dp"
+            android:layout_width="wrap_content"
+            android:maxWidth="180dp"
+            android:minWidth="120dp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="8dp"
             android:singleLine="true"
             android:textColor="?attr/akaraoke_roomInfo_idTextColor"
             android:textSize="?attr/akaraoke_roomInfo_idTextSize"
+            app:layout_constraintTop_toBottomOf="@id/tvRoomName"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivRoomCover" />
+            app:layout_constraintStart_toEndOf="@id/ivRoomCover"
+            tools:text="Room ID" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,8 +63,8 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivUserAvatar1"
         style="@style/ShapeAppearance.MaterialComponents.RoundComponent"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
         android:src="@drawable/aui_micseat_dialog_avatar_idle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,10 +72,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llContainer2"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:visibility="gone"
-        android:layout_marginStart="4dp" >
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginStart="4dp"
+        tools:visibility="visible"
+        android:visibility="gone">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivUserAvatar2"
@@ -83,31 +92,36 @@
             android:id="@+id/tvUserCount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@android:color/white"
             android:background="@drawable/bg_user_count"
             android:gravity="center"
+            android:textColor="@android:color/white"
             android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <io.agora.auikit.ui.basic.AUIButton
         android:id="@+id/btnUserMore"
         style="@style/AUIButton.Circle"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:minWidth="26dp"
+        android:minHeight="26dp"
         android:layout_marginStart="4dp"
         app:aui_button_background="@drawable/bg_top_user_btn"
-        app:aui_button_drawableCenter="?attr/akaraoke_roomMoreUser_drawable" />
+        app:aui_button_drawableCenter="?attr/akaraoke_roomMoreUser_drawable"
+        app:aui_button_drawablePaddingTop="0dp" />
 
     <io.agora.auikit.ui.basic.AUIButton
         android:id="@+id/btnShutDown"
         style="@style/AUIButton.Circle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:minWidth="26dp"
+        android:minHeight="26dp"
+        app:aui_button_drawablePadding="3dp"
         android:layout_marginStart="4dp"
         app:aui_button_background="@drawable/bg_top_user_btn"
         app:aui_button_drawableCenter="?attr/akaraoke_roomClose_drawable" />

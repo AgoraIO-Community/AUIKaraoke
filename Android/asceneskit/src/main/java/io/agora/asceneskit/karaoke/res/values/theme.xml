@@ -10,6 +10,7 @@
         <!-- KaraokeRoom组件 -->
         <item name="akaraoke_room_appearance">@style/AKaraokeRoomView</item>
 
+        <!--  底部栏      -->
         <item name="aui_chatBottomView_appearance">@style/AVoiceRoomPrimaryView</item>
 
     </style>

@@ -225,7 +225,6 @@ class KaraokeRoomView : FrameLayout,
         AUIBottomDialog(context).apply {
             setOnShowListener { binder.bind() }
             setOnDismissListener { binder.unBind() }
-            setBackground(null)
             setCustomView(jukeboxView)
             show()
         }
