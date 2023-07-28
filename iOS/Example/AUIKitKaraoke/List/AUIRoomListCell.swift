@@ -30,10 +30,20 @@ class AUIRoomListCell: UICollectionViewCell {
         let label = UILabel()
 //        label.text = "2人正在嗨哥"
         label.textColor = .white
-        label.font = .systemFont(ofSize: 14)
+        label.font = .systemFont(ofSize: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private lazy var topBgView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.init(hex: "#000000", alpha: 0.2)
+        view.layer.cornerRadius = 9
+        view.layer.masksToBounds = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
     private lazy var avatarImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 16
@@ -72,6 +82,7 @@ class AUIRoomListCell: UICollectionViewCell {
         contentView.clipsToBounds = true
         
         contentView.addSubview(avatarImageView)
+        contentView.addSubview(topBgView)
         contentView.addSubview(statusLabel)
         contentView.addSubview(iconImageView)
         contentView.addSubview(titleLabel)
@@ -79,8 +90,13 @@ class AUIRoomListCell: UICollectionViewCell {
         
         avatarImageView.frame = contentView.bounds
         
-        statusLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20).isActive = true
-        statusLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+        topBgView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12).isActive = true
+        topBgView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -12).isActive = true
+        topBgView.widthAnchor.constraint(equalToConstant: 88).isActive = true
+        topBgView.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        
+        statusLabel.centerYAnchor.constraint(equalTo: topBgView.centerYAnchor).isActive = true
+        statusLabel.rightAnchor.constraint(equalTo: topBgView.rightAnchor, constant: -5).isActive = true
     
         iconImageView.rightAnchor.constraint(equalTo: statusLabel.leftAnchor, constant: -5).isActive = true
         iconImageView.centerYAnchor.constraint(equalTo: statusLabel.centerYAnchor).isActive = true

@@ -126,8 +126,10 @@ class AUIRoomListViewController: UIViewController {
     }
     
     private func _layoutButton() {
+        let window = UIApplication.shared.windows.first
+        let bottomSafeAreaInset = window?.safeAreaInsets.bottom ?? 0
         createButton.frame = CGRect(origin: CGPoint(x: (view.frame.width - createButton.frame.width) / 2,
-                                                    y: view.frame.height - 74 - UIDevice.current.aui_SafeDistanceBottom),
+                                                    y: view.frame.height - 74 - bottomSafeAreaInset),
                                     size: createButton.frame.size)
         
         themeButton.frame = CGRect(origin: CGPoint(x: view.aui_width - themeButton.aui_width - 20, y: 40),
@@ -178,10 +180,10 @@ class AUIRoomListViewController: UIViewController {
     
     @objc func onCreateAction() {
         AUIAlertView()
-            .theme_background(color: "CommonColor.black")
+            .theme_background(color: "ListViewController.alertBgColor")
             .isShowCloseButton(isShow: true)
             .title(title: "房间主题")
-            .titleColor(color: .white)
+            .theme_titleColor(color: "ListViewController.alertTitleColor")
             .rightButton(title: "一起嗨歌")
             .theme_rightButtonBackground(color: "CommonColor.primary")
             .rightButtonTapClosure(onTap: {[weak self] text in
@@ -206,9 +208,9 @@ class AUIRoomListViewController: UIViewController {
             .textFieldPlaceholder(placeholder: "房间主题")
             .textFieldPlaceholder(color: UIColor(hex: "#5a5a5a"))
             .textFieldPlaceholder(placeholder: "请输入房间主题")
-            .textField(color: .white)
+            .theme_textFieldTextColor(color: "ListViewController.alertInputTextColor")
             .textField(text: "room\(arc4random_uniform(99999))")
-            .theme_textFieldBackground(color: "CommonColor.navy35")
+            .theme_textFieldBackground(color: "ListViewController.alertInputBgColor")
             .textField(cornerRadius: 25)
             .show()
     }

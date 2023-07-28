@@ -4,6 +4,10 @@
       "list_empty": "aui_list_empty",
       "backgroudColor": "#ffffff",
       "create_room_icon":"aui_create_room_icon",
+      "alertInputBgColor": "#F1F2F3",
+      "alertInputTextColor": "#000000",
+      "alertTitleColor":"#000000",
+      "alertBgColor": "#ffffff"
   },
   "AUIListEmptyView": {
       "emptyTitleColor": "#ACB4B9",

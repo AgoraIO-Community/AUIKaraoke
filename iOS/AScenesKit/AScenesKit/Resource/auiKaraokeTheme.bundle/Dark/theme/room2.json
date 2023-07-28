@@ -1,6 +1,6 @@
 {
   "Room": {
-      "roomInfoBackgrounfColor": "#ffffff40",
+      "infoBackgroundColor": "#00000033",
       "roomInfoTitleColor": "#ffffff",
       "roomInfoSubTitleColor": "#ffffff80",
       

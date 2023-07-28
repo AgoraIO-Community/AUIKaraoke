@@ -350,7 +350,7 @@ open class AUIKaraokeRoomView: UIView {
         
         
         microphoneButton.aui_bottom = chatButton.aui_bottom
-        microphoneButton.aui_right = giftButton.aui_left - 8
+        microphoneButton.aui_left = chatButton.aui_right + 8
         
         addSubview(inputBar)
         inputBar.isHidden = true
