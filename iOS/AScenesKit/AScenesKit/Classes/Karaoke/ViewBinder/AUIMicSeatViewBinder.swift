@@ -7,7 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
-import AUIKit
+import AUIKitCore
 
 let kMicSeatCount = 8
 public class AUIMicSeatViewBinder: NSObject {

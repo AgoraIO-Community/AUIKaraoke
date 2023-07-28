@@ -7,7 +7,7 @@
 
 import UIKit
 import AScenesKit
-import AUIKit
+import AUIKitCore
 import MJRefresh
 import SwiftTheme
 
@@ -37,10 +37,16 @@ class AUIRoomListViewController: UIViewController {
         let button = AUIButton()
         let style = AUIButtonDynamicTheme()
         style.backgroundColor = "CommonColor.primary"
-        style.buttonWidth = ThemeCGFloatPicker(floats: 327)
+        style.buttonWidth = ThemeCGFloatPicker(floats: 155)
+        style.buttonHeight = ThemeCGFloatPicker(floats: 50)
+        style.iconWidth =  ThemeCGFloatPicker(floats: 24)
+        style.iconHeight =  ThemeCGFloatPicker(floats: 24)
+        style.icon = ThemeAnyPicker(keyPath: "ListViewController.create_room_icon")
+        button.textImageAlignment = .imageLeftTextRight
         button.style = style
         button.layoutIfNeeded()
         button.setTitle("创建房间", for: .normal)
+        button.setGradient([UIColor(red: 0, green: 158/255.0, blue: 1, alpha: 1),UIColor(red: 124/255.0, green: 91/255.0, blue: 1, alpha: 1)],[CGPoint(x: 0, y: 0),CGPoint(x: 0, y: 1)])
         button.addTarget(self, action: #selector(self.onCreateAction), for: .touchUpInside)
         return button
     }()
@@ -48,13 +54,23 @@ class AUIRoomListViewController: UIViewController {
     private lazy var themeButton: AUIButton = {
         let button = AUIButton()
         let style = AUIButtonDynamicTheme()
-        style.backgroundColor = "CommonColor.primary"
-        style.buttonWidth = ThemeCGFloatPicker(floats: 327)
+        style.buttonWidth = ThemeCGFloatPicker(floats: 40)
+        style.buttonHeight = ThemeCGFloatPicker(floats: 40)
+        style.iconWidth = ThemeCGFloatPicker(floats: 40)
+        style.iconHeight = ThemeCGFloatPicker(floats: 40)
+
+        style.icon = ThemeAnyPicker(keyPath: "ListViewController.setting_button_icon")
         button.style = style
         button.layoutIfNeeded()
-        button.setTitle("换肤", for: .normal)
         button.addTarget(self, action: #selector(self.onThemeChangeAction), for: .touchUpInside)
         return button
+    }()
+    
+    private lazy var emptyView: AUIListEmptyView = {
+        let emptyView = AUIListEmptyView(frame: CGRect(x: 0, y: 0, width: 200, height: 150))
+        emptyView.center = view.center
+        emptyView.setImage(auiThemeImage("ListViewController.list_empty"), title: "暂无房间列表")
+        return emptyView
     }()
     
     private lazy var gradientLayer: CAGradientLayer = {
@@ -67,12 +83,10 @@ class AUIRoomListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        AUIRoomContext.shared.themeNames = ["UIKit", "KTV"]
-        AUIRoomContext.shared.resetTheme()
+//        AUIThemeManager.shared.themeNames = ["UIKit", "KTV"]
+        AUIThemeManager.shared.resetTheme()
         UIScrollView.appearance().contentInsetAdjustmentBehavior = .never
-        view.layer.addSublayer(gradientLayer)
-        gradientLayer.frame = view.bounds
-        gradientLayer.theme_colors = AUIGradientColor("CommonColor.normalGradient")
+        view.theme_backgroundColor = AUIColor("ListViewController.backgroudColor")
 
         collectionView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
             self?.onRefreshAction()
@@ -84,6 +98,13 @@ class AUIRoomListViewController: UIViewController {
         _layoutButton()
         initEngine()
         onRefreshAction()
+        
+        collectionView.addSubview(emptyView)
+        
+        //设置皮肤路径
+        if let folderPath = Bundle.main.path(forResource: "exampleTheme", ofType: "bundle") {
+            AUIThemeManager.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,15 +126,11 @@ class AUIRoomListViewController: UIViewController {
     }
     
     private func _layoutButton() {
-        if self.roomList.count > 0 {
-            createButton.frame = CGRect(origin: CGPoint(x: (view.frame.width - createButton.frame.width) / 2,
-                                                        y: view.frame.height - 74 - UIDevice.current.aui_SafeDistanceBottom),
-                                        size: createButton.frame.size)
-        } else {
-            createButton.center = CGPoint(x: view.frame.size.width / 2, y: view.frame.size.height / 2)
-        }
+        createButton.frame = CGRect(origin: CGPoint(x: (view.frame.width - createButton.frame.width) / 2,
+                                                    y: view.frame.height - 74 - UIDevice.current.aui_SafeDistanceBottom),
+                                    size: createButton.frame.size)
         
-        themeButton.frame = CGRect(origin: CGPoint(x: createButton.frame.origin.x, y: createButton.frame.origin.y - themeButton.frame.size.height - 5),
+        themeButton.frame = CGRect(origin: CGPoint(x: view.aui_width - themeButton.aui_width - 20, y: 40),
                                    size: themeButton.frame.size)
     }
     
@@ -131,6 +148,7 @@ class AUIRoomListViewController: UIViewController {
                 return
             }
             self.roomList = list ?? []
+            self.emptyView.isHidden = self.roomList.count > 0
             self.collectionView.reloadData()
 
             if self.roomList.count == kListCountPerPage {
@@ -196,7 +214,8 @@ class AUIRoomListViewController: UIViewController {
     }
     
     @objc func onThemeChangeAction() {
-        AUIRoomContext.shared.switchThemeToNext()
+        let vc = AUIThemeSettingViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
@@ -232,5 +251,13 @@ extension AUIRoomListViewController: UICollectionViewDataSource, UICollectionVie
         let vc = RoomViewController()
         vc.roomInfo = roomInfo
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension AUIRoomListViewController {
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        super.motionEnded(motion, with: event)
+        let vc = UIActivityViewController(activityItems: [URL(fileURLWithPath: AUILog.cacheDir())], applicationActivities: nil)
+        present(vc, animated: true)
     }
 }

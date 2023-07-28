@@ -7,7 +7,7 @@
 
 import Foundation
 import AgoraRtcKit
-import AUIKit
+import AUIKitCore
 import AVFAudio
 
 /// 卡拉OK房间Service，内部负责初始化房间内需要的Service组件，包括房间Service，邀请Service，麦位Service，...

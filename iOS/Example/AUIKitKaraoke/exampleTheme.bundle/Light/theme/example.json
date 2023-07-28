@@ -1,0 +1,19 @@
+{
+  "ListViewController": {
+      "setting_button_icon":"aui_list_setting",
+      "list_empty": "aui_list_empty",
+      "backgroudColor": "#ffffff",
+      "create_room_icon":"aui_create_room_icon",
+  },
+  "AUIListEmptyView": {
+      "emptyTitleColor": "#ACB4B9",
+  },
+  "AUIThemeSettingViewController": {
+      "backgroundImage": "aui_room_bg",
+  },
+  "AUIRoomListCell" : {
+      "ownerTextColor": "#99D8FF",
+      "starIcon": "aui_list_cell_star",
+  }
+}
+

@@ -5,7 +5,7 @@
 //  Created by wushengtao on 2023/2/23.
 //
 
-import AUIKit
+import AUIKitCore
 import SwiftTheme
 import UIKit
 import AgoraRtcKit
@@ -21,6 +21,15 @@ open class AUIKaraokeRoomView: UIView {
     
     /// 歌词播放UI
     private lazy var playerView: AUIPlayerView = AUIPlayerView(frame: CGRect(x: kSeatRoomPadding, y: 83, width: self.bounds.size.width - kSeatRoomPadding * 2, height: 240))
+    private lazy var blurBgView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.frame = playerView.frame
+        blurView.alpha = 0.8
+        blurView.layer.cornerRadius = 16
+        blurView.layer.masksToBounds = true
+        return blurView
+    }()
     private lazy var playerBinder: AUIPlayerViewBinder = AUIPlayerViewBinder()
     
     //麦位UI
@@ -220,13 +229,13 @@ open class AUIKaraokeRoomView: UIView {
         
         //设置皮肤路径
         if let folderPath = Bundle.main.path(forResource: "auiKaraokeTheme", ofType: "bundle") {
-            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+            AUIThemeManager.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
         }
         if let folderPath = Bundle.main.path(forResource: "Gift", ofType: "bundle") {
-            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+            AUIThemeManager.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
         }
         if let folderPath = Bundle.main.path(forResource: "ChatResource", ofType: "bundle") {
-            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
+            AUIThemeManager.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
         }
 //        if let folderPath = Bundle.main.path(forResource: "Invitation", ofType: "bundle") {
 //            AUIRoomContext.shared.addThemeFolderPath(path: URL(fileURLWithPath: folderPath) )
@@ -296,6 +305,7 @@ open class AUIKaraokeRoomView: UIView {
         
         //歌词组件
         playerView.selectSongButton.addTarget(self, action: #selector(onSelectedMusic), for: .touchUpInside)
+        addSubview(blurBgView)
         addSubview(playerView)
         
         //麦位组件
@@ -501,13 +511,13 @@ extension AUIKaraokeRoomView {
 }
 
 extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
-    public func onAnchorEnterSeat(seatIndex: Int, user: AUIKit.AUIUserThumbnailInfo) {
+    public func onAnchorEnterSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = false
         }
     }
     
-    public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKit.AUIUserThumbnailInfo) {
+    public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = true
         }
