@@ -3,6 +3,7 @@ package io.agora.asceneskit.karaoke
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -63,8 +64,9 @@ class KaraokeRoomView : FrameLayout,
         defStyleAttr
     ) {
         addView(mRoomViewBinding.root)
-        // mRoomViewBinding.chatBottomBar.setShowLike(false)
-        // mRoomViewBinding.chatBottomBar.setShowMore(false)
+        mRoomViewBinding.chatBottomBar.removeMenu(io.agora.auikit.ui.R.id.voice_extend_item_more)
+        mRoomViewBinding.chatBottomBar.removeMenu(io.agora.auikit.ui.R.id.voice_extend_item_like)
+        mRoomViewBinding.chatBottomBar.updateMenuGravity(io.agora.auikit.ui.R.id.voice_extend_item_mic, Gravity.START)
         mRoomViewBinding.chatBottomBar.setShowMic(false)
     }
 

@@ -55,6 +55,8 @@ class AUIGiftBarrageBinder constructor(
                     giftService.sendGift(it1) { error ->
                         if (error == null) {
                             ThreadManager.getInstance().runOnMainThread{
+                                effectAnimation(it1)
+                                dialog.dismiss()
                                 Log.d("AUIGiftViewBinder", "sendGift suc ${giftService.channelName}")
                                 chatManager.addGiftList(it1)
                                 this@AUIGiftBarrageBinder.giftView.refresh(chatManager.getGiftList())
