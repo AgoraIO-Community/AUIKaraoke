@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/room_list_item_bg"
-    android:orientation="vertical"
-    android:padding="15dp"
-    tools:layout_margin="8dp">
+    android:orientation="vertical">
+
+    <io.agora.auikit.ui.basic.AUIImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintCircleRadius="10dp"
+        app:layout_constraintDimensionRatio="1:1"
+        android:src="@mipmap/ic_avatar_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.TagItem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
         android:id="@+id/tvMember"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/aui_ic_nav_music"
         android:drawablePadding="8dp"
-        android:drawableTint="@color/aui_primary_light"
         android:gravity="center"
         android:text="2人正在嗨歌"
-        android:textColor="@color/aui_primary_light"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/aui_white"
         android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/ivAvatar"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/ivAvatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/aui_micseat_dialog_avatar_idle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMember" />
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="3dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="@id/tvMember"
+        app:layout_constraintBottom_toBottomOf="@id/tvMember"
+        app:layout_constraintEnd_toStartOf="@id/tvMember"
+        android:src="@mipmap/ic_star"
+        />
 
     <TextView
         android:id="@+id/tvRoomName"
@@ -41,10 +53,11 @@
         android:singleLine="true"
         android:text="自助上麦 你唱我听"
         android:textColor="@android:color/white"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivAvatar" />
+        app:layout_constraintBottom_toBottomOf="@id/ivAvatar" />
 
     <TextView
         android:id="@+id/tvRoomOwner"
@@ -52,10 +65,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:text="user的房间"
-        android:textColor="@color/aui_primary_light"
+        android:textColor="#99D8FF"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvRoomName" />
+        app:layout_constraintStart_toStartOf="@id/tvRoomName"
+        app:layout_constraintBottom_toTopOf="@id/tvRoomName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

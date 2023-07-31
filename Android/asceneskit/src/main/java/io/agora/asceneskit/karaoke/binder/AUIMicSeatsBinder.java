@@ -153,6 +153,11 @@ public class AUIMicSeatsBinder implements
         seatView.setMicSeatState(seatInfo.seatStatus);
     }
 
+    @Override
+    public void onShowInvited(int index) {
+        IAUIMicSeatService.AUIMicSeatRespDelegate.super.onShowInvited(index);
+    }
+
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
         if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
@@ -239,15 +244,13 @@ public class AUIMicSeatsBinder implements
         }
         if (isRoomOwner) {
             if (isEmptySeat) {
-                dialogView.addMuteAudio((seatInfo.muteAudio != 0));
                 dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
             } else {
                 if (isCurrentUser) {
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
                 } else {
                     dialogView.addKickSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
-                    dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0) || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0);
                 }
             }
         } else {
@@ -255,12 +258,12 @@ public class AUIMicSeatsBinder implements
                 if (inSeat) {
                     return false;
                 } else {
-                    dialogView.addEnterSeat();
+                    dialogView.addEnterSeat(true);
                 }
             } else {
                 if (isCurrentUser) {
                     dialogView.addLeaveSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0));
+                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
                 } else {
                     return false;
                 }
@@ -291,13 +294,24 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onClickMuteAudio(int index, boolean mute) {
-        micSeatService.muteAudioSeat(index, mute, null);
+        boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
+        if (isRoomOwner) {
+            micSeatService.muteAudioSeat(index, mute, null);
+        } else {
+            userService.muteUserAudio(mute, null);
+        }
     }
 
     @Override
     public void onClickMuteVideo(int index, boolean mute) {
         micSeatService.muteVideoSeat(index, mute, null);
     }
+
+    @Override
+    public void onClickInvited(int index) {
+        micSeatService.onClickInvited(index);
+    }
+
     /** IAUIMicSeatService.AUIChorusRespDelegate implements. */
     @Override
     public void onChoristerDidEnter(AUIChoristerModel chorister) {

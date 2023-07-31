@@ -1,15 +1,19 @@
 package io.agora.app.karaoke
 
+import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
 import io.agora.app.karaoke.kit.KaraokeRoomActivity
@@ -28,6 +32,13 @@ class RoomListActivity : AppCompatActivity() {
     private val listAdapter by lazy { RoomListAdapter() }
     private var mList = listOf<AUIRoomInfo>()
     private val mUserId = Random().nextInt(99999999).toString()
+    private val launcher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                theme.setTo(resources.newTheme())
+                initView()
+            }
+        }
 
     companion object {
         var ThemeId = io.agora.asceneskit.R.style.Theme_AKaraoke
@@ -35,9 +46,8 @@ class RoomListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()
         initService()
-        fetchRoomList()
+        initView()
     }
 
     private fun initService() {
@@ -45,7 +55,7 @@ class RoomListActivity : AppCompatActivity() {
         val config = AUICommonConfig()
         config.context = application
         config.userId = mUserId
-        config.userName = "user_$mUserId"
+        config.userName = randomUserName()
         config.userAvatar = randomAvatar()
         // init AUIKit
         KaraokeUiKit.setup(
@@ -62,10 +72,25 @@ class RoomListActivity : AppCompatActivity() {
         this.viewBinding = viewBinding
         setContentView(viewBinding.root)
 
-        val out = TypedValue()
-        if (theme.resolveAttribute(android.R.attr.windowBackground, out, true)) {
-            window.setBackgroundDrawableResource(out.resourceId)
+        val isDarkTheme = ThemeId != io.agora.asceneskit.R.style.Theme_AKaraoke
+        var systemUiVisibility: Int = window.decorView.systemUiVisibility
+        if (isDarkTheme) {
+            systemUiVisibility = systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+        }else{
+            systemUiVisibility = systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         }
+        window.decorView.systemUiVisibility = systemUiVisibility
+        window.setBackgroundDrawable(ColorDrawable(if(isDarkTheme) Color.parseColor("#171A1C") else Color.parseColor("#F9FAFA")))
+        viewBinding.tvEmptyList.setCompoundDrawables(
+            null,
+            getDrawable(
+                if (isDarkTheme) R.mipmap.ic_empty_dark else R.mipmap.ic_empty_light
+            ).apply {
+                this?.setBounds(0, 0, intrinsicWidth, intrinsicHeight)
+            },
+            null,
+            null
+        )
 
         viewBinding.rvList.addItemDecoration(
             AUISpaceItemDecoration(
@@ -89,15 +114,12 @@ class RoomListActivity : AppCompatActivity() {
                 show()
             }
         }
-        viewBinding.btnSwitchTheme.setOnClickListener {
-            if (ThemeId == io.agora.asceneskit.R.style.Theme_AKaraoke) {
-                ThemeId = io.agora.asceneskit.R.style.Theme_AKaraoke_KTV
-            } else {
-                ThemeId = io.agora.asceneskit.R.style.Theme_AKaraoke
-            }
-            theme.setTo(resources.newTheme())
-            initView()
+        viewBinding.btnSetting.setOnClickListener {
+            val intent = Intent(this, SettingActivity::class.java)
+            launcher.launch(intent)
         }
+
+        fetchRoomList()
     }
 
     private fun createRoom(roomName: String) {
@@ -106,7 +128,7 @@ class RoomListActivity : AppCompatActivity() {
         KaraokeUiKit.createRoom(
             createRoomInfo,
             success = { roomInfo ->
-                KaraokeRoomActivity.launch(this, roomInfo)
+                KaraokeRoomActivity.launch(this, true, roomInfo, ThemeId)
             },
             failure = {
                 Toast.makeText(this@RoomListActivity, "Create room failed!", Toast.LENGTH_SHORT)
@@ -153,6 +175,7 @@ class RoomListActivity : AppCompatActivity() {
                 runOnUiThread {
                     viewBinding.swipeRefresh.isRefreshing = false
                     listAdapter.submitList(mList)
+                    viewBinding.tvEmptyList.visibility = if (mList.isEmpty()) View.VISIBLE else View.GONE
                 }
             },
             failure = {
@@ -181,6 +204,31 @@ class RoomListActivity : AppCompatActivity() {
     private fun randomRoomName(): String {
         val randomValue = (Random().nextInt(9) + 1) * 10000 + Random().nextInt(10000)
         return "room_${randomValue}"
+    }
+
+    private fun randomUserName(): String {
+        val userNames = arrayListOf(
+            "安迪",
+            "路易",
+            "汤姆",
+            "杰瑞",
+            "杰森",
+            "布朗",
+            "吉姆",
+            "露西",
+            "莉莉",
+            "韩梅梅",
+            "李雷",
+            "张三",
+            "李四",
+            "小红",
+            "小明",
+            "小刚",
+            "小霞",
+            "小智",
+        )
+        val randomValue = Random().nextInt(userNames.size) + 1
+        return userNames[randomValue % userNames.size]
     }
 
     enum class LoadingMoreState {
@@ -218,12 +266,12 @@ class RoomListActivity : AppCompatActivity() {
             holder.binding.tvRoomName.text = item.roomName
             holder.binding.tvRoomOwner.text = item.roomOwner?.userName ?: "unKnowUser"
             holder.binding.tvMember.text = "${item.onlineUsers}人正在嗨歌"
-            holder.binding.root.setOnClickListener { KaraokeRoomActivity.launch(this@RoomListActivity, item) }
+            holder.binding.root.setOnClickListener {
+                KaraokeRoomActivity.launch(this@RoomListActivity, false, item, ThemeId)
+            }
             Glide.with(holder.binding.ivAvatar)
                 .load(item.roomOwner?.userAvatar)
-                .apply(RequestOptions.circleCropTransform())
                 .into(holder.binding.ivAvatar)
-
             if (loadingMoreState == LoadingMoreState.Normal && itemCount > 0 && position == itemCount - 1) {
                 this@RoomListActivity.loadMore()
             }

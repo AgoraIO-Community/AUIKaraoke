@@ -2,13 +2,16 @@
 <resources>
 
     <style name="Theme.AKaraoke" parent="Theme.AUIKit">
-        <item name="android:windowBackground">@drawable/default_room_bg</item>
+        <item name="android:windowBackground">@mipmap/ic_room_bg_light</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
 
         <!-- KaraokeRoom组件 -->
         <item name="akaraoke_room_appearance">@style/AKaraokeRoomView</item>
+
+        <!--  底部栏      -->
+        <item name="aui_chatBottomView_appearance">@style/AVoiceRoomPrimaryView</item>
 
     </style>
 

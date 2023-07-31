@@ -2,11 +2,8 @@
 <resources>
 
     <style name="AUIJukebox.Appearance.KTV">
-        <item name="aui_jukebox_background">@drawable/ktv_dialog_bg</item>
         <item name="aui_jukebox_titleTabMode">scrollable</item>
         <item name="aui_jukebox_titleTabGravity">start</item>
-        <item name="aui_jukebox_titleTabSelectedTextColor">@android:color/white</item>
-        <item name="aui_jukebox_titleTabTextColor">#88ffffff</item>
 
         <item name="aui_jukebox_titleTabIndicator">@null</item>
         <item name="aui_jukebox_titleTabDivider">@null</item>
@@ -35,7 +32,6 @@
         <item name="aui_jukeboxChooseItem_songNameTextColor">@android:color/white</item>
         <item name="aui_jukeboxChooseItem_singerNameTextColor">#88ffffff</item>
 
-        <item name="aui_jukeboxChooseItem_buttonBackground">@drawable/ktv_jukebox_choose_song_btn</item>
         <item name="aui_jukeboxChooseItem_buttonTextColor">@android:color/white</item>
 
     </style>
@@ -50,11 +46,8 @@
         <item name="aui_jukeboxChosenItem_songNameTextColor">@android:color/white</item>
         <item name="aui_jukeboxChosenItem_singerTextColor">#88ffffff</item>
         <item name="aui_jukeboxChosenItem_playingTagLocation">aboveOrder</item>
-        <item name="aui_jukeboxChosenItem_playingTagSrc">@drawable/ktv_singing_icon</item>
         <item name="aui_jukeboxChosenItem_playingBtnText">@string/aui_jukebox_song_playing</item>
         <item name="aui_jukeboxChosenItem_playingBtnBackground">@null</item>
-        <item name="aui_jukeboxChosenItem_deleteBtnBackground">@drawable/ktv_ic_to_del</item>
-        <item name="aui_jukeboxChosenItem_topBtnBackground">@drawable/ktv_ic_to_top</item>
         <item name="aui_jukeboxChosenItem_topBtnMarginEnd">20dp</item>
     </style>
 

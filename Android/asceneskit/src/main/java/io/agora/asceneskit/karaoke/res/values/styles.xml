@@ -9,10 +9,10 @@
 
         <!-- 房间信息 -->
         <item name="akaraoke_roomInfo_background">@drawable/bg_room_info</item>
-        <item name="akaraoke_roomInfo_nameTextColor">@color/aui_primary</item>
+        <item name="akaraoke_roomInfo_nameTextColor">@color/aui_white</item>
         <item name="akaraoke_roomInfo_nameTextSize">16sp</item>
-        <item name="akaraoke_roomInfo_idTextColor">@color/aui_primary_light</item>
-        <item name="akaraoke_roomInfo_idTextSize">12sp</item>
+        <item name="akaraoke_roomInfo_idTextColor">@color/aui_white_light</item>
+        <item name="akaraoke_roomInfo_idTextSize">11sp</item>
 
         <!-- 更多用户 -->
         <item name="akaraoke_roomMoreUser_drawable">@mipmap/ic_arrow</item>
@@ -21,8 +21,18 @@
         <item name="akaraoke_roomClose_drawable">@mipmap/ic_shutdown</item>
 
         <!-- 按钮 -->
-        <item name="akaraoke_roomButton_normalColor">#594230C8</item>
+        <item name="akaraoke_roomButton_normalColor">@android:color/transparent</item>
 
+    </style>
+
+    <style name="AVoiceRoomPrimaryView" parent="AUIChatBottomView.Appearance">
+        <item name="aui_primary_input_resource">@mipmap/ic_nav_msg</item>
+        <item name="aui_primary_input_width">45dp</item>
+        <item name="aui_primary_input_height">45dp</item>
+        <item name="aui_primary_menuWidth">45dp</item>
+        <item name="aui_primary_menuHeight">45dp</item>
+        <item name="aui_primary_menuMicOn">@mipmap/ic_nav_mic_on</item>
+        <item name="aui_primary_menuMicOff">@mipmap/ic_nav_mic_off</item>
     </style>
 
 

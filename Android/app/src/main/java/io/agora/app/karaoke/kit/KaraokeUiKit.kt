@@ -127,8 +127,8 @@ object KaraokeUiKit {
             config,
             roomInfo
         )
-        karaokeView.bindService(roomService)
         mService = roomService
+        karaokeView.bindService(roomService)
         eventHandler?.onRoomLaunchSuccess
     }
 
@@ -163,4 +163,5 @@ object KaraokeUiKit {
         val onRoomLaunchSuccess: (() -> Unit)? = null,
         val onRoomLaunchFailure: ((ErrorCode) -> Unit)? = null,
     )
+
 }
