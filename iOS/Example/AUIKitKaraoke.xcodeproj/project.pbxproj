@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A83559C22A6F739C003588A4 /* AUIThemeSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83559C12A6F739C003588A4 /* AUIThemeSettingViewController.swift */; };
+		A83559C42A6F7A79003588A4 /* exampleTheme.bundle in Resources */ = {isa = PBXBuildFile; fileRef = A83559C32A6F7A79003588A4 /* exampleTheme.bundle */; };
+		A83559C62A6FAA79003588A4 /* AUIListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83559C52A6FAA79003588A4 /* AUIListEmptyView.swift */; };
 		C33E33C3593F9B71557E2FFA /* Pods_AUIKitKaraoke.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 409001D7FC0B681248CE9F66 /* Pods_AUIKitKaraoke.framework */; };
 		DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44D2A0BAAD700797229 /* AppDelegate.swift */; };
 		DD00C4502A0BAAD700797229 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */; };
@@ -46,6 +49,9 @@
 		30CED821FC8BF6B98B75C421 /* Pods-AUIKitKaraoke.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AUIKitKaraoke.debug.xcconfig"; path = "Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke.debug.xcconfig"; sourceTree = "<group>"; };
 		409001D7FC0B681248CE9F66 /* Pods_AUIKitKaraoke.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AUIKitKaraoke.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FC354C2FAAAC938EEFEAC3 /* Pods-AUIKitKaraoke.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AUIKitKaraoke.release.xcconfig"; path = "Target Support Files/Pods-AUIKitKaraoke/Pods-AUIKitKaraoke.release.xcconfig"; sourceTree = "<group>"; };
+		A83559C12A6F739C003588A4 /* AUIThemeSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIThemeSettingViewController.swift; sourceTree = "<group>"; };
+		A83559C32A6F7A79003588A4 /* exampleTheme.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = exampleTheme.bundle; sourceTree = "<group>"; };
+		A83559C52A6FAA79003588A4 /* AUIListEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AUIListEmptyView.swift; sourceTree = "<group>"; };
 		DD00C44A2A0BAAD700797229 /* AUIKitKaraoke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AUIKitKaraoke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD00C44D2A0BAAD700797229 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +141,7 @@
 		DD00C44C2A0BAAD700797229 /* AUIKitKaraoke */ = {
 			isa = PBXGroup;
 			children = (
+				A83559C32A6F7A79003588A4 /* exampleTheme.bundle */,
 				DD00C47D2A0BAC7A00797229 /* List */,
 				DD00C4832A0BAC7A00797229 /* Model */,
 				DD00C4802A0BAC7A00797229 /* KaraokeUIKit.swift */,
@@ -173,6 +180,8 @@
 			children = (
 				DD00C47E2A0BAC7A00797229 /* AUIRoomListCell.swift */,
 				DD00C47F2A0BAC7A00797229 /* AUIRoomListViewController.swift */,
+				A83559C12A6F739C003588A4 /* AUIThemeSettingViewController.swift */,
+				A83559C52A6FAA79003588A4 /* AUIListEmptyView.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";
@@ -302,6 +311,7 @@
 			files = (
 				DD00C45A2A0BAAD800797229 /* LaunchScreen.storyboard in Resources */,
 				DD00C4572A0BAAD800797229 /* Assets.xcassets in Resources */,
+				A83559C42A6F7A79003588A4 /* exampleTheme.bundle in Resources */,
 				DD00C4552A0BAAD700797229 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -393,7 +403,9 @@
 				DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */,
 				DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */,
 				DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */,
+				A83559C22A6F739C003588A4 /* AUIThemeSettingViewController.swift in Sources */,
 				DD00C48B2A0BAC7A00797229 /* UserInfo.swift in Sources */,
+				A83559C62A6FAA79003588A4 /* AUIListEmptyView.swift in Sources */,
 				DD00C4502A0BAAD700797229 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -572,7 +584,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = JDPG69R49Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
@@ -607,9 +619,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 48TB6ZZL5S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKitKaraoke/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
@@ -627,6 +641,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = KaraokeUIKit_dis;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;

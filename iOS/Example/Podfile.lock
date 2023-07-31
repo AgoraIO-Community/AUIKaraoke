@@ -4,22 +4,9 @@ PODS:
   - AgoraRtcEngine_iOS (1.0)
   - Alamofire (5.7.1)
   - AScenesKit (0.1.0):
-    - AUIKit
+    - AUIKitCore
     - libpag
-  - AUIKit (0.1.0):
-    - Agora_Chat_iOS
-    - AgoraLyricsScore
-    - AgoraRtcEngine_iOS
-    - Alamofire
-    - AUIKit/AUIKit (= 0.1.0)
-    - MJRefresh
-    - ScoreEffectUI
-    - SDWebImage
-    - SwiftTheme
-    - SwiftyBeaver (= 1.9.5)
-    - YYModel
-    - Zip
-  - AUIKit/AUIKit (0.1.0):
+  - AUIKitCore (0.2.0-ui-2):
     - Agora_Chat_iOS
     - AgoraLyricsScore
     - AgoraRtcEngine_iOS
@@ -31,15 +18,15 @@ PODS:
     - SwiftyBeaver (= 1.9.5)
     - YYModel
     - Zip
-  - libpag (4.2.92)
+  - libpag (4.2.99)
   - LookinServer (1.1.7):
     - LookinServer/Core (= 1.1.7)
   - LookinServer/Core (1.1.7)
   - MJRefresh (3.7.5)
   - ScoreEffectUI (1.0.1)
-  - SDWebImage (5.16.0):
-    - SDWebImage/Core (= 5.16.0)
-  - SDWebImage/Core (5.16.0)
+  - SDWebImage (5.17.0):
+    - SDWebImage/Core (= 5.17.0)
+  - SDWebImage/Core (5.17.0)
   - SwiftTheme (0.6.4)
   - SwiftyBeaver (1.9.5)
   - YYModel (1.0.4)
@@ -49,7 +36,7 @@ DEPENDENCIES:
   - AgoraLyricsScore (= 1.1.1-beta-3)
   - AgoraRtcEngine_iOS (from `./libs`)
   - AScenesKit (from `../AScenesKit`)
-  - AUIKit (from `../../AUIKit/iOS`)
+  - AUIKitCore (from `../../AUIKit`)
   - LookinServer
 
 SPEC REPOS:
@@ -72,26 +59,26 @@ EXTERNAL SOURCES:
     :path: "./libs"
   AScenesKit:
     :path: "../AScenesKit"
-  AUIKit:
-    :path: "../../AUIKit/iOS"
+  AUIKitCore:
+    :path: "../../AUIKit"
 
 SPEC CHECKSUMS:
   Agora_Chat_iOS: 78b181ded388278e88d40e256a4fc659e62c3115
   AgoraLyricsScore: 7e25860ccecd3c6ed73f2b503f1d73d8849079e1
   AgoraRtcEngine_iOS: 7af3b344c55059556eeb05dc748ff124c593d4fb
   Alamofire: 0123a34370cb170936ae79a8df46cc62b2edeb88
-  AScenesKit: 172d23dea16be296aee41024e722eef1d386d40f
-  AUIKit: dce879a72897e4fc44a6eff30b1fe171cc0b2290
-  libpag: f241ce26187b505bf17e68db6c1495619af88a6a
+  AScenesKit: 074976beb295546b7cf62afa6316d561327ea04c
+  AUIKitCore: ea922665e81e40ae4f3d6cbb2dbd1e600d1ff417
+  libpag: 5418369f2308b8971bb355753ed35a94dc94a13b
   LookinServer: 4ce0469b066871525611d009d8d16a7a50c23491
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ScoreEffectUI: 1a3bbd83b17cfef1c16a3a4eede2854f89c9eb10
-  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
+  SDWebImage: 750adf017a315a280c60fde706ab1e552a3ae4e9
   SwiftTheme: 007cbaf1f9e171caf6448a4657533e54c682b285
   SwiftyBeaver: 84069991dd5dca07d7069100985badaca7f0ce82
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 565041615034c3bea2aa30dac5ae3f957c4c00c6
+PODFILE CHECKSUM: 4dde30894c4f4b4f7844aac5e590472f5e52a3d7
 
 COCOAPODS: 1.12.0

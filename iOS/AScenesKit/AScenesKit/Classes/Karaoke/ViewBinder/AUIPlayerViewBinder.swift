@@ -7,7 +7,7 @@
 
 import Foundation
 import AgoraRtcKit
-import AUIKit
+import AUIKitCore
 
 open class AUIPlayerViewBinder: NSObject {
     
