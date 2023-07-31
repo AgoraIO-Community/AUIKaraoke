@@ -1,7 +1,10 @@
 <resources>
 
-    <style name="Theme.AKaraoke.KTV">
-        <item name="android:windowBackground">@drawable/ktv_bg_app_def_dark</item>
+    <style name="Theme.AKaraoke.KTV" parent="Theme.AUIKit.Dark">
+        <item name="android:windowBackground">@drawable/ktv_ic_room_bg</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
 
         <!-- KaraokeRoom组件 -->
         <item name="akaraoke_room_appearance">@style/AKaraokeRoomView.KTV</item>
@@ -18,11 +21,9 @@
 
         <!--  播放器组件      -->
         <item name="aui_musicPlayer_appearance">@style/AUIMusicPlayer.Appearance.KTV</item>
-        <item name="aui_musicPlayerControllerDialog_appearance">@style/AUIMusicPlayerControllerDialog.Appearance.KTV</item>
-        <item name="aui_musicPlayerEffectPresetItem_appearance">@style/AUIMusicPlayerEffectPresetItem.Appearance.KTV</item>
 
         <!--VoiceRoom input组件 -->
-        <item name="aui_primary_appearance">@style/aui_primary_appearance</item>
+        <item name="aui_chatBottomView_appearance">@style/aui_primary_appearance</item>
 
     </style>
 

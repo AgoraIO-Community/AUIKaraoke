@@ -5,7 +5,7 @@
 //  Created by wushengtao on 2023/4/11.
 //
 
-import AUIKit
+import AUIKitCore
 
 extension AUIUserInfo: AUIUserCellUserDataProtocol {
 }

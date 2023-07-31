@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="AUIMusicPlayer.Appearance.KTV">
-        <item name="aui_musicPlayer_backgroundColor">#152064</item>
-
-        <!--  未点歌  start    -->
-        <item name="aui_musicPlayer_idleOrderText">""</item>
-        <item name="aui_musicPlayer_idleOrderTextColor">@android:color/transparent</item>
-        <item name="aui_musicPlayer_idleOrderBackground">@drawable/ktv_musicplayer_choose_song_btn</item>
-        <!--  未点歌  end    -->
-
-        <!--  歌曲加载中  start    -->
-        <!--  歌曲加载中  end    -->
 
         <!--  已点歌 start-->
         <item name="aui_musicPlayer_activeTextSize">10sp</item>
@@ -22,28 +12,8 @@
         <item name="aui_musicPlayer_activeVoiceSettingsIcon">@drawable/ktv_musicplayer_voice_controller</item>
         <item name="aui_musicPlayer_activeMusicPresetIcon">@drawable/ktv_musicplayer_voice_preset</item>
         <item name="aui_musicPlayer_activeSwitchOriginalIcon">@drawable/ktv_musicplayer_active_original_selector</item>
-<!--        <item name="aui_musicPlayer_activeJoinChorusBackground">@drawable/aui_musicplayer_join_chorus_btn_bg</item>-->
         <item name="aui_musicPlayer_activeJoinChorusTextColor">@android:color/white</item>
         <item name="aui_musicPlayer_activeJoinChorusTextSize">14sp</item>
-        <!--  已点歌 end-->
     </style>
 
-    <!-- 音效默认样式 -->
-    <style name="AUIMusicPlayerControllerDialog.Appearance.KTV">
-        <item name="aui_musicPlayerControllerDialog_background">@drawable/ktv_bg_bottom_dialog</item>
-        <item name="aui_musicPlayerControllerDialog_dividerColor">#00000000</item>
-        <item name="aui_musicPlayerControllerDialog_dividerHeight">0.5dp</item>
-        <item name="aui_musicPlayerControllerDialog_checkbox">@drawable/aui_musicplayer_def_selector</item>
-        <item name="aui_musicPlayerControllerDialog_seekbarProgressDrawable">@drawable/ktv_musicplayer_seekbar_progress</item>
-    </style>
-
-    <!-- 音效item样式 -->
-    <style name="AUIMusicPlayerEffectPresetItem.Appearance.KTV">
-        <item name="aui_musicPlayerEffectPresetItem_backgroundColor">#594230C8</item>
-        <item name="aui_musicPlayerEffectPresetItem_outStokeColor">#009DFD</item>
-        <item name="aui_musicPlayerEffectPresetItem_outIconSize">58dp</item>
-        <item name="aui_musicPlayerEffectPresetItem_innerIconSize">32dp</item>
-        <item name="aui_musicPlayerEffectPresetItem_textSize">14sp</item>
-        <item name="aui_musicPlayerEffectPresetItem_textColor">@android:color/white</item>
-    </style>
 </resources>

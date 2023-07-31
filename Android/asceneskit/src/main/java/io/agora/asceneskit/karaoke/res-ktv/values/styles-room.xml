@@ -3,17 +3,6 @@
 
     <style name="AKaraokeRoomView.KTV">
 
-        <!-- 背景 -->
-        <item name="akaraoke_room_background">@null</item>
-
-        <!-- 房间信息 -->
-        <item name="akaraoke_roomInfo_background">@drawable/ktv_room_info_bg</item>
-        <item name="akaraoke_roomInfo_nameTextColor">@android:color/white</item>
-        <item name="akaraoke_roomInfo_idTextColor">#80FFFFFF</item>
-
-        <!-- 按钮 -->
-        <item name="akaraoke_roomButton_normalColor">#40FFFFFF</item>
-
     </style>
 
 </resources>

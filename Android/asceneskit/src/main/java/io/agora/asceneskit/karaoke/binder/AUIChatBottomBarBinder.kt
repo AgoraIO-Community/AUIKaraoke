@@ -2,68 +2,53 @@ package io.agora.asceneskit.karaoke.binder
 
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
 import io.agora.auikit.model.AUIMicSeatInfo
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserThumbnailInfo
-import io.agora.auikit.model.AgoraChatMessage
-import io.agora.auikit.service.IAUIChatService
 import io.agora.auikit.service.IAUIInvitationService
 import io.agora.auikit.service.IAUIMicSeatService
 import io.agora.auikit.service.IAUIUserService
-import io.agora.auikit.service.callback.AUIChatMsgCallback
-import io.agora.auikit.service.callback.AUIException
-import io.agora.auikit.service.imp.AUIChatServiceImpl
 import io.agora.auikit.ui.R
 import io.agora.auikit.ui.chatBottomBar.IAUIChatBottomBarView
 import io.agora.auikit.ui.chatBottomBar.listener.AUIMenuItemClickListener
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
 import io.agora.auikit.ui.chatList.IAUIChatListView
+import io.agora.auikit.ui.micseats.IMicSeatsView
 
 class AUIChatBottomBarBinder constructor(
-    roomService: AUIKaraokeRoomService?,
-    chatBottomBarView: IAUIChatBottomBarView,
-    chatList:IAUIChatListView,
-    event:AUIChatBottomBarEventDelegate?
-) : IAUIBindable, AUIMenuItemClickListener, IAUIUserService.AUIUserRespDelegate,
-    IAUIMicSeatService.AUIMicSeatRespDelegate, IAUIInvitationService.AUIInvitationRespDelegate {
+    private val roomService: AUIKaraokeRoomService,
+    private val chatBottomBarView: IAUIChatBottomBarView,
+    private val micSeatsView: IMicSeatsView,
+    private val chatList: IAUIChatListView,
+    private val event: AUIChatBottomBarEventDelegate?
+) : IAUIBindable,
+    AUIMenuItemClickListener,
+    IAUIUserService.AUIUserRespDelegate,
+    IAUIMicSeatService.AUIMicSeatRespDelegate,
+    IAUIInvitationService.AUIInvitationRespDelegate {
 
     private var listener:AUISoftKeyboardHeightChangeListener?=null
-    private var chatBottomBarView: IAUIChatBottomBarView?
-    private var auiBarrageView: IAUIChatListView?
-    private var event:AUIChatBottomBarEventDelegate?
-    private var mRoomService:AUIKaraokeRoomService?
-    private var chatService:IAUIChatService?
-    private var userService:IAUIUserService?
-    private var roomContext:AUIRoomContext?
-    private var chatImpl:AUIChatServiceImpl?
-    private var micSeat:IAUIMicSeatService?
+    private val userService = roomService.getUserService()
+    private val chatManager = roomService.getChatManager()
+    private val imManagerService = roomService.getIMManagerService()
+    private val micSeatService = roomService.getMicSeatsService()
+    private var roomContext = AUIRoomContext.shared()
+    private val isRoomOwner = roomContext.isRoomOwner(roomService.getRoomInfo().roomId)
     private var mLocalMute = true
 
-    init {
-        this.chatBottomBarView = chatBottomBarView
-        this.auiBarrageView = chatList
-        this.event = event
-        this.mRoomService = roomService
-        this.chatService = roomService?.getChatService()
-        this.userService = roomService?.getUserService()
-        this.micSeat = roomService?.getMicSeatsService()
-        this.roomContext = AUIRoomContext.shared()
-
-        chatImpl = chatService as AUIChatServiceImpl
-    }
-
     override fun bind() {
-        userService?.bindRespDelegate(this)
-        micSeat?.bindRespDelegate(this)
-        chatBottomBarView?.setMenuItemClickListener(this)
-        chatBottomBarView?.setSoftKeyListener()
+        userService.bindRespDelegate(this)
+        micSeatService.bindRespDelegate(this)
+        chatBottomBarView.setMenuItemClickListener(this)
+        chatBottomBarView.setSoftKeyListener()
     }
 
     override fun unBind() {
-        chatBottomBarView?.setMenuItemClickListener(null)
-        userService?.unbindRespDelegate(this)
-        micSeat?.unbindRespDelegate(this)
+        chatBottomBarView.setMenuItemClickListener(null)
+        userService.unbindRespDelegate(this)
+        micSeatService.unbindRespDelegate(this)
     }
 
 
@@ -80,14 +65,33 @@ class AUIChatBottomBarBinder constructor(
             R.id.voice_extend_item_more -> {
                 //自定义预留
                 Log.e("apex","more")
-                chatBottomBarView?.setShowMoreStatus(chatImpl?.isOwner(),false)
+                chatBottomBarView.setShowMoreStatus(isRoomOwner,false)
                 event?.onClickMore(view)
             }
             R.id.voice_extend_item_mic -> {
-                //点击下方麦克风
-                Log.e("apex","mic")
-                mLocalMute = !mLocalMute
-                setLocalMute(mLocalMute)
+                if(isRoomOwner){
+                    mLocalMute = !mLocalMute
+                    micSeatService.muteAudioSeat(0, mLocalMute, null)
+                }else{
+                    if(mLocalMute){
+                        // 检查是否被房主禁麦
+                        for (seatIndex in 0 until micSeatService.micSeatSize){
+                            val seatInfo = micSeatService.getMicSeatInfo(seatIndex)
+                            if (seatInfo?.user?.userId == roomContext.currentUserInfo.userId) {
+                                val isMuteByHost = seatInfo.muteAudio != 0
+                                if(isMuteByHost){
+                                    Toast.makeText(roomContext.commonConfig.context, "当前麦位已被房主禁麦", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
+                            }
+                        }
+                    }
+                    //点击下方麦克风
+                    Log.e("apex","mic")
+                    mLocalMute = !mLocalMute
+                    userService.muteUserAudio(mLocalMute, null)
+                }
+
                 event?.onClickMic(view)
             }
             R.id.voice_extend_item_gift -> {
@@ -103,11 +107,12 @@ class AUIChatBottomBarBinder constructor(
     }
 
     override fun onSendMessage(content: String?) {
-        chatService?.sendMessage(chatImpl?.getCurrentRoom(),content,roomContext?.currentUserInfo,object: AUIChatMsgCallback{
-            override fun onResult(error: AUIException?, message: AgoraChatMessage?) {
-                auiBarrageView?.refreshSelectLast(chatImpl?.getMsgList())
+        imManagerService.sendMessage(roomService.getRoomInfo().roomId,
+            content ?: ""){ _, error ->
+            if(error == null){
+                chatList.refreshSelectLast(chatManager.getMsgList())
             }
-        })
+        }
     }
 
     interface AUIChatBottomBarEventDelegate{
@@ -123,17 +128,17 @@ class AUIChatBottomBarBinder constructor(
             return
         }
         var localUserSeat: AUIMicSeatInfo? = null
+        var seatIndex = 0
         for (i in 0..7) {
-            val seatInfo = mRoomService?.getMicSeatsService()?.getMicSeatInfo(i)
+            val seatInfo = roomService.getMicSeatsService().getMicSeatInfo(i)
             if (seatInfo?.user != null && seatInfo.user?.userId == userId) {
                 localUserSeat = seatInfo
+                seatIndex = i
                 break
             }
         }
         if (localUserSeat != null) {
-            val userInfo = userService?.getUserInfo(userId)
-            val mute = (localUserSeat.muteAudio == 1) || (userInfo?.muteAudio == 1)
-            setLocalMute(mute)
+            setLocalMute(seatIndex, mute)
         }
     }
 
@@ -141,19 +146,20 @@ class AUIChatBottomBarBinder constructor(
     override fun onAnchorEnterSeat(seatIndex: Int, userInfo: AUIUserThumbnailInfo) {
         val localUserId = roomContext?.currentUserInfo?.userId ?: ""
         if (userInfo.userId == localUserId) { // 本地用户上麦
-            mRoomService?.setupLocalStreamOn(true)
-            val micSeatInfo = mRoomService?.getMicSeatsService()?.getMicSeatInfo(seatIndex)
-            val userInfo = mRoomService?.getUserService()?.getUserInfo(localUserId)
-            val isMute = (micSeatInfo?.muteAudio == 1) || (userInfo?.muteAudio == 1)
-            setLocalMute(isMute)
+            chatBottomBarView.setShowMic(true)
+            roomService.setupLocalStreamOn(true)
+            val micSeatInfo = roomService.getMicSeatsService().getMicSeatInfo(seatIndex)
+            val isMute = (micSeatInfo?.muteAudio == 1) ||
+                    (roomService.getUserService().getUserInfo(localUserId)?.muteAudio == 1)
+            setLocalMute(seatIndex, isMute)
         }
     }
 
     override fun onAnchorLeaveSeat(seatIndex: Int, userInfo: AUIUserThumbnailInfo) {
         val localUserId = roomContext?.currentUserInfo?.userId ?: ""
         if (userInfo.userId == localUserId) { // 本地用户下麦
-            setLocalMute(true)
-            mRoomService?.setupLocalStreamOn(false)
+            chatBottomBarView.setShowMic(false)
+            roomService.setupLocalStreamOn(false)
         }
     }
 
@@ -161,26 +167,31 @@ class AUIChatBottomBarBinder constructor(
         // 麦位被禁用麦克风
         // 远端用户：关闭对该麦位的音频流订阅
         // 本地用户：保险起见关闭本地用户的麦克风音量
-        val micSeatInfo = mRoomService?.getMicSeatsService()?.getMicSeatInfo(seatIndex)
+        val micSeatInfo = roomService.getMicSeatsService().getMicSeatInfo(seatIndex)
         val seatUserId = micSeatInfo?.user?.userId
-        if (seatUserId == null || seatUserId.isEmpty()) {
+        if (seatUserId.isNullOrEmpty()) {
             return
         }
-        val userInfo = mRoomService?.getUserService()?.getUserInfo(seatUserId) ?: return
+        val userInfo = roomService.getUserService().getUserInfo(seatUserId) ?: return
         val localUserId = roomContext?.currentUserInfo?.userId ?: ""
         val mute = isMute || (userInfo.muteAudio == 1)
         if (seatUserId == localUserId) {
-            setLocalMute(mute)
+            setLocalMute(seatIndex, mute)
         } else {
-            mRoomService?.setupRemoteAudioMute(seatUserId, mute)
+            roomService.setupRemoteAudioMute(seatUserId, mute)
         }
     }
 
-    private fun setLocalMute(isMute: Boolean) {
+    private fun setLocalMute(seatIndex: Int, isMute: Boolean) {
         Log.d("local_mic","update rtc mute state: $isMute")
         mLocalMute = isMute
-        mRoomService?.setupLocalAudioMute(isMute)
-        chatBottomBarView?.setEnableMic(isMute)
+        roomService.setupLocalAudioMute(isMute)
+        chatBottomBarView.setEnableMic(isMute)
+
+        val seatView = micSeatsView.micSeatItemViewList[seatIndex]
+        seatView?.let {
+            seatView.setAudioMuteVisibility(if (isMute) View.VISIBLE else View.GONE)
+        }
     }
 
 

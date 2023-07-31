@@ -4,59 +4,55 @@ import android.util.Log
 import io.agora.asceneskit.karaoke.binder.IAUIBindable
 import io.agora.auikit.model.AUIChatEntity
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.model.AgoraChatMessage
-import io.agora.auikit.service.IAUIChatService
-import io.agora.auikit.service.im.AUIChatSubscribeDelegate
-import io.agora.auikit.service.imp.AUIChatServiceImpl
+import io.agora.auikit.service.IAUIIMManagerService
+import io.agora.auikit.service.im.AUIChatManager
 import io.agora.auikit.ui.chatBottomBar.IAUIChatBottomBarView
 import io.agora.auikit.ui.chatList.IAUIChatListView
 import io.agora.auikit.ui.chatList.listener.AUIChatListItemClickListener
-import io.agora.auikit.utils.ThreadManager
 
 class AUIChatListBinder constructor(
-    chatList:IAUIChatListView,
-    chatBottomBar:IAUIChatBottomBarView,
-    chatService:IAUIChatService,
-    roomInfo:AUIRoomInfo
-): IAUIBindable, AUIChatListItemClickListener, AUIChatSubscribeDelegate {
-    private val chatListImpl:IAUIChatListView
-    private val chatBottomBarImpl:IAUIChatBottomBarView
-    private val chatServiceImpl:AUIChatServiceImpl
+    private val chatListView:IAUIChatListView,
+    private val chatBottomBarView:IAUIChatBottomBarView,
+    private val imManagerService:IAUIIMManagerService,
+    private val chatManager: AUIChatManager,
+    private val roomInfo:AUIRoomInfo
+): IAUIBindable,
+    AUIChatListItemClickListener,
+    IAUIIMManagerService.AUIIMManagerRespDelegate {
 
     init {
-        this.chatListImpl = chatList
-        this.chatBottomBarImpl = chatBottomBar
-        this.chatServiceImpl = chatService as AUIChatServiceImpl
-        chatList.initView(roomInfo.roomOwner?.userId)
+        chatListView.initView(roomInfo.roomOwner?.userId)
     }
 
     override fun bind() {
-        chatListImpl.setChatListItemClickListener(this)
-        chatServiceImpl.subscribeChatMsg(this)
+        chatListView.setChatListItemClickListener(this)
+        imManagerService.bindRespDelegate(this)
     }
 
     override fun unBind() {
-        chatListImpl.setChatListItemClickListener(null)
-        chatServiceImpl.unsubscribeChatMsg(this)
+        chatListView.setChatListItemClickListener(null)
+        imManagerService.unbindRespDelegate(this)
     }
 
     override fun onChatListViewClickListener() {
-        chatBottomBarImpl.hideKeyboard()
+        chatBottomBarView.hideKeyboard()
     }
 
     override fun onItemClickListener(message: AUIChatEntity?) {
         Log.d("AUIChatListBinder","onItemClickListener")
     }
 
-    override fun onReceiveTextMsg(roomId: String?, message: AgoraChatMessage?) {
-        ThreadManager.getInstance().runOnMainThread{
-            chatListImpl.refreshSelectLast(chatServiceImpl.getMsgList())
-        }
+    override fun messageDidReceive(
+        roomId: String,
+        message: IAUIIMManagerService.AgoraChatTextMessage
+    ) {
+        chatListView.refreshSelectLast(chatManager.getMsgList())
     }
 
-    override fun onReceiveMemberJoinedMsg(roomId: String?, message: AgoraChatMessage?) {
-        ThreadManager.getInstance().runOnMainThread{
-            chatListImpl.refreshSelectLast(chatServiceImpl.getMsgList())
-        }
+    override fun onUserDidJoinRoom(
+        roomId: String,
+        message: IAUIIMManagerService.AgoraChatTextMessage
+    ) {
+        chatListView.refreshSelectLast(chatManager.getMsgList())
     }
 }

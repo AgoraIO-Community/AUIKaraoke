@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="aui_primary_appearance" parent="AUIPrimaryView.Appearance">
+    <style name="aui_primary_appearance" parent="AUIChatBottomView.Appearance.Dark">
+        <item name="aui_primary_input_resource">@mipmap/ic_nav_msg</item>
         <item name="aui_primary_input_width">45dp</item>
         <item name="aui_primary_input_height">45dp</item>
+        <item name="aui_primary_menuWidth">45dp</item>
+        <item name="aui_primary_menuHeight">45dp</item>
+        <item name="aui_primary_menuMicOn">@mipmap/ic_nav_mic_on</item>
+        <item name="aui_primary_menuMicOff">@mipmap/ic_nav_mic_off</item>
     </style>
 </resources>

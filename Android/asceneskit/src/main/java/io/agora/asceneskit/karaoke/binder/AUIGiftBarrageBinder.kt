@@ -9,9 +9,8 @@ import androidx.fragment.app.FragmentActivity
 import io.agora.auikit.model.AUIGiftEntity
 import io.agora.auikit.model.AUIGiftTabEntity
 import io.agora.auikit.model.AUIRoomContext
-import io.agora.auikit.service.IAUIChatService
 import io.agora.auikit.service.IAUIGiftsService
-import io.agora.auikit.service.imp.AUIChatServiceImpl
+import io.agora.auikit.service.im.AUIChatManager
 import io.agora.auikit.ui.gift.IAUIGiftBarrageView
 import io.agora.auikit.ui.gift.impl.dialog.AUiGiftListView
 import io.agora.auikit.utils.ThreadManager
@@ -23,32 +22,19 @@ import java.net.URL
 import java.security.MessageDigest
 
 class AUIGiftBarrageBinder constructor(
-    activity: FragmentActivity?,
-    giftView: IAUIGiftBarrageView,
-    data:List<AUIGiftTabEntity>,
-    giftService: IAUIGiftsService,
-    chatService:IAUIChatService?
+    private val activity: FragmentActivity,
+    private val giftView: IAUIGiftBarrageView,
+    private val giftList:List<AUIGiftTabEntity>,
+    private val giftService: IAUIGiftsService,
+    private val chatManager:AUIChatManager
 ): IAUIBindable,IAUIGiftsService.AUIGiftRespDelegate {
 
     private val TAG = "AUIGift_LOG"
-    private var auiGiftBarrageView: IAUIGiftBarrageView? =null
-    private var mGiftList : List<AUIGiftTabEntity> = mutableListOf()
-    private var activity: FragmentActivity?
-    private var giftService:IAUIGiftsService
-    private var roomContext:AUIRoomContext?
-    private var chatService:IAUIChatService?
-    private var chatImpl:AUIChatServiceImpl?
+    private var roomContext = AUIRoomContext.shared()
     private var mPAGView: PAGView? = null
 
     init {
-        this.auiGiftBarrageView = giftView
-        this.chatService = chatService
-        this.giftService = giftService
-        this.mGiftList = data
-        this.activity = activity
-        this.roomContext = AUIRoomContext.shared()
-        this.chatImpl = chatService as AUIChatServiceImpl
-        downloadEffectResource(data)
+        downloadEffectResource(giftList)
     }
 
     override fun bind() {
@@ -60,30 +46,29 @@ class AUIGiftBarrageBinder constructor(
     }
 
     fun showBottomGiftDialog(){
-        activity?.let {
-            val dialog = AUiGiftListView(it, mGiftList)
-            dialog.setDialogActionListener(object : AUiGiftListView.ActionListener{
-                override fun onGiftSend(bean: AUIGiftEntity?) {
-                    bean?.let { it1 ->
-                        it1.sendUser = roomContext?.currentUserInfo
-                        it1.giftCount = 1
-                        giftService.sendGift(it1) { error ->
-                            if (error == null) {
-                                ThreadManager.getInstance().runOnMainThread{
-                                    Log.d("AUIGiftViewBinder", "sendGift suc ${giftService.channelName}")
-                                    chatImpl?.addGiftList(it1)
-                                    auiGiftBarrageView?.refresh(chatImpl?.getGiftList())
-                                }
-                            } else {
-                                Log.e("AUIGiftViewBinder", "sendGift error ${error.code} ${error.message}")
+        val dialog = AUiGiftListView(activity, giftList)
+        dialog.setDialogActionListener(object : AUiGiftListView.ActionListener{
+            override fun onGiftSend(bean: AUIGiftEntity?) {
+                bean?.let { it1 ->
+                    it1.sendUser = roomContext?.currentUserInfo
+                    it1.giftCount = 1
+                    giftService.sendGift(it1) { error ->
+                        if (error == null) {
+                            ThreadManager.getInstance().runOnMainThread{
+                                effectAnimation(it1)
+                                dialog.dismiss()
+                                Log.d("AUIGiftViewBinder", "sendGift suc ${giftService.channelName}")
+                                chatManager.addGiftList(it1)
+                                this@AUIGiftBarrageBinder.giftView.refresh(chatManager.getGiftList())
                             }
+                        } else {
+                            Log.e("AUIGiftViewBinder", "sendGift error ${error.code} ${error.message}")
                         }
                     }
                 }
-            })
-            dialog.show(it.supportFragmentManager, "gift_dialog")
-        }
-
+            }
+        })
+        dialog.show(activity.supportFragmentManager, "gift_dialog")
     }
     private fun effectAnimation(gift: AUIGiftEntity) {
         val path = filePath(gift.giftEffect ?: "")
@@ -97,7 +82,7 @@ class AUIGiftBarrageBinder constructor(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
             pagView.elevation = 3F
-            val contentView = activity?.window?.decorView as ViewGroup
+            val contentView = activity.window?.decorView as ViewGroup
             contentView.addView(pagView)
             pagView.addListener(object: PAGView.PAGViewListener {
                 override fun onAnimationStart(p0: PAGView?) {
@@ -143,7 +128,7 @@ class AUIGiftBarrageBinder constructor(
         return if (fileName.isEmpty()) {
             null
         } else {
-            val dir = File(activity?.cacheDir,"giftEffects")
+            val dir = File(activity.cacheDir,"giftEffects")
             if (!dir.exists()){
                 dir.mkdirs()
             }
@@ -178,7 +163,7 @@ class AUIGiftBarrageBinder constructor(
         Log.d(TAG, "onReceiveGiftMsg ")
         ThreadManager.getInstance().runOnMainThread{
             giftEntity?.let { effectAnimation(it) }
-            auiGiftBarrageView?.refresh(chatImpl?.getGiftList())
+            this.giftView.refresh(chatManager.getGiftList())
         }
     }
 
