@@ -1,0 +1,23 @@
+{
+  "ListViewController": {
+      "setting_button_icon":"aui_list_setting",
+      "list_empty": "aui_list_empty",
+      "backgroudColor": "#202836",
+      "create_room_icon":"aui_create_room_icon",
+      "alertInputBgColor": "#2F3437",
+      "alertInputTextColor": "#ffffff",
+      "alertTitleColor":"#ffffff",
+      "alertBgColor": "#171A1C"
+  },
+  "AUIListEmptyView": {
+      "emptyTitleColor": "#ACB4B9",
+  },
+  "AUIThemeSettingViewController": {
+      "backgroundImage": "aui_room_bg",
+  },
+  "AUIRoomListCell" : {
+      "ownerTextColor": "#99D8FF",
+      "starIcon": "aui_list_cell_star",
+  }
+}
+

@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import AUIKit
+import AUIKitCore
 import libpag
 import Alamofire
 
@@ -55,7 +55,7 @@ extension String {
 
 
 extension AUIRoomGiftBinder: AUIGiftsManagerRespDelegate,PAGViewListener,AUIRoomGiftDialogEventsDelegate {
-    public func sendGiftAction(gift: AUIKit.AUIGiftEntity) {
+    public func sendGiftAction(gift: AUIKitCore.AUIGiftEntity) {
         if !gift.effectMD5.isEmpty {
             AUICommonDialog.hidden()
             AUIToast.hidden()

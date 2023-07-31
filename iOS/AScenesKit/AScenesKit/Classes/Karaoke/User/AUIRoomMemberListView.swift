@@ -5,7 +5,7 @@
 //  Created by FanPengpeng on 2023/4/4.
 //
 
-import AUIKit
+import AUIKitCore
 
 private let kMemberListCellID = "kMemberListCellID"
 
