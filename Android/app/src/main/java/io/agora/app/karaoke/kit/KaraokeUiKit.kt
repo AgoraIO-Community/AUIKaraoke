@@ -17,7 +17,7 @@ import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
 import io.agora.auikit.utils.AUILogger
 import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineEx
-import io.agora.rtm.RtmClient
+import io.agora.rtm2.RtmClient
 
 object KaraokeUiKit {
     private val notInitException =

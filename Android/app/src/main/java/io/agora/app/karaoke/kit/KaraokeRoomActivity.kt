@@ -20,7 +20,7 @@ import io.agora.auikit.service.http.application.TokenGenerateReq
 import io.agora.auikit.service.http.application.TokenGenerateResp
 import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
 import io.agora.auikit.ui.basic.AUIAlertDialog
-import io.agora.scene.show.utils.PermissionHelp
+import io.agora.auikit.utils.PermissionHelp
 import retrofit2.Response
 
 class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErrorProxyDelegate {
