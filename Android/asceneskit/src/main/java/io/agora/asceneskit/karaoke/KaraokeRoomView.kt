@@ -33,6 +33,7 @@ import io.agora.auikit.ui.basic.AUIBottomDialog
 import io.agora.auikit.ui.chatBottomBar.impl.AUIKeyboardStatusWatcher
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
 import io.agora.auikit.ui.jukebox.impl.AUIJukeboxView
+import io.agora.auikit.ui.member.MemberInfo
 import io.agora.auikit.ui.member.impl.AUIRoomMemberListView
 import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
 
@@ -210,7 +211,13 @@ class KaraokeRoomView : FrameLayout,
 
     private fun showUserListDialog() {
         val membersView = AUIRoomMemberListView(context)
-        membersView.setMembers(mMemberMap.values.toList(), mSeatMap)
+        membersView.setMembers(mMemberMap.values.map { model ->
+            MemberInfo(
+                model.userId,
+                model.userName,
+                model.userAvatar
+            )
+        }, mSeatMap)
         AUIBottomDialog(context).apply {
             setCustomView(membersView)
             show()
