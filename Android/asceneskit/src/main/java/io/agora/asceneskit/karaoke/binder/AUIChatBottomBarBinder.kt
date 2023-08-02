@@ -14,6 +14,7 @@ import io.agora.auikit.ui.R
 import io.agora.auikit.ui.chatBottomBar.IAUIChatBottomBarView
 import io.agora.auikit.ui.chatBottomBar.listener.AUIMenuItemClickListener
 import io.agora.auikit.ui.chatBottomBar.listener.AUISoftKeyboardHeightChangeListener
+import io.agora.auikit.ui.chatList.AUIChatInfo
 import io.agora.auikit.ui.chatList.IAUIChatListView
 import io.agora.auikit.ui.micseats.IMicSeatsView
 
@@ -110,7 +111,9 @@ class AUIChatBottomBarBinder constructor(
         imManagerService.sendMessage(roomService.getRoomInfo().roomId,
             content ?: ""){ _, error ->
             if(error == null){
-                chatList.refreshSelectLast(chatManager.getMsgList())
+                chatList.refreshSelectLast(chatManager.getMsgList().map { entity ->
+                    AUIChatInfo(entity.user?.userId ?: "", entity.user?.userName?: "", entity.content, entity.joined)
+                })
             }
         }
     }
