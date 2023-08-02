@@ -85,7 +85,9 @@ class AUIKaraokeRoomService(
             roomConfig.rtcChorusChannelName,
             roomConfig.rtcChorusRtcToken007
         )
-        KTVApiImpl(config)
+        KTVApiImpl().apply {
+            initialize(config)
+        }
     }
     fun getRoomManager() = roomManager
     fun getUserService() = userImpl
