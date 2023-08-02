@@ -14,6 +14,7 @@ import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
 import io.agora.auikit.model.AUIMicSeatInfo;
 import io.agora.auikit.model.AUIMicSeatStatus;
+import io.agora.auikit.model.AUIRoomContext;
 import io.agora.auikit.model.AUIUserInfo;
 import io.agora.auikit.model.AUIUserThumbnailInfo;
 import io.agora.auikit.service.IAUIChorusService;
@@ -125,20 +126,20 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onAnchorEnterSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
-        IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
-        seatView.setTitleText(userInfo.userName);
-        seatView.setUserAvatarImageUrl(userInfo.userAvatar);
+        AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
+        updateSeatView(seatIndex, seatInfo);
     }
 
     @Override
     public void onAnchorLeaveSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
-        updateSeatView(seatIndex, null);
+        AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
+        updateSeatView(seatIndex, seatInfo);
     }
 
     @Override
     public void onSeatAudioMute(int seatIndex, boolean isMute) {
-        IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
-        seatView.setAudioMuteVisibility(isMute ? View.VISIBLE : View.GONE);
+        AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
+        updateSeatView(seatIndex, seatInfo);
     }
 
     @Override
@@ -170,39 +171,41 @@ public class AUIMicSeatsBinder implements
 
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
-        if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
-            seatView.setTitleIndex(seatIndex + 1);
-            seatView.setAudioMuteVisibility(View.GONE);
-            seatView.setVideoMuteVisibility(View.GONE);
-            seatView.setUserAvatarImageDrawable(null);
-            seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
-            return;
-        }
         AUIUserInfo userInfo = null;
-        if (micSeatInfo.user != null) {
+        if (micSeatInfo != null && micSeatInfo.user != null) {
             userInfo = userService.getUserInfo(micSeatInfo.user.userId);
         }
-        seatView.setRoomOwnerVisibility((seatIndex == 0) ? View.VISIBLE : View.GONE);
 
-
-        seatView.setMicSeatState(MicSeatStatus.locked);
-
-        boolean isAudioMute = (micSeatInfo.muteAudio != 0);
-        if (userInfo != null) {
-            isAudioMute = isAudioMute || (userInfo.muteAudio == 1);
+        // 麦位状态
+        if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
+            seatView.setTitleIndex(seatIndex + 1);
+            seatView.setUserAvatarImageDrawable(null);
+            seatView.setMicSeatState(MicSeatStatus.idle);
+            seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
+        } else if (micSeatInfo.seatStatus == AUIMicSeatStatus.locked) {
+            seatView.setMicSeatState(MicSeatStatus.locked);
+        } else {
+            seatView.setMicSeatState(MicSeatStatus.used);
         }
+
+        // 房主标识
+        seatView.setRoomOwnerVisibility((userInfo != null && userInfo.userId.equals(AUIRoomContext.shared().getRoomOwner(micSeatService.getChannelName()))) ? View.VISIBLE : View.GONE);
+
+        // 静音状态
+        boolean isAudioMute = (micSeatInfo != null && micSeatInfo.muteAudio != 0) || (userInfo != null && userInfo.muteAudio == 1);
         seatView.setAudioMuteVisibility(isAudioMute ? View.VISIBLE : View.GONE);
 
-        boolean isVideoMute = (micSeatInfo.muteVideo != 0);
+        // 视频状态
+        boolean isVideoMute = micSeatInfo != null && micSeatInfo.muteVideo != 0;
         seatView.setVideoMuteVisibility(isVideoMute ? View.VISIBLE : View.GONE);
 
-        if (micSeatInfo.user != null) {
-            seatView.setTitleText(micSeatInfo.user.userName);
-            seatView.setUserAvatarImageUrl(micSeatInfo.user.userAvatar);
-
-            if (micSeatInfo.user.userId.equals(mLeadSingerId)) {
+        // 用户信息
+        if (userInfo != null) {
+            seatView.setTitleText(userInfo.userName);
+            seatView.setUserAvatarImageUrl(userInfo.userAvatar);
+            if (userInfo.userId.equals(mLeadSingerId)) {
                 seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
-            } else if (mAccompanySingers.contains(micSeatInfo.user.userId)) {
+            } else if (mAccompanySingers.contains(userInfo.userId)) {
                 seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.SecondarySinger);
             } else {
                 seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
@@ -241,34 +244,41 @@ public class AUIMicSeatsBinder implements
     @Override
     public boolean onClickSeat(int index, IMicSeatDialogView dialogView) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(index);
-        dialogView.setUserInfo(seatInfo.user.userId);
-        dialogView.setUserName(seatInfo.user.userName);
-        dialogView.setUserAvatar(seatInfo.user.userAvatar);
-        boolean isEmptySeat = (seatInfo.user == null || seatInfo.user.userId.length() == 0);
-        boolean isCurrentUser = seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
+        AUIUserInfo userInfo = seatInfo != null && seatInfo.user != null ? userService.getUserInfo(seatInfo.user.userId) : null;
+        boolean isEmptySeat = (userInfo == null || userInfo.userId.length() == 0);
+        boolean isCurrentUser = userInfo != null && userInfo.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
+        boolean isSeatLocked = seatInfo != null && seatInfo.seatStatus == AUIMicSeatStatus.locked;
+        boolean isSeatAudioMute = seatInfo!= null && seatInfo.muteAudio != 0;
+        boolean isUserAudioMute = userInfo != null && userInfo.muteAudio != 0;
         boolean inSeat = false;
-        for (int i = 0; i <= 7; i++) {
+        for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {
             AUIMicSeatInfo info = micSeatService.getMicSeatInfo(i);
-            if (info.user != null && info.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId)) {
+            if (info != null && info.user != null && info.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId)) {
                 inSeat = true;
                 break;
             }
         }
+
+        // 设置弹窗用户信息
+        if(userInfo != null){
+            dialogView.setUserInfo(userInfo.userId);
+            dialogView.setUserName(userInfo.userName);
+            dialogView.setUserAvatar(userInfo.userAvatar);
+        }
+
+
+        // 根据角色和在线状态配置显示的选项
         if (isRoomOwner) {
             if (isEmptySeat) {
-                dialogView.addCloseSeat((seatInfo.seatStatus == AUIMicSeatStatus.locked));
-            } else {
-                if (isCurrentUser) {
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
-                } else {
-                    dialogView.addKickSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0) || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0);
-                }
+                dialogView.addCloseSeat(isSeatLocked);
+            } else if (!isCurrentUser) {
+                dialogView.addKickSeat();
             }
+            dialogView.addMuteAudio(isSeatAudioMute);
         } else {
             if (isEmptySeat) {
-                if (inSeat) {
+                if (inSeat || isSeatLocked) {
                     return false;
                 } else {
                     dialogView.addEnterSeat(true);
@@ -276,7 +286,6 @@ public class AUIMicSeatsBinder implements
             } else {
                 if (isCurrentUser) {
                     dialogView.addLeaveSeat();
-                    dialogView.addMuteAudio((seatInfo.muteAudio != 0 || userService.getUserInfo(seatInfo.user.userId).muteAudio != 0));
                 } else {
                     return false;
                 }
@@ -383,7 +392,12 @@ public class AUIMicSeatsBinder implements
     /** IAUIUserService.AUIUserRespDelegate implements. */
     @Override
     public void onRoomUserSnapshot(@NonNull String roomId, @Nullable List<AUIUserInfo> userList) {
-
+        for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {
+            AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(i);
+            if (seatInfo != null && seatInfo.user != null) {
+                updateSeatView(i, seatInfo);
+            }
+        }
     }
 
     @Override
@@ -403,7 +417,7 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onUserAudioMute(@NonNull String userId, boolean mute) {
-        for (int i = 0; i <= 7; i++) {
+        for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {
             AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(i);
             if (seatInfo != null && seatInfo.user != null && seatInfo.user.userId.equals(userId)) {
                 updateSeatView(i, seatInfo);
