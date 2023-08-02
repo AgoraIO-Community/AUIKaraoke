@@ -23,19 +23,15 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 - <mark>最低兼容 Android 5.0</mark>（SDK API Level 21）
 - Android Studio 3.5及以上版本。
 - Android 5.0 及以上的手机设备。
+- JDK 17以上
 
 ---
 
 ### 2. 运行示例
-- 在AUIKitKaraoke目录下执行
+- (可选)在AUIKitKaraoke目录下执行
 ```
-git submodule update --init
+git submodule update --init --remote
 ```
-
-- 获取声网sdk
-  下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/null/Agora_Native_SDK_for_Android_rel.v4.1.1.30_49294_FULL_20230512_1606_264137.zip)并将文件解压到以下目录
-  [AUIKit/Android/auikit/libs](../AUIKit/Android/auikit/libs) : agora-rtc-sdk.jar
-  [AUIKit/Android/src/main/jniLibs](../AUIKit/Android/auikit/src/main/jniLibs) : so(arm64-v8a/armeabi-v7a/x86/x86_64)
 
 - 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
 
