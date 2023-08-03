@@ -72,7 +72,6 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
 
     private fun generateToken(onSuccess: (AUIRoomConfig) -> Unit) {
         val config = AUIRoomConfig( roomInfo?.roomId ?: "")
-        config.themeId = RoomListActivity.ThemeId
         var response = 3
         val trySuccess = {
             response -= 1;
@@ -89,8 +88,8 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
                 override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
-                        config.rtcToken007 = rspObj.rtcToken
-                        config.rtmToken007 = rspObj.rtmToken
+                        config.rtcToken = rspObj.rtcToken
+                        config.rtmToken = rspObj.rtmToken
                         AUIRoomContext.shared()?.commonConfig?.appId = rspObj.appId
                     }
                     trySuccess.invoke()
@@ -123,7 +122,7 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
                         // rtcChorusRtcToken007
-                        config.rtcChorusRtcToken007 = rspObj.rtcToken
+                        config.rtcChorusRtcToken = rspObj.rtcToken
                     }
                     trySuccess.invoke()
                 }

@@ -1,8 +1,8 @@
-# KaraokeUiKit
+# AScenesKit
 
-*[English](KaraokeUiKit.md) | 中文*
+*[English](AScenesKit.md) | 中文*
 
-KaraokeUiKit是一个Karaoke场景组件，提供房间管理以及拉起房间页面的功能，开发者可以使用他快速搭起一个Karaoke应用。
+AScenesKit是一个Karaoke场景组件，提供房间管理以及拉起房间页面的功能，开发者可以使用他快速搭起一个Karaoke应用。
 
 
 ## 快速集成
@@ -12,34 +12,21 @@ KaraokeUiKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 **将以下源码复制到自己项目里：**
 
-- [auikit](../../AUIKit/Android/auikit)
 - [asceneskit](../asceneskit)
-- [KaraokeUiKit](../app/src/main/java/io/agora/app/karaoke/kit)
 
 **在settings.gradle里添加库**
 ```groovy
-include ':auikit'
 include ':asceneskit'
 ```
 
 **在build.gradle里配置资源路径，viewBinding和依赖**
 ```groovy
-android {
-    buildFeatures {
-        viewBinding true
-    }
-    sourceSets {
-        main {
-            res.srcDirs += "src/main/java/io/agora/app/karaoke/kit/res"
-        }
-    }
-}
 dependencies {
     implementation project(':asceneskit')
 }
 ```
 
-**在AndroidManifest.xml里配置权限，主题和KaraokeRoomActivity**
+**在AndroidManifest.xml里配置权限和主题**
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -57,15 +44,23 @@ dependencies {
         android:theme="@style/Theme.AKaraoke"
         tools:replace="android:theme">
         
-        <activity
-            android:name=".kit.KaraokeRoomActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
+        ...
 
     </application>
 
 </manifest>
 ```
+
+**在项目的[**local.properties**](../local.properties)里配置业务服务器域名**
+
+  ![图片](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
+
+``` 
+SERVER_HOST= （业务服务器域名）
+```
+
+> 声网测试域名： https://service.agora.io/uikit-karaoke，
+
 
 ### 2. 初始化KaraokeUiKit
 ```kotlin
@@ -77,7 +72,7 @@ config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
 // Initialize KaraokeUiKit. If you have your own rtmClient, rtcEngine or ktvApi, you can pass them to KaraokeUiKit.
-KaraokeUiKit.init(
+KaraokeUiKit.setup(
     config = config, // must
     rtmClient = null, // option
     rtcEngineEx = null, // option
@@ -118,18 +113,40 @@ KaraokeUiKit.createRoom(
 
 ### 5. 拉起房间
 ```kotlin
+// 房间信息，由房间列表而来或者是创建房间得到
+val roomInfo : AUIRoomInfo
+// layout里的KaraokeRoomView
+val karaokeRoomView: KaraokeRoomView
+
 val config = AUiRoomConfig(roomInfo.roomId)
-config.themeId = io.agora.asceneskit.R.style.Theme_AKaraoke
+// 生成config.channelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtmToken = ""
+config.rtcToken = ""
+// 生成config.rtcChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtcRtmToken = ""
+config.rtcRtcToken = ""
+// 生成config.rtcChorusChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtcChorusRtcToken = ""
 
 KaraokeUiKit.launchRoom(
     roomInfo, // must
     config, // must
-    KaraokeUiKit.RoomEventHandler // option
-    ( 
-        onRoomLaunchSuccess = {},
-        onRoomLaunchFailure = {}
-    )
+    karaokeRoomView
 )
+
+// 订阅房间事件
+KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
+    override fun onRoomDestroy(roomId: String){
+        // 房间被销毁
+    }
+})
+```
+
+### 5. 销毁房间
+```kotlin
+KaraokeUiKit.destroyRoom(roomId)
+// 取消订阅房间事件
+KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
 ```
 
 ## 许可证

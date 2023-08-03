@@ -1,8 +1,8 @@
-# KaraokeUiKit
+# AScenesKit
 
-*English | [中文](KaraokeUiKit.zh.md)*
+*English | [中文](AScenesKit.zh.md)*
 
-KaraokeUiKit is a Karaoke scene component that provides room management and the function of pulling up room pages. Developers can use it to quickly build a Karaoke application.
+AScenesKit is a Karaoke scene component that provides room management and the function of pulling up room pages. Developers can use it to quickly build a Karaoke application.
 
 
 ## Quick integration
@@ -11,35 +11,21 @@ KaraokeUiKit is a Karaoke scene component that provides room management and the 
 ### 1. Add Source Code
 **Copy the following source code into your own project:**
 
-- [auikit](https://github.com/AgoraIO-Community/AUIKit/tree/main/Android/auikit)
 - [asceneskit](../asceneskit)
-- [KaraokeUiKit](../app/src/main/java/io/agora/app/karaoke/kit)
 
 **Configure libraries in settings.gradle**
 ```groovy
-include ':auikit'
 include ':asceneskit'
 ```
 
 **Configure resource path, viewBinding and dependencies in build.gradle**
 ```groovy
-android {
-    buildFeatures {
-        viewBinding true
-    }
-    sourceSets {
-        main {
-            manifest.srcFile += "src/main/java/io/agora/app/karaoke/kit/AndroidManifest.xml"
-            res.srcDirs += "src/main/java/io/agora/app/karaoke/kit/res"
-        }
-    }
-}
 dependencies {
     implementation project(':asceneskit')
 }
 ```
 
-**Configure permissions, theme and KaraokeRoomActivity in AndroidManifest.xml**
+**Configure permissions and theme in AndroidManifest.xml**
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -57,27 +43,34 @@ dependencies {
         android:theme="@style/Theme.AKaraoke"
         tools:replace="android:theme">
         
-        <activity
-            android:name=".kit.KaraokeRoomActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="behind" />
+        ...
 
     </application>
 
 </manifest>
 ```
 
+**Configure server host in local.properties**
+
+  ![PIC](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
+
+``` 
+SERVER_HOST= （Domain name of the business server）
+```
+
+> Agora Test Domain: https://service.agora.io/uikit-karaoke
+
 ### 2. Initialize KaraokeUiKit
 ```kotlin
 // Create Common Config
-val config = AUICommonConfig()
+val config = AUiCommonConfig()
 config.context = application
-config.appId = "Agora APP ID"
+config.appId = "Agora APP ID" // Get the Agora APP ID from agora console
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
-// init AUIKit. If you have your own rtmClient, rtcEngine or ktvApi, you can pass them to KaraokeUiKit.
-KaraokeUiKit.init(
+// Initialize KaraokeUiKit. If you have your own rtmClient, rtcEngine or ktvApi, you can pass them to KaraokeUiKit.
+KaraokeUiKit.setup(
     config = config, // must
     rtmClient = null, // option
     rtcEngineEx = null, // option
@@ -118,18 +111,40 @@ KaraokeUiKit.createRoom(
 
 ### 5. Launch Karaoke Room
 ```kotlin
-val config = AUIRoomConfig(roomInfo.roomId)
-config.themeId = io.agora.asceneskit.R.style.Theme_AKaraoke
+// RoomInfo from room list or room creator.
+val roomInfo : AUIRoomInfo
+// KaraokeRoomView in layout
+val karaokeRoomView: KaraokeRoomView
+
+val config = AUiRoomConfig(roomInfo.roomId)
+// Generate token with config.channelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtmToken = ""
+config.rtcToken = ""
+// Generate token with config.rtcChannelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtcRtmToken = ""
+config.rtcRtcToken = ""
+// Generate token with config.rtcChorusChannelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtcChorusRtcToken = ""
 
 KaraokeUiKit.launchRoom(
     roomInfo, // must
     config, // must
-    KaraokeUiKit.RoomEventHandler // option
-    ( 
-        onRoomLaunchSuccess = {},
-        onRoomLaunchFailure = {}
-    )
+    karaokeRoomView
 )
+
+// Subscribe room event
+KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
+    override fun onRoomDestroy(roomId: String){
+        // Room destroyed by host
+    }
+})
+```
+
+### 6. Destory Karaoke Room
+```kotlin
+KaraokeUiKit.destroyRoom(roomId)
+// Unsubscribe room event
+KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
 ```
 
 ## License

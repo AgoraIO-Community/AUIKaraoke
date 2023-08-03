@@ -10,11 +10,11 @@ UiKit是一套场景化应用的脚手架，提供Ui组件以及Service组件，
 
 
 ## 特性
-- [KaraokeUiKit](app/src/main/java/io/agora/app/karaoke/kit) **([使用指南](doc/KaraokeUiKit.zh.md))**
-- [AScenesKit](asceneskit)
+- [AScenesKit](asceneskit) **([使用指南](doc/AScenesKit.zh.md))**
     - [Karaoke](asceneskit/src/main/java/io/agora/asceneskit/karaoke)
         - [KaraokeRoomView](asceneskit/src/main/java/io/agora/asceneskit/karaoke/KaraokeRoomView.kt)
         - [KaraokeRoomService](asceneskit/src/main/java/io/agora/asceneskit/karaoke/AUIKaraokeRoomService.kt)
+        - [KaraokeUiKit](asceneskit/src/main/java/io/agora/asceneskit/karaoke/KaraokeUiKit.kt) 
 
 ## 快速跑通
 
