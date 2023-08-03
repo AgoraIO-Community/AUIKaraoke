@@ -11,6 +11,16 @@ android {
         targetSdkVersion 30
 
         consumerProguardFiles "consumer-rules.pro"
+
+        def properties = new Properties()
+        properties.load(rootProject.file("local.properties").newDataInputStream())
+
+        final def SERVER_HOST = properties.getProperty("SERVER_HOST")
+        if (SERVER_HOST.isEmpty()) {
+            throw new GradleException("请在 local.properties 中配置完整的 SERVER_HOST")
+        }
+
+        buildConfigField "String", "SERVER_HOST", "\"$SERVER_HOST\""
     }
 
     buildTypes {
@@ -31,8 +41,7 @@ android {
     }
     sourceSets {
         main {
-            res.srcDirs += "src/main/java/io/agora/asceneskit/karaoke/res"
-            res.srcDirs += "src/main/java/io/agora/asceneskit/karaoke/res-ktv"
+            res.srcDirs += "src/main/res-ktv"
         }
     }
 }

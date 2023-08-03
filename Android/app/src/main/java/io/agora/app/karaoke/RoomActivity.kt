@@ -1,4 +1,4 @@
-package io.agora.app.karaoke.kit
+package io.agora.app.karaoke
 
 import android.content.Context
 import android.content.Intent
@@ -6,9 +6,10 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import io.agora.app.karaoke.RoomListActivity
-import io.agora.app.karaoke.databinding.KaraokeRoomActivityBinding
+import io.agora.app.karaoke.databinding.RoomActivityBinding
+import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
@@ -23,7 +24,7 @@ import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.utils.PermissionHelp
 import retrofit2.Response
 
-class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErrorProxyDelegate {
+class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErrorProxyDelegate {
     companion object {
         private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
@@ -34,13 +35,13 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
             Companion.isCreateRoom = isCreateRoom
             Companion.themeId = themeId
 
-            val intent = Intent(context, KaraokeRoomActivity::class.java)
+            val intent = Intent(context, RoomActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
         }
     }
 
-    private val mViewBinding by lazy { KaraokeRoomActivityBinding.inflate(LayoutInflater.from(this)) }
+    private val mViewBinding by lazy { RoomActivityBinding.inflate(LayoutInflater.from(this)) }
     private val mPermissionHelp = PermissionHelp(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +58,7 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         mPermissionHelp.checkMicPerm(
             {
                 generateToken { config ->
-                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView, KaraokeUiKit.RoomEventHandler {
-
-                    })
+                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView)
                     KaraokeUiKit.subscribeError(roomInfo.roomId, this)
                     KaraokeUiKit.bindRespDelegate(this)
                 }
@@ -151,13 +150,13 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
         }
     }
 
-    override fun onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
-
-    }
-
     override fun onTokenPrivilegeWillExpire(channelName: String?) {
-        TODO("Not yet implemented")
+        runOnUiThread {
+            Toast.makeText(this, "TokenPrivilegeWillExpire >> channelName=$channelName", Toast.LENGTH_LONG).show()
+        }
     }
+
+
     override fun onBackPressed() {
         onUserLeaveRoom()
     }
@@ -185,8 +184,8 @@ class KaraokeRoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUI
     private fun shutDownRoom() {
         roomInfo?.roomId?.let { roomId ->
             KaraokeUiKit.destroyRoom(roomId)
-            KaraokeUiKit.unsubscribeError(roomId, this@KaraokeRoomActivity)
-            KaraokeUiKit.unbindRespDelegate(this@KaraokeRoomActivity)
+            KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
+            KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
         }
         finish()
     }

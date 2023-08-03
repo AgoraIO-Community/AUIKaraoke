@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
-import io.agora.app.karaoke.kit.KaraokeRoomActivity
-import io.agora.app.karaoke.kit.KaraokeUiKit
+import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUICreateRoomInfo
 import io.agora.auikit.model.AUIRoomInfo
@@ -128,7 +127,7 @@ class RoomListActivity : AppCompatActivity() {
         KaraokeUiKit.createRoom(
             createRoomInfo,
             success = { roomInfo ->
-                KaraokeRoomActivity.launch(this, true, roomInfo, ThemeId)
+                RoomActivity.launch(this, true, roomInfo, ThemeId)
             },
             failure = {
                 Toast.makeText(this@RoomListActivity, "Create room failed!", Toast.LENGTH_SHORT)
@@ -267,7 +266,7 @@ class RoomListActivity : AppCompatActivity() {
             holder.binding.tvRoomOwner.text = item.roomOwner?.userName ?: "unKnowUser"
             holder.binding.tvMember.text = "${item.onlineUsers}人正在嗨歌"
             holder.binding.root.setOnClickListener {
-                KaraokeRoomActivity.launch(this@RoomListActivity, false, item, ThemeId)
+                RoomActivity.launch(this@RoomListActivity, false, item, ThemeId)
             }
             Glide.with(holder.binding.ivAvatar)
                 .load(item.roomOwner?.userAvatar)

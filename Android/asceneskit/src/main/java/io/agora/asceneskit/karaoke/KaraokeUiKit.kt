@@ -1,8 +1,6 @@
-package io.agora.app.karaoke.kit
+package io.agora.asceneskit.karaoke
 
-import io.agora.app.karaoke.BuildConfig
-import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
-import io.agora.asceneskit.karaoke.KaraokeRoomView
+import io.agora.asceneskit.BuildConfig
 import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUICreateRoomInfo
 import io.agora.auikit.model.AUIRoomConfig
@@ -116,7 +114,6 @@ object KaraokeUiKit {
         roomInfo: AUIRoomInfo,
         config: AUIRoomConfig,
         karaokeView: KaraokeRoomView,
-        eventHandler: RoomEventHandler? = null,
     ) {
         AUIRoomContext.shared().roomConfig = config
         val roomManager = mRoomManager ?: throw notInitException
@@ -129,10 +126,10 @@ object KaraokeUiKit {
         )
         mService = roomService
         karaokeView.bindService(roomService)
-        eventHandler?.onRoomLaunchSuccess
     }
 
     fun destroyRoom(roomId: String?) {
+        AUIRoomContext.shared().cleanRoom(roomId)
         mService?.destroyRoom()
         mService = null
     }
@@ -152,16 +149,5 @@ object KaraokeUiKit {
     fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         mRoomManager?.unbindRespDelegate(delegate)
     }
-
-    enum class ErrorCode(val value: Int, val message: String) {
-        RTM_LOGIN_FAILURE(100, "Rtm login failed!"),
-        ROOM_PERMISSIONS_LEAK(101, "The room leak required permissions!"),
-        ROOM_DESTROYED(102, "The room has been destroyed!"),
-    }
-
-    data class RoomEventHandler(
-        val onRoomLaunchSuccess: (() -> Unit)? = null,
-        val onRoomLaunchFailure: ((ErrorCode) -> Unit)? = null,
-    )
 
 }
