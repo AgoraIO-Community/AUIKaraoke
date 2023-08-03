@@ -62,7 +62,11 @@ dependencies {
     if(findProject(":auikit") != null){
         api project(':auikit')
     }else{
-        api 'com.github.AgoraIO-Community.AUIKit:AUIKit:karaoke-0.4.0'
+        def uiKitVersion='0.4.0'
+        api "com.github.AgoraIO-Community.AUIKit:AUIKit:karaoke-$uiKitVersion"
+
+        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-Service:karaoke-$uiKitVersion"
+        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-UI:karaoke-$uiKitVersion"
     }
 }
 
