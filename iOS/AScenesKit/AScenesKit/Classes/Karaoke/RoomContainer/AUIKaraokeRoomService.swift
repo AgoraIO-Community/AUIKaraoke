@@ -83,7 +83,9 @@ open class AUIKaraokeRoomService: NSObject {
                                       channelName: roomConfig.rtcChannelName,
                                       localUid: userId,
                                       chorusChannelName: roomConfig.rtcChorusChannelName,
-                                      chorusChannelToken: roomConfig.rtcChorusRtcToken)
+                                      chorusChannelToken: roomConfig.rtcChorusRtcToken,
+                                      type: .normal,
+                                      maxCacheSize: 10)
             self.ktvApi = KTVApiImpl.init(config: config)
             
             ktvApiCreateBySercice = true
