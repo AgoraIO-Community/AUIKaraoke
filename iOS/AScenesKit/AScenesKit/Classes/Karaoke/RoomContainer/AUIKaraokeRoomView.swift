@@ -16,6 +16,25 @@ private let kSeatRoomPadding: CGFloat = 16
 open class AUIKaraokeRoomView: UIView {
     private var service: AUIKaraokeRoomService?
     
+    /// 席位是否被静音
+    private var mySeatIsMute = false {
+        didSet{
+            if mySeatIsMute {
+                self.microphoneButton.isSelected = true
+            }else{
+                self.microphoneButton.isSelected = myMicIsMute
+            }
+        }
+    }
+    
+    /// 我的座位号
+    private var mySeatIndex = -1
+    
+    /// 我的麦克风是否静音
+    private var myMicIsMute = false
+    
+    private var seatMuteMap = [Int: Bool]()
+    
     /// 房间信息UI
     private lazy var roomInfoView: AUIRoomInfoView = AUIRoomInfoView(frame: CGRect(x: 16, y: 35, width: 185, height: 40))
     
@@ -389,6 +408,8 @@ open class AUIKaraokeRoomView: UIView {
                         userService: service.userImpl,
                         micSeatService: service.micSeatImpl)
         
+        service.userImpl.bindRespDelegate(delegate: self)
+        
         if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
             self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
         }
@@ -468,6 +489,10 @@ extension AUIKaraokeRoomView {
     }
     
     @objc private func didClickVoiceChatButton(_ button: UIButton){
+        if mySeatIsMute {
+            AUIToast.show(text: "当前麦位已被房主静麦")
+            return
+        }
         button.isSelected = !button.isSelected
         service?.userImpl.muteUserAudio(isMute: button.isSelected) { err in
         }
@@ -514,17 +539,23 @@ extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
     public func onAnchorEnterSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = false
+            mySeatIsMute = seatMuteMap[seatIndex] ?? false
+            mySeatIndex = seatIndex
         }
     }
     
     public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = true
+            service?.userImpl.getRoomContext().currentUserInfo.seatIndex = -1
         }
     }
     
     public func onSeatAudioMute(seatIndex: Int, isMute: Bool) {
-        
+        if seatIndex == mySeatIndex {
+            mySeatIsMute = isMute
+        }
+        seatMuteMap[seatIndex] = isMute
     }
     
     public func onSeatVideoMute(seatIndex: Int, isMute: Bool) {
@@ -536,6 +567,39 @@ extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
     }
     
     
+}
+
+
+extension AUIKaraokeRoomView: AUIUserRespDelegate {
+    
+    public func onRoomUserSnapshot(roomId: String, userList: [AUIKitCore.AUIUserInfo]) {
+        
+    }
+
+    public func onRoomUserEnter(roomId: String, userInfo: AUIKitCore.AUIUserInfo) {
+        
+    }
+
+    public func onRoomUserLeave(roomId: String, userInfo: AUIKitCore.AUIUserInfo) {
+        
+    }
+
+    public func onRoomUserUpdate(roomId: String, userInfo: AUIKitCore.AUIUserInfo) {
+        
+    }
+
+    public func onUserVideoMute(userId: String, mute: Bool) {
+        
+    }
+
+    public func onUserBeKicked(roomId: String, userId: String) {
+        
+    }
+    
+    public func onUserAudioMute(userId: String, mute: Bool) {
+        myMicIsMute = mute
+    }
+
 }
 
 

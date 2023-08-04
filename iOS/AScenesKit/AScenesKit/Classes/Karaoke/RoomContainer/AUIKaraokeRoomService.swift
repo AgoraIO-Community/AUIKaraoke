@@ -9,6 +9,7 @@ import Foundation
 import AgoraRtcKit
 import AUIKitCore
 import AVFAudio
+import AgoraRtmKit2
 
 /// 卡拉OK房间Service，内部负责初始化房间内需要的Service组件，包括房间Service，邀请Service，麦位Service，...
 open class AUIKaraokeRoomService: NSObject {
@@ -82,7 +83,9 @@ open class AUIKaraokeRoomService: NSObject {
                                       channelName: roomConfig.rtcChannelName,
                                       localUid: userId,
                                       chorusChannelName: roomConfig.rtcChorusChannelName,
-                                      chorusChannelToken: roomConfig.rtcChorusRtcToken)
+                                      chorusChannelToken: roomConfig.rtcChorusRtcToken,
+                                      type: .normal,
+                                      maxCacheSize: 10)
             self.ktvApi = KTVApiImpl.init(config: config)
             
             ktvApiCreateBySercice = true

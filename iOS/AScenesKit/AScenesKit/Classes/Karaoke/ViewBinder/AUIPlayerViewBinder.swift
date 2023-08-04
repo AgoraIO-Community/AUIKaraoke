@@ -460,6 +460,14 @@ extension AUIPlayerViewBinder: AUIChorusRespDelegate {
 }
 
 extension AUIPlayerViewBinder: KTVApiEventHandlerDelegate {
+    public func onTokenPrivilegeWillExpire() {
+        
+    }
+    
+    public func onChorusChannelAudioVolumeIndication(speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
+        
+    }
+    
     public func onMusicPlayerStateChanged(state: AgoraMediaPlayerState, error: AgoraMediaPlayerError, isLocal: Bool) {
         if state == .playBackCompleted || state == .playBackAllLoopsCompleted {
             if isLocal {
