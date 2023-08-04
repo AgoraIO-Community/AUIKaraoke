@@ -25,8 +25,6 @@ git submodule update --init --remote
 ```
 
 - Please fill in the domain name of the business server in the [**local.properties**](/local.properties) file of the project
-
-  > For business server setup, please refer to [backend README](../backend/)
   
   ![PIC](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
 
@@ -34,6 +32,7 @@ git submodule update --init --remote
 SERVER_HOST= （Domain name of the business server）
 ```
 
+> For business server setup, please refer to [backend README](../backend/)
 > Agora Test Domain: https://service.agora.io/uikit-karaoke
 
 
@@ -336,21 +335,21 @@ fun release()
 
 ```
 .
-├── app                                       				// Demo
+├── app                                       				            // Demo
 └── asceneskit																				
     └── src
         └── main
             ├── java
             │   └── io.agora.asceneskit.karaoke				
-            │       ├── AUIKaraokeRoomService.kt			// Room service, manage AUIKit services 
+            │       ├── AUIKaraokeRoomService.kt	    // Room service, manage AUIKit services 
             │       ├── KaraokeRoomView.kt            // Room UI，manage AUIKit UI components
-            │       ├── KaraokeUiKit.kt           		// Karaoke launch class
+            │       ├── KaraokeUiKit.kt           	// Karaoke launch class
             │       └── binder
             │           ├── AUIChatBottomBarBinder.kt	// The binder of bottom bar UI and services
-            │           ├── AUIChatListBinder.kt			// The binder of chat list UI and services
-            │           ├── AUIGiftBarrageBinder.kt		// The binder of gift UI and services
-            │           ├── AUIJukeboxBinder.java 		// The binder of jukebox UI and services
-            │           ├── AUIMicSeatsBinder.java		// The binder of micseats UI and services
+            │           ├── AUIChatListBinder.kt		// The binder of chat list UI and services
+            │           ├── AUIGiftBarrageBinder.kt	// The binder of gift UI and services
+            │           ├── AUIJukeboxBinder.java 	// The binder of jukebox UI and services
+            │           ├── AUIMicSeatsBinder.java	// The binder of micseats UI and services
             │           ├── AUIMusicPlayerBinder.java	// The binder of music player UI and services
             │           └── IAUIBindable.java
             ├── res

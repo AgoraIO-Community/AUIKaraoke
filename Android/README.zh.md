@@ -27,8 +27,6 @@ git submodule update --init --remote
 ```
 
 - 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
-
-  > 业务服务器搭建可参考 [后台README](../backend/)
   
   ![图片](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
 
@@ -36,7 +34,8 @@ git submodule update --init --remote
 SERVER_HOST= （业务服务器域名）
 ```
 
-> 声网测试域名： https://service.agora.io/uikit-karaoke，
+> 业务服务器搭建可参考 [后台README](../backend/)。
+> 声网测试域名： https://service.agora.io/uikit-karaoke。
 
 - 用 Android Studio 运行项目即可开始您的体验
 
@@ -350,21 +349,21 @@ fun release()
 
 ```
 .
-├── app                                       				// Demo
+├── app                                       				            // Demo
 └── asceneskit																				
     └── src
         └── main
             ├── java
             │   └── io.agora.asceneskit.karaoke				
-            │       ├── AUIKaraokeRoomService.kt			// 房间服务，管理AUIKit各个Service
+            │       ├── AUIKaraokeRoomService.kt	    // 房间服务，管理AUIKit各个Service
             │       ├── KaraokeRoomView.kt            // 房间UI，管理AUIKit各个UI组件
-            │       ├── KaraokeUiKit.kt           		// K歌入口类
+            │       ├── KaraokeUiKit.kt           	// K歌入口类
             │       └── binder
             │           ├── AUIChatBottomBarBinder.kt	// 底部栏UI和service的绑定者
-            │           ├── AUIChatListBinder.kt			// 聊天UI和service的绑定者
-            │           ├── AUIGiftBarrageBinder.kt		// 礼物UI和service的绑定者
-            │           ├── AUIJukeboxBinder.java 		// 点歌器UI和service的绑定者
-            │           ├── AUIMicSeatsBinder.java		// 麦位UI和service的绑定者
+            │           ├── AUIChatListBinder.kt		// 聊天UI和service的绑定者
+            │           ├── AUIGiftBarrageBinder.kt   // 礼物UI和service的绑定者
+            │           ├── AUIJukeboxBinder.java 	// 点歌器UI和service的绑定者
+            │           ├── AUIMicSeatsBinder.java	// 麦位UI和service的绑定者
             │           ├── AUIMusicPlayerBinder.java	// 播放器UI和service的绑定者
             │           └── IAUIBindable.java
             ├── res
