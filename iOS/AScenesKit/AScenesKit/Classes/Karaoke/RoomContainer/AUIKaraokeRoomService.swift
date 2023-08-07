@@ -88,6 +88,7 @@ open class AUIKaraokeRoomService: NSObject {
                                       maxCacheSize: 10)
             self.ktvApi = KTVApiImpl.init(config: config)
             self.ktvApi.renewInnerDataStreamId()
+            
             ktvApiCreateBySercice = true
         }
         

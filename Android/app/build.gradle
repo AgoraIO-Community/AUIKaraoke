@@ -9,19 +9,11 @@ android {
         applicationId "io.agora.karaoke.uikit"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 3
-        versionName "0.3.0"
+        versionCode 4
+        versionName "0.4.0"
         ndk.abiFilters 'armeabi-v7a'// 'arm64-v8a', 'x86', 'x86-64'
 
-        def properties = new Properties()
-        properties.load(rootProject.file("local.properties").newDataInputStream())
 
-        final def SERVER_HOST = properties.getProperty("SERVER_HOST")
-        if (SERVER_HOST.isEmpty()) {
-            throw new GradleException("请在 local.properties 中配置完整的 SERVER_HOST")
-        }
-
-        buildConfigField "String", "SERVER_HOST", "\"$SERVER_HOST\""
     }
 
     signingConfigs {
@@ -34,6 +26,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             shrinkResources false
@@ -49,10 +45,15 @@ android {
     buildFeatures {
         viewBinding true
     }
-    sourceSets {
-        main {
-            res.srcDirs += "src/main/java/io/agora/app/karaoke/kit/res"
-        }
+
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all { output ->
+                outputFileName = new File(rootProject.name + "_" +
+                        "v" + defaultConfig.versionName + "_" +
+                        new Date().format("yyyyMMddHHmm") + "_" +
+                        buildType.name + ".apk")
+            }
     }
 }
 

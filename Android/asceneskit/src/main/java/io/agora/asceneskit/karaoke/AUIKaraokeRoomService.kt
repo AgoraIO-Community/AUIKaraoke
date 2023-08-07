@@ -83,9 +83,11 @@ class AUIKaraokeRoomService(
             roomConfig.rtcChannelName,
             AUIRoomContext.shared().commonConfig.userId.toInt(),
             roomConfig.rtcChorusChannelName,
-            roomConfig.rtcChorusRtcToken007
+            roomConfig.rtcChorusRtcToken
         )
-        KTVApiImpl(config)
+        KTVApiImpl().apply {
+            initialize(config)
+        }
     }
     fun getRoomManager() = roomManager
     fun getUserService() = userImpl
@@ -98,7 +100,7 @@ class AUIKaraokeRoomService(
     fun getGiftService() = giftImpl
     fun getChatManager() = chatManager
     fun enterRoom(success: (AUIRoomInfo) -> Unit, failure: (AUIException) -> Unit) {
-        roomManager.enterRoom(channelName, roomConfig.rtcToken007) { error ->
+        roomManager.enterRoom(channelName, roomConfig.rtcToken) { error ->
             logger().d(TAG, "enterRoom result : $error")
             if (error != null) {
                 // failure

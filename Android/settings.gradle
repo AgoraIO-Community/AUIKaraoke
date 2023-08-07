@@ -12,5 +12,10 @@ if(uiKitPath.exists()){
     include ':auikit-ui'
     project(':auikit-ui').projectDir = uiKitUIPath
 }
+def uiKitServicePath = new File(settingsDir, '../AUIKit/Android/auikit-service')
+if(uiKitServicePath.exists()){
+    include ':auikit-service'
+    project(':auikit-service').projectDir = uiKitServicePath
+}
 
 
