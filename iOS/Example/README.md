@@ -39,19 +39,11 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 
 ### 2. Build
 - Clone or download  source code
-- Open the terminal and execute the following command in the root directory
-```
-git submodule init
-git submodule update
-```
 - Fill in the HostUrl for step 1 in the [KeyCenter. swift] (AUIKitKaraoke/KeyCenter. swift) of the project
 ```
 static var HostUrl: String = <#Your HostUrl#>
 ```
 If you do not intend to deploy backend services temporarily, you can use the default domain name in KeyCenter.swift
-
-- Download the [ latest version of the RTC SDK containing RTM 2.0](https://download.agora.io/sdk/release/Agora_Native_SDK_for_iOS_hyf_63842_FULL_20230428_1607_263060.zip), extract it, and then copy the files from libs to [libs](libs)
-![](https://download.agora.io/null/3.jpg)
 
 - Open the terminal and enter the [Podfile](Podfile) directory, run `pod install`
 

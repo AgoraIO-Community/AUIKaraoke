@@ -37,20 +37,11 @@
 
 ### 2. 项目运行
 - 克隆或者直接下载项目源码
-- 打开终端，在根目录执行以下命令
-```
-git submodule init
-git submodule update
-```
 - 在项目的[KeyCenter.swift](AUIKitKaraoke/KeyCenter.swift) 中填入步骤1部署的HostUrl
 ```
 static var HostUrl: String = <#Your HostUrl#>
 ```
 如果暂无意部署后端服务，可以使用KeyCenter.swift里默认的域名
-
-
-- 下载[包含RTM 2.0的RTC SDK最新版本](https://download.agora.io/sdk/release/Agora_Native_SDK_for_iOS_hyf_63842_FULL_20230428_1607_263060.zip) , 解压之后把libs里的文件拷贝到[libs](libs) 里
-![](https://download.agora.io/null/3.jpg)
 
 - 打开终端，进入到[Podfile](Podfile)目录下，执行`pod install`命令
 
