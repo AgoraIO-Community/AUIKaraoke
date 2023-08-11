@@ -57,7 +57,7 @@ If you do not intend to deploy backend services temporarily, you can use the def
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691738494762.jpg)
 
 - Finally, open AUIKitKaraoke. xcworkspace and run it to start your experience
-  - If your cocoapods version is lower than 1.12.0, you will encounter the following error. Please manually sign the settings in 'Team'
+  - If your cocoapods version is lower than 1.12.0, you will encounter the following error. Please manually set the signature in 'Team'
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 
 
