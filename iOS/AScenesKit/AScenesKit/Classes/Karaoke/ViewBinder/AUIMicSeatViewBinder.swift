@@ -486,6 +486,7 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
     
     private func updateMicSeatRole() {
         for(i, seatInfo) in micSeatArray.enumerated() {
+            if seatInfo.user == nil { continue }
             if let topSong = topSong {
                 if topSong.owner?.userId == seatInfo.user?.userId {
                     updateMic(with: i, role: .mainSinger)
