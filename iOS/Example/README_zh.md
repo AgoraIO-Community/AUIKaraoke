@@ -44,8 +44,20 @@ static var HostUrl: String = <#Your HostUrl#>
 如果暂无意部署后端服务，可以使用KeyCenter.swift里默认的域名
 
 - 打开终端，进入到[Podfile](Podfile)目录下，执行`pod install`命令
+  - 建议cocoapods升级到1.12.0以上，如果您的cocoapods版本低于1.12.0，可能会遇到如下错误
+  ```
+  the version of cocoapods to generate the lockfile(1.12.0) is higher than the version of the current executable(1.11.2). 
+  ```
+  ```
+  can't modify frozen string: "[Xcodeproject] unknown object version (56).
+  ```
+  请打开[AUIKitKaraoke.xcodeproj](AUIKitKaraoke.xcodeproj)并按照下图修改为"Xcode 13.0-compatible"
+  ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691738494762.jpg)
+  
 
 - 最后打开AUIKitKaraoke.xcworkspace，运行即可开始您的体验
+  - 如果您的cocoapods版本低于1.12.0，会遇到如下错误，请在"Team"里手动设置签名
+  ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 
 ## 常见问题
 
