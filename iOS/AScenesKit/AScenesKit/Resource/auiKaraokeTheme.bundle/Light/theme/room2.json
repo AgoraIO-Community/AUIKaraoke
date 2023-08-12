@@ -1,6 +1,6 @@
 {
   "Room": {
-      "infoBackgroundColor": "#FFFFFF33",
+      "roomInfoBackgroundColor": "#FFFFFF33",
       "roomInfoTitleColor": "#ffffff",
       "roomInfoSubTitleColor": "#ffffff80",
       
@@ -63,5 +63,8 @@
       "giftBtnHeight": 48,
       "giftBtnBgColor": "#ffffff40",
       "giftBtnCornerRadius": 24,
+  },
+  "AUIRoomInfoView": {
+      "backgroundColor": "#FFFFFF33"
   }
 }

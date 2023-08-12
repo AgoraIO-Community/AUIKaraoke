@@ -10,6 +10,7 @@ import Foundation
 import AScenesKit
 import AUIKitCore
 import AgoraRtcKit
+import AgoraRtmKit2
 
 class KaraokeUIKit: NSObject {
     static let shared: KaraokeUIKit = KaraokeUIKit()

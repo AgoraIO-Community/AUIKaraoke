@@ -6,10 +6,16 @@ target 'AUIKitKaraoke' do
   use_frameworks!
   
   pod 'AScenesKit', :path => '../AScenesKit'
-  pod 'AUIKitCore', :path => '../../AUIKit'
-  pod 'AgoraRtcEngine_iOS', :path => './libs'
-  pod 'AgoraLyricsScore', '1.1.1-beta-3'
+  pod 'AUIKitCore','0.4.0'
+#  pod 'AgoraRtcEngine_iOS', :path => './libs'
+#  pod 'AgoraLyricsScore', '1.1.1-beta-3'
   pod 'LookinServer', :configurations => ['Debug']
+end
 
-  
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+    end
+  end
 end

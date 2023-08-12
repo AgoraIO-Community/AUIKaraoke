@@ -7,6 +7,7 @@
 
 import UIKit
 import AUIKitCore
+import SwiftTheme
 
 private let kbackButtonWidth: CGFloat = 311
 private let kbackButtonHeight: CGFloat = 50
