@@ -63,15 +63,16 @@ class KaraokeUIKit: NSObject {
     }
     
     func launchRoom(roomInfo: AUIRoomInfo,
-                    appId: String,
+                    appId: String?,
                     config: AUIRoomConfig,
-                    karaokeView: AUIKaraokeRoomView,
-                    completion: @escaping ((Int)->())) {
+                    karaokeView: AUIKaraokeRoomView) {
         guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
         }
-        AUIRoomContext.shared.commonConfig?.appId = appId
+        if let appId = appId {
+            AUIRoomContext.shared.commonConfig?.appId = appId
+        }
         let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
                                             ktvApi: ktvApi,
                                             roomManager: roomManager,
@@ -79,7 +80,6 @@ class KaraokeUIKit: NSObject {
                                             roomInfo: roomInfo)
         karaokeView.bindService(service: service)
         self.service = service
-        completion(0)
     }
     
     func destoryRoom(roomId: String) {

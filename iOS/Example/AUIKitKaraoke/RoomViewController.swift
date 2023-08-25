@@ -54,8 +54,7 @@ class RoomViewController: UIViewController {
             KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
                                            appId: appId,
                                            config: roomConfig,
-                                           karaokeView: karaokeView) {_ in
-            }
+                                           karaokeView: karaokeView) 
             //订阅Token过期回调
             KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
             //订阅房间被销毁回调
