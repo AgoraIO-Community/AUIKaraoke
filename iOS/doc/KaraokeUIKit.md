@@ -81,8 +81,7 @@ generateToken { roomConfig, appId in
     KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
                                    appId: appId,
                                    config: roomConfig,
-                                   karaokeView: karaokeView) {_ in
-    }
+                                   karaokeView: karaokeView)
 }
 ```
 
