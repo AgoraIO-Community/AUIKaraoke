@@ -2,6 +2,7 @@ package io.agora.asceneskit.karaoke.binder;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import io.agora.auikit.model.AUIChoristerModel;
 import io.agora.auikit.model.AUIMicSeatInfo;
 import io.agora.auikit.model.AUIMicSeatStatus;
 import io.agora.auikit.model.AUIRoomContext;
+import io.agora.auikit.model.AUIRoomInfo;
 import io.agora.auikit.model.AUIUserInfo;
 import io.agora.auikit.model.AUIUserThumbnailInfo;
 import io.agora.auikit.service.IAUIChorusService;
@@ -72,6 +74,15 @@ public class AUIMicSeatsBinder implements
         IMicSeatItemView[] seatViewList = micSeatsView.getMicSeatItemViewList();
         for (int seatIndex = 0; seatIndex < seatViewList.length; seatIndex++) {
             AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(seatIndex);
+            if (seatIndex == 0 && micSeatInfo == null) {
+                AUIRoomInfo roomInfo = AUIRoomContext.shared().getRoomInfo(micSeatService.getChannelName());
+                if (roomInfo != null && roomInfo.roomOwner != null) {
+                    micSeatInfo = new AUIMicSeatInfo();
+                    micSeatInfo.seatIndex = 0;
+                    micSeatInfo.user = roomInfo.roomOwner;
+                    micSeatInfo.seatStatus = AUIMicSeatStatus.used;
+                }
+            }
             updateSeatView(seatIndex, micSeatInfo);
         }
 
@@ -172,8 +183,14 @@ public class AUIMicSeatsBinder implements
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
         AUIUserInfo userInfo = null;
-        if (micSeatInfo != null && micSeatInfo.user != null) {
+        if (micSeatInfo != null && micSeatInfo.user != null && !TextUtils.isEmpty(micSeatInfo.user.userId)) {
             userInfo = userService.getUserInfo(micSeatInfo.user.userId);
+            if(userInfo == null){
+                userInfo = new AUIUserInfo();
+                userInfo.userId = micSeatInfo.user.userId;
+                userInfo.userName = micSeatInfo.user.userName;
+                userInfo.userAvatar = micSeatInfo.user.userAvatar;
+            }
         }
 
         // 麦位状态
@@ -412,7 +429,13 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onRoomUserUpdate(@NonNull String roomId, @NonNull AUIUserInfo userInfo) {
-
+        for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {
+            AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(i);
+            if (seatInfo != null && seatInfo.user != null && seatInfo.user.userId.equals(userInfo.userId)) {
+                updateSeatView(i, seatInfo);
+                break;
+            }
+        }
     }
 
     @Override

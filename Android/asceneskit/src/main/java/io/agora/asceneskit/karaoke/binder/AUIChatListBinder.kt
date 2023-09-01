@@ -1,7 +1,9 @@
 package io.agora.asceneskit.voice.binder
 
 import android.util.Log
+import io.agora.asceneskit.R
 import io.agora.asceneskit.karaoke.binder.IAUIBindable
+import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.service.IAUIIMManagerService
 import io.agora.auikit.service.im.AUIChatManager
@@ -21,12 +23,16 @@ class AUIChatListBinder constructor(
     IAUIIMManagerService.AUIIMManagerRespDelegate {
 
     init {
-        chatListView.initView(roomInfo.roomOwner?.userId)
+        chatListView.initView(roomInfo.roomOwner?.userId ?: "")
     }
 
     override fun bind() {
         chatListView.setChatListItemClickListener(this)
         imManagerService.bindRespDelegate(this)
+        chatManager.saveWelcomeMsg(AUIRoomContext.shared().commonConfig.context.getString(R.string.voice_room_welcome))
+        chatListView.refreshSelectLast(chatManager.getMsgList().map { entity ->
+            AUIChatInfo(entity.user?.userId ?: "", entity.user?.userName?: "", entity.content, entity.joined)
+        })
     }
 
     override fun unBind() {

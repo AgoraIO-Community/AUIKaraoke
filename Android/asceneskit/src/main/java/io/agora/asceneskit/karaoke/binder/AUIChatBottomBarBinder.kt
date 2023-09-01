@@ -42,6 +42,7 @@ class AUIChatBottomBarBinder constructor(
     override fun bind() {
         userService.bindRespDelegate(this)
         micSeatService.bindRespDelegate(this)
+        chatBottomBarView.setShowMic(AUIRoomContext.shared().isRoomOwner(userService.channelName))
         chatBottomBarView.setMenuItemClickListener(this)
         chatBottomBarView.setSoftKeyListener()
     }

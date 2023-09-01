@@ -13,7 +13,6 @@ import io.agora.auikit.service.imp.AUIRoomManagerImpl
 import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
 import io.agora.auikit.utils.AUILogger
-import io.agora.rtc2.RtcEngine
 import io.agora.rtc2.RtcEngineEx
 import io.agora.rtm2.RtmClient
 
@@ -25,7 +24,6 @@ object KaraokeUiKit {
 
     private var mRoomManager: AUIRoomManagerImpl? = null
 
-    private var shouldReleaseRtc = true
     private var mRtcEngineEx: RtcEngineEx? = null
     private var mKTVApi: KTVApi? = null
 
@@ -49,10 +47,7 @@ object KaraokeUiKit {
         HttpManager.setBaseURL(BuildConfig.SERVER_HOST)
         AUIRoomContext.shared().commonConfig = config
         mKTVApi = ktvApi
-        if (rtcEngineEx != null) { // 用户塞进来的engine由用户自己管理生命周期
-            mRtcEngineEx = rtcEngineEx
-            shouldReleaseRtc = false
-        }
+        mRtcEngineEx = rtcEngineEx // 用户塞进来的engine由用户自己管理生命周期
         mRoomManager = AUIRoomManagerImpl(config, rtmClient)
         AUILogger.initLogger(AUILogger.Config(AUIRoomContext.shared().commonConfig.context, "Karaoke"))
     }
@@ -61,9 +56,6 @@ object KaraokeUiKit {
      * 释放资源
      */
     fun release() {
-        if (shouldReleaseRtc) {
-            RtcEngine.destroy()
-        }
         mRtcEngineEx = null
         mRoomManager = null
         mKTVApi = null
@@ -128,9 +120,14 @@ object KaraokeUiKit {
         karaokeView.bindService(roomService)
     }
 
-    fun destroyRoom(roomId: String?) {
+    fun destroyRoom(roomId: String) {
+        if (AUIRoomContext.shared().isRoomOwner(roomId)) {
+            mService?.getRoomManager()?.destroyRoom(roomId){}
+        }else{
+            mService?.getRoomManager()?.exitRoom(roomId){}
+        }
+        mService?.destroy()
         AUIRoomContext.shared().cleanRoom(roomId)
-        mService?.destroyRoom()
         mService = null
     }
 

@@ -41,11 +41,12 @@
         <TextView
             android:id="@+id/tvRoomId"
             android:layout_width="wrap_content"
-            android:maxWidth="180dp"
+            android:maxWidth="160dp"
             android:minWidth="120dp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="8dp"
             android:singleLine="true"
+            android:ellipsize="marquee"
             android:textColor="?attr/akaraoke_roomInfo_idTextColor"
             android:textSize="?attr/akaraoke_roomInfo_idTextSize"
             app:layout_constraintTop_toBottomOf="@id/tvRoomName"
