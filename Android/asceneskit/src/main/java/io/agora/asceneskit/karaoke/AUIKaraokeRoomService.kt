@@ -47,6 +47,8 @@ class AUIKaraokeRoomService(
     private val channelName: String
         get() { return  roomInfo.roomId }
 
+    private val rtcEngineCreateByService = rtcEngine == null
+
     private val mRtcEngine: RtcEngine = rtcEngine ?: AgoraEngineCreator.createRtcEngine(
         AUIRoomContext.shared().commonConfig.context,
         AUIRoomContext.shared().commonConfig.appId
@@ -106,6 +108,7 @@ class AUIKaraokeRoomService(
                 // failure
                 failure.invoke(error)
             } else {
+                mKtvApi.renewInnerDataStreamId()
                 // success
                 success.invoke(roomInfo)
 
@@ -115,11 +118,14 @@ class AUIKaraokeRoomService(
             logger().d(TAG, "enterRoom end ...")
         }
     }
-    fun destroyRoom() {
-        roomManager.destroyRoom(channelName) {}
+    fun destroy() {
         mKtvApi.release()
         mRtcEngine.leaveChannel()
+        if(rtcEngineCreateByService){
+            RtcEngine.destroy()
+        }
     }
+
     fun setupLocalStreamOn(isOn: Boolean) {
         Log.d("rtc_publish_state", "isOn: $isOn")
         if (isOn) {

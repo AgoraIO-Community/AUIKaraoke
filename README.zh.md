@@ -39,7 +39,7 @@ AUIKitKaraoke 提供以下核心功能：
 
 | iOS | Android | Backend |
 | --- | --- | --- |
-| [Karaoke（iOS）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/iOS/Example/AUIKitKaraoke) | [Karaoke（Android）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/Android)  | [Karaoke（Backend）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/backend) |
+| [Karaoke（iOS）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/iOS/Example) | [Karaoke（Android）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/Android)  | [Karaoke（Backend）](https://github.com/AgoraIO-Community/AUIKitKaraoke/tree/main/backend) |
 
 
 ## 交流&反馈

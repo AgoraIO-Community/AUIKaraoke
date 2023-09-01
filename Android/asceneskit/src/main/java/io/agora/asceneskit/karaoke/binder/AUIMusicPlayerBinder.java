@@ -379,14 +379,20 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
                 @Override
                 public void onMusicLoadFail(Long songCode, int reason) {
+                    if (songPlayingModel == null || !songPlayingModel.songCode.equals(songCode.toString())) {
+                        // 当前无歌曲了或不是当前歌曲了
+                        return;
+                    }
                     musicPlayerView.onMusicPrepareFailed();
                 }
 
                 @Override
                 public void onMusicLoadProgress(Long songCode, int percent, int status, String msg, String lyricUrl) {
-                    if (songPlayingModel != null && songPlayingModel.songCode.equals(songCode.toString())) {
-                        musicPlayerView.setLoadProgress(percent);
+                    if (songPlayingModel == null || !songPlayingModel.songCode.equals(songCode.toString())) {
+                        // 当前无歌曲了或不是当前歌曲了
+                        return;
                     }
+                    musicPlayerView.setLoadProgress(percent);
                 }
             });
         } else {

@@ -10,6 +10,8 @@ import io.agora.auikit.model.AUIGiftEntity
 import io.agora.auikit.model.AUIGiftTabEntity
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.service.IAUIGiftsService
+import io.agora.auikit.service.callback.AUIException
+import io.agora.auikit.service.callback.AUIGiftListCallback
 import io.agora.auikit.service.im.AUIChatManager
 import io.agora.auikit.ui.gift.AUIGiftInfo
 import io.agora.auikit.ui.gift.AUIGiftTabInfo
@@ -26,7 +28,6 @@ import java.security.MessageDigest
 class AUIGiftBarrageBinder constructor(
     private val activity: FragmentActivity,
     private val giftView: IAUIGiftBarrageView,
-    private val giftList:List<AUIGiftTabEntity>,
     private val giftService: IAUIGiftsService,
     private val chatManager:AUIChatManager
 ): IAUIBindable,IAUIGiftsService.AUIGiftRespDelegate {
@@ -34,9 +35,17 @@ class AUIGiftBarrageBinder constructor(
     private val TAG = "AUIGift_LOG"
     private var roomContext = AUIRoomContext.shared()
     private var mPAGView: PAGView? = null
+    private val giftList = mutableListOf<AUIGiftTabEntity>()
 
     init {
-        downloadEffectResource(giftList)
+        /** 获取礼物列表 初始化礼物Binder */
+        giftService.getGiftsFromService(object : AUIGiftListCallback {
+            override fun onResult(error: AUIException?, giftList: List<AUIGiftTabEntity>) {
+                this@AUIGiftBarrageBinder.giftList.addAll(giftList)
+                downloadEffectResource(giftList)
+            }
+        })
+
     }
 
     override fun bind() {
