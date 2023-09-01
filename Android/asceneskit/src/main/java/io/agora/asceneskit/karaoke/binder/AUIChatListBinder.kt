@@ -10,6 +10,7 @@ import io.agora.auikit.service.im.AUIChatManager
 import io.agora.auikit.ui.chatBottomBar.IAUIChatBottomBarView
 import io.agora.auikit.ui.chatList.AUIChatInfo
 import io.agora.auikit.ui.chatList.IAUIChatListView
+import io.agora.auikit.ui.chatList.impl.AUIChatListView
 import io.agora.auikit.ui.chatList.listener.AUIChatListItemClickListener
 
 class AUIChatListBinder constructor(
@@ -23,7 +24,7 @@ class AUIChatListBinder constructor(
     IAUIIMManagerService.AUIIMManagerRespDelegate {
 
     init {
-        chatListView.initView(roomInfo.roomOwner?.userId ?: "")
+        (chatListView as? AUIChatListView)?.setOwnerId(roomInfo.roomOwner?.userId ?: "")
     }
 
     override fun bind() {
