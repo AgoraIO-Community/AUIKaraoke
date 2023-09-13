@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  AUIKitKaraoke
+//  AUIKaraoke
 //
 //  Created by wushengtao on 2023/5/10.
 //

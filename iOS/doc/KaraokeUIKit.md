@@ -6,7 +6,7 @@ KaraokeUIKit is a Karaoke scenario component that provides room management and t
 
 
 ## Quick Started
-> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKitKaraoke/README.md) before integrating。
+> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKaraoke/README.md) before integrating。
 
 ### 1. Add Source Code
 
@@ -14,8 +14,8 @@ KaraokeUIKit is a Karaoke scenario component that provides room management and t
 
 - [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README.md)
 - [AScenesKit](../AScenesKit)
-- [KaraokeUIKit.swift](../Example/AUIKitKaraoke/KaraokeUIKit.swift)
-- [KeyCenter.swift](../Example/AUIKitKaraoke/KeyCenter.swift)
+- [KaraokeUIKit.swift](../Example/AUIKaraoke/KaraokeUIKit.swift)
+- [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
 **Add dependencies on AScenesKit and AUIKit in the Podfile file (for example, when AUIKit and AScenesKit are placed in the same level directory as the Podfile)**
 
