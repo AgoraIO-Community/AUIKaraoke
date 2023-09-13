@@ -1,8 +1,8 @@
-# UiKit-Android
+# AUIKaraoke-Android
 
 *English | [中文](README.zh.md)*
 
-AUIKitKaraoke is an open source audio and video UI component. By integrating the AUIKitKaraoke component in the project, you only need to write a few lines of code to add online karaoke scenes to your application, experience karaoke, microphone management, send and receive gifts, and text chat Wait for the relevant capabilities of Agora RTC in the KTV scenario.
+AUIKaraoke is an open source audio and video UI component. By integrating the AUIKitKaraoke component in the project, you only need to write a few lines of code to add online karaoke scenes to your application, experience karaoke, microphone management, send and receive gifts, and text chat Wait for the relevant capabilities of Agora RTC in the KTV scenario.
 
 
 
