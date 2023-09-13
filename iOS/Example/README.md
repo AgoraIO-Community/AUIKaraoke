@@ -10,7 +10,7 @@ This document mainly introduces how to quickly run through the AUIKaraoke exampl
 ## Directory
 ```
 ┌─ Example                     // Demo Code Integration Catalog
-│  └─ AUIKitKaraoke            // Provide Karaoke's integrated page
+│  └─ AUIKaraoke            // Provide Karaoke's integrated page
 ├─ AUIScenesKit                // Scenario business assembly module, currently only including Karaoke
 │  ├─ AUIKaraokeRoomView       // Karaoke room container view, used to splice various basic components and bind them to services
 │  ├─ AUIKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
