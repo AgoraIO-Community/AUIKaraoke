@@ -34,7 +34,7 @@ AScenesKit
 
 - [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 - [AScenesKit](../AScenesKit)
-- [KeyCenter.swift](../Example/AUIKitKaraoke/KeyCenter.swift)
+- [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
 **在Podfile文件里添加依赖AScenesKit和AUIKit(例如AUIKit与AScenesKit放置在Podfile同一级目录下时)**
 

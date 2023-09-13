@@ -1,6 +1,6 @@
 //
 //  AUIThemeSettingViewController.swift
-//  AUIKitKaraoke
+//  AUIKaraoke
 //
 //  Created by FanPengpeng on 2023/7/25.
 //

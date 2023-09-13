@@ -1,8 +1,8 @@
-# AUIKItKaraoke-Android
+# AUIKaraoke-Android
 
 *[English](README.md) | 中文*
 
-AUIKitKaraoke 是一个开源的音视频 UI 组件，通过在项目中集成 AUIKitKaraoke 组件，您只需要编写几行代码就可以为您的应用添加在线 K 歌场景，体验 K 歌、麦位管理、收发礼物、文字聊天等 Agora RTC 在 KTV 场景下的相关能力。
+AUIKaraoke 是一个开源的音视频 UI 组件，通过在项目中集成 AUIKitKaraoke 组件，您只需要编写几行代码就可以为您的应用添加在线 K 歌场景，体验 K 歌、麦位管理、收发礼物、文字聊天等 Agora RTC 在 KTV 场景下的相关能力。
 
 
 

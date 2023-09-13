@@ -1,4 +1,4 @@
-rootProject.name = "AUIKitKaraoke"
+rootProject.name = "AUIKaraoke"
 include ':asceneskit'
 include ':app'
 
