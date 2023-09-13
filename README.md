@@ -4,7 +4,7 @@
 
 ## Overview
 
-**AUIKit Component Solution** is a low-code solution launched by Agora for Karaoke, VoiceRoom and other scenarios. By utilizing Agora's RTC && RTM technology capabilities, it helps developers quickly implement related business requirements and enhance the core business.
+**AUIKaraoke Component Solution** is a low-code solution launched by Agora for Karaoke, VoiceRoom and other scenarios. By utilizing Agora's RTC && RTM technology capabilities, it helps developers quickly implement related business requirements and enhance the core business.
 
 ## Scenario Description
 
