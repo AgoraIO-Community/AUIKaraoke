@@ -246,14 +246,13 @@ func renew(config: AUIRoomConfig)
 订阅房间的异常回调，例如token过期，可以通过renew方法更新token
 
 ```swift
-func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+func subscribeError(delegate: AUIRtmErrorProxyDelegate)
 ```
 
 参数如下表所示：
 
 | 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| roomId | String | 房间id |
 | delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
 
 ### unsubscribeError
@@ -261,14 +260,13 @@ func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
 取消订阅房间的异常回调
 
 ```swift
-func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
 ```
 
 参数如下表所示：
 
 | 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| roomId | String | 房间id |
 | delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
 
 ### bindRespDelegate

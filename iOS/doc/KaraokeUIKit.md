@@ -251,14 +251,13 @@ The parameters are shown in the table below:
 Abnormal callback of subscription rooms, such as token expiration, can be updated through the renew method
 
 ```swift
-func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+func subscribeError(delegate: AUIRtmErrorProxyDelegate)
 ```
 
 The parameters are shown in the table below:
 
 | parameter   | type            | meaning     |
 | ------ | ------ | -------------- |
-| roomId | String | Room ID |
 | delegate | AUIRtmErrorProxyDelegate | Error callback object |
 
 ### unsubscribeError
@@ -266,14 +265,13 @@ The parameters are shown in the table below:
 Exception callback for unsubscribing to a room
 
 ```swift
-func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
 ```
 
 The parameters are shown in the table below:
 
 | parameter   | type            | meaning     |
 | ------ | ------ | -------------- |
-| roomId | String | Room ID |
 | delegate | AUIRtmErrorProxyDelegate | Error callback object |
 
 ### bindRespDelegate
