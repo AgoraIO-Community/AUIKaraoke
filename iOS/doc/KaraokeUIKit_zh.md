@@ -12,7 +12,6 @@ KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 **将以下源码复制到自己项目里：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 - [AScenesKit](../AScenesKit)
 - [KaraokeUIKit.swift](../Example/AUIKaraoke/KaraokeUIKit.swift)
 - [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
@@ -21,7 +20,7 @@ KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **把KaraokeUIKit.swift拖进工程里**
