@@ -56,7 +56,7 @@ class RoomViewController: UIViewController {
                                            config: roomConfig,
                                            karaokeView: karaokeView) 
             //订阅Token过期回调
-            KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
+            KaraokeUIKit.shared.subscribeError(delegate: self)
             //订阅房间被销毁回调
             KaraokeUIKit.shared.bindRespDelegate(delegate: self)
         }
@@ -71,7 +71,7 @@ class RoomViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         KaraokeUIKit.shared.destoryRoom(roomId: roomInfo?.roomId ?? "")
-        KaraokeUIKit.shared.unsubscribeError(roomId: roomInfo?.roomId ?? "", delegate: self)
+        KaraokeUIKit.shared.unsubscribeError(delegate: self)
         KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
     }
     
