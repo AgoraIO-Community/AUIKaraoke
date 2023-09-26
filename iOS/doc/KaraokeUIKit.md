@@ -147,8 +147,8 @@ AUIRoomContext.shared.switchTheme(themeName: "UIKit")
 - You can also change the skin of the component by modifying the [configuration file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme) or replacing the [resource file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)
 - For more skin changing issues, please refer to [Skin Settings](./KaraokeTheme.md)
 
-#API reference
-##setup
+# API reference
+## setup
 Initialization
 ```swift
 func setup(roomConfig: AUICommonConfig,
@@ -164,7 +164,7 @@ The parameters are shown in the table below:
 | rtcEngine | AgoraRtcEngineKit     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
 | rtmClient   | AgoraRtmClientKit       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.|
 
-##createRoom
+## createRoom
 Create a Room
 
 ```swift
@@ -229,6 +229,80 @@ The parameters are shown in the table below:
 | parameter   | type            | meaning     |
 | ------ | ------ | -------------- |
 | roomId | String | The ID of the room to destroy |
+
+
+
+### renew
+
+Update room token
+
+```swift
+func renew(config: AUIRoomConfig)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| config | AUIRoomConfig | Configuration related to the room, including subchannel names and tokens |
+
+### subscribeError
+
+Abnormal callback of subscription rooms, such as token expiration, can be updated through the renew method
+
+```swift
+func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| roomId | String | Room ID |
+| delegate | AUIRtmErrorProxyDelegate | Error callback object |
+
+### unsubscribeError
+
+Exception callback for unsubscribing to a room
+
+```swift
+func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| roomId | String | Room ID |
+| delegate | AUIRtmErrorProxyDelegate | Error callback object |
+
+### bindRespDelegate
+
+Bind the response of the corresponding room, such as the room being destroyed, the user being kicked out, the room's information being updated, etc
+
+```swift
+func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | Response callback object |
+
+### unbindRespDelegate
+
+Response to unbinding the corresponding room
+
+```swift
+func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | Response callback object |
 
 
 ## Data Model

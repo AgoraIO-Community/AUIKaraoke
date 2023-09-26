@@ -146,8 +146,8 @@ AUIRoomContext.shared.switchTheme(themeName: "UIKit")
 - 也可通过修改[配置文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme)或者替换[资源文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)来更换组件的皮肤
 - 更多换肤问题可以参考[皮肤设置](./KaraokeTheme_zh.md)
 
-#API参考
-##setup
+# API参考
+## setup
 初始化
 ```swift
 func setup(roomConfig: AUICommonConfig,
@@ -163,7 +163,7 @@ func setup(roomConfig: AUICommonConfig,
 | rtcEngineEx | AgoraRtcEngineKit     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。 |
 | rtmClient   | AgoraRtmClientKit       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。 |
 
-##createRoom
+## createRoom
 创建房间
 
 ```swift
@@ -227,11 +227,77 @@ func launchRoom(roomInfo: AUIRoomInfo,
 func destoryRoom(roomId: String)
 ```
 
+### renew
+
+更新房间token
+
+```swift
+func renew(config: AUIRoomConfig)
+```
+
 参数如下表所示：
 
 | 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| roomId | String | 要销毁的房间ID |
+| config | AUIRoomConfig | 房间里相关的配置，包含子频道名和token |
+
+### subscribeError
+
+订阅房间的异常回调，例如token过期，可以通过renew方法更新token
+
+```swift
+func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| roomId | String | 房间id |
+| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
+
+### unsubscribeError
+
+取消订阅房间的异常回调
+
+```swift
+func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| roomId | String | 房间id |
+| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
+
+### bindRespDelegate
+
+绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等
+
+```swift
+func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
+
+### unbindRespDelegate
+
+解除绑定对应房间的响应
+
+```swift
+func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
 
 
 ## 数据模型
