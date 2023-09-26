@@ -6,7 +6,6 @@ KaraokeUIKit is a Karaoke scenario component that provides room management and t
 
 
 ## Quick Started
-> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKaraoke/README.md) before integrating。
 
 ### 1. Add Source Code
 
