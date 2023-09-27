@@ -167,19 +167,28 @@ KaraokeUiKit.launchRoom(
     karaokeRoomView
 )
 
+// 订阅错误事件
+val errorDelegate = object: AUIRtmErrorProxyDelegate{
+  override fun onTokenPrivilegeWillExpire(channelName: String?) {
+      // Token过期时回调
+  }
+}
+KaraokeUiKit.subscribeError(roomInfo.roomId, errorDelegate)
+
 // 订阅房间事件
-KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
-    override fun onRoomDestroy(roomId: String){
-        // 房间被销毁
-    }
-})
+val respDelegate = object: AUIRoomManagerRespDelegate{
+  override fun onRoomDestroy(roomId: String){
+    // 房间被销毁
+  }
+}
+KaraokeUiKit.bindRespDelegate(respDelegate)
 ```
 
 ### 5. 销毁房间
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
-KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
+KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
+KaraokeUiKit.unbindRespDelegate(respDelegate)
 ```
 
 ## API参考

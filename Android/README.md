@@ -4,9 +4,6 @@
 
 AUIKaraoke is an open source audio and video UI component. By integrating the AUIKitKaraoke component in the project, you only need to write a few lines of code to add online karaoke scenes to your application, experience karaoke, microphone management, send and receive gifts, and text chat Wait for the relevant capabilities of Agora RTC in the KTV scenario.
 
-
-
-
 ## Quick Start
 
 ### 1. Environment Setup
@@ -163,19 +160,28 @@ KaraokeUiKit.launchRoom(
     karaokeRoomView
 )
 
-// Subscribe room event
-KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
-    override fun onRoomDestroy(roomId: String){
-        // Room destroyed by host
-    }
-})
+// Subscribe room error events
+val errorDelegate = object: AUIRtmErrorProxyDelegate{
+  override fun onTokenPrivilegeWillExpire(channelName: String?) {
+    // Callback when rtm token expired.
+  }
+}
+KaraokeUiKit.subscribeError(roomInfo.roomId, errorDelegate)
+
+// Subscribe room response events
+val respDelegate = object: AUIRoomManagerRespDelegate{
+  override fun onRoomDestroy(roomId: String){
+    // Room destroyed by host
+  }
+}
+KaraokeUiKit.bindRespDelegate(respDelegate)
 ```
 
 ### 6. Destory Karaoke Room
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
-KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
+KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
+KaraokeUiKit.unbindRespDelegate(respDelegate)
 ```
 
 ## API reference
