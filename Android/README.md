@@ -174,13 +174,17 @@ KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
 ### 6. Destory Karaoke Room
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-// Unsubscribe room event
+KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
 KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
 ```
 
 ## API reference
 
-### setup
+### KaraokeUiKit
+
+Karaoke Launch Class.
+
+#### setup
 
 ```kotlin
 fun setup(
@@ -202,7 +206,7 @@ The parameters are shown in the table below:
 
 
 
-### createRoom
+#### createRoom
 
 ```kotlin
 fun createRoom(
@@ -222,7 +226,7 @@ The parameters are shown in the table below:
 
 
 
-### getRoomList
+#### getRoomList
 
 ```kotlin
 fun getRoomList(
@@ -242,7 +246,7 @@ The parameters are shown in the table below:
 | success   | Function | Success callback, success will return a list of room information |
 | failure   | Function | Failure callback                                             |
 
-### launchRoom
+#### launchRoom
 
 ```kotlin
 fun launchRoom(
@@ -252,7 +256,7 @@ fun launchRoom(
 )
 ```
 
-参数如下表所示：
+The parameters are shown in the table below:
 
 | parameter   | type            | meaning                                                      |
 | ----------- | --------------- | ------------------------------------------------------------ |
@@ -260,7 +264,7 @@ fun launchRoom(
 | config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 | karaokeView | KaraokeRoomView | Room UI View                                                 |
 
-### destroyRoom
+#### destroyRoom
 
 ```kotlin
 fun destroyRoom(roomId: String?)
@@ -272,12 +276,154 @@ The parameters are shown in the table below:
 | --------- | ------ | ----------------------------- |
 | roomId    | String | The ID of the room to destroy |
 
-### release
+#### subscribeError
+
+Subscribe room error events.
+
+```kotlin
+fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter | type                     | meaning                      |
+| --------- | ------------------------ | ---------------------------- |
+| roomId    | String                   | The room id                  |
+| delegate  | AUIRtmErrorProxyDelegate | The error delegate implement |
+
+#### unsubscribeError
+
+Unsubscribe room error events.
+
+```kotlin
+fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter | type                     | meaning                      |
+| --------- | ------------------------ | ---------------------------- |
+| roomId    | String                   | The room id                  |
+| delegate  | AUIRtmErrorProxyDelegate | The error delegate implement |
+
+#### bindRespDelegate
+
+Bind to get the room response events.
+
+```kotlin
+fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+The parameters are shown in the table below:
+
+| parameter | type                       | meaning                              |
+| --------- | -------------------------- | ------------------------------------ |
+| delegate  | AUIRoomManagerRespDelegate | The room response delegate implement |
+
+#### unbindRespDelegate
+
+```kotlin
+fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter | type                       | meaning                              |
+| --------- | -------------------------- | ------------------------------------ |
+| delegate  | AUIRoomManagerRespDelegate | The room response delegate implement |
+
+#### release
 
 ```kotlin
 fun release()
 ```
 
+### AUIRtmErrorProxyDelegate
+
+The error delegate interface.
+
+#### onConnectionStateChanged
+
+Callback when network status changes.
+
+The parameters are shown in the table below:
+
+| parameter   | type   | meaning                                                      |
+| ----------- | ------ | ------------------------------------------------------------ |
+| channelName | String | Same with the room Id.                                       |
+| state       | Int    | Network status，See **RtmConstants.RtmConnectionState**      |
+| reason      | Int    | Change reason，See **RtmConstants.RtmConnectionChangeReason** |
+
+
+#### onMsgRecvEmpty
+
+Callback when receiving empty message.
+
+The parameters are shown in the table below:
+
+| parameter   | type   | meaning                |
+| ----------- | ------ | ---------------------- |
+| channelName | String | Same with the room Id. |
+
+
+#### onTokenPrivilegeWillExpire
+
+Callback when the rtm token expired.
+
+The parameters are shown in the table below:
+
+| parameter   | type   | meaning                |
+| ----------- | ------ | ---------------------- |
+| channelName | String | Same with the room Id. |
+
+### AUIRoomManagerRespDelegate
+
+Response delegate interface.
+
+#### onRoomDestroy
+
+Callback when the room destroyed.
+
+The parameters are shown in the table below:
+
+| parameter | type   | meaning     |
+| --------- | ------ | ----------- |
+| roomId    | String | The room id |
+
+
+#### onRoomInfoChange
+
+Callback when the room info changed.
+
+The parameters are shown in the table below:
+
+| parameter | type        | meaning               |
+| --------- | ----------- | --------------------- |
+| roomId    | String      | The room id           |
+| roomInfo  | AUIRoomInfo | The room info changed |
+
+
+#### onAnnouncementDidChange
+
+Callback when room announcement is updated.
+
+The parameters are shown in the table below:
+
+| parameter | type   | meaning              |
+| --------- | ------ | -------------------- |
+| roomId    | String | The room id          |
+| content   | String | announcement content |
+
+
+#### onRoomUserBeKicked
+
+Calledback when the user is kicked.
+
+The parameters are shown in the table below:
+
+| parameter | type   | meaning        |
+| --------- | ------ | -------------- |
+| roomId    | String | The room id    |
+| userId    | String | Kicked user ID |
 
 
 ## Data Model

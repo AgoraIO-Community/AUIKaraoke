@@ -178,13 +178,17 @@ KaraokeUiKit.bindRespDelegate(object: AUIRoomManagerRespDelegate{
 ### 5. 销毁房间
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-// 取消订阅房间事件
+KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
 KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
 ```
 
 ## API参考
 
-### setup
+### KaraokeUiKit
+
+Karaoke入口类。
+
+#### setup
 
 初始化。
 
@@ -208,9 +212,9 @@ fun setup(
 
 
 
-### createRoom
+#### createRoom
 
-创建房间
+创建房间。
 
 ```kotlin
 fun createRoom(
@@ -230,9 +234,9 @@ fun createRoom(
 
 
 
-### getRoomList
+#### getRoomList
 
-获取房间列表
+获取房间列表。
 
 ```kotlin
 fun getRoomList(
@@ -252,7 +256,7 @@ fun getRoomList(
 | success   | Function | 成功回调，成功会返回一个房间信息列表 |
 | failure   | Function | 失败回调                             |
 
-### launchRoom
+#### launchRoom
 
 ```kotlin
 fun launchRoom(
@@ -270,9 +274,9 @@ fun launchRoom(
 | config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 | karaokeView | KaraokeRoomView | 房间UI View                           |
 
-### destroyRoom
+#### destroyRoom
 
-销毁房间
+销毁房间。
 
 ```kotlin
 fun destroyRoom(roomId: String?)
@@ -284,14 +288,159 @@ fun destroyRoom(roomId: String?)
 | ------ | ------ | -------------- |
 | roomId | String | 要销毁的房间ID |
 
-### release
+#### subscribeError
 
-释放资源
+订阅房间的异常回调。
+
+```kotlin
+fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数         | 类型                         | 含义      |
+|------------|----------------------------|---------|
+| roomId     | String                     | 房间ID    |
+| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
+
+#### unsubscribeError
+
+取消订阅房间的异常回调。
+
+```kotlin
+fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数         | 类型                         | 含义      |
+|------------|----------------------------|---------|
+| roomId     | String                     | 房间ID    |
+| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
+
+#### bindRespDelegate
+
+绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等。
+
+```kotlin
+fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+参数如下表所示：
+
+| 参数         | 类型                          | 含义      |
+|------------|-----------------------------|---------|
+| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+
+#### unbindRespDelegate
+
+解除绑定对应房间的响应。
+
+```kotlin
+fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+参数如下表所示：
+
+| 参数         | 类型                          | 含义      |
+|------------|-----------------------------|---------|
+| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+
+
+#### release
+
+释放资源。
 
 ```kotlin
 fun release()
 ```
 
+### AUIRtmErrorProxyDelegate
+
+错误回调接口。
+
+#### onConnectionStateChanged
+
+网络状态变化时回调。
+
+参数如下表所示：
+
+| 参数          | 类型     | 含义                                            |
+|-------------|--------|-----------------------------------------------|
+| channelName | String | 房间ID                                          |
+| state       | Int    | 网络状态，见RtmConstants.RtmConnectionState         |
+| reason      | Int    | 变化原因，见RtmConstants.RtmConnectionChangeReason  |
+
+
+#### onMsgRecvEmpty
+
+收到的消息Key和Value为空时回调。
+
+参数如下表所示：
+
+| 参数          | 类型     | 含义                                            |
+|-------------|--------|-----------------------------------------------|
+| channelName | String | 房间ID                                          |
+
+
+#### onTokenPrivilegeWillExpire
+
+Token过期时回调。
+
+参数如下表所示：
+
+| 参数          | 类型     | 含义                                            |
+|-------------|--------|-----------------------------------------------|
+| channelName | String | 房间ID                                          |
+
+### AUIRoomManagerRespDelegate
+
+响应回调接口。
+
+#### onRoomDestroy
+
+房间被销毁时回调。
+
+参数如下表所示：
+
+| 参数      | 类型     | 含义    |
+|---------|--------|-------|
+| roomId  | String | 房间ID  |
+
+
+#### onRoomInfoChange
+
+房间信息变更时回调。
+
+参数如下表所示：
+
+| 参数        | 类型           | 含义       |
+|-----------|--------------|----------|
+| roomId    | String       | 房间ID     |
+| roomInfo  | AUIRoomInfo  | 变更后房间信息  |
+
+
+#### onAnnouncementDidChange
+
+房间公告被更新时回调。
+
+参数如下表所示：
+
+| 参数      | 类型     | 含义    |
+|---------|--------|-------|
+| roomId  | String | 房间ID  |
+| content | String | 公告信息  |
+
+
+#### onRoomUserBeKicked
+
+用户被踢时回调。
+
+参数如下表所示：
+
+| 参数      | 类型     | 含义     |
+|---------|--------|--------|
+| roomId  | String | 房间ID   |
+| userId  | String | 被踢用户ID |
 
 
 ## 数据模型
