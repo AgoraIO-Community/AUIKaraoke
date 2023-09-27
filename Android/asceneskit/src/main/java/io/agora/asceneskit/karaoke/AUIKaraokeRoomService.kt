@@ -160,6 +160,20 @@ class AUIKaraokeRoomService(
         mRtcEngine.muteRemoteAudioStream(userId.toInt(), isMute)
     }
 
+    fun renew(config: AUIRoomConfig){
+        AUIRoomContext.shared().roomConfigMap[roomInfo.roomId] = config
+
+        // KTVApi renew
+        ktvApi?.renewToken(config.rtcRtmToken, config.rtcChorusRtcToken)
+
+        // rtm renew
+        rtmManager.renew(config.rtmToken)
+        rtmManager.renewChannel(config.channelName, config.rtcToken)
+
+        // rtc renew
+        rtcEngine?.renewToken(config.rtcRtcToken)
+    }
+
     private fun joinRtcRoom() {
         mRtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING)
         mRtcEngine.enableVideo()
