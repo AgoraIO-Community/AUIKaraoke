@@ -1,7 +1,4 @@
 spring:
-    profiles:
-        # Set environment
-        active: dev
     application:
         # Application name
         name: uikit-karaoke
@@ -55,22 +52,15 @@ task:
 token:
     appId:
     appCertificate:
+    expirationInSeconds: 86400
+    privilegeExpirationInSeconds: 86400
 
----
-spring:
-    profiles: dev
----
-spring:
-    profiles: test
-log:
-    path: /data/logs
----
-spring:
-    profiles: pre
-log:
-    path: /data/logs
----
-spring:
-    profiles: prod
-log:
-    path: /data/logs
+# IM
+em:
+    auth:
+        appKey:
+        clientId:
+        clientSecret:
+    chatRoom:
+        maxUsers: 1000
+

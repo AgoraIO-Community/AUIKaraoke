@@ -19,12 +19,14 @@ public class TokenServiceImpl implements ITokenService {
     private String appId;
     @Value("${token.appCertificate}")
     private String appCertificate;
+    @Value("${token.expirationInSeconds}")
     private static int tokenExpirationInSeconds = 3600 * 24;
+    @Value("${token.privilegeExpirationInSeconds}")
     private static int privilegeExpirationInSeconds = 3600 * 24;
 
     /**
      * Generate RTC token
-     * 
+     *
      * @param channelName
      * @param account
      * @return
@@ -39,7 +41,7 @@ public class TokenServiceImpl implements ITokenService {
 
     /**
      * Generate RTC token
-     * 
+     *
      * @param channelName
      * @param account
      * @return
@@ -54,7 +56,7 @@ public class TokenServiceImpl implements ITokenService {
 
     /**
      * Generate RTM token
-     * 
+     *
      * @param userId
      * @return
      */
@@ -67,7 +69,7 @@ public class TokenServiceImpl implements ITokenService {
 
     /**
      * Generate RTM token
-     * 
+     *
      * @param userId
      * @return
      */
@@ -80,7 +82,7 @@ public class TokenServiceImpl implements ITokenService {
 
     /**
      * Get token
-     * 
+     *
      * @param channelName
      * @param account
      * @return
@@ -100,7 +102,7 @@ public class TokenServiceImpl implements ITokenService {
 
     /**
      * Get token
-     * 
+     *
      * @param channelName
      * @param account
      * @return

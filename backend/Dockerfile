@@ -1,4 +1,17 @@
-FROM ubuntu:20.04
+FROM maven:3.9.2-eclipse-temurin-11 AS builder
+
+WORKDIR /app
+
+COPY mvn_settings.xml /root/.m2/settings.xml
+
+COPY src ./src
+
+COPY pom.xml ./
+
+RUN mvn package -f pom.xml -Dmaven.test.skip=true -T 6
+
+
+FROM ubuntu:20.04 AS Final
 
 ENV JAVA_HOME=/usr/lib/jvm/default-java
 
@@ -28,35 +41,22 @@ RUN apt-get install -y libxdamage1 \
 # Install java
 RUN apt-get -y install default-jdk
 
-# Install maven
-RUN apt-get -y install maven
-
-# Copy dynamic library
-COPY src/main/resources/lib/*.so /usr/lib/
-
-WORKDIR /app
-
 ARG JAR_FILE
-ENV PROFILES=${PROFILES}
-ENV MONGODB_URI=${MONGODB_URI}
-ENV NCS_SECRET=${NCS_SECRET}
-ENV REDIS_HOST=${REDIS_HOST}
-ENV REDIS_PASSWORD=${REDIS_PASSWORD}
-ENV TOKEN_APP_ID=${TOKEN_APP_ID}
-ENV TOKEN_APP_CERTIFICATE=${TOKEN_APP_CERTIFICATE}
+ARG VERSION
+ARG BRANCH
+ARG COMMIT_ID
+ARG BUILD_DATE
 
-RUN echo "> JAR_FILE"
-RUN echo ${JAR_FILE}
+ENV VERSION=${VERSION}
+ENV BRANCH=${BRANCH}
+ENV COMMIT_ID=${COMMIT_ID}
+ENV BUILD_DATE=${BUILD_DATE}
 
-COPY ${JAR_FILE} app.jar
+WORKDIR /workspace
+
+COPY --from=builder /app/target/*.jar /workspace/app.jar
+COPY --from=builder /app/src/main/resources/lib/*.so /usr/lib/
 
 EXPOSE 8080
 
-ENTRYPOINT java -jar -Dspring.profiles.active=$PROFILES \
-    -Dspring.data.mongodb.uri=$MONGODB_URI \
-    -Dspring.redis.host=$REDIS_HOST \
-    -Dspring.redis.password=$REDIS_PASSWORD \
-    -Dncs.secret=$NCS_SECRET \
-    -Dtoken.appId=$TOKEN_APP_ID \
-    -Dtoken.appCertificate=$TOKEN_APP_CERTIFICATE \
-    app.jar
+ENTRYPOINT ["java","-jar","app.jar"]

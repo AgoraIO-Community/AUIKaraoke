@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.PostConstruct;
 
+import io.agora.rtc2.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -98,7 +99,7 @@ public class RtmUtil {
 
     /**
      * Init
-     * 
+     *
      * @return
      */
     @PostConstruct
@@ -111,7 +112,7 @@ public class RtmUtil {
 
     /**
      * Acquire lock
-     * 
+     *
      * @param channelName
      * @param lockName
      * @return
@@ -157,7 +158,7 @@ public class RtmUtil {
 
     /**
      * Create client
-     * 
+     *
      * @return
      */
     public boolean createClient() {
@@ -172,6 +173,9 @@ public class RtmUtil {
         rtmConfig.appId = appId;
         rtmConfig.userId = userId;
         rtmConfig.eventListener = rtmEventListener;
+        RtmConfig.LogConfig logConfig = new RtmConfig.LogConfig();
+        logConfig.level = Constants.LogLevel.getValue(Constants.LogLevel.LOG_LEVEL_NONE);
+        rtmConfig.logConfig = logConfig;
 
         try {
             log.info("createClient, create rtm client, appId:{}, userId:{}", rtmConfig.appId, rtmConfig.userId);
@@ -187,7 +191,7 @@ public class RtmUtil {
 
     /**
      * Create metadata
-     * 
+     *
      * @return
      */
     public Metadata createMetadata() {
@@ -196,7 +200,7 @@ public class RtmUtil {
 
     /**
      * Get channel metadata
-     * 
+     *
      * @param channelName
      * @return
      */
@@ -246,7 +250,7 @@ public class RtmUtil {
 
     /**
      * Get channel metadata by key
-     * 
+     *
      * @param metadata
      * @param key
      * @return
@@ -268,7 +272,7 @@ public class RtmUtil {
 
     /**
      * Get RTM token
-     * 
+     *
      * @return
      */
     public String getRtmToken() {
@@ -279,7 +283,7 @@ public class RtmUtil {
 
     /**
      * Login
-     * 
+     *
      * @param rtmToken
      * @return
      */
@@ -328,7 +332,7 @@ public class RtmUtil {
 
     /**
      * Print channel metadata
-     * 
+     *
      * @param channelName
      * @return
      */
@@ -348,7 +352,7 @@ public class RtmUtil {
 
     /**
      * Print channel metadata
-     * 
+     *
      * @param channelName
      * @param metadata
      * @return
@@ -368,7 +372,7 @@ public class RtmUtil {
 
     /**
      * Release lock
-     * 
+     *
      * @param channelName
      * @param lockName
      * @return
@@ -413,7 +417,7 @@ public class RtmUtil {
 
     /**
      * Remove lock
-     * 
+     *
      * @param channelName
      * @param lockName
      * @return
@@ -454,7 +458,7 @@ public class RtmUtil {
 
     /**
      * Remove channel metadata
-     * 
+     *
      * @param channelName
      * @return
      */
@@ -500,7 +504,7 @@ public class RtmUtil {
 
     /**
      * Renew token
-     * 
+     *
      * @return
      */
     public Boolean renewToken() {
@@ -522,7 +526,7 @@ public class RtmUtil {
 
     /**
      * Set channel metadata
-     * 
+     *
      * @param channelName
      * @param metadata
      * @return
@@ -569,7 +573,7 @@ public class RtmUtil {
 
     /**
      * Set lock
-     * 
+     *
      * @param channelName
      * @param lockName
      * @return
@@ -610,7 +614,7 @@ public class RtmUtil {
 
     /**
      * Update channel metadata
-     * 
+     *
      * @param channelName
      * @param metadata
      * @return
@@ -657,7 +661,7 @@ public class RtmUtil {
 
     /**
      * Who now
-     * 
+     *
      * @param channelName
      * @return
      */
