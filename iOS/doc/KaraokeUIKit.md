@@ -345,6 +345,58 @@ The parameters are shown in the table below:
    |
 
 
+## 协议
+### AUIRtmErrorProxyDelegate
+```AUIRtmErrorProxyDelegate``` protocol is used to handle various events related to real-time messaging (RTM) errors in the voice network. It provides optional methods that can be implemented by classes that follow this protocol to respond to specific events.
+
+#### Method
+- ```func onTokenPrivilegeWillExpire(channelName: String?)```
+   Call when token is about to expire.
+  - Parameter:
+     - ```channelName```: channel name.
+    >
+- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
+    Called when the RTM connection status changes.
+    - Parameter:
+      - ```channelName```: channel name.
+      - ```state```: New connection status.
+      - ```reason```: The reason for the connection status.
+    >
+- ```func onMsgRecvEmpty(channelName: String)```
+    Called when room KV storage is empty, indicating that the room has been destroyed.
+
+  - Parameter:
+    - ```channelName```: channel name.
+
+> Note: The methods in this protocol are optional and can be implemented as needed.
+
+### AUIRoomManagerRespDelegate
+```AUIRoomManagerRespDelegate``` protocol is used to handle various response events related to room operations. It provides the following methods that can be implemented by classes following this protocol to respond to specific events.
+
+#### Method
+  - ```func onRoomDestroy(roomId: String)```
+    The callback method called when the room is destroyed.
+    - Parameter:
+      - ```roomId```: Room ID.
+    >
+  - ```func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo)```
+    The callback method called when room information changes.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```roomInfo```: Room information.
+    >
+  - ```func onRoomAnnouncementChange(roomId: String, announcement: String)```
+    The method called when a room announcement changes.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```announcement```: Announcement of changes.
+    >
+- ```func onRoomUserBeKicked(roomId: String, userId: String)```
+    The method called when a room user is kicked out of the room.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```userId```: User ID.
+
 ## License
 Copyright © Agora Corporation. All rights reserved.
 Licensed under the [MIT license](../LICENSE).
