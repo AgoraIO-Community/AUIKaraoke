@@ -26,6 +26,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AKaraoke"
+        android:usesCleartextTraffic="true"
         android:name=".MApplication"
         tools:replace="android:theme">
 

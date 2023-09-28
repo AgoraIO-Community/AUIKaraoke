@@ -35,10 +35,10 @@ import io.agora.rtc2.RtcEngine
 
 
 class AUIKaraokeRoomService(
-    private val rtcEngine: RtcEngine?,
-    private val ktvApi: KTVApi?,
+    rtcEngine: RtcEngine?,
+    ktvApi: KTVApi?,
     private val roomManager: AUIRoomManagerImpl,
-    private val roomConfig: AUIRoomConfig,
+    private var roomConfig: AUIRoomConfig,
     private val roomInfo: AUIRoomInfo
 ): AUIUserRespDelegate {
 
@@ -161,17 +161,18 @@ class AUIKaraokeRoomService(
     }
 
     fun renew(config: AUIRoomConfig){
+        roomConfig = config
         AUIRoomContext.shared().roomConfigMap[roomInfo.roomId] = config
 
         // KTVApi renew
-        ktvApi?.renewToken(config.rtcRtmToken, config.rtcChorusRtcToken)
+        mKtvApi.renewToken(config.rtcRtmToken, config.rtcChorusRtcToken)
 
         // rtm renew
         rtmManager.renew(config.rtmToken)
         rtmManager.renewChannel(config.channelName, config.rtcToken)
 
         // rtc renew
-        rtcEngine?.renewToken(config.rtcRtcToken)
+        mRtcEngine.renewToken(config.rtcRtcToken)
     }
 
     private fun joinRtcRoom() {
@@ -211,16 +212,16 @@ class AUIKaraokeRoomService(
         if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
             return
         }
-        rtcEngine?.adjustRecordingSignalVolume(if (mute) 0 else 100)
+        mRtcEngine.adjustRecordingSignalVolume(if (mute) 0 else 100)
     }
 
     override fun onUserVideoMute(userId: String, mute: Boolean) {
         if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
             return
         }
-        rtcEngine?.enableLocalVideo(!mute)
+        mRtcEngine.enableLocalVideo(!mute)
         val option = ChannelMediaOptions()
         option.publishCameraTrack = !mute
-        rtcEngine?.updateChannelMediaOptions(option)
+        mRtcEngine.updateChannelMediaOptions(option)
     }
 }
