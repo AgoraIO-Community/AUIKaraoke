@@ -340,6 +340,58 @@ func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 | rtcChorusChannelName | String | 合唱频道名，一般为{roomId}_rtc_ex                            |
 | rtcChorusRtcToken    | String | 合唱频道的rtc token，uid为setup时AUICommonConfig里的userId   |
 
+## 协议
+### AUIRtmErrorProxyDelegate
+```AUIRtmErrorProxyDelegate``` 协议是用于处理与声网实时消息（RTM）错误相关的各种事件的协议。它提供了可选方法，可以由遵循此协议的类来实现，以响应特定的事件。
+
+#### 方法
+- ```func onTokenPrivilegeWillExpire(channelName: String?)```
+   token 即将过期时的调用。
+  - 参数：
+     - ```channelName```: 频道名称。
+    >
+- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
+    当 RTM 连接状态发生改变时调用。
+    - 参数：
+      - ```channelName```: 频道名称。
+      - ```state```: 新的连接状态。
+      - ```reason```: 连接状态的原因。
+    >
+- ```func onMsgRecvEmpty(channelName: String)```
+    当收到房间KV存储为空时调用，认为房间已经被销毁。
+
+  - 参数:
+    - ```channelName```: 频道名称。
+
+> 注意：该协议中的方法都是可选的，可以根据需要进行实现。
+
+### AUIRoomManagerRespDelegate
+```AUIRoomManagerRespDelegate``` 协议用于处理与房间操作相关的各种响应事件。它提供了以下方法，可以由遵循此协议的类来实现，以响应特定的事件。
+
+#### 方法
+  - ```func onRoomDestroy(roomId: String)```
+    房间被销毁时调用的回调方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+    >
+  - ```func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo)```
+    房间信息发生变更时调用的回调方法。
+    - 参数：
+      - ```roomId```:房间ID。
+      - ```roomInfo```:房间信息。
+    >
+  - ```func onRoomAnnouncementChange(roomId: String, announcement: String)```
+    房间公告发生变更时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```announcement```: 公告变更内容。
+    >
+- ```func onRoomUserBeKicked(roomId: String, userId: String)```
+    房间用户被踢出房间时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```userId```: 用户ID。
+
 ## 许可证
 版权所有 Agora, Inc. 保留所有权利。
 使用 [MIT 许可证](../LICENSE)
