@@ -1,6 +1,11 @@
 
 English | [中文](CHANGELOG.zh.md)
 
+## [0.5.0](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.1)
+- Add renewToken api for Android.
+- Update backend code.
+- Fixed legacy bugs
+
 ## [0.5.0](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.0)
 - Update RTM to stable version
 - Fixed legacy bugs
