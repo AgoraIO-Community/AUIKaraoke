@@ -184,7 +184,22 @@ val respDelegate = object: AUIRoomManagerRespDelegate{
 KaraokeUiKit.bindRespDelegate(respDelegate)
 ```
 
-### 5. 销毁房间
+### 6. 更新Token
+```kotlin
+val config = AUiRoomConfig(roomInfo.roomId)
+// 生成config.channelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtmToken = ""
+config.rtcToken = ""
+// 生成config.rtcChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtcRtmToken = ""
+config.rtcRtcToken = ""
+// 生成config.rtcChorusChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
+config.rtcChorusRtcToken = ""
+
+KaraokeUiKit.renewToken(config)
+```
+
+### 7. 销毁房间
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
 KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
@@ -282,6 +297,21 @@ fun launchRoom(
 | roomInfo    | AUIRoomInfo     | 房间信息                              |
 | config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 | karaokeView | KaraokeRoomView | 房间UI View                           |
+
+
+#### renewToken
+
+```kotlin
+fun renewToken(
+    config: AUIRoomConfig
+)
+```
+
+参数如下表所示：
+
+| 参数        | 类型            | 含义                                  |
+| ----------- | --------------- | ------------------------------------- |
+| config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 
 #### destroyRoom
 

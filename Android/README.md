@@ -177,7 +177,22 @@ val respDelegate = object: AUIRoomManagerRespDelegate{
 KaraokeUiKit.bindRespDelegate(respDelegate)
 ```
 
-### 6. Destory Karaoke Room
+### 6. Renew Token
+```kotlin
+val config = AUiRoomConfig(roomInfo.roomId)
+// Generate token with config.channelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtmToken = ""
+config.rtcToken = ""
+// Generate token with config.rtcChannelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtcRtmToken = ""
+config.rtcRtcToken = ""
+// Generate token with config.rtcChorusChannelName and AUIRoomContext.shared().currentUserInfo.userId
+config.rtcChorusRtcToken = ""
+
+KaraokeUiKit.renewToken(config)
+```
+
+### 7. Destory Karaoke Room
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
 KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
@@ -269,6 +284,20 @@ The parameters are shown in the table below:
 | roomInfo    | AUIRoomInfo     | Room information                                             |
 | config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 | karaokeView | KaraokeRoomView | Room UI View                                                 |
+
+#### renewToken
+
+```kotlin
+fun renewToken(
+    config: AUIRoomConfig
+)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning                                                                 |
+| ----------- | --------------- |-------------------------------------------------------------------------|
+| config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 
 #### destroyRoom
 
