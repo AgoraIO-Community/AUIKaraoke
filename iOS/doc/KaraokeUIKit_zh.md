@@ -271,7 +271,7 @@ func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
 
 ### bindRespDelegate
 
-绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等
+绑定房间响应，比如房间被销毁、用户被踢出、房间的信息更新等
 
 ```swift
 func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
@@ -285,7 +285,7 @@ func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 
 ### unbindRespDelegate
 
-解除绑定对应房间的响应
+解除绑定房间的响应
 
 ```swift
 func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)

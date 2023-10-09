@@ -276,7 +276,7 @@ The parameters are shown in the table below:
 
 ### bindRespDelegate
 
-Bind the response of the corresponding room, such as the room being destroyed, the user being kicked out, the room's information being updated, etc
+Bind the response of the room, such as the room being destroyed, the user being kicked out, the room's information being updated, etc
 
 ```swift
 func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
@@ -290,7 +290,7 @@ The parameters are shown in the table below:
 
 ### unbindRespDelegate
 
-Response to unbinding the corresponding room
+Response to unbinding the room
 
 ```swift
 func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
@@ -345,7 +345,7 @@ The parameters are shown in the table below:
    |
 
 
-## 协议
+## Protocol
 ### AUIRtmErrorProxyDelegate
 ```AUIRtmErrorProxyDelegate``` protocol is used to handle various events related to real-time messaging (RTM) errors in the voice network. It provides optional methods that can be implemented by classes that follow this protocol to respond to specific events.
 
