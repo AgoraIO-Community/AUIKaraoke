@@ -30,12 +30,14 @@ open class AUIJukeBoxViewBinder: NSObject {
     //已点列表
     private var addedMusicList: [AUIChooseMusicModel] = [] {
         didSet {
-            if let topSong = addedMusicList.first,
-                topSong.userId == serviceDelegate?.getRoomContext().currentUserInfo.userId,
-                !topSong.isPlaying {
-                self.serviceDelegate?.updatePlayStatus(songCode: topSong.songCode, playStatus: .playing) { error in
-                    
+            if let topSong = addedMusicList.first{
+                if topSong.userId == serviceDelegate?.getRoomContext().currentUserInfo.userId,
+                   !topSong.isPlaying {
+                    self.serviceDelegate?.updatePlayStatus(songCode: topSong.songCode, playStatus: .playing) { error in
+                        
+                    }
                 }
+                topSong.switchEnable = topSong.userId == serviceDelegate?.getRoomContext().currentUserInfo.userId || serviceDelegate?.currentUserIsRoomOwner() == true
             }
             self.jukeBoxView?.selectedSongCount = addedMusicList.count
         }
