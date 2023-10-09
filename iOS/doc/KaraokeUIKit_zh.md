@@ -197,7 +197,7 @@ func getRoomInfoList(lastCreateTime: Int64?,
 
 | 参数      | 类型     | 含义                                 |
 | --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64     | 起始时间                         |
+| lastCreateTime | Int64?     | [可选]起始时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085                    |
 | pageSize  | Int      | 页数                                 |
 | callback   | Closure | 完成回调 |
 
@@ -331,7 +331,7 @@ func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 | roomId      | String               | 房间id       |
 | roomOwner   | AUIUserThumbnailInfo | 房主信息     |
 | memberCount | Int                  | 房间人数     |
-| createTime  | Int64                 | 房间创建时间 |
+| createTime  | Int64                 | 房间创建时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085 |
 
 ### AUIUserThumbnailInfo
 
