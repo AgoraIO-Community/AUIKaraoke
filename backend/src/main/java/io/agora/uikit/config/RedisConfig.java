@@ -2,8 +2,11 @@ package io.agora.uikit.config;
 
 import java.time.Duration;
 
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -11,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.redis.util.RedisLockRegistry;
 
@@ -77,5 +81,17 @@ public class RedisConfig {
         redisTemplate.setEnableTransactionSupport(true);
         redisTemplate.setConnectionFactory(setRedisConnectionFactory(redisConnectionFactory));
         return redisTemplate;
+    }
+
+    @Bean
+    public CacheManager redisCacheConfiguration() {
+        RedisCacheConfiguration cfg = RedisCacheConfiguration.defaultCacheConfig()
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+
+        return RedisCacheManager.builder(redisConnectionFactory)
+                .withCacheConfiguration("IMToken", cfg.entryTtl(Duration.ofDays(30)))
+                .withCacheConfiguration("IMUser", cfg.entryTtl(Duration.ofDays(30)))
+                .cacheDefaults(cfg)
+                .build();
     }
 }

@@ -6,22 +6,20 @@ KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 
 ## 快速集成
-> 在集成前请确保已经按照这个[教程](../Example/README_zh.md)将项目成功运行起来。
 
 ### 1. 添加源码
 
 **将以下源码复制到自己项目里：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 - [AScenesKit](../AScenesKit)
 - [KaraokeUIKit.swift](../Example/AUIKaraoke/KaraokeUIKit.swift)
 - [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
-**在Podfile文件里添加依赖AScenesKit和AUIKit(例如AUIKit与AScenesKit放置在Podfile同一级目录下时)**
+**在Podfile文件里添加依赖AScenesKit(例如AScenesKit放置在Podfile同一级目录下时)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **把KaraokeUIKit.swift拖进工程里**
@@ -96,7 +94,7 @@ karaokeView.onClickOffButton = { [weak self] in
 ```
 
 #### 6.2 房间销毁被动退出
-详见[房间销毁](#7.2 房间销毁)
+详见[房间销毁](#7.2%20房间销毁)
 
 
 ### 7. 异常处理
@@ -148,8 +146,8 @@ AUIRoomContext.shared.switchTheme(themeName: "UIKit")
 - 也可通过修改[配置文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme)或者替换[资源文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)来更换组件的皮肤
 - 更多换肤问题可以参考[皮肤设置](./KaraokeTheme_zh.md)
 
-#API参考
-##setup
+# API参考
+## setup
 初始化
 ```swift
 func setup(roomConfig: AUICommonConfig,
@@ -165,7 +163,7 @@ func setup(roomConfig: AUICommonConfig,
 | rtcEngineEx | AgoraRtcEngineKit     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。 |
 | rtmClient   | AgoraRtmClientKit       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。 |
 
-##createRoom
+## createRoom
 创建房间
 
 ```swift
@@ -199,7 +197,7 @@ func getRoomInfoList(lastCreateTime: Int64?,
 
 | 参数      | 类型     | 含义                                 |
 | --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64     | 起始时间                         |
+| lastCreateTime | Int64?     | [可选]起始时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085                    |
 | pageSize  | Int      | 页数                                 |
 | callback   | Closure | 完成回调 |
 
@@ -229,11 +227,75 @@ func launchRoom(roomInfo: AUIRoomInfo,
 func destoryRoom(roomId: String)
 ```
 
+### renew
+
+更新房间token
+
+```swift
+func renew(config: AUIRoomConfig)
+```
+
 参数如下表所示：
 
 | 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| roomId | String | 要销毁的房间ID |
+| config | AUIRoomConfig | 房间里相关的配置，包含子频道名和token |
+
+### subscribeError
+
+订阅房间的异常回调，例如token过期，可以通过renew方法更新token
+
+```swift
+func subscribeError(delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
+
+### unsubscribeError
+
+取消订阅房间的异常回调
+
+```swift
+func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
+
+### bindRespDelegate
+
+绑定房间响应，比如房间被销毁、用户被踢出、房间的信息更新等
+
+```swift
+func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
+
+### unbindRespDelegate
+
+解除绑定房间的响应
+
+```swift
+func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+参数如下表所示：
+
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
 
 
 ## 数据模型
@@ -248,14 +310,28 @@ func destoryRoom(roomId: String)
 | userName   | String  | 用户名               |
 | userAvatar | String  | 用户头像             |
 
+### AUICreateRoomInfo
+| 参数       | 类型    | 含义                 |
+| ---------- | ------- | -------------------- |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
+
 ### AUIRoomInfo
 
 | 参数        | 类型                 | 含义         |
 | ----------- | -------------------- | ------------ |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
 | roomId      | String               | 房间id       |
 | roomOwner   | AUIUserThumbnailInfo | 房主信息     |
 | memberCount | Int                  | 房间人数     |
-| createTime  | Int64                 | 房间创建时间 |
+| createTime  | Int64                 | 房间创建时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085 |
 
 ### AUIUserThumbnailInfo
 
@@ -277,6 +353,58 @@ func destoryRoom(roomId: String)
 | rtcRtmToken          | String | 音视频频道的rtm token，uid为setup时AUICommonConfig里的userId |
 | rtcChorusChannelName | String | 合唱频道名，一般为{roomId}_rtc_ex                            |
 | rtcChorusRtcToken    | String | 合唱频道的rtc token，uid为setup时AUICommonConfig里的userId   |
+
+## 协议
+### AUIRtmErrorProxyDelegate
+```AUIRtmErrorProxyDelegate``` 协议是用于处理与声网实时消息（RTM）错误相关的各种事件的协议。它提供了可选方法，可以由遵循此协议的类来实现，以响应特定的事件。
+
+#### 方法
+- ```func onTokenPrivilegeWillExpire(channelName: String?)```
+   token 即将过期时的调用。
+  - 参数：
+     - ```channelName```: 频道名称。
+    >
+- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
+    当 RTM 连接状态发生改变时调用。
+    - 参数：
+      - ```channelName```: 频道名称。
+      - ```state```: 新的连接状态。
+      - ```reason```: 连接状态的原因。
+    >
+- ```func onMsgRecvEmpty(channelName: String)```
+    当收到房间KV存储为空时调用，认为房间已经被销毁。
+
+  - 参数:
+    - ```channelName```: 频道名称。
+
+> 注意：该协议中的方法都是可选的，可以根据需要进行实现。
+
+### AUIRoomManagerRespDelegate
+```AUIRoomManagerRespDelegate``` 协议用于处理与房间操作相关的各种响应事件。它提供了以下方法，可以由遵循此协议的类来实现，以响应特定的事件。
+
+#### 方法
+  - ```func onRoomDestroy(roomId: String)```
+    房间被销毁时调用的回调方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+    >
+  - ```func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo)```
+    房间信息发生变更时调用的回调方法。
+    - 参数：
+      - ```roomId```:房间ID。
+      - ```roomInfo```:房间信息。
+    >
+  - ```func onRoomAnnouncementChange(roomId: String, announcement: String)```
+    房间公告发生变更时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```announcement```: 公告变更内容。
+    >
+- ```func onRoomUserBeKicked(roomId: String, userId: String)```
+    房间用户被踢出房间时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```userId```: 用户ID。
 
 ## 许可证
 版权所有 Agora, Inc. 保留所有权利。

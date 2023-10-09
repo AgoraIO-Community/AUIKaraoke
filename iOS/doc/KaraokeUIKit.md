@@ -6,22 +6,20 @@ KaraokeUIKit is a Karaoke scenario component that provides room management and t
 
 
 ## Quick Started
-> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKaraoke/README.md) before integrating。
 
 ### 1. Add Source Code
 
 **Copy the following source code into your own project：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README.md)
 - [AScenesKit](../AScenesKit)
 - [KaraokeUIKit.swift](../Example/AUIKaraoke/KaraokeUIKit.swift)
 - [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
-**Add dependencies on AScenesKit and AUIKit in the Podfile file (for example, when AUIKit and AScenesKit are placed in the same level directory as the Podfile)**
+**Add dependencies on AScenesKit in the Podfile file (for example, when AScenesKit are placed in the same level directory as the Podfile)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **Drag KaraokeUIKit.swift into the project**
@@ -149,8 +147,8 @@ AUIRoomContext.shared.switchTheme(themeName: "UIKit")
 - You can also change the skin of the component by modifying the [configuration file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme) or replacing the [resource file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)
 - For more skin changing issues, please refer to [Skin Settings](./KaraokeTheme.md)
 
-#API reference
-##setup
+# API reference
+## setup
 Initialization
 ```swift
 func setup(roomConfig: AUICommonConfig,
@@ -166,7 +164,7 @@ The parameters are shown in the table below:
 | rtcEngine | AgoraRtcEngineKit     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
 | rtmClient   | AgoraRtmClientKit       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.|
 
-##createRoom
+## createRoom
 Create a Room
 
 ```swift
@@ -196,8 +194,7 @@ func getRoomInfoList(lastCreateTime: Int64?,
 The parameters are shown in the table below:
 | parameter   | type            | meaning     |
 | --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64     | The page start time
-                         |
+| lastCreateTime | Int64     | (Optional) The page start time,difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085                      |
 | pageSize  | Int      | The page size                                 |
 | callback   | Closure | Completion callback|
 
@@ -233,6 +230,78 @@ The parameters are shown in the table below:
 | roomId | String | The ID of the room to destroy |
 
 
+
+### renew
+
+Update room token
+
+```swift
+func renew(config: AUIRoomConfig)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| config | AUIRoomConfig | Configuration related to the room, including subchannel names and tokens |
+
+### subscribeError
+
+Abnormal callback of subscription rooms, such as token expiration, can be updated through the renew method
+
+```swift
+func subscribeError(delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRtmErrorProxyDelegate | Error callback object |
+
+### unsubscribeError
+
+Exception callback for unsubscribing to a room
+
+```swift
+func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRtmErrorProxyDelegate | Error callback object |
+
+### bindRespDelegate
+
+Bind the response of the room, such as the room being destroyed, the user being kicked out, the room's information being updated, etc
+
+```swift
+func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | Response callback object |
+
+### unbindRespDelegate
+
+Response to unbinding the room
+
+```swift
+func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+```
+
+The parameters are shown in the table below:
+
+| parameter   | type            | meaning     |
+| ------ | ------ | -------------- |
+| delegate | AUIRoomManagerRespDelegate | Response callback object |
+
+
 ## Data Model
 
 ### AUICommonConfig
@@ -245,13 +314,27 @@ The parameters are shown in the table below:
 | userName   | String  | User name            |
 | userAvatar | String  | User avatar url      |
 
+### AUICreateRoomInfo
+| parameter   | type            | meaning     |
+| ---------- | ------- | -------------------- |
+| roomName      | String  | Room name           |
+| thumbnail       | String  | Thumbnails on Room List          |
+| micSeatCount     | UInt  | Number of mic seat, default to 8             |
+| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
+| password | String?  | [Optional] Room password            |
+
 ### AUIRoomInfo
 | parameter   | type            | meaning     |
 | ----------- | -------------------- | ------------ |
+| roomName      | String  | Room name           |
+| thumbnail       | String  | Thumbnails on Room List          |
+| micSeatCount     | UInt  | Number of mic seat, default to 8             |
+| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
+| password | String?  | [Optional] Room password            |
 | roomId      | String               | Room id       |
 | roomOwner   | AUIUserThumbnailInfo | Room information   |
 | memberCount | Int                  | Online user count  |
-| createTime  | Int64                | Room create time |
+| createTime  | Int64                | Room create time, difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085 |
 
 ### AUIUserThumbnailInfo
 
@@ -274,6 +357,58 @@ The parameters are shown in the table below:
 | rtcChorusRtcToken    | String | The rtc token of the chorus channel whose uid is setup in AUICommonConfig
    |
 
+
+## Protocol
+### AUIRtmErrorProxyDelegate
+```AUIRtmErrorProxyDelegate``` protocol is used to handle various events related to real-time messaging (RTM) errors in the voice network. It provides optional methods that can be implemented by classes that follow this protocol to respond to specific events.
+
+#### Method
+- ```func onTokenPrivilegeWillExpire(channelName: String?)```
+   Call when token is about to expire.
+  - Parameter:
+     - ```channelName```: channel name.
+    >
+- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
+    Called when the RTM connection status changes.
+    - Parameter:
+      - ```channelName```: channel name.
+      - ```state```: New connection status.
+      - ```reason```: The reason for the connection status.
+    >
+- ```func onMsgRecvEmpty(channelName: String)```
+    Called when room KV storage is empty, indicating that the room has been destroyed.
+
+  - Parameter:
+    - ```channelName```: channel name.
+
+> Note: The methods in this protocol are optional and can be implemented as needed.
+
+### AUIRoomManagerRespDelegate
+```AUIRoomManagerRespDelegate``` protocol is used to handle various response events related to room operations. It provides the following methods that can be implemented by classes following this protocol to respond to specific events.
+
+#### Method
+  - ```func onRoomDestroy(roomId: String)```
+    The callback method called when the room is destroyed.
+    - Parameter:
+      - ```roomId```: Room ID.
+    >
+  - ```func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo)```
+    The callback method called when room information changes.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```roomInfo```: Room information.
+    >
+  - ```func onRoomAnnouncementChange(roomId: String, announcement: String)```
+    The method called when a room announcement changes.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```announcement```: Announcement of changes.
+    >
+- ```func onRoomUserBeKicked(roomId: String, userId: String)```
+    The method called when a room user is kicked out of the room.
+    - Parameter:
+      - ```roomId```: Room ID.
+      - ```userId```: User ID.
 
 ## License
 Copyright © Agora Corporation. All rights reserved.

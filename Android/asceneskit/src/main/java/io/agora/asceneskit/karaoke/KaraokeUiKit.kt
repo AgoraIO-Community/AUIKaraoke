@@ -107,7 +107,7 @@ object KaraokeUiKit {
         config: AUIRoomConfig,
         karaokeView: KaraokeRoomView,
     ) {
-        AUIRoomContext.shared().roomConfig = config
+        AUIRoomContext.shared().roomConfigMap[roomInfo.roomId] = config
         val roomManager = mRoomManager ?: throw notInitException
         val roomService = AUIKaraokeRoomService(
             mRtcEngineEx,
@@ -129,6 +129,10 @@ object KaraokeUiKit {
         mService?.destroy()
         AUIRoomContext.shared().cleanRoom(roomId)
         mService = null
+    }
+
+    fun renewToken(config: AUIRoomConfig){
+        mService?.renew(config)
     }
 
     fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {

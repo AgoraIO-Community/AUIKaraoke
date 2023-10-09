@@ -9,15 +9,20 @@ English | [中文](README_zh.md)
 
 ## Service Deployment
 ### Quick Experience
-- The service installation environment needs to have Docker environment installed, and the [docker-compose](https://docs.docker.com/compose/) deployment tool installed.
+- The service installation environment needs to have the latest Docker environment installed, and the [docker-compose](https://docs.docker.com/compose/) deployment tool installed.
 - You can download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/), which has already installed docker-compose.
 - To launch the service locally, you need to open the docker-compose.yaml file and fill in the [appId and Secret](https://docs.agora.io/en/video-calling/reference/manage-agora-account?platform=android#get-the-app-id) obtained from Agora.
-    - TOKEN_APP_ID
-    - TOKEN_APP_CERTIFICATE
-- Execute docker-compose up in the current project root directory, which will pull related images and start Redis/MongoDB/Web service.
+- For local deployment, before starting the service, you need to create a `.env` file in the root directory of the project and fill in the following fields:
+  - TOKEN_APPID= < Your TOKEN_APPID >
+  - TOKEN_APPCERTIFICATE=< Your TOKEN_APPCERTIFICATE >
+  - NCS_SECRET=< Your NCS_SECRET >
+  - EM_AUTH_APPKEY=< Your EM_AUTH_APPKEY >
+  - EM_AUTH_CLIENTID=< Your EM_AUTH_CLIENTID >
+  - EM_AUTH_CLIENTSECRET=< YourEM_AUTH_CLIENTSECRET >
+- Execute `docker compose up -d --build` in the current project root directory, which will pull related images and start Redis/MongoDB/Web service.
 - After the service is started, you can use curl http://localhost:8080/health/check to test.
 - To debug local services using the app, you need to replace the corresponding backend service domain with http://service_machine_IP:8080 on the app. After replacing the domain, you can experience the related services on the app.
-- To stop the service, execute docker-compose down.
+- To stop the service, execute `docker compose down`.
 - Note! NCS message notification is not turned on, and personnel entering and leaving and room destruction logic cannot be automatically processed. If you need to enable this feature, NCS service needs to be enabled.
 - RTM and KTV permissions are not enabled, and the functional experience will be limited. To experience all the functions, refer to [Online Deployment Permission Access Instructions](#online-deployment).
 
@@ -32,8 +37,12 @@ English | [中文](README_zh.md)
     - spring.data.mongodb.uri
     - spring.redis.host
     - spring.redis.password
+    - ncs.secret
     - token.appId
     - token.appCertificate
+    - em.auth.appKey
+    - em.auth.clientId
+    - em.auth.clientSecret
 
 ### Online Deployment
 - Before going online, Redis/MongoDB and other configurations need to be adjusted, and the service needs to be deployed behind the gateway. The gateway can provide authentication/traffic limit and other capabilities, and this service does not have gateway capabilities.
@@ -89,6 +98,7 @@ English | [中文](README_zh.md)
 │   │   │               ├── config                                      // Configuration
 │   │   │               │   ├── GlobalExceptionHandler.java             // Global exception capture
 │   │   │               │   ├── RedisConfig.java                        // Redis configuration
+│   │   │               │   ├── EMServiceConfig.java                    // Huanxin IM configuration
 │   │   │               │   └── WebMvcConfig.java                       // MVC configuration
 │   │   │               ├── controller                                  // Controller
 │   │   │               │   ├── ChorusController.java                   // Chorus management
@@ -97,6 +107,8 @@ English | [中文](README_zh.md)
 │   │   │               │   ├── NcsController.java                      // NCS message notification
 │   │   │               │   ├── RoomController.java                     // Room management
 │   │   │               │   ├── SongController.java                     // Song management
+│   │   │               │   ├── ChatRoomController.java                 // Chat Room management
+│   │   │               │   ├── GiftController.java                     // Gift management
 │   │   │               │   └── TokenController.java                    // Token management
 │   │   │               ├── interceptor                                 // Interceptor
 │   │   │               │   ├── PrometheusMetricInterceptor.java        // Indicator interceptor

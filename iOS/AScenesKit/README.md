@@ -8,9 +8,9 @@ AScenesKit is a container component for karaoke rooms that integrates UI and ser
 ```
 AScenesKit  
 ├─ Binder                          // Binder
-│  ├─ AUiUserViewBinder            // Binder for user management
-│  ├─ AUiJukeBoxViewBinder         // Binder for jukebox
-│  ├─ AUiMicSeatViewBinder         // Binder  for mic seat management
+│  ├─ AUIUserViewBinder            // Binder for user management
+│  ├─ AUIJukeBoxViewBinder         // Binder for jukebox
+│  ├─ AUIMicSeatViewBinder         // Binder  for mic seat management
 │  └─ AUiPlayerViewBinder          // Binder for player management
 │
 └─ RoomContainer                   // Karaoke integration container
@@ -31,15 +31,14 @@ AScenesKit
 
 **Copy the following source code into your own project：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README.md)
 - [AScenesKit](../AScenesKit)
 - [KeyCenter.swift](../Example/AUIKaraoke/AUIKaraoke/KeyCenter.swift)
 
-**Add dependencies on AScenesKit and AUIKit in the Podfile file (for example, when AUIKit and AScenesKit are placed in the same level directory as the Podfile)**
+**Add dependencies on AScenesKit in the Podfile file (for example, when AScenesKit are placed in the same level directory as the Podfile)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **Drag KaraokeUIKit.swift into the project**

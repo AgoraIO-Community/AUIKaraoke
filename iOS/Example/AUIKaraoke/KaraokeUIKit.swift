@@ -87,12 +87,12 @@ class KaraokeUIKit: NSObject {
         service = nil
     }
     
-    func subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
-        roomManager?.rtmManager.subscribeError(channelName: roomId, delegate: delegate)
+    func subscribeError(delegate: AUIRtmErrorProxyDelegate) {
+        roomManager?.rtmManager.subscribeError(channelName: "", delegate: delegate)
     }
     
-    func unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
-        roomManager?.rtmManager.unsubscribeError(channelName: roomId, delegate: delegate)
+    func unsubscribeError(delegate: AUIRtmErrorProxyDelegate) {
+        roomManager?.rtmManager.unsubscribeError(channelName: "", delegate: delegate)
     }
     
     func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {

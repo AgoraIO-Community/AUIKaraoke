@@ -39,6 +39,8 @@ open class AUIPlayerViewBinder: NSObject {
     private var recordVol: CGFloat = 1
     private var enableEarMonitoring: Bool = false
     
+    private var downloadManager: AgoraDownLoadManager = AgoraDownLoadManager()
+    
     private weak var playerView: AUIPlayerView? {
         didSet {
 //            playerView?.uiDelegate = self
@@ -93,7 +95,7 @@ open class AUIPlayerViewBinder: NSObject {
         self.chorusServiceDelegate = chorusService
         self.playerView?.addActionHandler(playerViewActionHandler: self)
         
-        playerService.setLrcView(delegate: playerView.karaokeLrcView)
+        playerService.setLrcView(delegate: self)
         playerService.addEventHandler(ktvApiEventHandler: self)
         playerView.delegate = self
         playerView.karaokeLrcView.delegate = self
@@ -115,7 +117,7 @@ open class AUIPlayerViewBinder: NSObject {
     }
     
     private func updateBtnsWithRole() {
-        playerView?.updateBtns(with: singerRole, isMainSinger: isMainSinger, isOnSeat: isOnSeat)
+        playerView?.updateBtns(with: AUISingRole(rawValue: singerRole.rawValue)!, isMainSinger: isMainSinger, isOnSeat: isOnSeat)
     }
 }
 
@@ -606,5 +608,57 @@ extension AUIPlayerViewBinder: AUIKaraokeLrcViewDelegate {
 }
 
 
+extension AUIPlayerViewBinder: KTVLrcViewDelegate {
+    public func onHighPartTime(highStartTime: Int, highEndTime: Int) {
 
+    }
+
+    public func onUpdatePitch(pitch: Float) {
+        playerView?.karaokeLrcView.updatePitch(pitch: pitch)
+    }
+    
+    public func onUpdateProgress(progress: Int) {
+        playerView?.karaokeLrcView.updateProgress(progress: progress)
+    }
+    
+    public func onDownloadLrcData(url: String) {
+        //开始歌词下载
+        startDownloadLrc(with: url) {[weak self] url in
+            guard let self = self, let url = url else {return}
+            self.resetLrcData(with: url)
+        }
+    }
+}
+
+
+extension AUIPlayerViewBinder {
+
+    func startDownloadLrc(with url: String, callBack: @escaping ((String?) -> Void)) {
+        var path: String? = nil
+        downloadManager.downloadLrcFile(urlString: url) { lrcurl in
+            defer {
+                callBack(path)
+            }
+            guard let lrcurl = lrcurl else {
+                aui_info("downloadLrcFile fail, lrcurl is nil")
+                return
+            }
+
+            let curSong = URL(string: url)?.lastPathComponent.components(separatedBy: ".").first
+            let loadSong = URL(string: lrcurl)?.lastPathComponent.components(separatedBy: ".").first
+            guard curSong == loadSong else {
+                aui_info("downloadLrcFile fail, missmatch, cur:\(curSong ?? "") load:\(loadSong ?? "")")
+                return
+            }
+            path = lrcurl
+        } failure: {
+            callBack(nil)
+            aui_info("歌词解析失败")
+        }
+    }
+
+    func resetLrcData(with url: String) {
+        playerView?.karaokeLrcView.resetLrcData(with: url)
+    }
+}
 
