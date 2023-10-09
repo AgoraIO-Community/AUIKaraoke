@@ -8,9 +8,9 @@ AScenesKit is a container component for karaoke rooms that integrates UI and ser
 ```
 AScenesKit  
 ├─ Binder                          // Binder
-│  ├─ AUiUserViewBinder            // Binder for user management
-│  ├─ AUiJukeBoxViewBinder         // Binder for jukebox
-│  ├─ AUiMicSeatViewBinder         // Binder  for mic seat management
+│  ├─ AUIUserViewBinder            // Binder for user management
+│  ├─ AUIJukeBoxViewBinder         // Binder for jukebox
+│  ├─ AUIMicSeatViewBinder         // Binder  for mic seat management
 │  └─ AUiPlayerViewBinder          // Binder for player management
 │
 └─ RoomContainer                   // Karaoke integration container
@@ -25,21 +25,20 @@ AScenesKit
 ![](https://fullapp.oss-cn-beijing.aliyuncs.com/pic/pako_eNo9UD1vwjAQ_SunmwMqbaDEQyUCKxNVh2IGK76ApcROHbuUxvnvNQ7qTad7H_f0BqyMJGRYN-ZaXYR18L7jGuJsjh-KrqXSkuwJZrO34DspHIFXAcoEniZmeUcheAWicsroAJuHRZL1pCVY-vLUuwDb44Hst6roId5OYkt9B5IaOscX0QAww5ZsK5SM6YY7l6O7UEscWVwl1cI3jiPXY6QK78zhpitktWh6ynDKulP.png)
 
 ## Quick Started
-> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKitKaraoke/README.md) before integrating。
+> Please make sure you have successfully run the project according to this [tutorial](../Example/AUIKaraoke/README.md) before integrating。
 
 ### 1. Add Source Code
 
 **Copy the following source code into your own project：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README.md)
 - [AScenesKit](../AScenesKit)
-- [KeyCenter.swift](../Example/AUIKitKaraoke/AUIKitKaraoke/KeyCenter.swift)
+- [KeyCenter.swift](../Example/AUIKaraoke/AUIKaraoke/KeyCenter.swift)
 
-**Add dependencies on AScenesKit and AUIKit in the Podfile file (for example, when AUIKit and AScenesKit are placed in the same level directory as the Podfile)**
+**Add dependencies on AScenesKit in the Podfile file (for example, when AScenesKit are placed in the same level directory as the Podfile)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **Drag KaraokeUIKit.swift into the project**

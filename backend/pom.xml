@@ -60,7 +60,7 @@
             <artifactId>rtm</artifactId>
             <version>4.1.1.30</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/agora-rtm-sdk.jar</systemPath>
+            <systemPath>${pom.basedir}/src/main/resources/lib/agora-rtm-sdk.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -70,6 +70,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+        <!-- <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.8</version>
+        </dependency> -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -79,6 +85,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency> -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -111,6 +123,11 @@
         <dependency>
             <groupId>org.springframework.integration</groupId>
             <artifactId>spring-integration-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.easemob.im</groupId>
+            <artifactId>im-sdk-core</artifactId>
+            <version>0.7.0</version>
         </dependency>
     </dependencies>
 

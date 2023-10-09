@@ -1,23 +1,30 @@
-version: "3"
+version: "3.7"
 
 networks:
     uikit-network:
         driver: bridge
 
 services:
-    web:
-        image: agoracn/uikit-karaoke:0.1.2023051513
-        container_name: uikit-web
+    api:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: uikit-api
         ports:
             - 8080:8080
         environment:
-            - PROFILES=dev
-            - MONGODB_URI=mongodb://dev:test@uikit-mongo:27017/test
-            - NCS_SECRET=
-            - REDIS_HOST=uikit-redis
-            - REDIS_PASSWORD=test
-            - TOKEN_APP_ID=
-            - TOKEN_APP_CERTIFICATE=
+            - SPRING_PROFILES_ACTIVE=staging
+            - SPRING_DATA_MONGODB_URI=mongodb://dev:test@uikit-mongo:27017/test
+            - NCS_SECRET=${NCS_SECRET}
+            - SPRING_REDIS_HOST=uikit-redis
+            - SPRING_REDIS_PASSWORD=test
+            - SPRING_REDIS_PORT=6379
+            - SPRING_REDIS_DATABASE=2
+            - TOKEN_APPID=${TOKEN_APPID}
+            - TOKEN_APPCERTIFICATE=${TOKEN_APPCERTIFICATE}
+            - EM_AUTH_APPKEY=${EM_AUTH_APPKEY}
+            - EM_AUTH_CLIENTID=${EM_AUTH_CLIENTID}
+            - EM_AUTH_CLIENTSECRET=${EM_AUTH_CLIENTSECRET}
         networks:
             - uikit-network
         depends_on:
@@ -25,6 +32,7 @@ services:
             - mongo
     redis:
         image: redis:6.0
+        platform: linux/amd64
         container_name: uikit-redis
         restart: always
         ports:
@@ -44,6 +52,6 @@ services:
             - MONGO_INITDB_ROOT_USERNAME=admin
             - MONGO_INITDB_ROOT_PASSWORD=admin
         volumes:
-            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
         networks:
             - uikit-network

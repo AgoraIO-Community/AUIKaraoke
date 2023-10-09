@@ -1,8 +1,8 @@
-# AUIKitKaraoke-iOS Quick Start
+# AUIKaraoke-iOS Quick Start
 
 *English | [中文](README_zh.md)
 
-This document mainly introduces how to quickly run through the AUIKitKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUIScenesKit](../AScenesKit/README.md) and [AUIKit](https://github.com/AgoraIO-Community/AUIKit/tree/main/iOS)
+This document mainly introduces how to quickly run through the AUIKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to [AUIScenesKit](../AScenesKit/README.md) and [AUIKit](https://github.com/AgoraIO-Community/AUIKit/tree/main/iOS)
 
 ## Architecture
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/uikit_structure_chart.png)
@@ -10,7 +10,7 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 ## Directory
 ```
 ┌─ Example                     // Demo Code Integration Catalog
-│  └─ AUIKitKaraoke            // Provide Karaoke's integrated page
+│  └─ AUIKaraoke            // Provide Karaoke's integrated page
 ├─ AUIScenesKit                // Scenario business assembly module, currently only including Karaoke
 │  ├─ AUIKaraokeRoomView       // Karaoke room container view, used to splice various basic components and bind them to services
 │  ├─ AUIKaraokeRoomService    // Karaoke Room Service, used to create various basic services and initialize RTC/RTM/KTVAPi, etc
@@ -39,7 +39,7 @@ This document mainly introduces how to quickly run through the AUIKitKaraoke exa
 
 ### 2. Build
 - Clone or download  source code
-- Fill in the HostUrl for step 1 in the [KeyCenter. swift] (AUIKitKaraoke/KeyCenter. swift) of the project
+- Fill in the HostUrl for step 1 in the [KeyCenter. swift] (AUIKaraoke/KeyCenter. swift) of the project
 ```
 static var HostUrl: String = <#Your HostUrl#>
 ```
@@ -53,10 +53,10 @@ If you do not intend to deploy backend services temporarily, you can use the def
   ```
   can't modify frozen string: "[Xcodeproject] unknown object version (56).
   ```
-  Please open [AUIKitKaraoke.xcodeproj](AUIKitKaraoke.xcodeproj) and modify it to "Xcode 13.0 compatible" according to the following image
+  Please open [AUIKaraoke.xcodeproj](AUIKaraoke.xcodeproj) and modify it to "Xcode 13.0 compatible" according to the following image
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691738494762.jpg)
 
-- Finally, open AUIKitKaraoke. xcworkspace and run it to start your experience
+- Finally, open AUIKaraoke. xcworkspace and run it to start your experience
   - If your cocoapods version is lower than 1.12.0, you will encounter the following error. Please manually set the signature in 'Team'
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 

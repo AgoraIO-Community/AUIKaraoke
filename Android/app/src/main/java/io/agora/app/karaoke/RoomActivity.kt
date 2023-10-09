@@ -152,6 +152,9 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
     override fun onTokenPrivilegeWillExpire(channelName: String?) {
         runOnUiThread {
             Toast.makeText(this, "TokenPrivilegeWillExpire >> channelName=$channelName", Toast.LENGTH_LONG).show()
+            generateToken {
+                KaraokeUiKit.renewToken(it)
+            }
         }
     }
 

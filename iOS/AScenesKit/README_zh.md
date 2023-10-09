@@ -9,10 +9,10 @@ AScenesKit是基于AUIKit提供的UI和Service整合成的K歌房容器组件，
 ```
 AScenesKit  
 ├─ Binder                       // Binder
-│  ├─ AUiUserViewBinder         // 用户管理Binder
-│  ├─ AUiJukeBoxViewBinder      // 点歌器Binder
-│  ├─ AUiMicSeatViewBinder      // 麦位管理Binder    
-│  └─ AUiPlayerViewBinder       // 播放管理Binder
+│  ├─ AUIUserViewBinder         // 用户管理Binder
+│  ├─ AUIJukeBoxViewBinder      // 点歌器Binder
+│  ├─ AUIMicSeatViewBinder      // 麦位管理Binder    
+│  └─ AUIPlayerViewBinder       // 播放管理Binder
 │
 └─ RoomContainer                // K歌整合容器
    ├─ AUIKaraokeRoomView        // K歌容器View，负责组件的创建、拼装和绑定   
@@ -26,21 +26,19 @@ AScenesKit
 ![](https://fullapp.oss-cn-beijing.aliyuncs.com/pic/pako_eNo9UD1vwjAQ_SunmwMqbaDEQyUCKxNVh2IGK76ApcROHbuUxvnvNQ7qTad7H_f0BqyMJGRYN-ZaXYR18L7jGuJsjh-KrqXSkuwJZrO34DspHIFXAcoEniZmeUcheAWicsroAJuHRZL1pCVY-vLUuwDb44Hst6roId5OYkt9B5IaOscX0QAww5ZsK5SM6YY7l6O7UEscWVwl1cI3jiPXY6QK78zhpitktWh6ynDKulP.png)
 
 ## 快速集成
-> 在集成前请确保已经按照这个[教程](../Example/README_zh.md)将项目成功运行起来。
 
 ### 1. 添加源码
 
 **将以下源码复制到自己项目里：**
 
-- [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/README_zh.md)
 - [AScenesKit](../AScenesKit)
-- [KeyCenter.swift](../Example/AUIKitKaraoke/KeyCenter.swift)
+- [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
-**在Podfile文件里添加依赖AScenesKit和AUIKit(例如AUIKit与AScenesKit放置在Podfile同一级目录下时)**
+**在Podfile文件里添加依赖AScenesKit(例如AScenesKit放置在Podfile同一级目录下时)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKit', :path => './AUIKit'
+  pod 'AUIKitCore'
 ```
 
 **把KeyCenter.swift拖进工程里**
@@ -123,7 +121,7 @@ karaokeView.bindService(service: service)
 ```swift
 roomManager.bindRespDelegate(delegate: delegate)
 ```
-然后在回调AUiRoomManagerRespDelegate里实现方法
+然后在回调AUIRoomManagerRespDelegate里实现方法
 ```swift
 func onRoomDestroy(roomId: String) {
     //收到房间销毁消息 
@@ -135,7 +133,7 @@ func onRoomDestroy(roomId: String) {
 ```swift
 roomManager.rtmManager.subscribeError(channelName: roomId, delegate: delegate)
 ```
-然后在回调AUiRtmErrorProxyDelegate里实现方法
+然后在回调AUIRtmErrorProxyDelegate里实现方法
 ```swift
 @objc func onTokenPrivilegeWillExpire(channelName: String?) {
     //收到token过期
