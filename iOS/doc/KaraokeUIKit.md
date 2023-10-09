@@ -315,9 +315,23 @@ The parameters are shown in the table below:
 | userName   | String  | User name            |
 | userAvatar | String  | User avatar url      |
 
+### AUICreateRoomInfo
+| parameter   | type            | meaning     |
+| ---------- | ------- | -------------------- |
+| roomName      | String  | Room name           |
+| thumbnail       | String  | Thumbnails on Room List          |
+| micSeatCount     | UInt  | Number of mic seat, default to 8             |
+| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
+| password | String?  | [Optional] Room password            |
+
 ### AUIRoomInfo
 | parameter   | type            | meaning     |
 | ----------- | -------------------- | ------------ |
+| roomName      | String  | Room name           |
+| thumbnail       | String  | Thumbnails on Room List          |
+| micSeatCount     | UInt  | Number of mic seat, default to 8             |
+| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
+| password | String?  | [Optional] Room password            |
 | roomId      | String               | Room id       |
 | roomOwner   | AUIUserThumbnailInfo | Room information   |
 | memberCount | Int                  | Online user count  |

@@ -310,10 +310,24 @@ func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 | userName   | String  | 用户名               |
 | userAvatar | String  | 用户头像             |
 
+### AUICreateRoomInfo
+| 参数       | 类型    | 含义                 |
+| ---------- | ------- | -------------------- |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
+
 ### AUIRoomInfo
 
 | 参数        | 类型                 | 含义         |
 | ----------- | -------------------- | ------------ |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
 | roomId      | String               | 房间id       |
 | roomOwner   | AUIUserThumbnailInfo | 房主信息     |
 | memberCount | Int                  | 房间人数     |
