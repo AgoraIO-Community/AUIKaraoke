@@ -102,8 +102,7 @@ open class AUIKaraokeRoomService: NSObject {
         AUIRoomContext.shared.roomConfigMap[channelName] = roomConfig
         
         //ktvapi renew
-        ktvApi.getMusicContentCenter()?.renewToken(roomConfig.rtcRtmToken)
-        //TODO: 2nd chorus token renew
+        ktvApi.renewToken(rtmToken: roomConfig.rtcRtmToken, chorusChannelRtcToken: roomConfig.rtcChorusRtcToken)
         
         //rtm renew
         rtmManager.renew(token: roomConfig.rtmToken007)

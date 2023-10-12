@@ -1,7 +1,8 @@
 
 [English](CHANGELOG.md) | 中文
 
-## [0.5.0](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.1)
+## [0.5.1](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.1)
+- 升级AUIKit至0.5.1
 - Android补充renewToken相关api
 - 更新后台代码
 - 遗留Bug修复
