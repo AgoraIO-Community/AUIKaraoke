@@ -98,7 +98,7 @@ karaokeView.onClickOffButton = { [weak self] in
 ```
 
 #### 6.2 Room destruction passive exit
-Please refer to [Room Destruction] (# 7.2-Room-Destruction)
+Please refer to [Room Destruction] (# 7.1-Room-Destruction)
 
 
 ### 7. Exception handling
