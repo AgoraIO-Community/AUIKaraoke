@@ -14,17 +14,11 @@ AUIKaraoke 是一个开源的音视频 UI 组件，通过在项目中集成 AUIK
 - <mark>最低兼容 Android 7.0</mark>（SDK API Level 24）
 - Android Studio 3.5及以上版本。
 - Android 7.0 及以上的手机设备。
-- JDK 17以上
+- JDK 17
 
 ---
 
 ### 2. 运行示例
-- (可选)在AUIKitKaraoke目录下执行
-
-  > 如果执行会了会使用本地AUIKit，否则使用在线maven上的AUIKit
-```
-git submodule update --init --remote
-```
 
 - 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
   
@@ -100,7 +94,6 @@ SERVER_HOST= （业务服务器域名）
 // Create Common Config
 val config = AUiCommonConfig()
 config.context = application
-config.appId = "Agora APP ID" // Get the Agora APP ID from agora console
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
@@ -327,62 +320,62 @@ fun destroyRoom(roomId: String?)
 | ------ | ------ | -------------- |
 | roomId | String | 要销毁的房间ID |
 
-#### subscribeError
+#### registerErrorRespObserver
 
 订阅房间的异常回调。
 
 ```kotlin
-fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+fun registerErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
 ```
 
 参数如下表所示：
 
-| 参数         | 类型                         | 含义      |
-|------------|----------------------------|---------|
-| roomId     | String                     | 房间ID    |
-| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
+| 参数       | 类型                       | 含义      |
+|----------|--------------------------|---------|
+| roomId   | String                   | 房间ID    |
+| observer | AUIRtmErrorRespObserver  | 错误回调接口  |
 
-#### unsubscribeError
+#### unRegisterErrorRespObserver
 
 取消订阅房间的异常回调。
 
 ```kotlin
-fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+fun unRegisterErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
 ```
 
 参数如下表所示：
 
-| 参数         | 类型                         | 含义      |
-|------------|----------------------------|---------|
-| roomId     | String                     | 房间ID    |
-| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
+| 参数         | 类型                       | 含义      |
+|------------|--------------------------|---------|
+| roomId     | String                   | 房间ID    |
+| observer   | AUIRtmErrorRespObserver  | 错误回调接口  |
 
-#### bindRespDelegate
+#### registerRoomRespObserver
 
 绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等。
 
 ```kotlin
-fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun registerRoomRespObserver(observer: AUIRoomManagerRespDelegate)
 ```
 参数如下表所示：
 
 | 参数         | 类型                          | 含义      |
 |------------|-----------------------------|---------|
-| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+| observer   | AUIRoomManagerRespObserver  | 响应回调对象  |
 
-#### unbindRespDelegate
+#### unRegisterRoomRespObserver
 
 解除绑定对应房间的响应。
 
 ```kotlin
-fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver)
 ```
 
 参数如下表所示：
 
 | 参数         | 类型                          | 含义      |
 |------------|-----------------------------|---------|
-| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+| observer   | AUIRoomManagerRespObserver  | 响应回调对象  |
 
 
 #### release
@@ -393,7 +386,7 @@ fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 fun release()
 ```
 
-### AUIRtmErrorProxyDelegate
+### AUIRtmErrorRespObserver
 
 错误回调接口。
 
@@ -410,7 +403,7 @@ fun release()
 | reason      | Int    | 变化原因，见RtmConstants.RtmConnectionChangeReason  |
 
 
-#### onMsgRecvEmpty
+#### onMsgReceiveEmpty
 
 收到的消息Key和Value为空时回调。
 
@@ -431,7 +424,7 @@ Token过期时回调。
 |-------------|--------|-----------------------------------------------|
 | channelName | String | 房间ID                                          |
 
-### AUIRoomManagerRespDelegate
+### AUIRoomManagerRespObserver
 
 响应回调接口。
 
