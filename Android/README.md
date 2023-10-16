@@ -89,6 +89,7 @@ SERVER_HOST= （Domain name of the business server）
 // Create Common Config
 val config = AUiCommonConfig()
 config.context = application
+config.host = "Domain name of the business server"
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
@@ -139,59 +140,25 @@ val roomInfo : AUIRoomInfo
 // KaraokeRoomView in layout
 val karaokeRoomView: KaraokeRoomView
 
-val config = AUiRoomConfig(roomInfo.roomId)
-// Generate token with config.channelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtmToken = ""
-config.rtcToken = ""
-// Generate token with config.rtcChannelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtcRtmToken = ""
-config.rtcRtcToken = ""
-// Generate token with config.rtcChorusChannelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtcChorusRtcToken = ""
-
 KaraokeUiKit.launchRoom(
     roomInfo, // must
-    config, // must
     karaokeRoomView
 )
 
-// Subscribe room error events
-val errorDelegate = object: AUIRtmErrorProxyDelegate{
-  override fun onTokenPrivilegeWillExpire(channelName: String?) {
-    // Callback when rtm token expired.
-  }
-}
-KaraokeUiKit.subscribeError(roomInfo.roomId, errorDelegate)
-
-// Subscribe room response events
-val respDelegate = object: AUIRoomManagerRespDelegate{
+// Register room response observer
+val respObserver = object: AUIRoomManagerRespObserver{
   override fun onRoomDestroy(roomId: String){
     // Room destroyed by host
   }
 }
-KaraokeUiKit.bindRespDelegate(respDelegate)
+KaraokeUiKit.registerRoomRespObserver(respObserver)
+
 ```
 
-### 6. Renew Token
-```kotlin
-val config = AUiRoomConfig(roomInfo.roomId)
-// Generate token with config.channelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtmToken = ""
-config.rtcToken = ""
-// Generate token with config.rtcChannelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtcRtmToken = ""
-config.rtcRtcToken = ""
-// Generate token with config.rtcChorusChannelName and AUIRoomContext.shared().currentUserInfo.userId
-config.rtcChorusRtcToken = ""
-
-KaraokeUiKit.renewToken(config)
-```
-
-### 7. Destory Karaoke Room
+### 6. Destory Karaoke Room
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
-KaraokeUiKit.unbindRespDelegate(respDelegate)
+KaraokeUiKit.unbindRespDelegate(respObserver)
 ```
 
 ## API reference
@@ -213,12 +180,12 @@ fun setup(
 
 The parameters are shown in the table below:
 
-| parameter   | type            | meaning                                                      |
-| ----------- | --------------- | ------------------------------------------------------------ |
-| config      | AUICommonConfig | General configuration, including user information and appId, etc. |
+| parameter   | type            | meaning                                                                                                                                                                       |
+| ----------- | --------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| config      | AUICommonConfig | General configuration, including user information and domain, etc.                                                                                                            |
 | ktvApi      | KTVApi          | (Optional) Agora KTV scene API instance. When the KTVApi has been integrated in the project, it can be imported, otherwise the empty transmission will be created internally. |
-| rtcEngineEx | RtcEngineEx     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
-| rtmClient   | RtmClient       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
+| rtcEngineEx | RtcEngineEx     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.                   |
+| rtmClient   | RtmClient       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.                   |
 
 
 
@@ -267,7 +234,6 @@ The parameters are shown in the table below:
 ```kotlin
 fun launchRoom(
     roomInfo: AUIRoomInfo,
-    config: AUIRoomConfig,
     karaokeView: KaraokeRoomView,
 )
 ```
@@ -277,22 +243,7 @@ The parameters are shown in the table below:
 | parameter   | type            | meaning                                                      |
 | ----------- | --------------- | ------------------------------------------------------------ |
 | roomInfo    | AUIRoomInfo     | Room information                                             |
-| config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 | karaokeView | KaraokeRoomView | Room UI View                                                 |
-
-#### renewToken
-
-```kotlin
-fun renewToken(
-    config: AUIRoomConfig
-)
-```
-
-The parameters are shown in the table below:
-
-| parameter   | type            | meaning                                                                 |
-| ----------- | --------------- |-------------------------------------------------------------------------|
-| config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 
 #### destroyRoom
 
@@ -305,36 +256,6 @@ The parameters are shown in the table below:
 | parameter | type   | meaning                       |
 | --------- | ------ | ----------------------------- |
 | roomId    | String | The ID of the room to destroy |
-
-#### registerErrorRespObserver
-
-Subscribe room error events.
-
-```kotlin
-fun registerErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
-```
-
-The parameters are shown in the table below:
-
-| parameter | type                     | meaning                      |
-| --------- |--------------------------|------------------------------|
-| roomId    | String                   | The room id                  |
-| observer  | AUIRtmErrorRespObserver  | The error observer implement |
-
-#### unRegisterErrorRespObserver
-
-Unsubscribe room error events.
-
-```kotlin
-fun unRegisterErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
-```
-
-The parameters are shown in the table below:
-
-| parameter | type                     | meaning                      |
-| --------- |--------------------------|------------------------------|
-| roomId    | String                   | The room id                  |
-| observer  | AUIRtmErrorRespObserver  | The error observer implement |
 
 #### registerRoomRespObserver
 
@@ -366,44 +287,6 @@ The parameters are shown in the table below:
 ```kotlin
 fun release()
 ```
-
-### AUIRtmErrorRespObserver
-
-The error observer interface.
-
-#### onConnectionStateChanged
-
-Callback when network status changes.
-
-The parameters are shown in the table below:
-
-| parameter   | type   | meaning                                                      |
-| ----------- | ------ | ------------------------------------------------------------ |
-| channelName | String | Same with the room Id.                                       |
-| state       | Int    | Network status，See **RtmConstants.RtmConnectionState**      |
-| reason      | Int    | Change reason，See **RtmConstants.RtmConnectionChangeReason** |
-
-
-#### onMsgReceiveEmpty
-
-Callback when receiving empty message.
-
-The parameters are shown in the table below:
-
-| parameter   | type   | meaning                |
-| ----------- | ------ | ---------------------- |
-| channelName | String | Same with the room Id. |
-
-
-#### onTokenPrivilegeWillExpire
-
-Callback when the rtm token expired.
-
-The parameters are shown in the table below:
-
-| parameter   | type   | meaning                |
-| ----------- | ------ | ---------------------- |
-| channelName | String | Same with the room Id. |
 
 ### AUIRoomManagerRespObserver
 
@@ -460,13 +343,13 @@ The parameters are shown in the table below:
 
 ### AUICommonConfig
 
-| parameter  | type    | meaning         |
-| ---------- | ------- | --------------- |
-| context    | Context | Android Contex  |
-| appId      | String  | Agora AppID     |
-| userId     | String  | User ID         |
-| userName   | String  | User name       |
-| userAvatar | String  | User avatar url |
+| parameter  | type    | meaning                             |
+|------------| ------- |-------------------------------------|
+| context    | Context | Android Contex                      |
+| host       | String  | Domain name of the business server  |
+| userId     | String  | User ID                             |
+| userName   | String  | User name                           |
+| userAvatar | String  | User avatar url                     |
 
 ### AUIRoomInfo
 
@@ -491,21 +374,6 @@ The parameters are shown in the table below:
 | --------- | ------ | ------------- |
 | code      | int    | Error code    |
 | message   | String | Error message |
-
-### AUIRoomConfig
-
-| parameter            | type   | meaning                                                      |
-| -------------------- | ------ | ------------------------------------------------------------ |
-| channelName          | String | Main channel name, usually roomId                            |
-| rtmToken             | String | The rtm token of the main channel whose uid is setup in AUICommonConfig |
-| rtcToken             | String | The rtc token of the main channel whose uid is setup in AUICommonConfig |
-| rtcChannelName       | String | Video channel name, usually {roomId}_rtc                     |
-| rtcRtcToken          | String | The rtc token of the video channel whose uid is setup in AUICommonConfig |
-| rtcRtmToken          | String | The rtm token of the video channel whose uid is setup in AUICommonConfig |
-| rtcChorusChannelName | String | Chorus channel name, usually {roomId}_rtc_ex                 |
-| rtcChorusRtcToken    | String | The rtc token of the chorus channel whose uid is setup in AUICommonConfig |
-
-
 
 ## Directory Structure
 
