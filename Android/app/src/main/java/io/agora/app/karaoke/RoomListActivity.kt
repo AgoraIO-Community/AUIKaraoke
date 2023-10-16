@@ -53,6 +53,7 @@ class RoomListActivity : AppCompatActivity() {
         // Create Common Config
         val config = AUICommonConfig()
         config.context = application
+        config.host = BuildConfig.SERVER_HOST
         config.userId = mUserId
         config.userName = randomUserName()
         config.userAvatar = randomAvatar()

@@ -25,7 +25,7 @@ import io.agora.auikit.utils.PermissionHelp
 import retrofit2.Response
 
 class RoomActivity : AppCompatActivity(),
-    AUIRoomManagerRespObserver, AUIRtmErrorRespObserver {
+    AUIRoomManagerRespObserver {
     companion object {
         private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
@@ -58,79 +58,17 @@ class RoomActivity : AppCompatActivity(),
         }
         mPermissionHelp.checkMicPerm(
             {
-                generateToken { config ->
-                    KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView)
-                    KaraokeUiKit.registerErrorRespObserver(roomInfo.roomId, this)
-                    KaraokeUiKit.registerRoomRespObserver(this)
-                }
+                KaraokeUiKit.launchRoom(
+                    roomInfo,
+                    mViewBinding.karaokeRoomView,
+                    failure = { finish() })
+                KaraokeUiKit.registerRoomRespObserver(this)
             },
             {
                 finish()
             },
             true
         )
-    }
-
-    private fun generateToken(onSuccess: (AUIRoomConfig) -> Unit) {
-        val config = AUIRoomConfig( roomInfo?.roomId ?: "")
-        var response = 3
-        val trySuccess = {
-            response -= 1;
-            if (response == 0) {
-                onSuccess.invoke(config)
-            }
-        }
-
-        val userId = AUIRoomContext.shared().currentUserInfo.userId
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.channelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        config.rtcToken = rspObj.rtcToken
-                        config.rtmToken = rspObj.rtmToken
-                        AUIRoomContext.shared()?.commonConfig?.appId = rspObj.appId
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        config.rtcRtcToken = rspObj.rtcToken
-                        config.rtcRtmToken = rspObj.rtmToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
-        HttpManager
-            .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, response: Response<CommonResp<TokenGenerateResp>>) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        // rtcChorusRtcToken007
-                        config.rtcChorusRtcToken = rspObj.rtcToken
-                    }
-                    trySuccess.invoke()
-                }
-                override fun onFailure(call: retrofit2.Call<CommonResp<TokenGenerateResp>>, t: Throwable) {
-                    trySuccess.invoke()
-                }
-            })
     }
 
     private var mRoomDestroyAlert = false
@@ -147,15 +85,6 @@ class RoomActivity : AppCompatActivity(),
                 shutDownRoom()
             }
             show()
-        }
-    }
-
-    override fun onTokenPrivilegeWillExpire(channelName: String?) {
-        runOnUiThread {
-            Toast.makeText(this, "TokenPrivilegeWillExpire >> channelName=$channelName", Toast.LENGTH_LONG).show()
-            generateToken {
-                KaraokeUiKit.renewToken(it)
-            }
         }
     }
 
@@ -187,7 +116,6 @@ class RoomActivity : AppCompatActivity(),
     private fun shutDownRoom() {
         roomInfo?.roomId?.let { roomId ->
             KaraokeUiKit.destroyRoom(roomId)
-            KaraokeUiKit.unRegisterErrorRespObserver(roomId, this@RoomActivity)
             KaraokeUiKit.unRegisterRoomRespObserver(this@RoomActivity)
         }
         finish()
