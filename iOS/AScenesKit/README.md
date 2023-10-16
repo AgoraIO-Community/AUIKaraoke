@@ -20,7 +20,7 @@ AScenesKit
    └─ AUIKaraokeRoomService        // Karaoke Service, responsible for creating basic services
 ```
 ###  Relationship between component and service dependencies
-![](https://fullapp.oss-cn-beijing.aliyuncs.com/pic/KaraokeRoom_en.png)
+![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/KaraokeRoom_en.png)
 
 ### Scheduling process between Binder and View and Service
 

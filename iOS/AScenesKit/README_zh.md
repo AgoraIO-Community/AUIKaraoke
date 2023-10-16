@@ -21,7 +21,7 @@ AScenesKit
    └─ AUIKaraokeRoomService     // K歌容器Service，负责基础service的创建
 ```
 ###  组件和Service依赖的关系
-![](https://fullapp.oss-cn-beijing.aliyuncs.com/pic/KaraokeRoom.png)
+![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/KaraokeRoom_zh.png)
 
 ### Binder与View和Service之间调度流程
 
