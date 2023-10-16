@@ -147,7 +147,7 @@ func setup(roomConfig: AUICommonConfig,
 The parameters are shown in the table below:
 | parameter   | type            | meaning     |
 | ----------- | --------------- | ------------------------------------------------------------ |
-| config      | AUICommonConfig | General configuration, including user information and appId, etc.                              |
+| config      | AUICommonConfig | General configuration, including user information and domain name, etc.                             |
 | ktvApi      | KTVApi          | (Optional) Agora KTV scene API instance. When the KTVApi has been integrated in the project, it can be imported, otherwise the empty transmission will be created internally. |
 | rtcEngine | AgoraRtcEngineKit     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
 | rtmClient   | AgoraRtmClientKit       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.|
@@ -294,7 +294,6 @@ The parameters are shown in the table below:
 
 | parameter   | type            | meaning     |
 | ---------- | ------- | -------------------- |
-| appId      | String  | Agora AppID          |
 | host       | String  | Backend service domain name     |
 | userId     | String  | User ID              |
 | userName   | String  | User name            |
