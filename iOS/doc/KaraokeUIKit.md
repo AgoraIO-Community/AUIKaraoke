@@ -102,23 +102,7 @@ Please refer to [Room Destruction] (# 7.2-Room-Destruction)
 
 
 ### 7. Exception handling
-#### 7.1 Token expiration processing
-```swift
-//Subscribe to the callback for AUIRtmErrorProxyDelegate after KaraokeUIKit.shared.launchRoom
-KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
-
-//Unsubscribe when exiting the room
-KaraokeUIKit.shared.unsubscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
-
-//Then use the onTokenPrivilegeWillExpire callback method in the AUIRtmErrorProxyDelegate callback to renew all tokens
-@objc func onTokenPrivilegeWillExpire(channelName: String?) {
-    generatorToken { config, _ in
-        KaraokeUIKit.shared.renew(config: config)
-    }
-}
-```
-
-#### 7.2 Room destruction
+#### 7.1 Room destruction
 ```swift
 //Subscribe to the callback for AUIRoomManagerRespDelegate after KaraokeUIKit. shared. launchRoom
 KaraokeUIKit.shared.bindRespDelegate(delegate: self)

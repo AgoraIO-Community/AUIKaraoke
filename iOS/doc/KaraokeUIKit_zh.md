@@ -102,23 +102,7 @@ karaokeView.onClickOffButton = { [weak self] in
 
 
 ### 7. 异常处理
-#### 7.1 token过期处理
-```swift
-//在KaraokeUIKit.shared.launchRoom之后订阅AUIRtmErrorProxyDelegate的回调
-KaraokeUIKit.shared.subscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
-
-//在退出房间时取消订阅
-KaraokeUIKit.shared.unsubscribeError(roomId: self.roomInfo?.roomId ?? "", delegate: self)
-
-//然后通过AUIRtmErrorProxyDelegate回调方法中的onTokenPrivilegeWillExpire来renew所有的token
-@objc func onTokenPrivilegeWillExpire(channelName: String?) {
-    generatorToken { config, _ in
-        KaraokeUIKit.shared.renew(config: config)
-    }
-}
-```
-
-#### 7.2 房间销毁
+#### 7.1 房间销毁
 ```swift
 //在KaraokeUIKit.shared.launchRoom之后订阅AUIRoomManagerRespDelegate的回调
 KaraokeUIKit.shared.bindRespDelegate(delegate: self)
