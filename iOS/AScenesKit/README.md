@@ -11,7 +11,9 @@ AScenesKit
 │  ├─ AUIUserViewBinder            // Binder for user management
 │  ├─ AUIJukeBoxViewBinder         // Binder for jukebox
 │  ├─ AUIMicSeatViewBinder         // Binder  for mic seat management
-│  └─ AUiPlayerViewBinder          // Binder for player management
+│  ├─ AUIPlayerViewBinder          // Binder for player management
+│  ├─ AUIIMViewBinder              // Binder for chat management
+|  └─ AUIRoomGiftBinder            // Binder for gift management
 │
 └─ RoomContainer                   // Karaoke integration container
    ├─ AUIKaraokeRoomView           // Karaoke View, responsible for creating, assembling, and binding components 
@@ -121,7 +123,7 @@ Subscribe to changes through the bindRespDelegate method of AUIRoomManagerImpl
 ```swift
 roomManager.bindRespDelegate(delegate: delegate)
 ```
-Then implement the method in the callback AUiRoomManagerRespDelegate
+Then implement the method in the callback AUIRoomManagerRespDelegate
 ```swift
 func onRoomDestroy(roomId: String) {
     //Received message that the room has been destroyed
@@ -133,7 +135,7 @@ Subscribe to changes through the subscribeError method of AUIRoomManagerImpl
 ```swift
 roomManager.rtmManager.subscribeError(channelName: roomId, delegate: delegate)
 ```
-Then implement the method in the callback AUiRtmErrorProxyDelegate
+Then implement the method in the callback AUIRtmErrorProxyDelegate
 ```swift
 @objc func onTokenPrivilegeWillExpire(channelName: String?) {
     //Received token expired

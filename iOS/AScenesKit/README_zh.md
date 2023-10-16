@@ -12,7 +12,9 @@ AScenesKit
 │  ├─ AUIUserViewBinder         // 用户管理Binder
 │  ├─ AUIJukeBoxViewBinder      // 点歌器Binder
 │  ├─ AUIMicSeatViewBinder      // 麦位管理Binder    
-│  └─ AUIPlayerViewBinder       // 播放管理Binder
+│  ├─ AUIPlayerViewBinder       // 播放管理Binder  
+│  ├─ AUIIMViewBinder           // 聊天管理Binder
+|  └─ AUIRoomGiftBinder         // 礼物管理Binder
 │
 └─ RoomContainer                // K歌整合容器
    ├─ AUIKaraokeRoomView        // K歌容器View，负责组件的创建、拼装和绑定   
