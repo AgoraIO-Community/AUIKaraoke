@@ -13,18 +13,19 @@ import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
+import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
 import io.agora.auikit.service.http.CommonResp
 import io.agora.auikit.service.http.HttpManager
 import io.agora.auikit.service.http.application.ApplicationInterface
 import io.agora.auikit.service.http.application.TokenGenerateReq
 import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
+import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.utils.PermissionHelp
 import retrofit2.Response
 
-class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErrorProxyDelegate {
+class RoomActivity : AppCompatActivity(),
+    AUIRoomManagerRespObserver, AUIRtmErrorRespObserver {
     companion object {
         private var roomInfo: AUIRoomInfo? = null
         private var themeId: Int = View.NO_ID
@@ -59,8 +60,8 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
             {
                 generateToken { config ->
                     KaraokeUiKit.launchRoom(roomInfo, config, mViewBinding.karaokeRoomView)
-                    KaraokeUiKit.subscribeError(roomInfo.roomId, this)
-                    KaraokeUiKit.bindRespDelegate(this)
+                    KaraokeUiKit.registerErrorRespObserver(roomInfo.roomId, this)
+                    KaraokeUiKit.registerRoomRespObserver(this)
                 }
             },
             {
@@ -186,8 +187,8 @@ class RoomActivity : AppCompatActivity(), AUIRoomManagerRespDelegate, AUIRtmErro
     private fun shutDownRoom() {
         roomInfo?.roomId?.let { roomId ->
             KaraokeUiKit.destroyRoom(roomId)
-            KaraokeUiKit.unsubscribeError(roomId, this@RoomActivity)
-            KaraokeUiKit.unbindRespDelegate(this@RoomActivity)
+            KaraokeUiKit.unRegisterErrorRespObserver(roomId, this@RoomActivity)
+            KaraokeUiKit.unRegisterRoomRespObserver(this@RoomActivity)
         }
         finish()
     }

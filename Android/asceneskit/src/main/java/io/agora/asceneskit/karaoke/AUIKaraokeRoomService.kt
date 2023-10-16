@@ -12,17 +12,17 @@ import io.agora.auikit.service.IAUIJukeboxService
 import io.agora.auikit.service.IAUIMicSeatService
 import io.agora.auikit.service.IAUIMusicPlayerService
 import io.agora.auikit.service.IAUIUserService
-import io.agora.auikit.service.IAUIUserService.AUIUserRespDelegate
+import io.agora.auikit.service.IAUIUserService.AUIUserRespObserver
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.im.AUIChatManager
-import io.agora.auikit.service.imp.AUIChorusServiceImpl
-import io.agora.auikit.service.imp.AUIGiftServiceImpl
+import io.agora.auikit.service.imp.AUIChorusServiceImplResp
+import io.agora.auikit.service.imp.AUIGiftServiceImplResp
 import io.agora.auikit.service.imp.AUIIMManagerServiceImpl
-import io.agora.auikit.service.imp.AUIJukeboxServiceImpl
-import io.agora.auikit.service.imp.AUIMicSeatServiceImpl
+import io.agora.auikit.service.imp.AUIJukeboxServiceImplResp
+import io.agora.auikit.service.imp.AUIMicSeatServiceImplResp
 import io.agora.auikit.service.imp.AUIMusicPlayerServiceImpl
-import io.agora.auikit.service.imp.AUIRoomManagerImpl
-import io.agora.auikit.service.imp.AUIUserServiceImpl
+import io.agora.auikit.service.imp.AUIRoomManagerImplRespResp
+import io.agora.auikit.service.imp.AUIUserServiceImplResp
 import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.ktv.KTVApiConfig
 import io.agora.auikit.service.ktv.KTVApiImpl
@@ -37,10 +37,10 @@ import io.agora.rtc2.RtcEngine
 class AUIKaraokeRoomService(
     rtcEngine: RtcEngine?,
     ktvApi: KTVApi?,
-    private val roomManager: AUIRoomManagerImpl,
+    private val roomManager: AUIRoomManagerImplRespResp,
     private var roomConfig: AUIRoomConfig,
     private val roomInfo: AUIRoomInfo
-): AUIUserRespDelegate {
+): AUIUserRespObserver {
 
     private val TAG = "AUIKaraokeRoomService"
 
@@ -57,8 +57,8 @@ class AUIKaraokeRoomService(
     private val rtmManager: AUIRtmManager = roomManager.rtmManager
 
     private val userImpl: IAUIUserService by lazy {
-        val user = AUIUserServiceImpl(roomInfo.roomId, rtmManager)
-        user.bindRespDelegate(this)
+        val user = AUIUserServiceImplResp(roomInfo.roomId, rtmManager)
+        user.registerRespObserver(this)
         user
     }
 
@@ -66,15 +66,15 @@ class AUIKaraokeRoomService(
 
     private val imManagerImpl: IAUIIMManagerService by lazy { AUIIMManagerServiceImpl(roomInfo.roomId, rtmManager, chatManager) }
 
-    private val micSeatImpl: IAUIMicSeatService by lazy { AUIMicSeatServiceImpl(roomInfo.roomId, rtmManager) }
+    private val micSeatImpl: IAUIMicSeatService by lazy { AUIMicSeatServiceImplResp(roomInfo.roomId, rtmManager) }
 
     private val playerImpl: IAUIMusicPlayerService by lazy { AUIMusicPlayerServiceImpl(mRtcEngine, roomInfo.roomId, mKtvApi) }
 
-    private val chorusImpl: IAUIChorusService by lazy { AUIChorusServiceImpl(roomInfo.roomId, mKtvApi, rtmManager) }
+    private val chorusImpl: IAUIChorusService by lazy { AUIChorusServiceImplResp(roomInfo.roomId, mKtvApi, rtmManager) }
 
-    private val jukeboxImpl: IAUIJukeboxService by lazy { AUIJukeboxServiceImpl(roomInfo.roomId, rtmManager, mKtvApi) }
+    private val jukeboxImpl: IAUIJukeboxService by lazy { AUIJukeboxServiceImplResp(roomInfo.roomId, rtmManager, mKtvApi) }
 
-    private val giftImpl: IAUIGiftsService by lazy { AUIGiftServiceImpl(roomInfo.roomId, rtmManager,chatManager) }
+    private val giftImpl: IAUIGiftsService by lazy { AUIGiftServiceImplResp(roomInfo.roomId, rtmManager,chatManager) }
 
 
     private val mKtvApi: KTVApi = ktvApi ?: run {

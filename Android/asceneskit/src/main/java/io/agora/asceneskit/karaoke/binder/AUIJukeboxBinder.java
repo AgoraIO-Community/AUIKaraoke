@@ -16,7 +16,7 @@ import io.agora.auikit.ui.jukebox.AUIMusicInfo;
 import io.agora.auikit.ui.jukebox.IAUIJukeboxChosenItemView;
 import io.agora.auikit.ui.jukebox.IAUIJukeboxView;
 
-public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJukeboxRespDelegate, IAUIJukeboxView.ActionDelegate {
+public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJukeboxRespObserver, IAUIJukeboxView.ActionDelegate {
     private final IAUIJukeboxView jukeboxView;
     private final IAUIJukeboxService jukeboxService;
 
@@ -30,7 +30,7 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
     @Override
     public void bind() {
         mMainHandler = new Handler(Looper.getMainLooper());
-        jukeboxService.bindRespDelegate(this);
+        jukeboxService.registerRespObserver(this);
         jukeboxView.setActionDelegate(this);
 
         jukeboxView.setChooseSongCategories(IAUIJukeboxService.songCategories);
@@ -66,7 +66,7 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
     public void unBind() {
         mMainHandler.removeCallbacksAndMessages(null);
         mMainHandler = null;
-        jukeboxService.unbindRespDelegate(this);
+        jukeboxService.unRegisterRespObserver(this);
         jukeboxView.setActionDelegate(null);
     }
 
