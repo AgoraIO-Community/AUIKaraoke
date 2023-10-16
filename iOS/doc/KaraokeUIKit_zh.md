@@ -129,7 +129,7 @@ AUIRoomContext.shared.switchThemeToNext()
 
 ```swift
 //指定一个主题
-AUIRoomContext.shared.switchTheme(themeName: "UIKit")
+AUIRoomContext.shared.switchTheme(themeName: "Light")
 ```
 - 也可通过修改[配置文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme)或者替换[资源文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)来更换组件的皮肤
 - 更多换肤问题可以参考[皮肤设置](./KaraokeTheme_zh.md)

@@ -182,7 +182,7 @@ func getRoomInfoList(lastCreateTime: Int64?,
 The parameters are shown in the table below:
 | parameter   | type            | meaning     |
 | --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64     | (Optional) The page start time,difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085                      |
+| lastCreateTime | Int64     | (Optional) The page start time, difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085                      |
 | pageSize  | Int      | The page size                                 |
 | callback   | Closure | Completion callback|
 
