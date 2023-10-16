@@ -119,7 +119,7 @@ extension KaraokeUIKit {
     
     private func generateToken(roomInfo: AUIRoomInfo,
                                completion:@escaping ((AUIRoomConfig, String)->())) {
-        let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
+        let uid = roomConfig?.userId ?? ""
         let channelName = roomInfo.roomId
         let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
@@ -187,8 +187,8 @@ extension KaraokeUIKit {
 extension KaraokeUIKit: AUIRtmErrorProxyDelegate {
     @objc func onTokenPrivilegeWillExpire(channelName: String?) {
         guard let roomInfo = roomInfo else { return }
-        generateToken(roomInfo: roomInfo) { config, _ in
-            KaraokeUIKit.shared.renew(config: config)
+        generateToken(roomInfo: roomInfo) {[weak self] config, _ in
+            self?.renew(config: config)
         }
     }
 }
