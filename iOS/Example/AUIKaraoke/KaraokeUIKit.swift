@@ -19,6 +19,7 @@ class KaraokeUIKit: NSObject {
     private var rtcEngine: AgoraRtcEngineKit?
     private var rtmClient: AgoraRtmClientKit?
     private var service: AUIKaraokeRoomService?
+    private var roomInfo: AUIRoomInfo?
     
     private var roomManager: AUIRoomManagerImpl?
     
@@ -41,10 +42,6 @@ class KaraokeUIKit: NSObject {
         roomManager.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: pageSize, callback: callback)
     }
     
-    func renew(config: AUIRoomConfig) {
-        service?.renew(config: config)
-    }
-    
     func createRoom(roomInfo: AUICreateRoomInfo,
                     success: ((AUIRoomInfo?)->())?,
                     failure: ((Error)->())?) {
@@ -63,36 +60,38 @@ class KaraokeUIKit: NSObject {
     }
     
     func launchRoom(roomInfo: AUIRoomInfo,
-                    appId: String?,
-                    config: AUIRoomConfig,
-                    karaokeView: AUIKaraokeRoomView) {
+                    karaokeView: AUIKaraokeRoomView,
+                    completion: @escaping (NSError?)->()) {
         guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
         }
-        if let appId = appId {
+        
+        generateToken(roomInfo: roomInfo) {[weak self] roomConfig, appId in
+            guard let self = self else { return }
+            guard appId.count > 0 else {
+                completion(NSError(domain: "KaraokeUIKit Error", code: -1, userInfo: [ NSLocalizedDescriptionKey : "token generate fail!"]))
+                return
+            }
             AUIRoomContext.shared.commonConfig?.appId = appId
+            let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
+                                                ktvApi: ktvApi,
+                                                roomManager: roomManager,
+                                                roomConfig: roomConfig,
+                                                roomInfo: roomInfo)
+            //订阅Token过期回调
+            self.subscribeError(delegate: self)
+            karaokeView.bindService(service: service)
+            self.service = service
+            self.roomInfo = roomInfo
+            completion(nil)
         }
-        let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
-                                            ktvApi: ktvApi,
-                                            roomManager: roomManager,
-                                            roomConfig: config,
-                                            roomInfo: roomInfo)
-        karaokeView.bindService(service: service)
-        self.service = service
     }
     
     func destoryRoom(roomId: String) {
 //        rtmClient?.logout()
+        self.unsubscribeError(delegate: self)
         service = nil
-    }
-    
-    func subscribeError(delegate: AUIRtmErrorProxyDelegate) {
-        roomManager?.rtmManager.subscribeError(channelName: "", delegate: delegate)
-    }
-    
-    func unsubscribeError(delegate: AUIRtmErrorProxyDelegate) {
-        roomManager?.rtmManager.unsubscribeError(channelName: "", delegate: delegate)
     }
     
     func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
@@ -104,10 +103,92 @@ class KaraokeUIKit: NSObject {
     }
 }
 
-extension KaraokeUIKit: AgoraRtcEngineDelegate {
+//MARK: private method
+extension KaraokeUIKit {
+    private func subscribeError(delegate: AUIRtmErrorProxyDelegate) {
+        roomManager?.rtmManager.subscribeError(channelName: "", delegate: delegate)
+    }
     
+    private func unsubscribeError(delegate: AUIRtmErrorProxyDelegate) {
+        roomManager?.rtmManager.unsubscribeError(channelName: "", delegate: delegate)
+    }
+    
+    private func renew(config: AUIRoomConfig) {
+        service?.renew(config: config)
+    }
+    
+    private func generateToken(roomInfo: AUIRoomInfo,
+                               completion:@escaping ((AUIRoomConfig, String)->())) {
+        let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
+        let channelName = roomInfo.roomId
+        let rtcChannelName = "\(channelName)_rtc"
+        let rtcChorusChannelName = "\(channelName)_rtc_ex"
+        let roomConfig = AUIRoomConfig()
+        roomConfig.channelName = channelName
+        roomConfig.rtcChannelName = rtcChannelName
+        roomConfig.rtcChorusChannelName = rtcChorusChannelName
+        print("generateTokens: \(uid)")
+        
+        var appId = ""
+        
+        let group = DispatchGroup()
+        
+        group.enter()
+        let tokenModel1 = AUITokenGenerateNetworkModel()
+        tokenModel1.channelName = channelName
+        tokenModel1.userId = uid
+        tokenModel1.request { error, result in
+            defer {
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
+            appId = tokenMap["appId"] ?? ""
+        }
+        
+        group.enter()
+        let tokenModel2 = AUITokenGenerateNetworkModel()
+        tokenModel2.channelName = rtcChannelName
+        tokenModel2.userId = uid
+        tokenModel2.request { error, result in
+            defer {
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcRtcToken = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtcRtmToken = tokenMap["rtmToken"] ?? ""
+        }
+        
+        group.enter()
+        let tokenModel3 = AUITokenGenerateNetworkModel()
+        tokenModel3.channelName = rtcChorusChannelName
+        tokenModel3.userId = uid
+        tokenModel3.request { error, result in
+            defer {
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcChorusRtcToken = tokenMap["rtcToken"] ?? ""
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(roomConfig, appId)
+        }
+    }
 }
 
-extension KaraokeUIKit: AgoraRtmClientDelegate {
-    
+extension KaraokeUIKit: AUIRtmErrorProxyDelegate {
+    @objc func onTokenPrivilegeWillExpire(channelName: String?) {
+        guard let roomInfo = roomInfo else { return }
+        generateToken(roomInfo: roomInfo) { config, _ in
+            KaraokeUIKit.shared.renew(config: config)
+        }
+    }
 }
