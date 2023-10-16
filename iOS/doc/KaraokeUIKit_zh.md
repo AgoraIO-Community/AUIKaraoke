@@ -59,7 +59,6 @@ KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: nil,
 let room = AUICreateRoomInfo()
 room.roomName = text
 room.thumbnail = self.userInfo.userAvatar
-room.seatCount = 8
 KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
     let vc = RoomViewController()
     vc.roomInfo = roomInfo
@@ -71,15 +70,20 @@ KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
 
 ### 5. 拉起房间
 ```swift
-let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
 //创建房间容器
 let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
-//通过generateToken方法获取到必须的token和appid
-generateToken { roomConfig, appId in
-    KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
-                                   appId: appId,
-                                   config: roomConfig,
-                                   karaokeView: karaokeView) 
+karaokeView.onClickOffButton = { [weak self] in
+    //退出房间的回调
+}
+self.view.addSubview(karaokeView)
+
+//进入房间
+KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
+                               karaokeView: karaokeView) {[weak self] error in
+    guard let self = self else {return}
+    if let _ = error { return }
+    //订阅房间被销毁回调
+    KaraokeUIKit.shared.bindRespDelegate(delegate: self)
 }
 ```
 
@@ -205,9 +209,8 @@ func getRoomInfoList(lastCreateTime: Int64?,
 
 ```swift
 func launchRoom(roomInfo: AUIRoomInfo,
-                appId: String? = nil,
-                config: AUIRoomConfig,
-                karaokeView: AUIKaraokeRoomView) 
+                karaokeView: AUIKaraokeRoomView,
+                completion: @escaping (NSError?)->()) 
 ```
 
 参数如下表所示：
@@ -215,9 +218,8 @@ func launchRoom(roomInfo: AUIRoomInfo,
 | 参数        | 类型            | 含义                                  |
 | ----------- | --------------- | ------------------------------------- |
 | roomInfo    | AUIRoomInfo     | 房间信息                              |
-| appId    | String     | (可选)设置当前AppId，如果初始化时未设置，这里必须要设置否则可以忽略                              |
-| config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 | karaokeView | KaraokeRoomView | 房间UI View                           |
+| completion | Closure | 加入房间完成回调                           |
 
 ### destroyRoom
 
@@ -226,48 +228,6 @@ func launchRoom(roomInfo: AUIRoomInfo,
 ```swift
 func destoryRoom(roomId: String)
 ```
-
-### renew
-
-更新房间token
-
-```swift
-func renew(config: AUIRoomConfig)
-```
-
-参数如下表所示：
-
-| 参数   | 类型   | 含义           |
-| ------ | ------ | -------------- |
-| config | AUIRoomConfig | 房间里相关的配置，包含子频道名和token |
-
-### subscribeError
-
-订阅房间的异常回调，例如token过期，可以通过renew方法更新token
-
-```swift
-func subscribeError(delegate: AUIRtmErrorProxyDelegate)
-```
-
-参数如下表所示：
-
-| 参数   | 类型   | 含义           |
-| ------ | ------ | -------------- |
-| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
-
-### unsubscribeError
-
-取消订阅房间的异常回调
-
-```swift
-func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
-```
-
-参数如下表所示：
-
-| 参数   | 类型   | 含义           |
-| ------ | ------ | -------------- |
-| delegate | AUIRtmErrorProxyDelegate | 错误回调对象 |
 
 ### bindRespDelegate
 
@@ -304,7 +264,6 @@ func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 
 | 参数       | 类型    | 含义                 |
 | ---------- | ------- | -------------------- |
-| appId      | String  | 声网AppID            |
 | host       | String  | 后端服务域名          |
 | userId     | String  | 用户ID               |
 | userName   | String  | 用户名               |
@@ -340,44 +299,6 @@ func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 | userId     | String | 用户Id   |
 | userName   | String | 用户名   |
 | userAvatar | String | 用户头像 |
-
-### AUIRoomConfig
-
-| 参数                 | 类型   | 含义                                                         |
-| -------------------- | ------ | ------------------------------------------------------------ |
-| channelName          | String | 主频道名，一般为roomId                                       |
-| rtmToken007             | String | 主频道的rtm token，uid为setup时AUICommonConfig里的userId     |
-| rtcToken007             | String | 主频道的rtc token，uid为setup时AUICommonConfig里的userId     |
-| rtcChannelName       | String | 音视频频道名，一般为{roomId}_rtc                             |
-| rtcRtcToken          | String | 音视频频道的rtc token，uid为setup时AUICommonConfig里的userId |
-| rtcRtmToken          | String | 音视频频道的rtm token，uid为setup时AUICommonConfig里的userId |
-| rtcChorusChannelName | String | 合唱频道名，一般为{roomId}_rtc_ex                            |
-| rtcChorusRtcToken    | String | 合唱频道的rtc token，uid为setup时AUICommonConfig里的userId   |
-
-## 协议
-### AUIRtmErrorProxyDelegate
-```AUIRtmErrorProxyDelegate``` 协议是用于处理与声网实时消息（RTM）错误相关的各种事件的协议。它提供了可选方法，可以由遵循此协议的类来实现，以响应特定的事件。
-
-#### 方法
-- ```func onTokenPrivilegeWillExpire(channelName: String?)```
-   token 即将过期时的调用。
-  - 参数：
-     - ```channelName```: 频道名称。
-    >
-- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
-    当 RTM 连接状态发生改变时调用。
-    - 参数：
-      - ```channelName```: 频道名称。
-      - ```state```: 新的连接状态。
-      - ```reason```: 连接状态的原因。
-    >
-- ```func onMsgRecvEmpty(channelName: String)```
-    当收到房间KV存储为空时调用，认为房间已经被销毁。
-
-  - 参数:
-    - ```channelName```: 频道名称。
-
-> 注意：该协议中的方法都是可选的，可以根据需要进行实现。
 
 ### AUIRoomManagerRespDelegate
 ```AUIRoomManagerRespDelegate``` 协议用于处理与房间操作相关的各种响应事件。它提供了以下方法，可以由遵循此协议的类来实现，以响应特定的事件。

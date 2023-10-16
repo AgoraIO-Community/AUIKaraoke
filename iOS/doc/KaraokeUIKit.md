@@ -59,7 +59,6 @@ KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: nil,
 let room = AUICreateRoomInfo()
 room.roomName = text
 room.thumbnail = self.userInfo.userAvatar
-room.seatCount = 8
 KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
     let vc = RoomViewController()
     vc.roomInfo = roomInfo
@@ -71,15 +70,20 @@ KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
 
 ### 5. Launch room
 ```swift
-let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
-//Creating Room Containers
+//creating room containers
 let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
-//Obtain the necessary token and appid through the generateToken method
-generateToken { roomConfig, appId in
-    KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
-                                   appId: appId,
-                                   config: roomConfig,
-                                   karaokeView: karaokeView)
+karaokeView.onClickOffButton = { [weak self] in
+    //exit room callback
+}
+self.view.addSubview(karaokeView)
+
+//enter room
+KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
+                               karaokeView: karaokeView) {[weak self] error in
+    guard let self = self else {return}
+    if let _ = error { return }
+    //subscription room destroyed callback
+    KaraokeUIKit.shared.bindRespDelegate(delegate: self)
 }
 ```
 
@@ -202,9 +206,8 @@ The parameters are shown in the table below:
 Launch Room
 ```swift
 func launchRoom(roomInfo: AUIRoomInfo,
-                appId: String? = nil,
-                config: AUIRoomConfig,
-                karaokeView: AUIKaraokeRoomView) 
+                karaokeView: AUIKaraokeRoomView,
+                completion: @escaping (NSError?)->()) 
 ```
 
 The parameters are shown in the table below:
@@ -212,9 +215,8 @@ The parameters are shown in the table below:
 | parameter   | type            | meaning     |
 | ----------- | --------------- | ------------------------------------- |
 | roomInfo    | AUIRoomInfo     | Room information                     |
-| appId    | String     | (Optional) Set the current AppId. If it is not set during initialization, it must be set here, otherwise it can be ignored  |
-| config      | AUIRoomConfig   | Related configuration in the room, including sub-channel name and token |
 | karaokeView | KaraokeRoomView | Room UI View                    |
+| completion | Closure | Join the room to complete the callback                          |
 
 ### destroyRoom
 Destroy Room
@@ -344,44 +346,6 @@ The parameters are shown in the table below:
 | userName   | String | User name   |
 | userAvatar | String | User avatar url |
 
-### AUIRoomConfig
-| parameter   | type            | meaning     |
-| -------------------- | ------ | ------------------------------------------------------------ |
-| channelName          | String | Main channel name, usually roomId                                       |
-| rtmToken007             | String | The rtm token of the main channel whose uid is setup in AUICommonConfig     |
-| rtcToken007             | String | The rtc token of the main channel whose uid is setup in AUICommonConfig     |
-| rtcChannelName       | String | Video channel name, usually {roomId}_rtc                             |
-| rtcRtcToken          | String | The rtc token of the video channel whose uid is setup in AUICommonConfig |
-| rtcRtmToken          | String | The rtm token of the video channel whose uid is setup in AUICommonConfig |
-| rtcChorusChannelName | String | Chorus channel name, usually {roomId}_rtc_ex                            |
-| rtcChorusRtcToken    | String | The rtc token of the chorus channel whose uid is setup in AUICommonConfig
-   |
-
-
-## Protocol
-### AUIRtmErrorProxyDelegate
-```AUIRtmErrorProxyDelegate``` protocol is used to handle various events related to real-time messaging (RTM) errors in the voice network. It provides optional methods that can be implemented by classes that follow this protocol to respond to specific events.
-
-#### Method
-- ```func onTokenPrivilegeWillExpire(channelName: String?)```
-   Call when token is about to expire.
-  - Parameter:
-     - ```channelName```: channel name.
-    >
-- ```func onConnectionStateChanged(channelName: String, connectionStateChanged state: AgoraRtmClientConnectionState, result reason: AgoraRtmClientConnectionChangeReason)```
-    Called when the RTM connection status changes.
-    - Parameter:
-      - ```channelName```: channel name.
-      - ```state```: New connection status.
-      - ```reason```: The reason for the connection status.
-    >
-- ```func onMsgRecvEmpty(channelName: String)```
-    Called when room KV storage is empty, indicating that the room has been destroyed.
-
-  - Parameter:
-    - ```channelName```: channel name.
-
-> Note: The methods in this protocol are optional and can be implemented as needed.
 
 ### AUIRoomManagerRespDelegate
 ```AUIRoomManagerRespDelegate``` protocol is used to handle various response events related to room operations. It provides the following methods that can be implemented by classes following this protocol to respond to specific events.
