@@ -6,12 +6,12 @@ import io.agora.auikit.model.AUICreateRoomInfo
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
+import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.imp.AUIRoomManagerImpl
+import io.agora.auikit.service.imp.AUIRoomManagerImplRespResp
 import io.agora.auikit.service.ktv.KTVApi
-import io.agora.auikit.service.rtm.AUIRtmErrorProxyDelegate
+import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.utils.AUILogger
 import io.agora.rtc2.RtcEngineEx
 import io.agora.rtm2.RtmClient
@@ -22,7 +22,7 @@ object KaraokeUiKit {
     private val initedException =
         RuntimeException("The KaraokeServiceManager has been initialized!")
 
-    private var mRoomManager: AUIRoomManagerImpl? = null
+    private var mRoomManager: AUIRoomManagerImplRespResp? = null
 
     private var mRtcEngineEx: RtcEngineEx? = null
     private var mKTVApi: KTVApi? = null
@@ -48,7 +48,7 @@ object KaraokeUiKit {
         AUIRoomContext.shared().commonConfig = config
         mKTVApi = ktvApi
         mRtcEngineEx = rtcEngineEx // 用户塞进来的engine由用户自己管理生命周期
-        mRoomManager = AUIRoomManagerImpl(config, rtmClient)
+        mRoomManager = AUIRoomManagerImplRespResp(config, rtmClient)
         AUILogger.initLogger(AUILogger.Config(AUIRoomContext.shared().commonConfig.context, "Karaoke"))
     }
 
@@ -135,20 +135,20 @@ object KaraokeUiKit {
         mService?.renew(config)
     }
 
-    fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
-        mRoomManager?.rtmManager?.proxy?.subscribeError(roomId, delegate)
+    fun registerErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver) {
+        mRoomManager?.rtmManager?.proxy?.registerErrorRespObserver(roomId, observer)
     }
 
-    fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate) {
-        mRoomManager?.rtmManager?.proxy?.unsubscribeError(roomId, delegate)
+    fun unRegisterErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver) {
+        mRoomManager?.rtmManager?.proxy?.unRegisterErrorRespObserver(roomId, observer)
     }
 
-    fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
-        mRoomManager?.bindRespDelegate(delegate)
+    fun registerRoomRespObserver(observer: AUIRoomManagerRespObserver) {
+        mRoomManager?.registerRespObserver(observer)
     }
 
-    fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
-        mRoomManager?.unbindRespDelegate(delegate)
+    fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver) {
+        mRoomManager?.unRegisterRespObserver(observer)
     }
 
 }

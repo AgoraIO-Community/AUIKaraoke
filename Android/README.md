@@ -11,15 +11,11 @@ AUIKaraoke is an open source audio and video UI component. By integrating the AU
 - <mark>Minimum Compatibility with Android 7.0</mark>（SDK API Level 24）
 - Android Studio 3.5 and above versions.
 - Mobile devices with Android 7.0 and above.
-- JDK 17 and above.
+- JDK 17.
 
 ---
 
 ### 2. Running the Example
-- (Optional)Execute in the AUIKitKaraoke directory:
-```
-git submodule update --init --remote
-```
 
 - Please fill in the domain name of the business server in the [**local.properties**](/local.properties) file of the project
   
@@ -93,7 +89,6 @@ SERVER_HOST= （Domain name of the business server）
 // Create Common Config
 val config = AUiCommonConfig()
 config.context = application
-config.appId = "Agora APP ID" // Get the Agora APP ID from agora console
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
@@ -311,60 +306,60 @@ The parameters are shown in the table below:
 | --------- | ------ | ----------------------------- |
 | roomId    | String | The ID of the room to destroy |
 
-#### subscribeError
+#### registerErrorRespObserver
 
 Subscribe room error events.
 
 ```kotlin
-fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+fun registerErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
 ```
 
 The parameters are shown in the table below:
 
 | parameter | type                     | meaning                      |
-| --------- | ------------------------ | ---------------------------- |
+| --------- |--------------------------|------------------------------|
 | roomId    | String                   | The room id                  |
-| delegate  | AUIRtmErrorProxyDelegate | The error delegate implement |
+| observer  | AUIRtmErrorRespObserver  | The error observer implement |
 
-#### unsubscribeError
+#### unRegisterErrorRespObserver
 
 Unsubscribe room error events.
 
 ```kotlin
-fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
+fun unRegisterErrorRespObserver(roomId: String, observer: AUIRtmErrorRespObserver)
 ```
 
 The parameters are shown in the table below:
 
 | parameter | type                     | meaning                      |
-| --------- | ------------------------ | ---------------------------- |
+| --------- |--------------------------|------------------------------|
 | roomId    | String                   | The room id                  |
-| delegate  | AUIRtmErrorProxyDelegate | The error delegate implement |
+| observer  | AUIRtmErrorRespObserver  | The error observer implement |
 
-#### bindRespDelegate
+#### registerRoomRespObserver
 
 Bind to get the room response events.
 
 ```kotlin
-fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun registerRoomRespObserver(observer: AUIRoomManagerRespObserver)
 ```
 The parameters are shown in the table below:
 
-| parameter | type                       | meaning                              |
-| --------- | -------------------------- | ------------------------------------ |
-| delegate  | AUIRoomManagerRespDelegate | The room response delegate implement |
+| parameter | type                        | meaning                              |
+| --------- |-----------------------------|--------------------------------------|
+| observer  | AUIRoomManagerRespObserver  | The room response observer implement |
 
-#### unbindRespDelegate
+#### unRegisterRoomRespObserver
 
 ```kotlin
-fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver)
 ```
 
 The parameters are shown in the table below:
 
 | parameter | type                       | meaning                              |
-| --------- | -------------------------- | ------------------------------------ |
-| delegate  | AUIRoomManagerRespDelegate | The room response delegate implement |
+| --------- |----------------------------|--------------------------------------|
+| observer  | AUIRoomManagerRespObserver | The room response observer implement |
 
 #### release
 
@@ -372,9 +367,9 @@ The parameters are shown in the table below:
 fun release()
 ```
 
-### AUIRtmErrorProxyDelegate
+### AUIRtmErrorRespObserver
 
-The error delegate interface.
+The error observer interface.
 
 #### onConnectionStateChanged
 
@@ -389,7 +384,7 @@ The parameters are shown in the table below:
 | reason      | Int    | Change reason，See **RtmConstants.RtmConnectionChangeReason** |
 
 
-#### onMsgRecvEmpty
+#### onMsgReceiveEmpty
 
 Callback when receiving empty message.
 
@@ -410,9 +405,9 @@ The parameters are shown in the table below:
 | ----------- | ------ | ---------------------- |
 | channelName | String | Same with the room Id. |
 
-### AUIRoomManagerRespDelegate
+### AUIRoomManagerRespObserver
 
-Response delegate interface.
+Response observer interface.
 
 #### onRoomDestroy
 

@@ -34,10 +34,10 @@ import io.agora.auikit.ui.micseats.MicSeatStatus;
 public class AUIMicSeatsBinder implements
         IAUIBindable,
         IMicSeatsView.ActionDelegate,
-        IAUIMicSeatService.AUIMicSeatRespDelegate,
-        IAUIChorusService.AUIChorusRespDelegate,
-        IAUIJukeboxService.AUIJukeboxRespDelegate,
-        IAUIUserService.AUIUserRespDelegate {
+        IAUIMicSeatService.AUIMicSeatRespObserver,
+        IAUIChorusService.AUIChorusRespObserver,
+        IAUIJukeboxService.AUIJukeboxRespObserver,
+        IAUIUserService.AUIUserRespObserver {
     private final IMicSeatsView micSeatsView;
     private final IAUIUserService userService;
     private final IAUIMicSeatService micSeatService;
@@ -64,10 +64,10 @@ public class AUIMicSeatsBinder implements
     @Override
     public void bind() {
         mMainHandler = new Handler(Looper.getMainLooper());
-        userService.bindRespDelegate(this);
-        micSeatService.bindRespDelegate(this);
-        jukeboxService.bindRespDelegate(this);
-        chorusService.bindRespDelegate(this);
+        userService.registerRespObserver(this);
+        micSeatService.registerRespObserver(this);
+        jukeboxService.registerRespObserver(this);
+        chorusService.registerRespObserver(this);
         micSeatsView.setMicSeatActionDelegate(this);
 
         // update view
@@ -113,10 +113,10 @@ public class AUIMicSeatsBinder implements
     public void unBind() {
         mMainHandler.removeCallbacksAndMessages(null);
         mMainHandler = null;
-        userService.unbindRespDelegate(this);
-        micSeatService.unbindRespDelegate(this);
-        jukeboxService.unbindRespDelegate(this);
-        chorusService.unbindRespDelegate(this);
+        userService.unRegisterRespObserver(this);
+        micSeatService.unRegisterRespObserver(this);
+        jukeboxService.unRegisterRespObserver(this);
+        chorusService.unRegisterRespObserver(this);
 
         micSeatsView.setMicSeatActionDelegate(null);
     }
@@ -132,7 +132,7 @@ public class AUIMicSeatsBinder implements
     /** IAUIMicSeatService.AUIMicSeatRespDelegate implements. */
     @Override
     public void onSeatListChange(List<AUIMicSeatInfo> seatInfoList) {
-        IAUIMicSeatService.AUIMicSeatRespDelegate.super.onSeatListChange(seatInfoList);
+        IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatListChange(seatInfoList);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onShowInvited(int index) {
-        IAUIMicSeatService.AUIMicSeatRespDelegate.super.onShowInvited(index);
+        IAUIMicSeatService.AUIMicSeatRespObserver.super.onShowInvited(index);
     }
 
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
