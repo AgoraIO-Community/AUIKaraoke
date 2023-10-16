@@ -13,7 +13,15 @@ android {
         versionName "0.5.0"
         ndk.abiFilters 'armeabi-v7a','arm64-v8a'//, 'x86', 'x86-64'
 
+        def properties = new Properties()
+        properties.load(rootProject.file("local.properties").newDataInputStream())
 
+        final def SERVER_HOST = properties.getProperty("SERVER_HOST")
+        if (SERVER_HOST.isEmpty()) {
+            throw new GradleException("请在 local.properties 中配置完整的 SERVER_HOST")
+        }
+
+        buildConfigField "String", "SERVER_HOST", "\"$SERVER_HOST\""
     }
 
     signingConfigs {
