@@ -43,7 +43,7 @@ static var HostUrl: String = <#Your HostUrl#>
 ```
 如果暂无意部署后端服务，可以使用KeyCenter.swift里默认的域名
 
-- 打开终端，进入到[Podfile](Podfile)目录下，执行`pod install`命令
+- 打开终端，进入到[Podfile](Podfile)目录下，执行`pod update`命令
   - 建议cocoapods升级到1.12.0以上，如果您的cocoapods版本低于1.12.0，可能会遇到如下错误
   ```
   the version of cocoapods to generate the lockfile(1.12.0) is higher than the version of the current executable(1.11.2). 
