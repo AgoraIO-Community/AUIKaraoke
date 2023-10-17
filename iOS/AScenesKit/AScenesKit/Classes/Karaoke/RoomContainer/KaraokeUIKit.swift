@@ -7,13 +7,12 @@
 //
 
 import Foundation
-import AScenesKit
 import AUIKitCore
 import AgoraRtcKit
 import AgoraRtmKit
 
-class KaraokeUIKit: NSObject {
-    static let shared: KaraokeUIKit = KaraokeUIKit()
+public class KaraokeUIKit: NSObject {
+    public static let shared: KaraokeUIKit = KaraokeUIKit()
     public var roomConfig: AUICommonConfig?
     private var ktvApi: KTVApiDelegate?
     private var rtcEngine: AgoraRtcEngineKit?
@@ -23,10 +22,10 @@ class KaraokeUIKit: NSObject {
     
     private var roomManager: AUIRoomManagerImpl?
     
-    func setup(roomConfig: AUICommonConfig,
-               ktvApi: KTVApiDelegate? = nil,
-               rtcEngine: AgoraRtcEngineKit? = nil,
-               rtmClient: AgoraRtmClientKit? = nil) {
+    public func setup(roomConfig: AUICommonConfig,
+                      ktvApi: KTVApiDelegate? = nil,
+                      rtcEngine: AgoraRtcEngineKit? = nil,
+                      rtmClient: AgoraRtmClientKit? = nil) {
         self.roomConfig = roomConfig
         self.ktvApi = ktvApi
         self.rtcEngine = rtcEngine
@@ -34,7 +33,7 @@ class KaraokeUIKit: NSObject {
         self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
-    func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUIRoomListCallback) {
+    public func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUIRoomListCallback) {
         guard let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
@@ -42,9 +41,9 @@ class KaraokeUIKit: NSObject {
         roomManager.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: pageSize, callback: callback)
     }
     
-    func createRoom(roomInfo: AUICreateRoomInfo,
-                    success: ((AUIRoomInfo?)->())?,
-                    failure: ((Error)->())?) {
+    public func createRoom(roomInfo: AUICreateRoomInfo,
+                           success: ((AUIRoomInfo?)->())?,
+                           failure: ((Error)->())?) {
         guard let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
@@ -59,9 +58,9 @@ class KaraokeUIKit: NSObject {
         }
     }
     
-    func launchRoom(roomInfo: AUIRoomInfo,
-                    karaokeView: AUIKaraokeRoomView,
-                    completion: @escaping (NSError?)->()) {
+    public func launchRoom(roomInfo: AUIRoomInfo,
+                           karaokeView: AUIKaraokeRoomView,
+                           completion: @escaping (NSError?)->()) {
         guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
@@ -88,17 +87,17 @@ class KaraokeUIKit: NSObject {
         }
     }
     
-    func destoryRoom(roomId: String) {
+    public func destoryRoom(roomId: String) {
 //        rtmClient?.logout()
         self.unsubscribeError(delegate: self)
         service = nil
     }
     
-    func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         roomManager?.bindRespDelegate(delegate: delegate)
     }
     
-    func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
         roomManager?.unbindRespDelegate(delegate: delegate)
     }
 }
@@ -185,7 +184,7 @@ extension KaraokeUIKit {
 }
 
 extension KaraokeUIKit: AUIRtmErrorProxyDelegate {
-    @objc func onTokenPrivilegeWillExpire(channelName: String?) {
+    @objc public func onTokenPrivilegeWillExpire(channelName: String?) {
         guard let roomInfo = roomInfo else { return }
         generateToken(roomInfo: roomInfo) {[weak self] config, _ in
             self?.renew(config: config)
