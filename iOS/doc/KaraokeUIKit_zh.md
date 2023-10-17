@@ -18,12 +18,11 @@ KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间�
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKitCore'
 ```
 
-**把KaraokeUIKit.swift拖进工程里**
+**把KeyCenter.swift拖进工程里**
 
-![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_keycenter_ios.png) 
+![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/add_keycenter_to_karaoke.jpg) 
 
 **在Info.plist里配置麦克风和摄像头权限**
 

@@ -12,19 +12,17 @@ KaraokeUIKit is a Karaoke scenario component that provides room management and t
 **Copy the following source code into your own project：**
 
 - [AScenesKit](../AScenesKit)
-- [KaraokeUIKit.swift](../Example/AUIKaraoke/KaraokeUIKit.swift)
 - [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
 **Add dependencies on AScenesKit in the Podfile file (for example, when AScenesKit are placed in the same level directory as the Podfile)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
-  pod 'AUIKitCore'
 ```
 
-**Drag KaraokeUIKit.swift into the project**
+**Drag KeyCenter.swift into the project**
 
-![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_keycenter_ios.png) 
+![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/add_keycenter_to_karaoke.jpg) 
 
 **Configure microphone and camera permissions**
 
