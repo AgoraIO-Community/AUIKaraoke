@@ -55,8 +55,8 @@ dependencies {
         def uiKitVersion='0.5.2'
         api "com.github.AgoraIO-Community.AUIKit:AUIKit:$uiKitVersion"
 
-        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-Service:karaoke-$uiKitVersion"
-        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-UI:karaoke-$uiKitVersion"
+        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-Service:$uiKitVersion"
+        //api "com.github.AgoraIO-Community.AUIKit:AUIKit-UI:$uiKitVersion"
     }
 }
 
