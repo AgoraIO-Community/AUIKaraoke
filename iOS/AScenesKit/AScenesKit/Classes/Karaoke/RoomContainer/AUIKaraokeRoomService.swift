@@ -77,7 +77,7 @@ open class AUIKaraokeRoomService: NSObject {
             self.ktvApi = ktvApi
         } else {
             let userId = Int(roomManager.commonConfig.userId) ?? 0
-            let config = KTVApiConfig(appId: roomManager.commonConfig.appId,
+            let config = KTVApiConfig(appId:  AUIRoomContext.shared.appId,
                                       rtmToken: roomConfig.rtcRtmToken,
                                       engine: self.rtcEngine,
                                       channelName: roomConfig.rtcChannelName,
@@ -204,7 +204,7 @@ open class AUIKaraokeRoomService: NSObject {
 extension AUIKaraokeRoomService {
     private func _rtcEngineConfig(commonConfig: AUICommonConfig) -> AgoraRtcEngineConfig {
        let config = AgoraRtcEngineConfig()
-        config.appId = commonConfig.appId
+        config.appId = AUIRoomContext.shared.appId
         config.channelProfile = .liveBroadcasting
         config.audioScenario = .gameStreaming
         config.areaCode = .global

@@ -72,7 +72,7 @@ public class KaraokeUIKit: NSObject {
                 completion(NSError(domain: "KaraokeUIKit Error", code: -1, userInfo: [ NSLocalizedDescriptionKey : "token generate fail!"]))
                 return
             }
-            AUIRoomContext.shared.commonConfig?.appId = appId
+            AUIRoomContext.shared.appId = appId
             let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
                                                 ktvApi: ktvApi,
                                                 roomManager: roomManager,
