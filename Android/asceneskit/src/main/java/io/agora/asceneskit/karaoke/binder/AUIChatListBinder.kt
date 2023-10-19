@@ -21,7 +21,7 @@ class AUIChatListBinder constructor(
     private val roomInfo:AUIRoomInfo
 ): IAUIBindable,
     AUIChatListItemClickListener,
-    IAUIIMManagerService.AUIIMManagerRespDelegate {
+    IAUIIMManagerService.AUIIMManagerRespObserver {
 
     init {
         (chatListView as? AUIChatListView)?.setOwnerId(roomInfo.roomOwner?.userId ?: "")
@@ -29,7 +29,7 @@ class AUIChatListBinder constructor(
 
     override fun bind() {
         chatListView.setChatListItemClickListener(this)
-        imManagerService.bindRespDelegate(this)
+        imManagerService.registerRespObserver(this)
         chatManager.saveWelcomeMsg(AUIRoomContext.shared().commonConfig.context.getString(R.string.voice_room_welcome))
         chatListView.refreshSelectLast(chatManager.getMsgList().map { entity ->
             AUIChatInfo(entity.user?.userId ?: "", entity.user?.userName?: "", entity.content, entity.joined)
@@ -38,7 +38,7 @@ class AUIChatListBinder constructor(
 
     override fun unBind() {
         chatListView.setChatListItemClickListener(null)
-        imManagerService.unbindRespDelegate(this)
+        imManagerService.unRegisterRespObserver(this)
     }
 
     override fun onChatListViewClickListener() {

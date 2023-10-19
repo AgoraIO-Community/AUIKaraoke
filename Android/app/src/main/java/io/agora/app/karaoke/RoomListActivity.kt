@@ -30,7 +30,7 @@ class RoomListActivity : AppCompatActivity() {
     private var viewBinding: RoomListActivityBinding? = null
     private val listAdapter by lazy { RoomListAdapter() }
     private var mList = listOf<AUIRoomInfo>()
-    private val mUserId = Random().nextInt(99999999).toString()
+
     private val launcher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
@@ -53,10 +53,12 @@ class RoomListActivity : AppCompatActivity() {
         // Create Common Config
         val config = AUICommonConfig()
         config.context = application
-        config.userId = mUserId
+        config.host = BuildConfig.SERVER_HOST
+        // Randomly generate local user information
+        config.userId = randomUserId()
         config.userName = randomUserName()
         config.userAvatar = randomAvatar()
-        // init AUIKit
+        // Setup karaokeUiKit
         KaraokeUiKit.setup(
             config = config, // must
             ktvApi = null,// option
@@ -64,6 +66,8 @@ class RoomListActivity : AppCompatActivity() {
             rtmClient = null // option
         )
     }
+
+
 
     private fun initView() {
         setTheme(ThemeId)
@@ -199,6 +203,8 @@ class RoomListActivity : AppCompatActivity() {
         val randomValue = Random().nextInt(8) + 1
         return "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/sample_avatar/sample_avatar_${randomValue}.png"
     }
+
+    private fun randomUserId() = Random().nextInt(99999999).toString()
 
     private fun randomRoomName(): String {
         val randomValue = (Random().nextInt(9) + 1) * 10000 + Random().nextInt(10000)

@@ -30,7 +30,7 @@ class AUIGiftBarrageBinder constructor(
     private val giftView: IAUIGiftBarrageView,
     private val giftService: IAUIGiftsService,
     private val chatManager:AUIChatManager
-): IAUIBindable,IAUIGiftsService.AUIGiftRespDelegate {
+): IAUIBindable,IAUIGiftsService.AUIGiftRespObserver {
 
     private val TAG = "AUIGift_LOG"
     private var roomContext = AUIRoomContext.shared()
@@ -49,11 +49,11 @@ class AUIGiftBarrageBinder constructor(
     }
 
     override fun bind() {
-        giftService.bindRespDelegate(this)
+        giftService.registerRespObserver(this)
     }
 
     override fun unBind() {
-        giftService.bindRespDelegate(null)
+        giftService.registerRespObserver(null)
     }
 
     fun showBottomGiftDialog(){

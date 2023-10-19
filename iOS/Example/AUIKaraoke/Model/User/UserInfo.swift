@@ -50,6 +50,7 @@ class UserInfo: NSObject {
             if let uid = uid, uid.count > 0 {
                 return uid
             }
+            //用户uid第一次获取随机
             uid = "\(arc4random_uniform(999999999))"
             UserDefaults.standard.set(uid, forKey: kUserId)
             return uid!

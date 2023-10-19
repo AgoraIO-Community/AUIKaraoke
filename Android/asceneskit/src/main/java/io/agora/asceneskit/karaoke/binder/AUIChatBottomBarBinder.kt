@@ -26,9 +26,9 @@ class AUIChatBottomBarBinder constructor(
     private val event: AUIChatBottomBarEventDelegate?
 ) : IAUIBindable,
     AUIMenuItemClickListener,
-    IAUIUserService.AUIUserRespDelegate,
-    IAUIMicSeatService.AUIMicSeatRespDelegate,
-    IAUIInvitationService.AUIInvitationRespDelegate {
+    IAUIUserService.AUIUserRespObserver,
+    IAUIMicSeatService.AUIMicSeatRespObserver,
+    IAUIInvitationService.AUIInvitationRespObserver {
 
     private var listener:AUISoftKeyboardHeightChangeListener?=null
     private val userService = roomService.getUserService()
@@ -40,8 +40,8 @@ class AUIChatBottomBarBinder constructor(
     private var mLocalMute = true
 
     override fun bind() {
-        userService.bindRespDelegate(this)
-        micSeatService.bindRespDelegate(this)
+        userService.registerRespObserver(this)
+        micSeatService.registerRespObserver(this)
         chatBottomBarView.setShowMic(AUIRoomContext.shared().isRoomOwner(userService.channelName))
         chatBottomBarView.setMenuItemClickListener(this)
         chatBottomBarView.setSoftKeyListener()
@@ -49,8 +49,8 @@ class AUIChatBottomBarBinder constructor(
 
     override fun unBind() {
         chatBottomBarView.setMenuItemClickListener(null)
-        userService.unbindRespDelegate(this)
-        micSeatService.unbindRespDelegate(this)
+        userService.unRegisterRespObserver(this)
+        micSeatService.unRegisterRespObserver(this)
     }
 
 

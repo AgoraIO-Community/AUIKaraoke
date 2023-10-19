@@ -14,17 +14,11 @@ AUIKaraoke 是一个开源的音视频 UI 组件，通过在项目中集成 AUIK
 - <mark>最低兼容 Android 7.0</mark>（SDK API Level 24）
 - Android Studio 3.5及以上版本。
 - Android 7.0 及以上的手机设备。
-- JDK 17以上
+- JDK 17
 
 ---
 
 ### 2. 运行示例
-- (可选)在AUIKitKaraoke目录下执行
-
-  > 如果执行会了会使用本地AUIKit，否则使用在线maven上的AUIKit
-```
-git submodule update --init --remote
-```
 
 - 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
   
@@ -100,7 +94,7 @@ SERVER_HOST= （业务服务器域名）
 // Create Common Config
 val config = AUiCommonConfig()
 config.context = application
-config.appId = "Agora APP ID" // Get the Agora APP ID from agora console
+config.host = "业务服务器域名"
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
@@ -151,59 +145,24 @@ val roomInfo : AUIRoomInfo
 // layout里的KaraokeRoomView
 val karaokeRoomView: KaraokeRoomView
 
-val config = AUiRoomConfig(roomInfo.roomId)
-// 生成config.channelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtmToken = ""
-config.rtcToken = ""
-// 生成config.rtcChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtcRtmToken = ""
-config.rtcRtcToken = ""
-// 生成config.rtcChorusChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtcChorusRtcToken = ""
-
 KaraokeUiKit.launchRoom(
     roomInfo, // must
-    config, // must
     karaokeRoomView
 )
 
-// 订阅错误事件
-val errorDelegate = object: AUIRtmErrorProxyDelegate{
-  override fun onTokenPrivilegeWillExpire(channelName: String?) {
-      // Token过期时回调
-  }
-}
-KaraokeUiKit.subscribeError(roomInfo.roomId, errorDelegate)
-
-// 订阅房间事件
-val respDelegate = object: AUIRoomManagerRespDelegate{
+// 注册房间事件观察者
+val respObserver = object: AUIRoomManagerRespObserver{
   override fun onRoomDestroy(roomId: String){
     // 房间被销毁
   }
 }
-KaraokeUiKit.bindRespDelegate(respDelegate)
+KaraokeUiKit.registerRoomRespObserver(respObserver)
 ```
 
-### 6. 更新Token
-```kotlin
-val config = AUiRoomConfig(roomInfo.roomId)
-// 生成config.channelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtmToken = ""
-config.rtcToken = ""
-// 生成config.rtcChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtcRtmToken = ""
-config.rtcRtcToken = ""
-// 生成config.rtcChorusChannelName及AUIRoomContext.shared().currentUserInfo.userId的token
-config.rtcChorusRtcToken = ""
-
-KaraokeUiKit.renewToken(config)
-```
-
-### 7. 销毁房间
+### 6. 销毁房间
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-KaraokeUiKit.unsubscribeError(roomId, errorDelegate)
-KaraokeUiKit.unbindRespDelegate(respDelegate)
+KaraokeUiKit.unRegisterRoomRespObserver(respObserver)
 ```
 
 ## API参考
@@ -227,12 +186,12 @@ fun setup(
 
 参数如下表所示：
 
-| 参数        | 类型            | 含义                                                         |
-| ----------- | --------------- | ------------------------------------------------------------ |
-| config      | AUICommonConfig | 通用配置，包含用户信息和appId等                              |
+| 参数        | 类型            | 含义                                                 |
+| ----------- | --------------- |----------------------------------------------------|
+| config      | AUICommonConfig | 通用配置，包含用户信息和域名等                                    |
 | ktvApi      | KTVApi          | （可选）声网KTV场景化API实例。当项目里已经集成了KTV场景化可以传入，否则传空由内部自行创建。 |
-| rtcEngineEx | RtcEngineEx     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。 |
-| rtmClient   | RtmClient       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。 |
+| rtcEngineEx | RtcEngineEx     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。      |
+| rtmClient   | RtmClient       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。      |
 
 
 
@@ -285,7 +244,6 @@ fun getRoomList(
 ```kotlin
 fun launchRoom(
     roomInfo: AUIRoomInfo,
-    config: AUIRoomConfig,
     karaokeView: KaraokeRoomView,
 )
 ```
@@ -295,23 +253,8 @@ fun launchRoom(
 | 参数        | 类型            | 含义                                  |
 | ----------- | --------------- | ------------------------------------- |
 | roomInfo    | AUIRoomInfo     | 房间信息                              |
-| config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 | karaokeView | KaraokeRoomView | 房间UI View                           |
 
-
-#### renewToken
-
-```kotlin
-fun renewToken(
-    config: AUIRoomConfig
-)
-```
-
-参数如下表所示：
-
-| 参数        | 类型            | 含义                                  |
-| ----------- | --------------- | ------------------------------------- |
-| config      | AUIRoomConfig   | 房间里相关的配置，包含子频道名和token |
 
 #### destroyRoom
 
@@ -327,62 +270,32 @@ fun destroyRoom(roomId: String?)
 | ------ | ------ | -------------- |
 | roomId | String | 要销毁的房间ID |
 
-#### subscribeError
-
-订阅房间的异常回调。
-
-```kotlin
-fun subscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
-```
-
-参数如下表所示：
-
-| 参数         | 类型                         | 含义      |
-|------------|----------------------------|---------|
-| roomId     | String                     | 房间ID    |
-| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
-
-#### unsubscribeError
-
-取消订阅房间的异常回调。
-
-```kotlin
-fun unsubscribeError(roomId: String, delegate: AUIRtmErrorProxyDelegate)
-```
-
-参数如下表所示：
-
-| 参数         | 类型                         | 含义      |
-|------------|----------------------------|---------|
-| roomId     | String                     | 房间ID    |
-| delegate   | AUIRtmErrorProxyDelegate   | 错误回调接口  |
-
-#### bindRespDelegate
+#### registerRoomRespObserver
 
 绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等。
 
 ```kotlin
-fun bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun registerRoomRespObserver(observer: AUIRoomManagerRespDelegate)
 ```
 参数如下表所示：
 
 | 参数         | 类型                          | 含义      |
 |------------|-----------------------------|---------|
-| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+| observer   | AUIRoomManagerRespObserver  | 响应回调对象  |
 
-#### unbindRespDelegate
+#### unRegisterRoomRespObserver
 
 解除绑定对应房间的响应。
 
 ```kotlin
-fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
+fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver)
 ```
 
 参数如下表所示：
 
 | 参数         | 类型                          | 含义      |
 |------------|-----------------------------|---------|
-| delegate   | AUIRoomManagerRespDelegate  | 响应回调对象  |
+| observer   | AUIRoomManagerRespObserver  | 响应回调对象  |
 
 
 #### release
@@ -393,45 +306,7 @@ fun unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 fun release()
 ```
 
-### AUIRtmErrorProxyDelegate
-
-错误回调接口。
-
-#### onConnectionStateChanged
-
-网络状态变化时回调。
-
-参数如下表所示：
-
-| 参数          | 类型     | 含义                                            |
-|-------------|--------|-----------------------------------------------|
-| channelName | String | 房间ID                                          |
-| state       | Int    | 网络状态，见RtmConstants.RtmConnectionState         |
-| reason      | Int    | 变化原因，见RtmConstants.RtmConnectionChangeReason  |
-
-
-#### onMsgRecvEmpty
-
-收到的消息Key和Value为空时回调。
-
-参数如下表所示：
-
-| 参数          | 类型     | 含义                                            |
-|-------------|--------|-----------------------------------------------|
-| channelName | String | 房间ID                                          |
-
-
-#### onTokenPrivilegeWillExpire
-
-Token过期时回调。
-
-参数如下表所示：
-
-| 参数          | 类型     | 含义                                            |
-|-------------|--------|-----------------------------------------------|
-| channelName | String | 房间ID                                          |
-
-### AUIRoomManagerRespDelegate
+### AUIRoomManagerRespObserver
 
 响应回调接口。
 
@@ -486,13 +361,13 @@ Token过期时回调。
 
 ### AUICommonConfig
 
-| 参数       | 类型    | 含义                 |
-| ---------- | ------- | -------------------- |
+| 参数         | 类型    | 含义                |
+|------------| ------- |-------------------|
 | context    | Context | Android Contex上下文 |
-| appId      | String  | 声网AppID            |
-| userId     | String  | 用户ID               |
+| host       | String  | 业务服务器地址           |
+| userId     | String  | 用户ID              |
 | userName   | String  | 用户名               |
-| userAvatar | String  | 用户头像             |
+| userAvatar | String  | 用户头像              |
 
 ### AUIRoomInfo
 
@@ -517,21 +392,6 @@ Token过期时回调。
 | ------- | ------ | -------- |
 | code    | int    | 错误码   |
 | message | String | 错误信息 |
-
-### AUIRoomConfig
-
-| 参数                 | 类型   | 含义                                                         |
-| -------------------- | ------ | ------------------------------------------------------------ |
-| channelName          | String | 主频道名，一般为roomId                                       |
-| rtmToken             | String | 主频道的rtm token，uid为setup时AUICommonConfig里的userId     |
-| rtcToken             | String | 主频道的rtc token，uid为setup时AUICommonConfig里的userId     |
-| rtcChannelName       | String | 音视频频道名，一般为{roomId}_rtc                             |
-| rtcRtcToken          | String | 音视频频道的rtc token，uid为setup时AUICommonConfig里的userId |
-| rtcRtmToken          | String | 音视频频道的rtm token，uid为setup时AUICommonConfig里的userId |
-| rtcChorusChannelName | String | 合唱频道名，一般为{roomId}_rtc_ex                            |
-| rtcChorusRtcToken    | String | 合唱频道的rtc token，uid为setup时AUICommonConfig里的userId   |
-
-
 
 ## 目录结构
 

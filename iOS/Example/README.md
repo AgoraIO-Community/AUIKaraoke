@@ -45,7 +45,7 @@ static var HostUrl: String = <#Your HostUrl#>
 ```
 If you do not intend to deploy backend services temporarily, you can use the default domain name in KeyCenter.swift
 
-- Open the terminal and enter the [Podfile](Podfile) directory, run `pod install`
+- Open the terminal and enter the [Podfile](Podfile) directory, run `pod update`
   - It is recommended to upgrade cocoapods to 1.12.0 or higher. If your cocoapods version is lower than 1.12.0, you may encounter the following errors
   ```
   the version of cocoapods to generate the lockfile(1.12.0) is higher than the version of the current executable(1.11.2). 

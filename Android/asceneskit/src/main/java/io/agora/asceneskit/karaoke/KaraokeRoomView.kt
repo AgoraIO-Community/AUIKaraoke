@@ -23,7 +23,7 @@ import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserInfo
 import io.agora.auikit.model.AUIUserThumbnailInfo
 import io.agora.auikit.service.IAUIMicSeatService
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespDelegate
+import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
 import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.ui.basic.AUIBottomDialog
 import io.agora.auikit.ui.chatBottomBar.impl.AUIKeyboardStatusWatcher
@@ -34,9 +34,9 @@ import io.agora.auikit.ui.member.impl.AUIRoomMemberListView
 import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
 
 class KaraokeRoomView : FrameLayout,
-    IAUIUserService.AUIUserRespDelegate,
-    IAUIMicSeatService.AUIMicSeatRespDelegate,
-    AUIRoomManagerRespDelegate {
+    IAUIUserService.AUIUserRespObserver,
+    IAUIMicSeatService.AUIMicSeatRespObserver,
+    AUIRoomManagerRespObserver {
 
     private var mOnClickShutDown: (() -> Unit)? = null
 
@@ -75,9 +75,9 @@ class KaraokeRoomView : FrameLayout,
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
 
-        mRoomService?.getUserService()?.unbindRespDelegate(this)
-        mRoomService?.getMicSeatsService()?.unbindRespDelegate(this)
-        mRoomService?.getRoomManager()?.unbindRespDelegate(this)
+        mRoomService?.getUserService()?.unRegisterRespObserver(this)
+        mRoomService?.getMicSeatsService()?.unRegisterRespObserver(this)
+        mRoomService?.getRoomManager()?.unRegisterRespObserver(this)
 
         mBinders.forEach {
             it.unBind()
@@ -93,7 +93,7 @@ class KaraokeRoomView : FrameLayout,
 
     fun bindService(service: AUIKaraokeRoomService) {
         mRoomService = service
-        service.getRoomManager().bindRespDelegate(this)
+        service.getRoomManager().registerRespObserver(this)
 
         // 加入房间
         service.enterRoom({
@@ -108,8 +108,8 @@ class KaraokeRoomView : FrameLayout,
         })
 
         // 顶部用户信息
-        service.getUserService().bindRespDelegate(this)
-        service.getMicSeatsService().bindRespDelegate(this)
+        service.getUserService().registerRespObserver(this)
+        service.getMicSeatsService().registerRespObserver(this)
         mRoomViewBinding.topUserLayout.tvRoomName.text = service.getRoomInfo().roomName
         mRoomViewBinding.topUserLayout.tvRoomId.text = "房间ID: ${service.getRoomInfo().roomId}"
         Glide.with(mRoomViewBinding.topUserLayout.ivRoomCover)
