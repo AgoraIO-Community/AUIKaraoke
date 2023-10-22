@@ -6,7 +6,7 @@ target 'AUIKaraoke' do
   use_frameworks!
   
   pod 'AScenesKit', :path => '../AScenesKit'
-#  pod 'AgoraRtcEngine_iOS', :path => './libs'
+  pod 'AgoraRtcEngine_Special_iOS', '4.1.1.17'
 #  pod 'AgoraLyricsScore', '1.1.1-beta-3'
   pod 'LookinServer', :configurations => ['Debug']
 end
