@@ -23,9 +23,6 @@ PODS:
     - YYModel
     - Zip
   - libpag (4.3.27)
-  - LookinServer (1.2.2):
-    - LookinServer/Core (= 1.2.2)
-  - LookinServer/Core (1.2.2)
   - MJRefresh (3.7.5)
   - ScoreEffectUI (1.0.2)
   - SDWebImage (4.4.8):
@@ -39,7 +36,6 @@ PODS:
 DEPENDENCIES:
   - AgoraRtcEngine_Special_iOS (= 4.1.1.17)
   - AScenesKit (from `../AScenesKit`)
-  - LookinServer
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -50,7 +46,6 @@ SPEC REPOS:
     - Alamofire
     - AUIKitCore
     - libpag
-    - LookinServer
     - MJRefresh
     - ScoreEffectUI
     - SDWebImage
@@ -72,7 +67,6 @@ SPEC CHECKSUMS:
   AScenesKit: b8cfa74cc2e3a970150a7e00a147881a83cee37a
   AUIKitCore: 388fb75a4cd26af9c46dac9b651457dd69e906a7
   libpag: b39c9de84d405313bd1b3953240de2361cbe2e32
-  LookinServer: 3204eefff2f18e19fa546931fb5f1b88bc709a0b
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ScoreEffectUI: bf1195b4d41a73d43c236450b5d7f958989844aa
   SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
@@ -81,6 +75,6 @@ SPEC CHECKSUMS:
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 6837133a79bdeae215ebc9d564e94ec05677c02e
+PODFILE CHECKSUM: 7880884d05d604e52217ca917b32d8c8a613c17b
 
 COCOAPODS: 1.12.1
