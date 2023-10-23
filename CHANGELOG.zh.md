@@ -3,6 +3,7 @@
 
 ## [0.5.3](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.3)
 - [iOS]更新RTC SDK到最新版本
+- [iOS]升级AUIKit至0.5.3
 
 ## [0.5.2](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.2)
 - 升级AUIKit至0.5.2
