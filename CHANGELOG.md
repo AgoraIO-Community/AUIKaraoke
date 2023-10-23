@@ -1,6 +1,9 @@
 
 English | [中文](CHANGELOG.zh.md)
 
+## [0.5.3](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.3)
+- [iOS]Update the RTC SDK to the latest version
+
 ## [0.5.2](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/0.5.2)
 - Upgrade AUIKit to 0.5.2.
 
