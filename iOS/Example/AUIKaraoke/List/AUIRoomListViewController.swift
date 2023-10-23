@@ -140,7 +140,7 @@ class AUIRoomListViewController: UIViewController {
         self.roomList = []
         self.collectionView.reloadData()
         self.collectionView.mj_footer = nil
-        KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: nil, pageSize: kListCountPerPage, callback: {[weak self] error, list in
+        KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: 0, pageSize: kListCountPerPage, callback: {[weak self] error, list in
             guard let self = self else {return}
             defer {
                 self.collectionView.mj_header?.endRefreshing()
@@ -164,7 +164,7 @@ class AUIRoomListViewController: UIViewController {
     
     func onLoadMoreAction() {
         let lastCreateTime = roomList.last?.createTime
-        KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: kListCountPerPage, callback: {[weak self] error, list in
+        KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: lastCreateTime ?? 0, pageSize: kListCountPerPage, callback: {[weak self] error, list in
             guard let self = self else {return}
             self.roomList += list ?? []
             self.collectionView.reloadData()

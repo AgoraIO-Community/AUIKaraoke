@@ -65,7 +65,7 @@ class RoomViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        KaraokeUIKit.shared.destoryRoom(roomId: roomInfo?.roomId ?? "")
+        KaraokeUIKit.shared.destroyRoom(roomId: roomInfo?.roomId ?? "")
         KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
     }
     

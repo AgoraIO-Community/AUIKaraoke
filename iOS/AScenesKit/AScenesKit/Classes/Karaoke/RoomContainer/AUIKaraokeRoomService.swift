@@ -146,7 +146,7 @@ open class AUIKaraokeRoomService: NSObject {
         aui_error("leaveRtcChannel", tag: "AUIKaraokeRoomService")
     }
     
-    func destory() {
+    func destroy() {
         ktvApi.cleanCache()
         ktvApi = nil
         leaveRtcChannel()

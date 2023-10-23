@@ -453,7 +453,7 @@ extension AUIKaraokeRoomView {
             service.roomManagerImpl.exitRoom(roomId: service.channelName) { err in
             }
         }
-        service.destory()
+        service.destroy()
         AUIRoomContext.shared.clean(channelName: service.channelName)
         AUICommonDialog.hidden()
         AUIToast.hidden()

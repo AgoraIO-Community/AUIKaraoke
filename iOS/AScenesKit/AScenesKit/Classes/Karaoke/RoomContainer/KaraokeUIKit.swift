@@ -11,6 +11,7 @@ import AUIKitCore
 import AgoraRtcKit
 import AgoraRtmKit
 
+@objcMembers
 public class KaraokeUIKit: NSObject {
     public static let shared: KaraokeUIKit = KaraokeUIKit()
     public var roomConfig: AUICommonConfig?
@@ -33,7 +34,7 @@ public class KaraokeUIKit: NSObject {
         self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
-    public func getRoomInfoList(lastCreateTime: Int64?, pageSize: Int, callback: @escaping AUIRoomListCallback) {
+    public func getRoomInfoList(lastCreateTime: Int64, pageSize: Int, callback: @escaping AUIRoomListCallback) {
         guard let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
             return
@@ -87,7 +88,7 @@ public class KaraokeUIKit: NSObject {
         }
     }
     
-    public func destoryRoom(roomId: String) {
+    public func destroyRoom(roomId: String) {
 //        rtmClient?.logout()
         self.unsubscribeError(delegate: self)
         service = nil
