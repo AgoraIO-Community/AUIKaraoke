@@ -174,7 +174,7 @@ func createRoom(roomInfo: AUICreateRoomInfo,
 获取房间列表
 
 ```swift
-func getRoomInfoList(lastCreateTime: Int64?, 
+func getRoomInfoList(lastCreateTime: Int64, 
                      pageSize: Int, 
                      callback: @escaping AUIRoomListCallback)
 ```
@@ -183,7 +183,7 @@ func getRoomInfoList(lastCreateTime: Int64?,
 
 | 参数      | 类型     | 含义                                 |
 | --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64?     | [可选]起始时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085                    |
+| lastCreateTime | Int64     | 起始时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085，为0则使用服务器当前时间                    |
 | pageSize  | Int      | 页数                                 |
 | callback   | Closure | 完成回调 |
 
