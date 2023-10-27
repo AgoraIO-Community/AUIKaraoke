@@ -2,18 +2,18 @@ PODS:
   - Agora_Chat_iOS (1.2.0)
   - AgoraLyricsScore (1.1.4)
   - AgoraRtcEngine_Special_iOS (4.1.1.17)
-  - AgoraRtm_iOS (2.1.4)
+  - AgoraRtm_iOS (2.1.7)
   - Alamofire (5.8.0)
   - AScenesKit (0.5.3):
-    - AUIKitCore (= 0.5.3)
+    - AUIKitCore (= 0.6.0)
     - libpag
-  - AUIKitCore (0.5.3):
-    - AUIKitCore/All (= 0.5.3)
-  - AUIKitCore/All (0.5.3):
+  - AUIKitCore (0.6.0):
+    - AUIKitCore/All (= 0.6.0)
+  - AUIKitCore/All (0.6.0):
     - Agora_Chat_iOS
     - AgoraLyricsScore
     - AgoraRtcEngine_Special_iOS (~> 4.1.1.1)
-    - AgoraRtm_iOS (= 2.1.4)
+    - AgoraRtm_iOS (= 2.1.7)
     - Alamofire
     - MJRefresh
     - ScoreEffectUI
@@ -36,6 +36,7 @@ PODS:
 DEPENDENCIES:
   - AgoraRtcEngine_Special_iOS (= 4.1.1.17)
   - AScenesKit (from `../AScenesKit`)
+  - AUIKitCore (from `../../../AUIKit`)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -44,7 +45,6 @@ SPEC REPOS:
     - AgoraRtcEngine_Special_iOS
     - AgoraRtm_iOS
     - Alamofire
-    - AUIKitCore
     - libpag
     - MJRefresh
     - ScoreEffectUI
@@ -57,15 +57,17 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   AScenesKit:
     :path: "../AScenesKit"
+  AUIKitCore:
+    :path: "../../../AUIKit"
 
 SPEC CHECKSUMS:
   Agora_Chat_iOS: e11aa75b290e5e8a6b90c1c73642ac1172a71b97
   AgoraLyricsScore: 8103638e50f0c878d9188ea76262008bfa68f8ba
   AgoraRtcEngine_Special_iOS: 5b3106aad2d76959393cc6497affe83dbdc926a0
-  AgoraRtm_iOS: 11b767ee81a7202dcf09e045cd2d359b5abbc965
+  AgoraRtm_iOS: cd26cf8a377a79934864d37e184866dbd1430eaf
   Alamofire: 0e92e751b3e9e66d7982db43919d01f313b8eb91
-  AScenesKit: 5ce5bb8ea453563f8bee281627112028f7c49d6c
-  AUIKitCore: fc5df86f26781fe6b76b4ced98f94da3872cf815
+  AScenesKit: 8e58e7dedd0d9dafe6121b243a3cfd593860e89c
+  AUIKitCore: 1229007e0e042335c423a401f0aed45d550ec556
   libpag: b39c9de84d405313bd1b3953240de2361cbe2e32
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
   ScoreEffectUI: bf1195b4d41a73d43c236450b5d7f958989844aa
@@ -75,6 +77,6 @@ SPEC CHECKSUMS:
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30
   Zip: b3fef584b147b6e582b2256a9815c897d60ddc67
 
-PODFILE CHECKSUM: 7880884d05d604e52217ca917b32d8c8a613c17b
+PODFILE CHECKSUM: 3cd29f3a313279cf6a2c5b07524a2bffee5d3e14
 
 COCOAPODS: 1.12.1
