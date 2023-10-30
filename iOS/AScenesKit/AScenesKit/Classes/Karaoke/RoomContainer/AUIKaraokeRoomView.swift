@@ -496,6 +496,12 @@ extension AUIKaraokeRoomView {
         button.isSelected = !button.isSelected
         service?.userImpl.muteUserAudio(isMute: button.isSelected) { err in
         }
+        
+        #if DEBUG
+        self.service?.roomManagerImpl.rtmManager.acquireLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
+            AUIToast.show(text: "acquireLock: \(err?.code ?? 0)")
+        }
+        #endif
     }
     
     @objc private func onMuteCameraAction(_ button: UIButton){
@@ -512,7 +518,7 @@ extension AUIKaraokeRoomView {
         item.title = auikaraoke_localized("lrcBackground")
         item.callback = { [weak self] in
             aui_info("onMoreAction click", tag: "AUIKaraokeRoomView")
-            guard let self = self else {return}
+//            guard let self = self else {return}
             
         }
         
@@ -532,6 +538,13 @@ extension AUIKaraokeRoomView {
         let theme = AUICommonDialogTheme()
         theme.contentControlColor = AUIColor("CommonDialog.contentBackgroundColor")
         AUICommonDialog.show(contentView: self.giftsView, theme: theme)
+        
+        
+        #if DEBUG
+        self.service?.roomManagerImpl.rtmManager.releaseLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
+            AUIToast.show(text: "releaseLock: \(err?.code ?? 0)")
+        }
+        #endif
     }
 }
 
