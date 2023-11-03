@@ -18,16 +18,16 @@ open class AUIKaraokeRoomService: NSObject {
                                                                             roomManager: roomManagerImpl)
 //    lazy var invitationImpl: AUIInvitationServiceDelegate = AUIInvitationServiceImpl(channelName: self.channelName,
 //                                                                                     rtmManager: self.rtmManager)
-    lazy var musicImpl: AUIMusicServiceDelegate = AUIMusicServiceImpl(channelName: channelName,
-                                                                      rtmManager: rtmManager,
-                                                                      ktvApi: ktvApi)
+    lazy var musicImpl: AUIMusicServiceDelegate = AUIMusicLocalServiceImpl(channelName: channelName,
+                                                                           rtmManager: rtmManager,
+                                                                           ktvApi: ktvApi)
     lazy var playerImpl: AUIPlayerServiceDelegate = AUIPlayerServiceImpl(channelName: channelName,
                                                                          rtcKit: rtcEngine,
                                                                          ktvApi: ktvApi,
                                                                          rtmManager: rtmManager)
-    lazy var userImpl: AUIUserServiceDelegate = AUIUserServiceImpl(channelName: channelName,
-                                                                   rtmManager: rtmManager,
-                                                                   roomManager: roomManagerImpl)
+    lazy var userImpl: AUIUserServiceDelegate = AUIUserLocalServiceImpl(channelName: channelName,
+                                                                        rtmManager: rtmManager,
+                                                                        roomManager: roomManagerImpl)
     lazy var chorusImpl: AUIChorusServiceDelegate = AUIChorusServiceImpl(channelName: channelName,
                                                                          rtcKit: rtcEngine,
                                                                          ktvApi: ktvApi,
@@ -40,7 +40,7 @@ open class AUIKaraokeRoomService: NSObject {
                                                                               rtmManager: rtmManager)
     
     
-    var roomManagerImpl: AUIRoomManagerImpl!
+    var roomManagerImpl: AUIRoomLocalManagerImpl!
     private(set) var channelName: String!
     private var roomConfig: AUIRoomConfig!
     private(set) var rtcEngine: AgoraRtcEngineKit!
@@ -57,7 +57,7 @@ open class AUIKaraokeRoomService: NSObject {
     
     public init(rtcEngine: AgoraRtcEngineKit?,
                 ktvApi: KTVApiDelegate?,
-                roomManager: AUIRoomManagerImpl,
+                roomManager: AUIRoomLocalManagerImpl,
                 roomConfig: AUIRoomConfig,
                 roomInfo: AUIRoomInfo) {
         aui_info("init AUIKaraokeRoomService", tag: "AUIKaraokeRoomService")
@@ -94,6 +94,7 @@ open class AUIKaraokeRoomService: NSObject {
         
         AUIRoomContext.shared.roomConfigMap[channelName] = roomConfig
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
+        AUIRoomContext.shared.roomInteractionHandlerMap[channelName] = AUIServiceInteractionHandler(channelName: channelName, rtmManager: rtmManager, userInfo: AUIRoomContext.shared.currentUserInfo)
     }
     
     //token过期之后调用该方法更新所有token

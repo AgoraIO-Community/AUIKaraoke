@@ -21,7 +21,7 @@ public class KaraokeUIKit: NSObject {
     private var service: AUIKaraokeRoomService?
     private var roomInfo: AUIRoomInfo?
     
-    private var roomManager: AUIRoomManagerImpl?
+    private var roomManager: AUIRoomLocalManagerImpl?
     
     public func setup(roomConfig: AUICommonConfig,
                       ktvApi: KTVApiDelegate? = nil,
@@ -31,7 +31,7 @@ public class KaraokeUIKit: NSObject {
         self.ktvApi = ktvApi
         self.rtcEngine = rtcEngine
         self.rtmClient = rtmClient
-        self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
+        self.roomManager = AUIRoomLocalManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
     public func getRoomInfoList(lastCreateTime: Int64, pageSize: Int, callback: @escaping AUIRoomListCallback) {
