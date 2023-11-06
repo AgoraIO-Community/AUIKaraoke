@@ -579,11 +579,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YS397FG5PA;
+				DEVELOPMENT_TEAM = YS397FG5PA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKaraoke/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
@@ -601,7 +599,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = wildcard;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -618,11 +615,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 0;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YS397FG5PA;
+				DEVELOPMENT_TEAM = YS397FG5PA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AUIKaraoke/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "UIKit needs to apply for camera access";
@@ -640,7 +635,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.karaoke.uikit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = wildcard;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;

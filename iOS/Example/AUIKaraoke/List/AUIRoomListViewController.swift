@@ -115,6 +115,7 @@ class AUIRoomListViewController: UIViewController {
     private func initEngine() {
         //设置基础信息到KaraokeUIKit里
         let commonConfig = AUICommonConfig()
+        commonConfig.appId = KeyCenter.AppId
         commonConfig.host = KeyCenter.HostUrl
         commonConfig.userId = userInfo.userId
         commonConfig.userName = userInfo.userName

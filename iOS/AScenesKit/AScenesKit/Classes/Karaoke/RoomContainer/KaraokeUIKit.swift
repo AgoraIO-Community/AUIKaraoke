@@ -19,7 +19,7 @@ public class KaraokeUIKit: NSObject {
     private var rtcEngine: AgoraRtcEngineKit?
     private var rtmClient: AgoraRtmClientKit?
     private var service: AUIKaraokeRoomService?
-    private var roomInfo: AUIRoomInfo?
+    private var roomId: String?
     
     private var roomManager: AUIRoomLocalManagerImpl?
     
@@ -49,13 +49,26 @@ public class KaraokeUIKit: NSObject {
             assert(false, "please invoke setup first")
             return
         }
-        roomManager.createRoom(room: roomInfo) { error, info in
+        
+        let tokenModel1 = AUITokenGenerateNetworkModel()
+        tokenModel1.channelName = "a"
+        tokenModel1.userId = roomConfig?.userId ?? ""
+        tokenModel1.request { error, result in
             if let error = error {
                 failure?(error)
                 return
             }
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
-            success?(info)
+            AUIRoomContext.shared.roomRtmToken = tokenMap["rtmToken"] ?? ""
+            roomManager.createRoom(room: roomInfo) { error, info in
+                if let error = error {
+                    failure?(error)
+                    return
+                }
+                
+                success?(info)
+            }
         }
     }
     
@@ -67,13 +80,9 @@ public class KaraokeUIKit: NSObject {
             return
         }
         
-        generateToken(roomInfo: roomInfo) {[weak self] roomConfig, appId in
+        generateToken(channelName: roomInfo.roomId) {[weak self] roomConfig, roomRtmToken in
             guard let self = self else { return }
-            guard appId.count > 0 else {
-                completion(NSError(domain: "KaraokeUIKit Error", code: -1, userInfo: [ NSLocalizedDescriptionKey : "token generate fail!"]))
-                return
-            }
-            AUIRoomContext.shared.appId = appId
+            AUIRoomContext.shared.roomRtmToken = roomRtmToken
             let service = AUIKaraokeRoomService(rtcEngine: rtcEngine,
                                                 ktvApi: ktvApi,
                                                 roomManager: roomManager,
@@ -83,7 +92,7 @@ public class KaraokeUIKit: NSObject {
             self.subscribeError(delegate: self)
             karaokeView.bindService(service: service)
             self.service = service
-            self.roomInfo = roomInfo
+            self.roomId = roomInfo.roomId
             completion(nil)
         }
     }
@@ -113,14 +122,13 @@ extension KaraokeUIKit {
         roomManager?.rtmManager.unsubscribeError(channelName: "", delegate: delegate)
     }
     
-    private func renew(config: AUIRoomConfig) {
-        service?.renew(config: config)
+    private func renew(roomRtmToken: String, config: AUIRoomConfig) {
+        service?.renew(roomRtmToken: roomRtmToken, config: config)
     }
     
-    private func generateToken(roomInfo: AUIRoomInfo,
+    private func generateToken(channelName: String,
                                completion:@escaping ((AUIRoomConfig, String)->())) {
         let uid = roomConfig?.userId ?? ""
-        let channelName = roomInfo.roomId
         let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
         let roomConfig = AUIRoomConfig()
@@ -129,7 +137,7 @@ extension KaraokeUIKit {
         roomConfig.rtcChorusChannelName = rtcChorusChannelName
         print("generateTokens: \(uid)")
         
-        var appId = ""
+        var roomRtmToken = ""
         
         let group = DispatchGroup()
         
@@ -145,8 +153,7 @@ extension KaraokeUIKit {
             guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
             roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
-            roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
-            appId = tokenMap["appId"] ?? ""
+            roomRtmToken = tokenMap["rtmToken"] ?? ""
         }
         
         group.enter()
@@ -179,16 +186,16 @@ extension KaraokeUIKit {
         }
         
         group.notify(queue: DispatchQueue.main) {
-            completion(roomConfig, appId)
+            completion(roomConfig, roomRtmToken)
         }
     }
 }
 
 extension KaraokeUIKit: AUIRtmErrorProxyDelegate {
     @objc public func onTokenPrivilegeWillExpire(channelName: String?) {
-        guard let roomInfo = roomInfo else { return }
-        generateToken(roomInfo: roomInfo) {[weak self] config, _ in
-            self?.renew(config: config)
+        guard let channelName = roomId else { return }
+        generateToken(channelName: channelName) {[weak self] config, roomRtmToken in
+            self?.renew(roomRtmToken: roomRtmToken, config: config)
         }
     }
 }

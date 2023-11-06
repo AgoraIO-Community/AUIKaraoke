@@ -28,10 +28,10 @@ open class AUIKaraokeRoomService: NSObject {
     lazy var userImpl: AUIUserServiceDelegate = AUIUserLocalServiceImpl(channelName: channelName,
                                                                         rtmManager: rtmManager,
                                                                         roomManager: roomManagerImpl)
-    lazy var chorusImpl: AUIChorusServiceDelegate = AUIChorusServiceImpl(channelName: channelName,
-                                                                         rtcKit: rtcEngine,
-                                                                         ktvApi: ktvApi,
-                                                                         rtmManager: rtmManager)
+    lazy var chorusImpl: AUIChorusServiceDelegate = AUIChorusLocalServiceImpl(channelName: channelName,
+                                                                              rtcKit: rtcEngine,
+                                                                              ktvApi: ktvApi,
+                                                                              rtmManager: rtmManager)
     
     lazy var chatImplement: AUIMManagerServiceDelegate = AUIIMManagerServiceImplement(channelName: channelName,
                                                                                       rtmManager: rtmManager)
@@ -76,8 +76,9 @@ open class AUIKaraokeRoomService: NSObject {
         if let ktvApi = ktvApi {
             self.ktvApi = ktvApi
         } else {
+            let appId = AUIRoomContext.shared.commonConfig?.appId ?? ""
             let userId = Int(roomManager.commonConfig.userId) ?? 0
-            let config = KTVApiConfig(appId:  AUIRoomContext.shared.appId,
+            let config = KTVApiConfig(appId: appId,
                                       rtmToken: roomConfig.rtcRtmToken,
                                       engine: self.rtcEngine,
                                       channelName: roomConfig.rtcChannelName,
@@ -98,7 +99,7 @@ open class AUIKaraokeRoomService: NSObject {
     }
     
     //token过期之后调用该方法更新所有token
-    public func renew(config: AUIRoomConfig) {
+    public func renew(roomRtmToken: String, config: AUIRoomConfig) {
         roomConfig = config
         AUIRoomContext.shared.roomConfigMap[channelName] = roomConfig
         
@@ -106,7 +107,8 @@ open class AUIKaraokeRoomService: NSObject {
         ktvApi.renewToken(rtmToken: roomConfig.rtcRtmToken, chorusChannelRtcToken: roomConfig.rtcChorusRtcToken)
         
         //rtm renew
-        rtmManager.renew(token: roomConfig.rtmToken007)
+        AUIRoomContext.shared.roomRtmToken = roomRtmToken
+        rtmManager.renew(token: roomRtmToken)
         rtmManager.renewChannel(channelName: channelName, token: roomConfig.rtcToken007)
         
         //rtc renew
@@ -205,7 +207,7 @@ open class AUIKaraokeRoomService: NSObject {
 extension AUIKaraokeRoomService {
     private func _rtcEngineConfig(commonConfig: AUICommonConfig) -> AgoraRtcEngineConfig {
        let config = AgoraRtcEngineConfig()
-        config.appId = AUIRoomContext.shared.appId
+        config.appId = commonConfig.appId
         config.channelProfile = .liveBroadcasting
         config.audioScenario = .gameStreaming
         config.areaCode = .global
