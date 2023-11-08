@@ -14,7 +14,7 @@ import AgoraRtmKit
 @objcMembers
 public class KaraokeUIKit: NSObject {
     public static let shared: KaraokeUIKit = KaraokeUIKit()
-    public var roomConfig: AUICommonConfig?
+    public var commonConfig: AUICommonConfig?
     private var ktvApi: KTVApiDelegate?
     private var rtcEngine: AgoraRtcEngineKit?
     private var rtmClient: AgoraRtmClientKit?
@@ -27,7 +27,7 @@ public class KaraokeUIKit: NSObject {
                       ktvApi: KTVApiDelegate? = nil,
                       rtcEngine: AgoraRtcEngineKit? = nil,
                       rtmClient: AgoraRtmClientKit? = nil) {
-        self.roomConfig = roomConfig
+        self.commonConfig = roomConfig
         self.ktvApi = ktvApi
         self.rtcEngine = rtcEngine
         self.rtmClient = rtmClient
@@ -42,7 +42,7 @@ public class KaraokeUIKit: NSObject {
         roomManager.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: pageSize, callback: callback)
     }
     
-    public func createRoom(roomInfo: AUICreateRoomInfo,
+    public func createRoom(roomInfo: AUIRoomInfo,
                            success: ((AUIRoomInfo?)->())?,
                            failure: ((Error)->())?) {
         guard let roomManager = self.roomManager else {
@@ -52,7 +52,7 @@ public class KaraokeUIKit: NSObject {
         
         let tokenModel1 = AUITokenGenerateNetworkModel()
         tokenModel1.channelName = "a"
-        tokenModel1.userId = roomConfig?.userId ?? ""
+        tokenModel1.userId = commonConfig?.userId ?? ""
         tokenModel1.request { error, result in
             if let error = error {
                 failure?(error)
@@ -61,13 +61,25 @@ public class KaraokeUIKit: NSObject {
             guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
             
             AUIRoomContext.shared.roomRtmToken = tokenMap["rtmToken"] ?? ""
-            roomManager.createRoom(room: roomInfo) { error, info in
+            roomManager.createRoom(room: roomInfo) {[weak self] error, info in
                 if let error = error {
                     failure?(error)
                     return
                 }
                 
-                success?(info)
+                self?.generateToken(channelName: info?.roomId ?? "") { roomConfig, roomRtmToken in
+                    guard let self = self else { return }
+                    AUIRoomContext.shared.roomRtmToken = roomRtmToken
+                    let service = AUIKaraokeRoomService(rtcEngine: self.rtcEngine,
+                                                        ktvApi: self.ktvApi,
+                                                        roomManager: roomManager,
+                                                        roomConfig: roomConfig,
+                                                        roomInfo: info!)
+                    self.service = service
+                    self.roomId = info?.roomId ?? ""
+                    
+                    success?(info)
+                }
             }
         }
     }
@@ -77,6 +89,12 @@ public class KaraokeUIKit: NSObject {
                            completion: @escaping (NSError?)->()) {
         guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
             assert(false, "please invoke setup first")
+            return
+        }
+        if roomInfo.roomId == self.roomId, let service = self.service {
+            self.subscribeError(delegate: self)
+            karaokeView.bindService(service: service)
+            completion(nil)
             return
         }
         
@@ -100,7 +118,8 @@ public class KaraokeUIKit: NSObject {
     public func destroyRoom(roomId: String) {
 //        rtmClient?.logout()
         self.unsubscribeError(delegate: self)
-        service = nil
+        self.service = nil
+        self.roomId = nil
     }
     
     public func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
@@ -128,7 +147,7 @@ extension KaraokeUIKit {
     
     private func generateToken(channelName: String,
                                completion:@escaping ((AUIRoomConfig, String)->())) {
-        let uid = roomConfig?.userId ?? ""
+        let uid = commonConfig?.userId ?? ""
         let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
         let roomConfig = AUIRoomConfig()

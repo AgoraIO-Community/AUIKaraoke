@@ -194,7 +194,7 @@ class AUIRoomListViewController: UIViewController {
                     return
                 }
                 print("create room with name(\(text))")
-                let room = AUICreateRoomInfo()
+                let room = AUIRoomInfo()
                 room.roomName = text
                 room.thumbnail = self.userInfo.userAvatar
                 room.micSeatCount = 8

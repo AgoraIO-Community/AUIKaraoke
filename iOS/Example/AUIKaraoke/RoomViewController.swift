@@ -23,7 +23,7 @@ class RoomViewController: UIViewController {
         
         self.navigationItem.title = roomInfo?.roomName
         
-        let uid = KaraokeUIKit.shared.roomConfig?.userId ?? ""
+        let uid = KaraokeUIKit.shared.commonConfig?.userId ?? ""
         //创建房间容器
         let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
         let isOwner = roomInfo?.owner?.userId == uid ? true : false
