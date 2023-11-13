@@ -334,7 +334,7 @@ extension AUIKaraokeRoomService: AUIUserRespDelegate {
 extension AUIKaraokeRoomService {
     private func cleanUserInfo(channelName: String, userId: String) {
         guard AUIRoomContext.shared.isLockOwner(channelName: channelName) else {return}
-        guard let idx = micSeatImpl.getMicSeatIndex?(userId: userId) else {return}
+        guard let idx = micSeatImpl.getMicSeatIndex?(userId: userId), idx >= 0 else {return}
         micSeatImpl.kickSeat(seatIndex: idx) { err in
         }
     }
@@ -379,6 +379,8 @@ extension AUIKaraokeRoomService {
         let metaData = NSMutableDictionary()
         metaData[kRoomInfoAttrKry] = roomInfoStr
         _ = micSeatImpl.onRoomWillInit?(metaData: metaData)
+        _ = musicImpl.onRoomWillInit?(metaData: metaData)
+        _ = chorusImpl.onRoomWillInit?(metaData: metaData)
         
         let channelName = roomInfo.roomId
         rtmManager.setMetadata(channelName: channelName,
