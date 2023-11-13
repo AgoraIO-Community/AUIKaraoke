@@ -465,6 +465,26 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
 //        updateMic(with: index, role: .onlineAudience)
     }
     
+    public func onSeatWillLeave(userId: String, metaData: NSMutableDictionary) -> NSError? {
+//        if let err = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
+//            return err
+//        }
+        if let err = musicDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
+            return err
+        }
+        if let err = chorusDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
+            return err
+        }
+        
+        return nil
+    }
+    
+    public func onWillJoinChours(songCode: String, userId: String, metaData: NSMutableDictionary) -> NSError? {
+        if micSeatDelegate?.isOnMicSeat?(userId: userId) ?? false {return nil}
+        
+        return AUICommonError.userNoEnterSeat.toNSError()
+    }
+    
     private func getMicIndex(with userId: String) -> Int? {
         return micSeatArray
             .filter { $0.user?.userId == userId }

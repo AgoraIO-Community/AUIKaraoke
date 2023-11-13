@@ -8,6 +8,7 @@
 import AUIKitCore
 
 open class AUIUserViewBinder: NSObject {
+    private weak var rtmManager: AUIRtmManager?
     private weak var userView: AUIRoomMembersView?
     private weak var userDelegate: AUIUserServiceDelegate? {
         didSet {
@@ -15,6 +16,8 @@ open class AUIUserViewBinder: NSObject {
             userDelegate?.bindRespDelegate(delegate: self)
         }
     }
+    private weak var chorusDelegate: AUIChorusServiceDelegate?
+    private weak var musicDelegate: AUIMusicServiceDelegate?
     private weak var micSeatDelegate: AUIMicSeatServiceDelegate? {
         didSet {
             micSeatDelegate?.unbindRespDelegate(delegate: self)
@@ -22,16 +25,32 @@ open class AUIUserViewBinder: NSObject {
         }
     }
     
-    public func bind(userView: AUIRoomMembersView, userService: AUIUserServiceDelegate, micSeatService: AUIMicSeatServiceDelegate) {
+    public func bind(userView: AUIRoomMembersView,
+                     rtmManager: AUIRtmManager,
+                     userService: AUIUserServiceDelegate,
+                     micSeatService: AUIMicSeatServiceDelegate,
+                     musicService: AUIMusicServiceDelegate,
+                     chorusService: AUIChorusServiceDelegate) {
         self.userView = userView
+        self.rtmManager = rtmManager
         self.userDelegate = userService
         self.micSeatDelegate = micSeatService
+        self.musicDelegate = musicService
+        self.chorusDelegate = chorusService
     }
 }
 
 extension AUIUserViewBinder: AUIUserRespDelegate {
     public func onUserBeKicked(roomId: String, userId: String) {
-        
+        guard AUIRoomContext.shared.isLockOwner(channelName: roomId) else { return }
+        let _metaData = NSMutableDictionary()
+        _ = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
+        _ = musicDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
+        _ = chorusDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
+        self.rtmManager?.setMetadata(channelName: roomId, 
+                                     lockName: kRTM_Referee_LockName,
+                                     metadata: _metaData as! [String : String]) { err in
+        }
     }
     
     public func onUserAudioMute(userId: String, mute: Bool) {

@@ -48,7 +48,7 @@ class RoomViewController: UIViewController {
         self.view.addSubview(karaokeView)
         self.karaokeView = karaokeView
         
-        KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
+        KaraokeUIKit.shared.launchRoom(roomId: roomInfo?.roomId ?? "",
                                        karaokeView: karaokeView) {[weak self] error in
             guard let self = self else {return}
             if let _ = error { return }

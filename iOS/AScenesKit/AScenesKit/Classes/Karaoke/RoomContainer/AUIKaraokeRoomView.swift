@@ -306,14 +306,11 @@ open class AUIKaraokeRoomView: UIView {
         loadSubviews()
         viewBinderConnected()
         
-        let channelName:String = service.channelName
-        aui_info("enter room: \(channelName)", tag: "AUIKaraokeRoomView")
-        service.roomManagerImpl.enterRoom(roomId: channelName) { error in
-            aui_info("enter room success", tag: "AUIKaraokeRoomView")
-        }
-        service.joinRtcChannel { error in
-            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: "AUIKaraokeRoomView")
-        }
+//        let channelName:String = service.channelName
+//        aui_info("enter room: \(channelName)", tag: "AUIKaraokeRoomView")
+//        service.enterRoom { error in
+//            aui_info("enter room success", tag: "AUIKaraokeRoomView")
+//        }
     }
     
     private func loadSubviews() {
@@ -392,7 +389,10 @@ open class AUIKaraokeRoomView: UIView {
                            chorusService: service.chorusImpl)
 //        invitationView.invitationdelegate = service.invitationImpl
 //        invitationView.roomDelegate = service.roomManagerImpl
-        jukeBoxBinder.bind(jukeBoxView: jukeBoxView, service: service.musicImpl)
+        jukeBoxBinder.bind(jukeBoxView: jukeBoxView,
+                           musicService: service.musicImpl,
+                           micSeatService: service.micSeatImpl,
+                           chorusService: service.chorusImpl)
 
         playerBinder.bind(playerView: playerView,
                           playerService: service.playerImpl,
@@ -405,8 +405,11 @@ open class AUIKaraokeRoomView: UIView {
         microphoneButton.isHidden = !AUIRoomContext.shared.isRoomOwner(channelName: service.channelName)
         
         userBinder.bind(userView: membersView,
+                        rtmManager: service.rtmManager,
                         userService: service.userImpl,
-                        micSeatService: service.micSeatImpl)
+                        micSeatService: service.micSeatImpl,
+                        musicService: service.musicImpl,
+                        chorusService: service.chorusImpl)
         
         service.userImpl.bindRespDelegate(delegate: self)
         
@@ -447,13 +450,13 @@ extension AUIKaraokeRoomView {
     @objc public func onBackAction() {
         guard let service = service else {return}
         if AUIRoomContext.shared.isRoomOwner(channelName: service.channelName) {
-            service.roomManagerImpl.destroyRoom(roomId: service.channelName) { err in
+            service.destroyRoom { err in
             }
         } else {
-            service.roomManagerImpl.exitRoom(roomId: service.channelName) { err in
+            service.exitRoom { err in
             }
         }
-        service.destroy()
+        
         AUIRoomContext.shared.clean(channelName: service.channelName)
         AUICommonDialog.hidden()
         AUIToast.hidden()
@@ -498,7 +501,7 @@ extension AUIKaraokeRoomView {
         }
         
         #if DEBUG
-        self.service?.roomManagerImpl.rtmManager.acquireLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
+        self.service?.rtmManager.acquireLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
             AUIToast.show(text: "acquireLock: \(err?.code ?? 0)")
         }
         #endif
@@ -511,15 +514,13 @@ extension AUIKaraokeRoomView {
     }
     
     @objc private func onMoreAction(_ button: UIButton){
-
         let item = AUIActionSheetThemeItem.vertical()
         item.backgroundIcon = "Player.voiceConversionDialogItemBackgroundIcon"
         item.icon = "Room.moreDialogLrcBackgroundIcon"
         item.title = auikaraoke_localized("lrcBackground")
-        item.callback = { [weak self] in
+        item.callback = {
             aui_info("onMoreAction click", tag: "AUIKaraokeRoomView")
 //            guard let self = self else {return}
-            
         }
         
         let theme = AUIActionSheetTheme()
@@ -541,7 +542,7 @@ extension AUIKaraokeRoomView {
         
         
         #if DEBUG
-        self.service?.roomManagerImpl.rtmManager.releaseLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
+        self.service?.rtmManager.releaseLock(channelName: service?.channelName ?? "", lockName: kRTM_Referee_LockName) { err in
             AUIToast.show(text: "releaseLock: \(err?.code ?? 0)")
         }
         #endif

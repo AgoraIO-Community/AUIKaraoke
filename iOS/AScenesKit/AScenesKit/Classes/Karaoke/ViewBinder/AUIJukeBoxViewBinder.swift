@@ -23,6 +23,9 @@ open class AUIJukeBoxViewBinder: NSObject {
         }
     }
     
+    private weak var micSeatServiceDelegate: AUIMicSeatServiceDelegate?
+    private weak var chorusServiceDelegate: AUIChorusServiceDelegate?
+    
     //歌曲查询列表
     private var searchMusicList: [AUIMusicModel]?
     //点歌列表
@@ -60,9 +63,14 @@ open class AUIJukeBoxViewBinder: NSObject {
         aui_info("AUIJukeBoxViewBinder init", tag: "AUIJukeBoxViewBinder")
     }
     
-    public func bind(jukeBoxView: AUIJukeBoxView, service: AUIMusicServiceDelegate) {
+    public func bind(jukeBoxView: AUIJukeBoxView, 
+                     musicService: AUIMusicServiceDelegate,
+                     micSeatService: AUIMicSeatServiceDelegate,
+                     chorusService: AUIChorusServiceDelegate) {
         self.jukeBoxView = jukeBoxView
-        self.serviceDelegate = service
+        self.serviceDelegate = musicService
+        self.micSeatServiceDelegate = micSeatService
+        self.chorusServiceDelegate = chorusService
     }
 }
 
@@ -270,4 +278,32 @@ extension AUIJukeBoxViewBinder: AUIMusicRespDelegate {
         self.jukeBoxView?.addedMusicTableView.reloadData()
         self.jukeBoxView?.allMusicTableView.reloadData()
     }
+    
+    public func onSongWillAdd(userId: String, metaData: NSMutableDictionary) -> NSError? {
+        guard micSeatServiceDelegate?.isOnMicSeat?(userId: userId) ?? false else {
+            return AUICommonError.noPermission.toNSError()
+        }
+        return nil
+    }
+    
+    public func onSongWillRemove(songCode: String, metaData: NSMutableDictionary) -> NSError? {
+        guard let song = addedMusicList.first, let userId = song.userId, song.songCode == songCode else { return nil }
+        let err = chorusServiceDelegate?.onUserInfoClean?(userId: userId, metaData: metaData)
+        return nil
+    }
+}
+
+extension AUIJukeBoxViewBinder: AUIChorusRespDelegate {
+    public func onChoristerDidEnter(chorister: AUIKitCore.AUIChoristerModel) {
+    }
+    
+    public func onChoristerDidLeave(chorister: AUIKitCore.AUIChoristerModel) {
+    }
+    
+    public func onWillJoinChours(songCode: String, userId: String, metaData: NSMutableDictionary) -> NSError? {
+        guard let song = addedMusicList.first, song.owner?.userId == userId else { return nil }
+        //song owner disallow join chorus
+        return AUICommonError.unknown.toNSError()
+    }
+    
 }
