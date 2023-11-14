@@ -105,7 +105,7 @@ open class AUIKaraokeRoomService: NSObject {
         }
         
         AUIRoomContext.shared.roomConfigMap[channelName] = roomConfig
-        AUIRoomContext.shared.roomInteractionHandlerMap[channelName] = AUIServiceInteractionHandler(channelName: channelName, rtmManager: rtmManager, userInfo: AUIRoomContext.shared.currentUserInfo)
+        AUIRoomContext.shared.roomArbiterMap[channelName] = AUIArbiter(channelName: channelName, rtmManager: rtmManager, userInfo: AUIRoomContext.shared.currentUserInfo)
     }
     
     //token过期之后调用该方法更新所有token
