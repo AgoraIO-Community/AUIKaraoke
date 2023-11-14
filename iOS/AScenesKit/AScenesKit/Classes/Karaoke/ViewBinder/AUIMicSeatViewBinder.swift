@@ -466,9 +466,9 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
     }
     
     public func onSeatWillLeave(userId: String, metaData: NSMutableDictionary) -> NSError? {
-//        if let err = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
-//            return err
-//        }
+        if let err = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
+            return err
+        }
         if let err = musicDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
             return err
         }
