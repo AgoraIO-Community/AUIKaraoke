@@ -50,12 +50,14 @@ public class KaraokeUIKit: NSObject {
             assert(false, "please invoke setup first")
             return
         }
+        var date = Date()
         roomManager.createRoom(room: roomInfo) {[weak self] error, info in
             if let error = error {
                 failure?(error)
                 return
             }
-            
+            aui_info("restful createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            date = Date()
             self?.generateToken(channelName: info?.roomId ?? "") { roomConfig in
                 guard let self = self else { return }
                 let service = AUIKaraokeRoomService(rtcEngine: self.rtcEngine,
@@ -64,10 +66,13 @@ public class KaraokeUIKit: NSObject {
                                                     commonConfig: roomManager.commonConfig,
                                                     roomConfig: roomConfig,
                                                     roomId: info!.roomId)
+                aui_info("generateToken1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                 self.service = service
                 self.roomId = info?.roomId ?? ""
                 //TODO: create & enter
+                date = Date()
                 service.createRoom(roomInfo: info!) { err in
+                    aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                     self.isRoomOwner = true
                     success?(info)
                 }
@@ -82,11 +87,13 @@ public class KaraokeUIKit: NSObject {
             assert(false, "please invoke setup first")
             return
         }
+        let date = Date()
         //TODO: remove it
         if roomId == self.roomId, let service = self.service {
             self.subscribeError(delegate: self)
             karaokeView.bindService(service: service)
             service.enterRoom { err in
+                aui_info("service enterRoom1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                 completion(nil)
             }
             return
@@ -94,6 +101,7 @@ public class KaraokeUIKit: NSObject {
         
         generateToken(channelName: roomId) {[weak self] roomConfig in
             guard let self = self else { return }
+            aui_info("generateToken2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             let service = AUIKaraokeRoomService(rtcEngine: self.rtcEngine,
                                                 ktvApi: self.ktvApi,
                                                 rtmClient: self.rtmClient,
@@ -106,6 +114,7 @@ public class KaraokeUIKit: NSObject {
             self.service = service
             self.roomId = roomId
             service.enterRoom { err in
+                aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                 completion(nil)
             }
         }

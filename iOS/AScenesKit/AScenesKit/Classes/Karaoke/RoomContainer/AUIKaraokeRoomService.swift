@@ -11,6 +11,8 @@ import AUIKitCore
 import AVFAudio
 import AgoraRtmKit
 
+private let kSertviceTag = "AUIKaraokeRoomService"
+
 /// 卡拉OK房间Service，内部负责初始化房间内需要的Service组件，包括房间Service，邀请Service，麦位Service，...
 open class AUIKaraokeRoomService: NSObject {
     lazy var micSeatImpl: AUIMicSeatServiceDelegate = AUIMicSeatLocalServiceImpl(channelName: channelName,
@@ -56,7 +58,7 @@ open class AUIKaraokeRoomService: NSObject {
     private var rtcJoinClousure: ((Error?)->())?
     
     deinit {
-        aui_info("deinit AUIKaraokeRoomService", tag: "AUIKaraokeRoomService")
+        aui_info("deinit AUIKaraokeRoomService", tag: kSertviceTag)
     }
     
     public init(rtcEngine: AgoraRtcEngineKit?,
@@ -65,7 +67,7 @@ open class AUIKaraokeRoomService: NSObject {
                 commonConfig: AUICommonConfig,
                 roomConfig: AUIRoomConfig,
                 roomId: String) {
-        aui_info("init AUIKaraokeRoomService", tag: "AUIKaraokeRoomService")
+        aui_info("init AUIKaraokeRoomService", tag: kSertviceTag)
         super.init()
         self.channelName = roomId
         self.roomConfig = roomConfig
@@ -127,7 +129,7 @@ open class AUIKaraokeRoomService: NSObject {
     private func joinRtcChannel(completion: ((Error?)->())?) {
         guard let commonConfig = AUIRoomContext.shared.commonConfig,
               let uid = UInt(commonConfig.userId) else {
-            aui_error("joinRtcChannel fail, commonConfig is empty", tag: "AUIKaraokeRoomService")
+            aui_error("joinRtcChannel fail, commonConfig is empty", tag: kSertviceTag)
             completion?(nil)
             return
         }
@@ -140,7 +142,7 @@ open class AUIKaraokeRoomService: NSObject {
                                    uid: uid,
                                    mediaOptions: channelMediaOptions())
 #if DEBUG
-        aui_info("joinChannel channelName ret: \(ret) channelName:\(roomConfig.rtcChannelName), uid: \(uid) token: \(roomConfig.rtcRtcToken)", tag: "AUIKaraokeRoomService")
+        aui_info("joinChannel channelName ret: \(ret) channelName:\(roomConfig.rtcChannelName), uid: \(uid) token: \(roomConfig.rtcRtcToken)", tag: kSertviceTag)
 #endif
         
         if ret != 0 {
@@ -155,7 +157,7 @@ open class AUIKaraokeRoomService: NSObject {
         if rtcEngineCreateBySercice {
             AgoraRtcEngineKit.destroy()
         }
-        aui_error("leaveRtcChannel", tag: "AUIKaraokeRoomService")
+        aui_error("leaveRtcChannel", tag: kSertviceTag)
     }
     
     private func setEngineConfig(with uid:UInt) {
@@ -201,7 +203,7 @@ open class AUIKaraokeRoomService: NSObject {
         option.publishMediaPlayerId = Int(self.ktvApi.getMediaPlayer()?.getMediaPlayerId() ?? 0)
         option.enableAudioRecordingOrPlayout = true
         
-        aui_info("update clientRoleType: \(option.clientRoleType.rawValue)", tag: "AUIKaraokeRoomService")
+        aui_info("update clientRoleType: \(option.clientRoleType.rawValue)", tag: kSertviceTag)
         return option
     }
 }
@@ -216,7 +218,7 @@ extension AUIKaraokeRoomService {
         config.areaCode = .global
         
         if config.appId?.count ?? 0 == 0 {
-            aui_error("config.appId is empty, please check 'AUIRoomContext.shared.commonConfig.appId'", tag: "AUIKaraokeRoomService")
+            aui_error("config.appId is empty, please check 'AUIRoomContext.shared.commonConfig.appId'", tag: kSertviceTag)
             assert(false, "config.appId is empty, please check 'AUIRoomContext.shared.commonConfig.appId'")
         }
         return config
@@ -252,20 +254,20 @@ extension AUIKaraokeRoomService {
 extension AUIKaraokeRoomService: AgoraRtcEngineDelegate {
     
     public func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-        aui_info("didJoinChannel channel:\(channel) uid: \(uid)", tag: "AUIKaraokeRoomService")
+        aui_info("didJoinChannel channel:\(channel) uid: \(uid)", tag: kSertviceTag)
         
         guard uid == UInt(AUIRoomContext.shared.currentUserInfo.userId) else {
             return
         }
         
-        aui_info("joinChannel  channelName success channelName:\(channel), uid: \(uid)", tag: "AUIKaraokeRoomService")
+        aui_info("joinChannel  channelName success channelName:\(channel), uid: \(uid)", tag: kSertviceTag)
 //        self.rtcEngine.setAudioSessionOperationRestriction(.deactivateSession)
         rtcJoinClousure?(nil)
         rtcJoinClousure = nil
     }
    
     public func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
-        aui_error("didOccurError: \(errorCode.rawValue)", tag: "AUIKaraokeRoomService")
+        aui_error("didOccurError: \(errorCode.rawValue)", tag: kSertviceTag)
         rtcJoinClousure?(AUICommonError.rtcError(Int32(errorCode.rawValue)).toNSError())
         rtcJoinClousure = nil
     }
@@ -293,7 +295,7 @@ extension AUIKaraokeRoomService: AUIUserRespDelegate {
     
     public func onRoomUserSnapshot(roomId: String, userList: [AUIUserInfo]) {
         guard let user = userList.filter({$0.userId == AUIRoomContext.shared.currentUserInfo.userId }).first else {return}
-        aui_info("onRoomUserSnapshot", tag: "AUIKaraokeRoomService")
+        aui_info("onRoomUserSnapshot", tag: kSertviceTag)
         onUserAudioMute(userId: user.userId, mute: user.muteAudio)
         onUserVideoMute(userId: user.userId, mute: user.muteVideo)
     }
@@ -316,13 +318,13 @@ extension AUIKaraokeRoomService: AUIUserRespDelegate {
     
     public func onUserAudioMute(userId: String, mute: Bool) {
         guard userId == AUIRoomContext.shared.currentUserInfo.userId else {return}
-        aui_info("onUserAudioMute mute current user: \(mute)", tag: "AUIKaraokeRoomService")
+        aui_info("onUserAudioMute mute current user: \(mute)", tag: kSertviceTag)
         rtcEngine.adjustRecordingSignalVolume(mute ? 0 : 100)
     }
     
     public func onUserVideoMute(userId: String, mute: Bool) {
         guard userId == AUIRoomContext.shared.currentUserInfo.userId else {return}
-        aui_info("onMuteVideo onUserVideoMute [\(userId)]: \(mute)", tag: "AUIKaraokeRoomService")
+        aui_info("onMuteVideo onUserVideoMute [\(userId)]: \(mute)", tag: kSertviceTag)
         rtcEngine.enableLocalVideo(!mute)
         let option = AgoraRtcChannelMediaOptions()
         option.publishCameraTrack = !mute
@@ -360,7 +362,9 @@ extension AUIKaraokeRoomService {
             return
         }
         guard rtmManager.isLogin else {
+            let date = Date()
             rtmManager.login(token: rtmToken) {[weak self] err in
+                aui_info("[Benchmark]rtm login: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
                 if let err = err {
                     completion(err as NSError)
                     return
@@ -383,9 +387,11 @@ extension AUIKaraokeRoomService {
         _ = chorusImpl.onRoomWillInit?(metaData: metaData)
         
         let channelName = roomInfo.roomId
+        let date = Date()
         rtmManager.setMetadata(channelName: channelName,
                                lockName: "",
                                metadata: metaData as! [String : String]) { err in
+            aui_info("[Benchmark]rtm setMetaData: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
             if let err = err {
                 completion(err)
                 return
@@ -402,40 +408,33 @@ extension AUIKaraokeRoomService {
             assert(false)
             return
         }
-        guard rtmManager.isLogin else {
-            rtmManager.login(token: rtmToken) {[weak self] err in
-                if let err = err {
-                    completion(err as NSError)
-                    return
-                }
-                self?.enterRoom(completion: completion)
-            }
-            return
-        }
         
         let roomId = channelName!
         guard let roomConfig = AUIRoomContext.shared.roomConfigMap[roomId] else {
             assert(false)
-            aui_info("enterRoom: \(roomId) fail", tag: "AUIKaraokeRoomService")
+            aui_info("enterRoom: \(roomId) fail", tag: kSertviceTag)
             completion(AUICommonError.missmatchRoomConfig.toNSError())
             return
         }
         assert(!rtmToken.isEmpty, "rtm token invalid")
         guard rtmManager.isLogin else {
+            let date = Date()
             rtmManager.login(token: rtmToken) {[weak self] err in
+                aui_info("[Benchmark]rtm login: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
                 if let err = err {
                     completion(err as NSError)
                     return
                 }
                 self?.enterRoom(completion: completion)
             }
-
             return
         }
         
-        aui_info("enterRoom subscribe: \(roomId)", tag: "AUIKaraokeRoomService")
+        aui_info("enterRoom subscribe: \(roomId)", tag: kSertviceTag)
+        let date = Date()
         rtmManager.subscribe(channelName: roomId, rtcToken: roomConfig.rtcToken007) { error in
-            aui_info("enterRoom subscribe finished \(roomId) \(error?.localizedDescription ?? "")", tag: "AUIRoomManagerImpl")
+            aui_info("[Benchmark]rtm manager subscribe: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
+            aui_info("enterRoom subscribe finished \(roomId) \(error?.localizedDescription ?? "")", tag: kSertviceTag)
             completion(error as? NSError)
         }
         AUIRoomContext.shared.getArbiter(channelName: channelName)?.acquire()
@@ -444,13 +443,13 @@ extension AUIKaraokeRoomService {
         
         //join rtc
         joinRtcChannel { error in
-            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: "AUIKaraokeRoomService")
+            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: kSertviceTag)
         }
     }
     
     public func exitRoom(callback: @escaping (NSError?) -> ()) {
         let roomId = channelName!
-        aui_info("exitRoom: \(roomId)", tag: "AUIKaraokeRoomService")
+        aui_info("exitRoom: \(roomId)", tag: kSertviceTag)
         cleanUserInfo(channelName: roomId, userId: AUIRoomContext.shared.currentUserInfo.userId)
         cleanRoom()
         callback(nil)
@@ -458,12 +457,16 @@ extension AUIKaraokeRoomService {
     
     public func destroyRoom(callback: @escaping (NSError?) -> ()) {
         let roomId = channelName!
-        aui_info("destroyRoom: \(roomId)", tag: "AUIKaraokeRoomService")
+        aui_info("destroyRoom: \(roomId)", tag: kSertviceTag)
         cleanRoomInfo(channelName: roomId)
 
         cleanRoom()
         
         AUIRoomContext.shared.getArbiter(channelName: channelName)?.destroy()
+    }
+    
+    private func initRoom() {
+        
     }
     
     private func cleanRoom() {
