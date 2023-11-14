@@ -237,6 +237,7 @@ extension AUIKaraokeRoomService {
 //        let log = AgoraRtmLogConfig()
 //        log.filePath = NSHomeDirectory() + "/Documents/RTMLog/"
 //        rtmConfig.logConfig = log
+        rtmConfig.presenceTimeout = 20
         if rtmConfig.userId.count == 0 {
             aui_error("userId is empty")
             assert(false, "userId is empty")
@@ -245,7 +246,6 @@ extension AUIKaraokeRoomService {
             aui_error("appId is empty, please check 'AUIRoomContext.shared.commonConfig.appId' ")
             assert(false, "appId is empty, please check 'AUIRoomContext.shared.commonConfig.appId' ")
         }
-        rtmConfig.presenceTimeout = 200
         let rtmClient = try? AgoraRtmClientKit(rtmConfig, delegate: nil)
         return rtmClient!
     }
