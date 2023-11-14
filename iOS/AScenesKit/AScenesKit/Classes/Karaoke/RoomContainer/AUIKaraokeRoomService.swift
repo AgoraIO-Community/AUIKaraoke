@@ -333,14 +333,14 @@ extension AUIKaraokeRoomService: AUIUserRespDelegate {
 // room manager handler
 extension AUIKaraokeRoomService {
     private func cleanUserInfo(channelName: String, userId: String) {
-        guard AUIRoomContext.shared.isLockOwner(channelName: channelName) else {return}
+        guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
         guard let idx = micSeatImpl.getMicSeatIndex?(userId: userId), idx >= 0 else {return}
         micSeatImpl.kickSeat(seatIndex: idx) { err in
         }
     }
     
     private func cleanRoomInfo(channelName: String) {
-        guard AUIRoomContext.shared.isLockOwner(channelName: channelName) else {return}
+        guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
         let removeKeys = NSMutableArray()
         removeKeys.add(kRoomInfoAttrKry)
         //TODO: remove im key
@@ -394,8 +394,7 @@ extension AUIKaraokeRoomService {
             completion(nil)
         }
         
-        rtmManager.setLock(channelName: channelName, lockName: kRTM_Referee_LockName) { err in
-        }
+        AUIRoomContext.shared.getArbiter(channelName: channelName)?.create()
     }
     
     public func enterRoom(completion:@escaping (Error?)->()) {
@@ -439,8 +438,7 @@ extension AUIKaraokeRoomService {
             aui_info("enterRoom subscribe finished \(roomId) \(error?.localizedDescription ?? "")", tag: "AUIRoomManagerImpl")
             completion(error as? NSError)
         }
-        rtmManager.acquireLock(channelName: channelName, lockName: kRTM_Referee_LockName) { err in
-        }
+        AUIRoomContext.shared.getArbiter(channelName: channelName)?.acquire()
         rtmManager.subscribeAttributes(channelName: channelName, itemKey: kRoomInfoAttrKry, delegate: self)
         rtmManager.subscribeError(channelName: roomId, delegate: self)
         
@@ -464,8 +462,8 @@ extension AUIKaraokeRoomService {
         cleanRoomInfo(channelName: roomId)
 
         cleanRoom()
-        rtmManager.removeLock(channelName: roomId, lockName: kRTM_Referee_LockName) { err in
-        }
+        
+        AUIRoomContext.shared.getArbiter(channelName: channelName)?.destroy()
     }
     
     private func cleanRoom() {
@@ -511,8 +509,7 @@ extension AUIKaraokeRoomService: AUIRtmErrorProxyDelegate {
                                                connectionStateChanged state: AgoraRtmClientConnectionState,
                                                result reason: AgoraRtmClientConnectionChangeReason) {
         if reason == .changedRejoinSuccess {
-            rtmManager.acquireLock(channelName: channelName, lockName: kRTM_Referee_LockName) { err in
-            }
+            AUIRoomContext.shared.getArbiter(channelName: channelName)?.acquire()
         }
         guard state == .failed, reason == .changedBannedByServer else {
             return

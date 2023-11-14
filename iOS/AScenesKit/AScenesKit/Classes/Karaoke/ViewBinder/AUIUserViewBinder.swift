@@ -42,7 +42,7 @@ open class AUIUserViewBinder: NSObject {
 
 extension AUIUserViewBinder: AUIUserRespDelegate {
     public func onUserBeKicked(roomId: String, userId: String) {
-        guard AUIRoomContext.shared.isLockOwner(channelName: roomId) else { return }
+        guard AUIRoomContext.shared.getArbiter(channelName: roomId)?.isArbiter() ?? false else { return }
         let _metaData = NSMutableDictionary()
         _ = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
         _ = musicDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
