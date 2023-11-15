@@ -12,26 +12,27 @@ import AVFAudio
 import AgoraRtmKit
 
 private let kSertviceTag = "AUIKaraokeRoomService"
+private let kRoomInfoAttrKry = "basic"
 
 /// 卡拉OK房间Service，内部负责初始化房间内需要的Service组件，包括房间Service，邀请Service，麦位Service，...
 open class AUIKaraokeRoomService: NSObject {
-    lazy var micSeatImpl: AUIMicSeatServiceDelegate = AUIMicSeatLocalServiceImpl(channelName: channelName,
-                                                                                 rtmManager: rtmManager)
+    lazy var micSeatImpl: AUIMicSeatServiceDelegate = AUIMicSeatServiceImpl(channelName: channelName,
+                                                                            rtmManager: rtmManager)
 //    lazy var invitationImpl: AUIInvitationServiceDelegate = AUIInvitationServiceImpl(channelName: self.channelName,
 //                                                                                     rtmManager: self.rtmManager)
-    lazy var musicImpl: AUIMusicServiceDelegate = AUIMusicLocalServiceImpl(channelName: channelName,
-                                                                           rtmManager: rtmManager,
-                                                                           ktvApi: ktvApi)
+    lazy var musicImpl: AUIMusicServiceDelegate = AUIMusicServiceImpl(channelName: channelName,
+                                                                      rtmManager: rtmManager,
+                                                                      ktvApi: ktvApi)
     lazy var playerImpl: AUIPlayerServiceDelegate = AUIPlayerServiceImpl(channelName: channelName,
                                                                          rtcKit: rtcEngine,
                                                                          ktvApi: ktvApi,
                                                                          rtmManager: rtmManager)
-    lazy var userImpl: AUIUserServiceDelegate = AUIUserLocalServiceImpl(channelName: channelName,
-                                                                        rtmManager: rtmManager)
-    lazy var chorusImpl: AUIChorusServiceDelegate = AUIChorusLocalServiceImpl(channelName: channelName,
-                                                                              rtcKit: rtcEngine,
-                                                                              ktvApi: ktvApi,
-                                                                              rtmManager: rtmManager)
+    lazy var userImpl: AUIUserServiceDelegate = AUIUserServiceImpl(channelName: channelName,
+                                                                   rtmManager: rtmManager)
+    lazy var chorusImpl: AUIChorusServiceDelegate = AUIChorusServiceImpl(channelName: channelName,
+                                                                         rtcKit: rtcEngine,
+                                                                         ktvApi: ktvApi,
+                                                                         rtmManager: rtmManager)
     
     lazy var chatImplement: AUIMManagerServiceDelegate = AUIIMManagerServiceImplement(channelName: channelName,
                                                                                       rtmManager: rtmManager)

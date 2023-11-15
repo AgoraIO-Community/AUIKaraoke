@@ -8,6 +8,7 @@
 
 import Foundation
 import AUIKitCore
+import AScenesKit
 import AgoraRtcKit
 import AgoraRtmKit
 
@@ -22,7 +23,7 @@ public class KaraokeUIKit: NSObject {
     private var roomId: String?
     private var isRoomOwner: Bool = false
     
-    private var roomManager: AUIRoomLocalManagerImpl?
+    private var roomManager: AUIRoomManagerImpl?
     
     public func setup(roomConfig: AUICommonConfig,
                       ktvApi: KTVApiDelegate? = nil,
@@ -32,7 +33,7 @@ public class KaraokeUIKit: NSObject {
         self.ktvApi = ktvApi
         self.rtcEngine = rtcEngine
         self.rtmClient = rtmClient
-        self.roomManager = AUIRoomLocalManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
+        self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
     }
     
     public func getRoomInfoList(lastCreateTime: Int64, pageSize: Int, callback: @escaping AUIRoomListCallback) {

@@ -25,6 +25,7 @@
 		DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4812A0BAC7A00797229 /* RoomViewController.swift */; };
 		DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4822A0BAC7A00797229 /* KeyCenter.swift */; };
 		DD00C48B2A0BAC7A00797229 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4852A0BAC7A00797229 /* UserInfo.swift */; };
+		DD3587062B0468D2006318ED /* KaraokeUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD3587052B0468D2006318ED /* KaraokeUIKit.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +70,7 @@
 		DD00C4812A0BAC7A00797229 /* RoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoomViewController.swift; sourceTree = "<group>"; };
 		DD00C4822A0BAC7A00797229 /* KeyCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCenter.swift; sourceTree = "<group>"; };
 		DD00C4852A0BAC7A00797229 /* UserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
+		DD3587052B0468D2006318ED /* KaraokeUIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KaraokeUIKit.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +141,7 @@
 		DD00C44C2A0BAAD700797229 /* AUIKaraoke */ = {
 			isa = PBXGroup;
 			children = (
+				DD3587052B0468D2006318ED /* KaraokeUIKit.swift */,
 				A83559C32A6F7A79003588A4 /* exampleTheme.bundle */,
 				DD00C47D2A0BAC7A00797229 /* List */,
 				DD00C4832A0BAC7A00797229 /* Model */,
@@ -397,6 +400,7 @@
 				DD00C4892A0BAC7A00797229 /* RoomViewController.swift in Sources */,
 				DD00C4872A0BAC7A00797229 /* AUIRoomListViewController.swift in Sources */,
 				DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */,
+				DD3587062B0468D2006318ED /* KaraokeUIKit.swift in Sources */,
 				DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */,
 				DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */,
 				A83559C22A6F739C003588A4 /* AUIThemeSettingViewController.swift in Sources */,
