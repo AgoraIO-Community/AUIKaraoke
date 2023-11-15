@@ -341,17 +341,21 @@ extension AUIKaraokeRoomService {
     
     private func cleanRoomInfo(channelName: String) {
         guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
-        let removeKeys = NSMutableArray()
-        removeKeys.add(kRoomInfoAttrKry)
-        //TODO: remove im key
-        removeKeys.add("chatRoom")
-        _ = micSeatImpl.onRoomWillDestroy?(removeKeys: removeKeys)
-        _ = musicImpl.onRoomWillDestroy?(removeKeys: removeKeys)
-        _ = chorusImpl.onRoomWillDestroy?(removeKeys: removeKeys)
-        rtmManager.cleanMetadata(channelName: channelName,
-                                 removeKeys: removeKeys as! [String],
-                                 lockName: kRTM_Referee_LockName) { err in
-        }
+
+        micSeatImpl.onRoomWillDestroy?(completion: { err in
+        })
+        musicImpl.onRoomWillDestroy?(completion: { err in
+        })
+        chorusImpl.onRoomWillDestroy?(completion: { err in
+        })
+        chatImplement.onRoomWillDestroy?(completion: { err in
+        })
+        rtmManager.cleanBatchMetadata(channelName: channelName,
+                                      lockName: kRTM_Referee_LockName, 
+                                      removeKeys: [kRoomInfoAttrKry],
+                                      fetchImmediately: true,
+                                      completion: { err in
+        })
     }
     
     public func createRoom(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
@@ -372,32 +376,9 @@ extension AUIKaraokeRoomService {
             return
         }
         
-        guard let roomInfoStr = roomInfo.yy_modelToJSONString() else {
-            assert(false)
-            completion(nil)
-            return
-        }
+        AUIRoomContext.shared.getArbiter(channelName: roomInfo.roomId)?.create()
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
-        
-        let metaData = NSMutableDictionary()
-        metaData[kRoomInfoAttrKry] = roomInfoStr
-        _ = micSeatImpl.onRoomWillInit?(completion: { err in
-        })
-        
-        let channelName = roomInfo.roomId
-        let date = Date()
-        rtmManager.setBatchMetadata(channelName: channelName,
-                                    lockName: "",
-                                    metadata: metaData as! [String : String]) { err in
-            aui_info("[Benchmark]rtm setMetaData: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
-            if let err = err {
-                completion(err)
-                return
-            }
-            completion(nil)
-        }
-        
-        AUIRoomContext.shared.getArbiter(channelName: channelName)?.create()
+        initRoom(roomInfo: roomInfo, completion: completion)
     }
     
     public func enterRoom(completion:@escaping (Error?)->()) {
@@ -462,8 +443,28 @@ extension AUIKaraokeRoomService {
         AUIRoomContext.shared.getArbiter(channelName: channelName)?.destroy()
     }
     
-    private func initRoom() {
+    private func initRoom(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
+        guard let roomInfoStr = roomInfo.yy_modelToJSONString() else {
+            assert(false)
+            completion(nil)
+            return
+        }
         
+        _ = micSeatImpl.onRoomWillInit?(completion: { err in
+        })
+        
+        let date = Date()
+        rtmManager.setBatchMetadata(channelName: roomInfo.roomId,
+                                    lockName: "",
+                                    metadata: [kRoomInfoAttrKry: roomInfoStr],
+                                    fetchImmediately: true) { err in
+            aui_info("[Benchmark]rtm setMetaData: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
+            if let err = err {
+                completion(err)
+                return
+            }
+            completion(nil)
+        }
     }
     
     private func cleanRoom() {
