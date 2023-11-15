@@ -16,41 +16,29 @@ import AgoraRtmKit
 public class KaraokeUIKit: NSObject {
     public static let shared: KaraokeUIKit = KaraokeUIKit()
     public var commonConfig: AUICommonConfig?
-    private var ktvApi: KTVApiDelegate?
-    private var rtcEngine: AgoraRtcEngineKit?
-    private var rtmClient: AgoraRtmClientKit?
+    private var apiConfig: AUIAPIConfig?
     private var service: AUIKaraokeRoomService?
     private var roomId: String?
     private var isRoomOwner: Bool = false
     
-    private var roomManager: AUIRoomManagerImpl?
+    private lazy var roomManager: AUIRoomManagerImpl = AUIRoomManagerImpl()
     
-    public func setup(roomConfig: AUICommonConfig,
-                      ktvApi: KTVApiDelegate? = nil,
-                      rtcEngine: AgoraRtcEngineKit? = nil,
-                      rtmClient: AgoraRtmClientKit? = nil) {
-        self.commonConfig = roomConfig
-        self.ktvApi = ktvApi
-        self.rtcEngine = rtcEngine
-        self.rtmClient = rtmClient
-        self.roomManager = AUIRoomManagerImpl(commonConfig: roomConfig, rtmClient: rtmClient)
+    public func setup(commonConfig: AUICommonConfig,
+                      apiConfig: AUIAPIConfig? = nil) {
+        AUIRoomContext.shared.commonConfig = commonConfig
+        self.commonConfig = commonConfig
+        self.apiConfig = apiConfig
     }
     
     public func getRoomInfoList(lastCreateTime: Int64, pageSize: Int, callback: @escaping AUIRoomListCallback) {
-        guard let roomManager = self.roomManager else {
-            assert(false, "please invoke setup first")
-            return
-        }
+        checkSetupAndCommonConfig()
         roomManager.getRoomInfoList(lastCreateTime: lastCreateTime, pageSize: pageSize, callback: callback)
     }
     
     public func createRoom(roomInfo: AUIRoomInfo,
                            success: ((AUIRoomInfo?)->())?,
                            failure: ((Error)->())?) {
-        guard let roomManager = self.roomManager else {
-            assert(false, "please invoke setup first")
-            return
-        }
+        checkSetupAndCommonConfig()
         var date = Date()
         roomManager.createRoom(room: roomInfo) {[weak self] error, info in
             if let error = error {
@@ -61,12 +49,8 @@ public class KaraokeUIKit: NSObject {
             date = Date()
             self?.generateToken(channelName: info?.roomId ?? "") { roomConfig in
                 guard let self = self else { return }
-                let service = AUIKaraokeRoomService(rtcEngine: self.rtcEngine,
-                                                    ktvApi: self.ktvApi,
-                                                    rtmClient: self.rtmClient,
-                                                    commonConfig: roomManager.commonConfig,
-                                                    roomConfig: roomConfig,
-                                                    roomId: info!.roomId)
+                let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
+                                                    roomConfig: roomConfig)
                 aui_info("generateToken1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                 self.service = service
                 self.roomId = info?.roomId ?? ""
@@ -84,14 +68,10 @@ public class KaraokeUIKit: NSObject {
     public func launchRoom(roomId: String,
                            karaokeView: AUIKaraokeRoomView,
                            completion: @escaping (NSError?)->()) {
-        guard /*let rtmClient = self.rtmClient,*/ let roomManager = self.roomManager else {
-            assert(false, "please invoke setup first")
-            return
-        }
+        checkSetupAndCommonConfig()
         let date = Date()
         //TODO: remove it
         if roomId == self.roomId, let service = self.service {
-            self.subscribeError(delegate: self)
             karaokeView.bindService(service: service)
             service.enterRoom { err in
                 aui_info("service enterRoom1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
@@ -103,14 +83,9 @@ public class KaraokeUIKit: NSObject {
         generateToken(channelName: roomId) {[weak self] roomConfig in
             guard let self = self else { return }
             aui_info("generateToken2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-            let service = AUIKaraokeRoomService(rtcEngine: self.rtcEngine,
-                                                ktvApi: self.ktvApi,
-                                                rtmClient: self.rtmClient,
-                                                commonConfig: roomManager.commonConfig,
-                                                roomConfig: roomConfig,
-                                                roomId: roomId)
+            let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
+                                                roomConfig: roomConfig)
             //订阅Token过期回调
-            self.subscribeError(delegate: self)
             karaokeView.bindService(service: service)
             self.service = service
             self.roomId = roomId
@@ -122,34 +97,37 @@ public class KaraokeUIKit: NSObject {
     }
     
     public func destroyRoom(roomId: String) {
+        checkSetupAndCommonConfig()
         if isRoomOwner {
-            roomManager?.destroyRoom(roomId: roomId, callback: { err in
+            roomManager.destroyRoom(roomId: roomId, callback: { err in
             })
         }
         isRoomOwner = false
 //        rtmClient?.logout()
-        self.unsubscribeError(delegate: self)
         self.service = nil
         self.roomId = nil
     }
     
-    public func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func bindRespDelegate(delegate: AUIKaraokeRoomServiceRespDelegate) {
         service?.bindRespDelegate(delegate: delegate)
     }
     
-    public func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func unbindRespDelegate(delegate: AUIKaraokeRoomServiceRespDelegate) {
         service?.unbindRespDelegate(delegate: delegate)
+    }
+    
+    public func onTokenPrivilegeWillExpire(channelName: String?) {
+        guard let channelName = roomId else { return }
+        generateToken(channelName: channelName) {[weak self] config in
+            self?.renew(config: config)
+        }
     }
 }
 
 //MARK: private method
 extension KaraokeUIKit {
-    private func subscribeError(delegate: AUIRtmErrorProxyDelegate) {
-        service?.rtmManager.subscribeError(channelName: "", delegate: delegate)
-    }
-    
-    private func unsubscribeError(delegate: AUIRtmErrorProxyDelegate) {
-        service?.rtmManager.unsubscribeError(channelName: "", delegate: delegate)
+    private func checkSetupAndCommonConfig() {
+        assert(AUIRoomContext.shared.commonConfig?.isValidate() ?? false, "make sure invoke setup first")
     }
     
     private func renew(config: AUIRoomConfig) {
@@ -215,15 +193,6 @@ extension KaraokeUIKit {
         
         group.notify(queue: DispatchQueue.main) {
             completion(roomConfig)
-        }
-    }
-}
-
-extension KaraokeUIKit: AUIRtmErrorProxyDelegate {
-    @objc public func onTokenPrivilegeWillExpire(channelName: String?) {
-        guard let channelName = roomId else { return }
-        generateToken(channelName: channelName) {[weak self] config in
-            self?.renew(config: config)
         }
     }
 }

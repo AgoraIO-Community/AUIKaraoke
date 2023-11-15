@@ -120,10 +120,8 @@ class AUIRoomListViewController: UIViewController {
         commonConfig.userId = userInfo.userId
         commonConfig.userName = userInfo.userName
         commonConfig.userAvatar = userInfo.userAvatar
-        KaraokeUIKit.shared.setup(roomConfig: commonConfig,
-                                  ktvApi: nil,
-                                  rtcEngine: nil,
-                                  rtmClient: nil)
+        KaraokeUIKit.shared.setup(commonConfig: commonConfig,
+                                  apiConfig: nil)
     }
     
     private func _layoutButton() {

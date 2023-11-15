@@ -77,13 +77,11 @@ class RoomViewController: UIViewController {
     }
 }
 
-extension RoomViewController: AUIRoomManagerRespDelegate {
+extension RoomViewController: AUIKaraokeRoomServiceRespDelegate {
     func onRoomAnnouncementChange(roomId: String, announcement: String) {
-        
     }
     
     func onRoomUserBeKicked(roomId: String, userId: String) {
-        
     }
     
     func onRoomDestroy(roomId: String) {
@@ -103,5 +101,9 @@ extension RoomViewController: AUIRoomManagerRespDelegate {
     
     func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
         
+    }
+    
+    func onTokenPrivilegeWillExpire(channelName: String?) {
+        KaraokeUIKit.shared.onTokenPrivilegeWillExpire(channelName: channelName)
     }
 }

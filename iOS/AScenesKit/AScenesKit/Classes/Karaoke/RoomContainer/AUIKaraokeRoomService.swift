@@ -54,7 +54,7 @@ open class AUIKaraokeRoomService: NSObject {
     }()
     private var rtmClientCreateBySercice = false
     
-    private var respDelegates: NSHashTable<AUIRoomManagerRespDelegate> = NSHashTable<AUIRoomManagerRespDelegate>.weakObjects()
+    private var respDelegates: NSHashTable<AUIKaraokeRoomServiceRespDelegate> = NSHashTable<AUIKaraokeRoomServiceRespDelegate>.weakObjects()
     
     private var rtcJoinClousure: ((Error?)->())?
     
@@ -62,24 +62,20 @@ open class AUIKaraokeRoomService: NSObject {
         aui_info("deinit AUIKaraokeRoomService", tag: kSertviceTag)
     }
     
-    public init(rtcEngine: AgoraRtcEngineKit?,
-                ktvApi: KTVApiDelegate?,
-                rtmClient: AgoraRtmClientKit?,
-                commonConfig: AUICommonConfig,
-                roomConfig: AUIRoomConfig,
-                roomId: String) {
+    public init(apiConfig: AUIAPIConfig?,
+                roomConfig: AUIRoomConfig) {
         aui_info("init AUIKaraokeRoomService", tag: kSertviceTag)
         super.init()
-        self.channelName = roomId
+        self.channelName = roomConfig.channelName
         self.roomConfig = roomConfig
-        if let rtcEngine = rtcEngine {
+        if let rtcEngine = apiConfig?.rtcEngine {
             self.rtcEngine = rtcEngine
         } else {
-            self.rtcEngine = self._createRtcEngine(commonConfig: commonConfig)
+            self.rtcEngine = self._createRtcEngine(commonConfig: AUIRoomContext.shared.commonConfig!)
             rtcEngineCreateBySercice = true
         }
         
-        if let rtmClient = rtmClient {
+        if let rtmClient = apiConfig?.rtmClient {
             self.rtmClient = rtmClient
         } else {
             rtmClientCreateBySercice = true
@@ -87,7 +83,7 @@ open class AUIKaraokeRoomService: NSObject {
         }
         
         self.userImpl.bindRespDelegate(delegate: self)
-        if let ktvApi = ktvApi {
+        if let ktvApi = apiConfig?.ktvApi {
             self.ktvApi = ktvApi
         } else {
             let appId = AUIRoomContext.shared.commonConfig?.appId ?? ""
@@ -495,11 +491,17 @@ extension AUIKaraokeRoomService: AUIRtmAttributesProxyDelegate {
 
 
 extension AUIKaraokeRoomService: AUIRtmErrorProxyDelegate {
-    public func bindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func onTokenPrivilegeWillExpire(channelName: String?) {
+        aui_info("onTokenPrivilegeWillExpire: \(channelName ?? "")", tag: kSertviceTag)
+        for obj in self.respDelegates.allObjects {
+            obj.onTokenPrivilegeWillExpire?(channelName: channelName)
+        }
+    }
+    public func bindRespDelegate(delegate: AUIKaraokeRoomServiceRespDelegate) {
         respDelegates.add(delegate)
     }
     
-    public func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate) {
+    public func unbindRespDelegate(delegate: AUIKaraokeRoomServiceRespDelegate) {
         respDelegates.remove(delegate)
     }
     
