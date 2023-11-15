@@ -469,12 +469,10 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
 //        if let err = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
 //            return err
 //        }
-        if let err = musicDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
-            return err
-        }
-        if let err = chorusDelegate?.onUserInfoClean?(userId: userId, metaData: metaData) {
-            return err
-        }
+        musicDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
+        chorusDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
         
         return nil
     }

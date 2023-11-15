@@ -288,7 +288,8 @@ extension AUIJukeBoxViewBinder: AUIMusicRespDelegate {
     
     public func onSongWillRemove(songCode: String, metaData: NSMutableDictionary) -> NSError? {
         guard let song = addedMusicList.first, let userId = song.userId, song.songCode == songCode else { return nil }
-        let err = chorusServiceDelegate?.onUserInfoClean?(userId: userId, metaData: metaData)
+        chorusServiceDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
         return nil
     }
 }

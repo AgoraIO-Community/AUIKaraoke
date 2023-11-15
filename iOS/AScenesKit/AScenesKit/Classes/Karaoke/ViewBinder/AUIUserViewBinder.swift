@@ -43,14 +43,12 @@ open class AUIUserViewBinder: NSObject {
 extension AUIUserViewBinder: AUIUserRespDelegate {
     public func onUserBeKicked(roomId: String, userId: String) {
         guard AUIRoomContext.shared.getArbiter(channelName: roomId)?.isArbiter() ?? false else { return }
-        let _metaData = NSMutableDictionary()
-        _ = micSeatDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
-        _ = musicDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
-        _ = chorusDelegate?.onUserInfoClean?(userId: userId, metaData: _metaData)
-        self.rtmManager?.setMetadata(channelName: roomId, 
-                                     lockName: kRTM_Referee_LockName,
-                                     metadata: _metaData as! [String : String]) { err in
-        }
+        _ = micSeatDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
+        _ = musicDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
+        _ = chorusDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        })
     }
     
     public func onUserAudioMute(userId: String, mute: Bool) {

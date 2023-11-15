@@ -335,6 +335,7 @@ extension AUIKaraokeRoomService: AUIUserRespDelegate {
 // room manager handler
 extension AUIKaraokeRoomService {
     private func cleanUserInfo(channelName: String, userId: String) {
+        //TODO: 仲裁者暂无
         guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
         guard let idx = micSeatImpl.getMicSeatIndex?(userId: userId), idx >= 0 else {return}
         micSeatImpl.kickSeat(seatIndex: idx) { err in
@@ -379,24 +380,23 @@ extension AUIKaraokeRoomService {
             completion(nil)
             return
         }
+        AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
         
         let metaData = NSMutableDictionary()
         metaData[kRoomInfoAttrKry] = roomInfoStr
-        _ = micSeatImpl.onRoomWillInit?(metaData: metaData)
-        _ = musicImpl.onRoomWillInit?(metaData: metaData)
-        _ = chorusImpl.onRoomWillInit?(metaData: metaData)
+        _ = micSeatImpl.onRoomWillInit?(completion: { err in
+        })
         
         let channelName = roomInfo.roomId
         let date = Date()
-        rtmManager.setMetadata(channelName: channelName,
-                               lockName: "",
-                               metadata: metaData as! [String : String]) { err in
+        rtmManager.setBatchMetadata(channelName: channelName,
+                                    lockName: "",
+                                    metadata: metaData as! [String : String]) { err in
             aui_info("[Benchmark]rtm setMetaData: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
             if let err = err {
                 completion(err)
                 return
             }
-            AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
             completion(nil)
         }
         
