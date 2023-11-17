@@ -342,13 +342,13 @@ extension AUIKaraokeRoomService {
     private func cleanRoomInfo(channelName: String) {
         guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
 
-        micSeatImpl.onRoomWillDestroy?(completion: { err in
+        micSeatImpl.deinitService?(completion: { err in
         })
-        musicImpl.onRoomWillDestroy?(completion: { err in
+        musicImpl.deinitService?(completion: { err in
         })
-        chorusImpl.onRoomWillDestroy?(completion: { err in
+        chorusImpl.deinitService?(completion: { err in
         })
-        chatImplement.onRoomWillDestroy?(completion: { err in
+        chatImplement.deinitService?(completion: { err in
         })
         rtmManager.cleanBatchMetadata(channelName: channelName,
                                       lockName: kRTM_Referee_LockName, 
@@ -450,7 +450,7 @@ extension AUIKaraokeRoomService {
             return
         }
         
-        _ = micSeatImpl.onRoomWillInit?(completion: { err in
+        _ = micSeatImpl.initService?(completion: { err in
         })
         
         let date = Date()

@@ -43,11 +43,11 @@ open class AUIUserViewBinder: NSObject {
 extension AUIUserViewBinder: AUIUserRespDelegate {
     public func onUserBeKicked(roomId: String, userId: String) {
         guard AUIRoomContext.shared.getArbiter(channelName: roomId)?.isArbiter() ?? false else { return }
-        _ = micSeatDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        _ = micSeatDelegate?.cleanUserInfo?(userId: userId, completion: { err in
         })
-        _ = musicDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        _ = musicDelegate?.cleanUserInfo?(userId: userId, completion: { err in
         })
-        _ = chorusDelegate?.onUserInfoClean?(userId: userId, completion: { err in
+        _ = chorusDelegate?.cleanUserInfo?(userId: userId, completion: { err in
         })
     }
     
