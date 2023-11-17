@@ -20,8 +20,12 @@ class RoomViewController: UIViewController {
         super.viewDidLoad()
         
         self.view.backgroundColor = .white
+        guard let room = self.roomInfo else {
+            assert(false)
+            return
+        }
         
-        self.navigationItem.title = roomInfo?.roomName
+        self.navigationItem.title = room.roomName
         
         let uid = KaraokeUIKit.shared.commonConfig?.userId ?? ""
         //创建房间容器
@@ -48,12 +52,45 @@ class RoomViewController: UIViewController {
         self.view.addSubview(karaokeView)
         self.karaokeView = karaokeView
         
-        KaraokeUIKit.shared.launchRoom(roomId: roomInfo?.roomId ?? "",
-                                       karaokeView: karaokeView) {[weak self] error in
-            guard let self = self else {return}
-            if let _ = error { return }
-            //订阅房间被销毁回调
-            KaraokeUIKit.shared.bindRespDelegate(delegate: self)
+        let roomConfig = AUIRoomConfig()
+        if isOwner {
+#if DEBUG
+            roomConfig.generateToken = { [weak self] roomId in
+                self?.generateToken(channelName: roomId,
+                                    roomConfig: roomConfig,
+                                    completion: { error in
+                    roomConfig.generateTokenCompletion?(error as NSError?)
+                })
+            }
+#else
+            #error("remove it")
+#endif
+            KaraokeUIKit.shared.createRoom(roomInfo: room,
+                                           roomConfig: roomConfig,
+                                           karaokeView: karaokeView) {[weak self] roomInfo in
+                guard let self = self else {return}
+                self.roomInfo = roomInfo
+                //订阅房间被销毁回调
+                KaraokeUIKit.shared.bindRespDelegate(delegate: self)
+            } failure: { error in
+                AUIToast.show(text: error.localizedDescription)
+            }
+        } else {
+            let roomId = roomInfo?.roomId ?? ""
+            generateToken(channelName: roomId,
+                          roomConfig: roomConfig) {[weak self] err  in
+                KaraokeUIKit.shared.launchRoom(roomId: roomId,
+                                               roomConfig: roomConfig,
+                                               karaokeView: karaokeView) { error in
+                    guard let self = self else {return}
+                    if let error = error {
+                        AUIToast.show(text: error.localizedDescription)
+                        return
+                    }
+                    //订阅房间被销毁回调
+                    KaraokeUIKit.shared.bindRespDelegate(delegate: self)
+                }
+            }
         }
     }
     
@@ -73,6 +110,78 @@ class RoomViewController: UIViewController {
         super.willMove(toParent: parent)
         if parent == nil {
             navigationController?.isNavigationBarHidden = false
+        }
+    }
+    
+    private func generateToken(channelName: String,
+                               roomConfig: AUIRoomConfig,
+                               completion:@escaping ((Error?)->())) {
+        let uid = KaraokeUIKit.shared.commonConfig?.userId ?? ""
+        let rtcChannelName = "\(channelName)_rtc"
+        let rtcChorusChannelName = "\(channelName)_rtc_ex"
+        roomConfig.channelName = channelName
+        roomConfig.rtcChannelName = rtcChannelName
+        roomConfig.rtcChorusChannelName = rtcChorusChannelName
+        print("generateTokens: \(uid)")
+                
+        let group = DispatchGroup()
+        
+        var err: Error? = nil
+        group.enter()
+        let tokenModel1 = AUITokenGenerateNetworkModel()
+        tokenModel1.channelName = channelName
+        tokenModel1.userId = uid
+        tokenModel1.request { error, result in
+            defer {
+                if err == nil {
+                    err = error
+                }
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
+        }
+        
+        group.enter()
+        let tokenModel2 = AUITokenGenerateNetworkModel()
+        tokenModel2.channelName = rtcChannelName
+        tokenModel2.userId = uid
+        tokenModel2.request { error, result in
+            defer {
+                if err == nil {
+                    err = error
+                }
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcRtcToken = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtcRtmToken = tokenMap["rtmToken"] ?? ""
+        }
+        
+        group.enter()
+        let tokenModel3 = AUITokenGenerateNetworkModel()
+        tokenModel3.channelName = rtcChorusChannelName
+        tokenModel3.userId = uid
+        tokenModel3.request { error, result in
+            defer {
+                if err == nil {
+                    err = error
+                }
+                group.leave()
+            }
+            
+            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
+            
+            roomConfig.rtcChorusRtcToken = tokenMap["rtcToken"] ?? ""
+        }
+        
+        group.notify(queue: DispatchQueue.main) {
+            completion(err)
         }
     }
 }
@@ -100,10 +209,12 @@ extension RoomViewController: AUIKaraokeRoomServiceRespDelegate {
     }
     
     func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
-        
     }
     
     func onTokenPrivilegeWillExpire(channelName: String?) {
-        KaraokeUIKit.shared.onTokenPrivilegeWillExpire(channelName: channelName)
+        let config = AUIRoomConfig()
+        generateToken(channelName: channelName!, roomConfig: config) { _ in
+            KaraokeUIKit.shared.renew(config: config)
+        }
     }
 }

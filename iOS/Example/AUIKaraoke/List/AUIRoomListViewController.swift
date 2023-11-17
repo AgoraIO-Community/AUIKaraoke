@@ -192,17 +192,15 @@ class AUIRoomListViewController: UIViewController {
                     return
                 }
                 print("create room with name(\(text))")
+                
                 let room = AUIRoomInfo()
                 room.roomName = text
                 room.thumbnail = self.userInfo.userAvatar
                 room.micSeatCount = 8
-                KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
-                    let vc = RoomViewController()
-                    vc.roomInfo = roomInfo
-                    self.navigationController?.pushViewController(vc, animated: true)
-                } failure: { error in
-                    AUIToast.show(text: error.localizedDescription)
-                }
+                room.owner = AUIRoomContext.shared.currentUserInfo
+                let vc = RoomViewController()
+                vc.roomInfo = room
+                self.navigationController?.pushViewController(vc, animated: true)
             })
             .textFieldPlaceholder(placeholder: "房间主题")
             .textFieldPlaceholder(color: UIColor(hex: "#5a5a5a"))
