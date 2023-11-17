@@ -84,11 +84,10 @@ public class KaraokeUIKit: NSObject {
         let date = Date()
         let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
                                             roomConfig: roomConfig)
-        //订阅Token过期回调
-        karaokeView.bindService(service: service)
         self.service = service
         self.roomId = roomId
         service.enterRoom { err in
+            karaokeView.bindService(service: service)
             aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             completion(nil)
         }

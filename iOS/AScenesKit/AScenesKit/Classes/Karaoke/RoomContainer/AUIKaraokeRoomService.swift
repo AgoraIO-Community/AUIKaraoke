@@ -40,7 +40,6 @@ open class AUIKaraokeRoomService: NSObject {
     lazy var giftImplement: AUIGiftServiceImplement = AUIGiftServiceImplement(channelName: channelName,
                                                                               rtmManager: rtmManager)
     
-    
     private(set) var channelName: String!
     private var roomConfig: AUIRoomConfig!
     private(set) var rtcEngine: AgoraRtcEngineKit!
@@ -48,9 +47,11 @@ open class AUIKaraokeRoomService: NSObject {
     private var rtcEngineCreateBySercice = false
     private var ktvApiCreateBySercice = false
     
+    private var enterRoomCompletion: ((NSError?)-> ())?
+    
     private var rtmClient: AgoraRtmClientKit!
     public private(set) lazy var rtmManager: AUIRtmManager = {
-        return AUIRtmManager(rtmClient: self.rtmClient, rtmChannelType: .stream, isExternalLogin: !rtmClientCreateBySercice)
+        return AUIRtmManager(rtmClient: self.rtmClient, rtmChannelType: .message, isExternalLogin: !rtmClientCreateBySercice)
     }()
     private var rtmClientCreateBySercice = false
     
@@ -410,14 +411,25 @@ extension AUIKaraokeRoomService {
         
         aui_info("enterRoom subscribe: \(roomId)", tag: kSertviceTag)
         let date = Date()
-        rtmManager.subscribe(channelName: roomId, rtcToken: roomConfig.rtcToken007) { error in
+        
+        rtmManager.subscribe(channelName: roomId, rtcToken: roomConfig.rtcToken007) {[weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                completion(error)
+                return
+            }
             aui_info("[Benchmark]rtm manager subscribe: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
             aui_info("enterRoom subscribe finished \(roomId) \(error?.localizedDescription ?? "")", tag: kSertviceTag)
-            completion(error as? NSError)
+            
+            self.enterRoomCompletion = { err in
+                aui_info("[Benchmark]enterRoomCompletion: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
+                completion(err)
+            }
+            
+            AUIRoomContext.shared.getArbiter(channelName: roomId)?.acquire()
+            self.rtmManager.subscribeError(channelName: roomId, delegate: self)
+            self.rtmManager.subscribeAttributes(channelName: roomId, itemKey: kRoomInfoAttrKry, delegate: self)
         }
-        AUIRoomContext.shared.getArbiter(channelName: channelName)?.acquire()
-        rtmManager.subscribeAttributes(channelName: channelName, itemKey: kRoomInfoAttrKry, delegate: self)
-        rtmManager.subscribeError(channelName: roomId, delegate: self)
         
         //join rtc
         joinRtcChannel { error in
@@ -487,6 +499,8 @@ extension AUIKaraokeRoomService: AUIRtmAttributesProxyDelegate {
         guard key == kRoomInfoAttrKry, let roomInfo = AUIRoomInfo.yy_model(withJSON: value) else {return}
         
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
+        self.enterRoomCompletion?(nil)
+        self.enterRoomCompletion = nil
     }
 }
 
