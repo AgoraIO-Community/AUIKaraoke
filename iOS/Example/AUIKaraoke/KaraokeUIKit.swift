@@ -61,10 +61,10 @@ public class KaraokeUIKit: NSObject {
                 self.roomId = info?.roomId ?? ""
                 //TODO: create & enter
                 date = Date()
+                karaokeView.bindService(service: service)
                 service.create(roomInfo: info!) { err in
                     aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                     self.isRoomOwner = true
-                    karaokeView.bindService(service: service)
                     service.enter { err in
                         aui_info("service enterRoom1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                         completion(info!, nil)
@@ -85,8 +85,8 @@ public class KaraokeUIKit: NSObject {
                                             roomConfig: roomConfig)
         self.service = service
         self.roomId = roomId
+        karaokeView.bindService(service: service)
         service.enter { err in
-            karaokeView.bindService(service: service)
             aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             completion(nil)
         }

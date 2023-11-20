@@ -500,6 +500,9 @@ extension AUIKaraokeRoomService: AUIRtmAttributesProxyDelegate {
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
         self.enterRoomCompletion?(nil)
         self.enterRoomCompletion = nil
+        for obj in self.respDelegates.allObjects {
+            obj.onRoomInfoChange?(roomId: channelName, roomInfo: roomInfo)
+        }
     }
 }
 

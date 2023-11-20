@@ -91,7 +91,6 @@ open class AUIKaraokeRoomView: UIView {
                                                  y: top,
                                                  width: self.aui_width,
                                                  height: self.frame.height - top - 65 - CGFloat(ABottomBarHeight)))
-        view.showNewMessage(entity: startMessage(nil))
         return view
     }()
     lazy var inputBar: AUIChatInputBar = {
@@ -381,6 +380,8 @@ open class AUIKaraokeRoomView: UIView {
             return
         }
         
+        service.bindRespDelegate(delegate: self)
+        
         //绑定Service
         micSeatBinder.bind(micSeatView: micSeatView,
                            micSeatService: service.micSeatImpl,
@@ -412,10 +413,6 @@ open class AUIKaraokeRoomView: UIView {
                         chorusService: service.chorusImpl)
         
         service.userImpl.bindRespDelegate(delegate: self)
-        
-        if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
-            self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
-        }
         
         membersView.onClickMoreButtonAction = { [weak self] in
             guard let `self` = self else { return }
@@ -616,6 +613,12 @@ extension AUIKaraokeRoomView: AUIUserRespDelegate {
 
 }
 
+extension AUIKaraokeRoomView: AUIKaraokeRoomServiceRespDelegate {
+    public func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
+        roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
+        chatListView.showNewMessage(entity: startMessage(nil))
+    }
+}
 
 //TODO: implement by gift binder
 extension AUIKaraokeRoomView: AUIRoomGiftDialogEventsDelegate {
