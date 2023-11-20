@@ -450,10 +450,10 @@ extension AUIKaraokeRoomView {
     @objc public func onBackAction() {
         guard let service = service else {return}
         if AUIRoomContext.shared.isRoomOwner(channelName: service.channelName) {
-            service.destroyRoom { err in
+            service.destroy { err in
             }
         } else {
-            service.exitRoom { err in
+            service.exit { err in
             }
         }
         
@@ -561,7 +561,7 @@ extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
     public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = true
-            service?.userImpl.getRoomContext().currentUserInfo.seatIndex = -1
+//            service?.userImpl.getRoomContext().currentUserInfo.seatIndex = -1
         }
     }
     

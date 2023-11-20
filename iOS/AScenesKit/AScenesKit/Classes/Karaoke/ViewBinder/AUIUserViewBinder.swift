@@ -25,6 +25,8 @@ open class AUIUserViewBinder: NSObject {
         }
     }
     
+    private var seatIndexMap: [String: Int] = [:]
+    
     public func bind(userView: AUIRoomMembersView,
                      rtmManager: AUIRtmManager,
                      userService: AUIUserServiceDelegate,
@@ -61,36 +63,34 @@ extension AUIUserViewBinder: AUIUserRespDelegate {
     
     public func onRoomUserSnapshot(roomId: String, userList: [AUIUserInfo]) {
         aui_info("onRoomUserSnapshot", tag: "AUIUserViewBinder")
-        userView?.members = userList
+        userView?.updateMembers(members: userList.map({$0.createData(seatIndexMap[$0.userId] ?? -1)}), channelName: roomId)
     }
     
     public func onRoomUserEnter(roomId: String, userInfo: AUIUserInfo) {
         aui_info("onRoomUserEnter \(userInfo.userId) \(userInfo.userName)", tag: "AUIUserViewBinder")
-        userView?.members.append(userInfo)
+        userView?.appendMember(member: userInfo.createData(seatIndexMap[userInfo.userId] ?? -1))
     }
     
     public func onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
         aui_info("onRoomUserLeave \(userInfo.userId) \(userInfo.userName)", tag: "AUIUserViewBinder")
-        userView?.members.removeAll(where: {$0.userId == userInfo.userId})
+        userView?.removeMember(userId: userInfo.userId)
     }
     
     public func onRoomUserUpdate(roomId: String, userInfo: AUIUserInfo) {
         aui_info("onRoomUserUpdate \(userInfo.userId) \(userInfo.userName)", tag: "AUIUserViewBinder")
-        if let index = userView?.members.firstIndex(where: {$0.userId == userInfo.userId}) {
-            userView?.members[index] = userInfo
-        } else {
-            userView?.members.append(userInfo)
-        }
+        userView?.updateMember(member: userInfo.createData(seatIndexMap[userInfo.userId] ?? -1))
     }
 }
 
 extension AUIUserViewBinder: AUIMicSeatRespDelegate {
     public func onAnchorEnterSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
-        userView?.seatMap[user.userId] = seatIndex
+        seatIndexMap[user.userId] = seatIndex
+        userView?.updateSeatInfo(userId: user.userId, seatIndex: seatIndex)
     }
     
     public func onAnchorLeaveSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
-        userView?.seatMap[user.userId] = nil
+        seatIndexMap[user.userId] = -1
+        userView?.updateSeatInfo(userId: user.userId, seatIndex: -1)
     }
     
     public func onSeatAudioMute(seatIndex: Int, isMute: Bool) {

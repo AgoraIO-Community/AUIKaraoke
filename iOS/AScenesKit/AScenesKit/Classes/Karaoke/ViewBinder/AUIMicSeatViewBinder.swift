@@ -172,7 +172,7 @@ public class AUIMicSeatViewBinder: NSObject {
         var items = [AUIActionSheetItem]()
         
         let channelName: String = micSeatDelegate?.getChannelName() ?? ""
-        let currentUserId: String = micSeatDelegate?.getRoomContext().currentUserInfo.userId ?? ""
+        let currentUserId: String = getLocalUserId()
         //当前麦位用户是否自己
         let isCurrentUser: Bool = seatInfo.user?.userId == currentUserId
         //是否空麦位
@@ -232,7 +232,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         updateMic(with: seatIndex, role: .onlineAudience)
 
         //current user enter seat
-        if user.userId == micSeatDelegate?.getRoomContext().commonConfig?.userId {
+        if user.userId == getLocalUserId() {
             let mediaOption = AgoraRtcChannelMediaOptions()
             mediaOption.clientRoleType = .broadcaster
             mediaOption.publishMicrophoneTrack = true
@@ -260,7 +260,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         updateMic(with: seatIndex, role: .offlineAudience)
  
         //current user enter seat
-        guard user.userId == micSeatDelegate?.getRoomContext().commonConfig?.userId else {
+        guard user.userId == getLocalUserId() else {
             return
         }
         
@@ -280,7 +280,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         
         //TODO: 麦位静音表示不听远端用户的声音，目前是mute remote audio
         guard let uid = UInt(micSeat.user?.userId ?? ""),
-              micSeat.user?.userId != micSeatDelegate?.getRoomContext().currentUserInfo.userId else {
+              micSeat.user?.userId != getLocalUserId() else {
             return
         }
         aui_info("mute audio uid: \(uid) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
@@ -295,7 +295,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
         micSeatView?.collectionView.reloadItems(at: [IndexPath(item: seatIndex, section: 0)])
         
         guard let uid = UInt(micSeat.user?.userId ?? ""),
-              micSeat.user?.userId != micSeatDelegate?.getRoomContext().currentUserInfo.userId else {
+              micSeat.user?.userId != getLocalUserId() else {
             return
         }
         aui_info("mute video uid: \(uid) isMute: \(isMute)", tag: "AUIMicSeatViewBinder")
@@ -346,7 +346,7 @@ extension AUIMicSeatViewBinder: AUIMicSeatViewDelegate {
             videoCanvas.uid = uid
             videoCanvas.view = canvas
             videoCanvas.renderMode = .hidden
-            if userId == self.micSeatDelegate?.getRoomContext().commonConfig?.userId {
+            if userId == getLocalUserId() {
                 rtcEngine.setupLocalVideo(videoCanvas)
             } else {
                 rtcEngine.setupRemoteVideo(videoCanvas)
@@ -490,9 +490,8 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
             .first
     }
     
-    private func getLocalUserId() -> String? {
-        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return nil}
-        return commonConfig.userId
+    private func getLocalUserId() -> String {
+        return AUIRoomContext.shared.currentUserInfo.userId
     }
     
     private func updateMic(with index: Int, role: MicRole) {

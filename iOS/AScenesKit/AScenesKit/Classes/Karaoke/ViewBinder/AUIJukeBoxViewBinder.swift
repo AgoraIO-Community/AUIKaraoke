@@ -227,7 +227,7 @@ extension AUIJukeBoxViewBinder: AUIMusicRespDelegate {
         if serviceDelegate?.currentUserIsRoomOwner() ?? false == true {
             deleteEnableSet.add(song.songCode)
             pinEnableSet.add(song.songCode)
-        } else if song.owner?.userId == serviceDelegate?.getRoomContext().commonConfig?.userId {
+        } else if song.owner?.userId == serviceDelegate?.getRoomContext().currentUserInfo.userId {
             deleteEnableSet.add(song.songCode)
         }
     }

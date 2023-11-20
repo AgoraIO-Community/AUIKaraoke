@@ -38,13 +38,12 @@ public class KaraokeUIKit: NSObject {
     public func createRoom(roomInfo: AUIRoomInfo,
                            roomConfig: AUIRoomConfig,
                            karaokeView: AUIKaraokeRoomView,
-                           success: ((AUIRoomInfo?)->())?,
-                           failure: ((Error)->())?) {
+                           completion: @escaping (AUIRoomInfo?, NSError?)->()) {
         checkSetupAndCommonConfig()
         var date = Date()
         roomManager.createRoom(room: roomInfo) {[weak self] error, info in
             if let error = error {
-                failure?(error)
+                completion(nil, error)
                 return
             }
             aui_info("restful createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
@@ -52,7 +51,7 @@ public class KaraokeUIKit: NSObject {
             roomConfig.generateTokenCompletion = { err in
                 guard let self = self else { return }
                 if let err = err {
-                    failure?(err)
+                    completion(nil, err)
                     return
                 }
                 let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
@@ -62,13 +61,13 @@ public class KaraokeUIKit: NSObject {
                 self.roomId = info?.roomId ?? ""
                 //TODO: create & enter
                 date = Date()
-                service.createRoom(roomInfo: info!) { err in
+                service.create(roomInfo: info!) { err in
                     aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
                     self.isRoomOwner = true
                     karaokeView.bindService(service: service)
-                    service.enterRoom { err in
+                    service.enter { err in
                         aui_info("service enterRoom1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-                        success?(info)
+                        completion(info!, nil)
                     }
                 }
             }
@@ -76,17 +75,17 @@ public class KaraokeUIKit: NSObject {
         }
     }
     
-    public func launchRoom(roomId: String,
-                           roomConfig: AUIRoomConfig,
-                           karaokeView: AUIKaraokeRoomView,
-                           completion: @escaping (NSError?)->()) {
+    public func enterRoom(roomId: String,
+                          roomConfig: AUIRoomConfig,
+                          karaokeView: AUIKaraokeRoomView,
+                          completion: @escaping (NSError?)->()) {
         checkSetupAndCommonConfig()
         let date = Date()
         let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
                                             roomConfig: roomConfig)
         self.service = service
         self.roomId = roomId
-        service.enterRoom { err in
+        service.enter { err in
             karaokeView.bindService(service: service)
             aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             completion(nil)

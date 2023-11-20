@@ -117,9 +117,11 @@ class AUIRoomListViewController: UIViewController {
         let commonConfig = AUICommonConfig()
         commonConfig.appId = KeyCenter.AppId
         commonConfig.host = KeyCenter.HostUrl
-        commonConfig.userId = userInfo.userId
-        commonConfig.userName = userInfo.userName
-        commonConfig.userAvatar = userInfo.userAvatar
+        let ownerInfo = AUIUserThumbnailInfo()
+        ownerInfo.userId = userInfo.userId
+        ownerInfo.userName = userInfo.userName
+        ownerInfo.userAvatar = userInfo.userAvatar
+        commonConfig.owner = ownerInfo
         KaraokeUIKit.shared.setup(commonConfig: commonConfig,
                                   apiConfig: nil)
     }

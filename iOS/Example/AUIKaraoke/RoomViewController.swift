@@ -27,7 +27,7 @@ class RoomViewController: UIViewController {
         
         self.navigationItem.title = room.roomName
         
-        let uid = KaraokeUIKit.shared.commonConfig?.userId ?? ""
+        let uid = KaraokeUIKit.shared.commonConfig?.owner?.userId ?? ""
         //创建房间容器
         let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
         let isOwner = roomInfo?.owner?.userId == uid ? true : false
@@ -67,21 +67,23 @@ class RoomViewController: UIViewController {
 #endif
             KaraokeUIKit.shared.createRoom(roomInfo: room,
                                            roomConfig: roomConfig,
-                                           karaokeView: karaokeView) {[weak self] roomInfo in
+                                           karaokeView: karaokeView) {[weak self] roomInfo, error in
                 guard let self = self else {return}
+                if let error = error {
+                    AUIToast.show(text: error.localizedDescription)
+                    return
+                }
                 self.roomInfo = roomInfo
                 //订阅房间被销毁回调
                 KaraokeUIKit.shared.bindRespDelegate(delegate: self)
-            } failure: { error in
-                AUIToast.show(text: error.localizedDescription)
             }
         } else {
             let roomId = roomInfo?.roomId ?? ""
             generateToken(channelName: roomId,
                           roomConfig: roomConfig) {[weak self] err  in
-                KaraokeUIKit.shared.launchRoom(roomId: roomId,
-                                               roomConfig: roomConfig,
-                                               karaokeView: karaokeView) { error in
+                KaraokeUIKit.shared.enterRoom(roomId: roomId,
+                                              roomConfig: roomConfig,
+                                              karaokeView: karaokeView) { error in
                     guard let self = self else {return}
                     if let error = error {
                         AUIToast.show(text: error.localizedDescription)
@@ -116,7 +118,7 @@ class RoomViewController: UIViewController {
     private func generateToken(channelName: String,
                                roomConfig: AUIRoomConfig,
                                completion:@escaping ((Error?)->())) {
-        let uid = KaraokeUIKit.shared.commonConfig?.userId ?? ""
+        let uid = KaraokeUIKit.shared.commonConfig?.owner?.userId ?? ""
         let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
         roomConfig.channelName = channelName

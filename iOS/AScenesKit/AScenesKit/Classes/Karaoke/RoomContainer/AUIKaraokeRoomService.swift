@@ -18,8 +18,6 @@ private let kRoomInfoAttrKry = "basic"
 open class AUIKaraokeRoomService: NSObject {
     lazy var micSeatImpl: AUIMicSeatServiceDelegate = AUIMicSeatServiceImpl(channelName: channelName,
                                                                             rtmManager: rtmManager)
-//    lazy var invitationImpl: AUIInvitationServiceDelegate = AUIInvitationServiceImpl(channelName: self.channelName,
-//                                                                                     rtmManager: self.rtmManager)
     lazy var musicImpl: AUIMusicServiceDelegate = AUIMusicServiceImpl(channelName: channelName,
                                                                       rtmManager: rtmManager,
                                                                       ktvApi: ktvApi)
@@ -88,7 +86,7 @@ open class AUIKaraokeRoomService: NSObject {
             self.ktvApi = ktvApi
         } else {
             let appId = AUIRoomContext.shared.commonConfig?.appId ?? ""
-            let userId = Int(AUIRoomContext.shared.commonConfig?.userId ?? "") ?? 0
+            let userId = Int(AUIRoomContext.shared.currentUserInfo.userId) ?? 0
             let config = KTVApiConfig(appId: appId,
                                       rtmToken: roomConfig.rtcRtmToken,
                                       engine: self.rtcEngine,
@@ -125,8 +123,8 @@ open class AUIKaraokeRoomService: NSObject {
     }
     
     private func joinRtcChannel(completion: ((Error?)->())?) {
-        guard let commonConfig = AUIRoomContext.shared.commonConfig,
-              let uid = UInt(commonConfig.userId) else {
+        let currentUserInfo = AUIRoomContext.shared.currentUserInfo
+        guard let uid = UInt(currentUserInfo.userId) else {
             aui_error("joinRtcChannel fail, commonConfig is empty", tag: kSertviceTag)
             completion?(nil)
             return
@@ -231,7 +229,8 @@ extension AUIKaraokeRoomService {
     
     private func createRtmClient() -> AgoraRtmClientKit {
         let commonConfig = AUIRoomContext.shared.commonConfig!
-        let rtmConfig = AgoraRtmClientConfig(appId: commonConfig.appId, userId: commonConfig.userId)
+        let userInfo = AUIRoomContext.shared.currentUserInfo
+        let rtmConfig = AgoraRtmClientConfig(appId: commonConfig.appId, userId: userInfo.userId)
 //        let log = AgoraRtmLogConfig()
 //        log.filePath = NSHomeDirectory() + "/Documents/RTMLog/"
 //        rtmConfig.logConfig = log
@@ -359,7 +358,7 @@ extension AUIKaraokeRoomService {
         })
     }
     
-    public func createRoom(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
+    public func create(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
         guard let rtmToken = AUIRoomContext.shared.roomConfigMap[roomInfo.roomId]?.rtmToken007 else {
             assert(false)
             return
@@ -372,7 +371,7 @@ extension AUIKaraokeRoomService {
                     completion(err as NSError)
                     return
                 }
-                self?.createRoom(roomInfo: roomInfo, completion: completion)
+                self?.create(roomInfo: roomInfo, completion: completion)
             }
             return
         }
@@ -382,7 +381,7 @@ extension AUIKaraokeRoomService {
         initRoom(roomInfo: roomInfo, completion: completion)
     }
     
-    public func enterRoom(completion:@escaping (Error?)->()) {
+    public func enter(completion:@escaping (Error?)->()) {
         guard let rtmToken = AUIRoomContext.shared.roomConfigMap[channelName]?.rtmToken007 else {
             assert(false)
             return
@@ -404,7 +403,7 @@ extension AUIKaraokeRoomService {
                     completion(err as NSError)
                     return
                 }
-                self?.enterRoom(completion: completion)
+                self?.enter(completion: completion)
             }
             return
         }
@@ -437,7 +436,7 @@ extension AUIKaraokeRoomService {
         }
     }
     
-    public func exitRoom(callback: @escaping (NSError?) -> ()) {
+    public func exit(callback: @escaping (NSError?) -> ()) {
         let roomId = channelName!
         aui_info("exitRoom: \(roomId)", tag: kSertviceTag)
         cleanUserInfo(channelName: roomId, userId: AUIRoomContext.shared.currentUserInfo.userId)
@@ -445,7 +444,7 @@ extension AUIKaraokeRoomService {
         callback(nil)
     }
     
-    public func destroyRoom(callback: @escaping (NSError?) -> ()) {
+    public func destroy(callback: @escaping (NSError?) -> ()) {
         let roomId = channelName!
         aui_info("destroyRoom: \(roomId)", tag: kSertviceTag)
         cleanRoomInfo(channelName: roomId)
