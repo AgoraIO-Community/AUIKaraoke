@@ -30,7 +30,7 @@ private let userNames = [
     "小明",
     "小刚",
     "小霞",
-    "小智",
+    "小智"
     ]
 
 private let userAvatars = [
@@ -50,7 +50,7 @@ class UserInfo: NSObject {
             if let uid = uid, uid.count > 0 {
                 return uid
             }
-            //用户uid第一次获取随机
+            // 用户uid第一次获取随机
             uid = "\(arc4random_uniform(999999999))"
             UserDefaults.standard.set(uid, forKey: kUserId)
             return uid!
@@ -58,14 +58,14 @@ class UserInfo: NSObject {
             UserDefaults.standard.set(newValue, forKey: kUserId)
         }
     }
-    
+
     public var userAvatar: String {
         get {
             var uAvatar = UserDefaults.standard.string(forKey: kUserAvatar)
             if let uAvatar = uAvatar, uAvatar.count > 0 {
                 return uAvatar
             }
-            
+
             let idx = arc4random_uniform(UInt32(userAvatars.count - 1))
             uAvatar = userAvatars[Int(idx)]
             UserDefaults.standard.set(uAvatar, forKey: kUserAvatar)
@@ -74,14 +74,14 @@ class UserInfo: NSObject {
             UserDefaults.standard.set(newValue, forKey: kUserAvatar)
         }
     }
-    
+
     public var userName: String {
         get {
             var uName = UserDefaults.standard.string(forKey: kUserName)
             if let uName = uName, uName.count > 0 {
                 return uName
             }
-            
+
             let idx = arc4random_uniform(UInt32(userNames.count - 1))
             uName = userNames[Int(idx)]
             UserDefaults.standard.set(uName, forKey: kUserName)

@@ -13,7 +13,6 @@
 		A83559C62A6FAA79003588A4 /* AUIListEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A83559C52A6FAA79003588A4 /* AUIListEmptyView.swift */; };
 		DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44D2A0BAAD700797229 /* AppDelegate.swift */; };
 		DD00C4502A0BAAD700797229 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */; };
-		DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD00C4512A0BAAD700797229 /* ViewController.swift */; };
 		DD00C4552A0BAAD700797229 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4532A0BAAD700797229 /* Main.storyboard */; };
 		DD00C4572A0BAAD800797229 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4562A0BAAD800797229 /* Assets.xcassets */; };
 		DD00C45A2A0BAAD800797229 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD00C4582A0BAAD800797229 /* LaunchScreen.storyboard */; };
@@ -55,7 +54,6 @@
 		DD00C44A2A0BAAD700797229 /* AUIKaraoke.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AUIKaraoke.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD00C44D2A0BAAD700797229 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		DD00C4512A0BAAD700797229 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DD00C4542A0BAAD700797229 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DD00C4562A0BAAD800797229 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DD00C4592A0BAAD800797229 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 				DD00C4812A0BAC7A00797229 /* RoomViewController.swift */,
 				DD00C44D2A0BAAD700797229 /* AppDelegate.swift */,
 				DD00C44F2A0BAAD700797229 /* SceneDelegate.swift */,
-				DD00C4512A0BAAD700797229 /* ViewController.swift */,
 				DD00C4532A0BAAD700797229 /* Main.storyboard */,
 				DD00C4562A0BAAD800797229 /* Assets.xcassets */,
 				DD00C4582A0BAAD800797229 /* LaunchScreen.storyboard */,
@@ -215,6 +212,7 @@
 				DD00C4482A0BAAD700797229 /* Resources */,
 				CD2695062888764D1A5A97F0 /* [CP] Embed Pods Frameworks */,
 				A0F7096168358AAA28B2F23B /* [CP] Copy Pods Resources */,
+				DD4B9B1B2B0C80F20027B77B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -389,6 +387,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AUIKaraoke/Pods-AUIKaraoke-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		DD4B9B1B2B0C80F20027B77B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -401,7 +416,6 @@
 				DD00C4872A0BAC7A00797229 /* AUIRoomListViewController.swift in Sources */,
 				DD00C48A2A0BAC7A00797229 /* KeyCenter.swift in Sources */,
 				DD3587062B0468D2006318ED /* KaraokeUIKit.swift in Sources */,
-				DD00C4522A0BAAD700797229 /* ViewController.swift in Sources */,
 				DD00C44E2A0BAAD700797229 /* AppDelegate.swift in Sources */,
 				A83559C22A6F739C003588A4 /* AUIThemeSettingViewController.swift in Sources */,
 				DD00C48B2A0BAC7A00797229 /* UserInfo.swift in Sources */,
