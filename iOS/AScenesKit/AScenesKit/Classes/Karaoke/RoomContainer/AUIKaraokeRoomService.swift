@@ -45,7 +45,7 @@ open class AUIKaraokeRoomService: NSObject {
     private var rtcEngineCreateBySercice = false
     private var ktvApiCreateBySercice = false
     
-    private var enterRoomCompletion: ((NSError?)-> ())?
+    private var enterRoomCompletion: ((AUIRoomInfo?)-> ())?
     
     private var rtmClient: AgoraRtmClientKit!
     public private(set) lazy var rtmManager: AUIRtmManager = {
@@ -378,10 +378,18 @@ extension AUIKaraokeRoomService {
         
         AUIRoomContext.shared.getArbiter(channelName: roomInfo.roomId)?.create()
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
-        initRoom(roomInfo: roomInfo, completion: completion)
+        initRoom(roomInfo: roomInfo) {[weak self] err in
+            if let err = err {
+                completion(err)
+                return
+            }
+            self?.enter(completion: { _, err in
+                completion(err)
+            })
+        }
     }
     
-    public func enter(completion:@escaping (Error?)->()) {
+    public func enter(completion:@escaping (AUIRoomInfo?, Error?)->()) {
         guard let rtmToken = AUIRoomContext.shared.roomConfigMap[channelName]?.rtmToken007 else {
             assert(false)
             return
@@ -391,7 +399,7 @@ extension AUIKaraokeRoomService {
         guard let roomConfig = AUIRoomContext.shared.roomConfigMap[roomId] else {
             assert(false)
             aui_info("enterRoom: \(roomId) fail", tag: kSertviceTag)
-            completion(AUICommonError.missmatchRoomConfig.toNSError())
+            completion(nil, AUICommonError.missmatchRoomConfig.toNSError())
             return
         }
         assert(!rtmToken.isEmpty, "rtm token invalid")
@@ -400,7 +408,7 @@ extension AUIKaraokeRoomService {
             rtmManager.login(token: rtmToken) {[weak self] err in
                 aui_info("[Benchmark]rtm login: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
                 if let err = err {
-                    completion(err as NSError)
+                    completion(nil, err as NSError)
                     return
                 }
                 self?.enter(completion: completion)
@@ -414,15 +422,15 @@ extension AUIKaraokeRoomService {
         rtmManager.subscribe(channelName: roomId, rtcToken: roomConfig.rtcToken007) {[weak self] error in
             guard let self = self else { return }
             if let error = error {
-                completion(error)
+                completion(nil, error)
                 return
             }
             aui_info("[Benchmark]rtm manager subscribe: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
             aui_info("enterRoom subscribe finished \(roomId) \(error?.localizedDescription ?? "")", tag: kSertviceTag)
             
-            self.enterRoomCompletion = { err in
+            self.enterRoomCompletion = { roomInfo in
                 aui_info("[Benchmark]enterRoomCompletion: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
-                completion(err)
+                completion(roomInfo, nil)
             }
             
             AUIRoomContext.shared.getArbiter(channelName: roomId)?.acquire()
@@ -498,7 +506,7 @@ extension AUIKaraokeRoomService: AUIRtmAttributesProxyDelegate {
         guard key == kRoomInfoAttrKry, let roomInfo = AUIRoomInfo.yy_model(withJSON: value) else {return}
         
         AUIRoomContext.shared.roomInfoMap[channelName] = roomInfo
-        self.enterRoomCompletion?(nil)
+        self.enterRoomCompletion?(roomInfo)
         self.enterRoomCompletion = nil
         for obj in self.respDelegates.allObjects {
             obj.onRoomInfoChange?(roomId: channelName, roomInfo: roomInfo)

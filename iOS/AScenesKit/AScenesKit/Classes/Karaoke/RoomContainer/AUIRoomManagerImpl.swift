@@ -23,12 +23,7 @@ extension AUIRoomManagerImpl {
         aui_info("enterRoom: \(room.roomName) ", tag: "AUIRoomManagerImpl")
         
         let model = AUIRoomCreateNetworkModel()
-        model.roomName = room.roomName
-        model.userId = AUIRoomContext.shared.currentUserInfo.userId
-        model.userName = AUIRoomContext.shared.currentUserInfo.userName
-        model.userAvatar = AUIRoomContext.shared.currentUserInfo.userAvatar
-        model.micSeatCount = room.micSeatCount
-        model.micSeatStyle = "\(room.micSeatStyle)"
+        model.roomInfo = room
         
         var createRoomError: NSError? = nil
         var roomInfo: AUIRoomInfo? = nil

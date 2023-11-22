@@ -13,6 +13,7 @@ import AUIKitCore
 
 class RoomViewController: UIViewController {
     var roomInfo: AUIRoomInfo?
+    var isCreate: Bool = false
     var themeIdx = 0
     private var karaokeView: AUIKaraokeRoomView?
 
@@ -51,39 +52,40 @@ class RoomViewController: UIViewController {
         self.view.addSubview(karaokeView)
         self.karaokeView = karaokeView
         let roomConfig = AUIRoomConfig()
-        if isOwner {
-#if DEBUG
-            roomConfig.generateToken = { [weak self] roomId in
-                self?.generateToken(channelName: roomId,
-                                    roomConfig: roomConfig,
-                                    completion: { error in
-                    roomConfig.generateTokenCompletion?(error as NSError?)
-                })
-            }
-#else
-            #error("remove it")
-#endif
-            KaraokeUIKit.shared.createRoom(roomInfo: room,
-                                           roomConfig: roomConfig,
-                                           karaokeView: karaokeView) {[weak self] roomInfo, error in
-                guard let self = self else {return}
+        if isOwner, isCreate {
+            let roomId = roomInfo?.roomId ?? ""
+            generateToken(channelName: roomId,
+                          roomConfig: roomConfig,
+                          completion: { error in
                 if let error = error {
+                    self.navigationController?.popViewController(animated: true)
                     AUIToast.show(text: error.localizedDescription)
                     return
                 }
-                self.roomInfo = roomInfo
-                // 订阅房间被销毁回调
-                KaraokeUIKit.shared.bindRespDelegate(delegate: self)
-            }
+                KaraokeUIKit.shared.createRoom(roomInfo: room,
+                                               roomConfig: roomConfig,
+                                               karaokeView: karaokeView) {[weak self] roomInfo, error in
+                    guard let self = self else {return}
+                    if let error = error {
+                        self.navigationController?.popViewController(animated: true)
+                        AUIToast.show(text: error.localizedDescription)
+                        return
+                    }
+                    self.roomInfo = roomInfo
+                    // 订阅房间被销毁回调
+                    KaraokeUIKit.shared.bindRespDelegate(delegate: self)
+                }
+            })
         } else {
             let roomId = roomInfo?.roomId ?? ""
             generateToken(channelName: roomId,
                           roomConfig: roomConfig) {[weak self] err  in
                 KaraokeUIKit.shared.enterRoom(roomId: roomId,
                                               roomConfig: roomConfig,
-                                              karaokeView: karaokeView) { error in
+                                              karaokeView: karaokeView) { roomInfo, error in
                     guard let self = self else {return}
                     if let error = error {
+                        self.navigationController?.popViewController(animated: true)
                         AUIToast.show(text: error.localizedDescription)
                         return
                     }

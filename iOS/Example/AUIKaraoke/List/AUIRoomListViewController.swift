@@ -195,11 +195,13 @@ class AUIRoomListViewController: UIViewController {
                 }
                 print("create room with name(\(text))")
                 let room = AUIRoomInfo()
+                room.roomId = UUID().uuidString.lowercased()
                 room.roomName = text
                 room.thumbnail = self.userInfo.userAvatar
                 room.micSeatCount = 8
                 room.owner = AUIRoomContext.shared.currentUserInfo
                 let vc = RoomViewController()
+                vc.isCreate = true
                 vc.roomInfo = room
                 self.navigationController?.pushViewController(vc, animated: true)
             })
