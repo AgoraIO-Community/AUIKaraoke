@@ -103,7 +103,7 @@ class RoomViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        KaraokeUIKit.shared.destroyRoom(roomId: roomInfo?.roomId ?? "")
+        KaraokeUIKit.shared.leaveRoom(roomId: roomInfo?.roomId ?? "")
         KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
     }
 
@@ -118,10 +118,8 @@ class RoomViewController: UIViewController {
                                roomConfig: AUIRoomConfig,
                                completion: @escaping ((Error?) -> Void)) {
         let uid = KaraokeUIKit.shared.commonConfig?.owner?.userId ?? ""
-        let rtcChannelName = "\(channelName)_rtc"
         let rtcChorusChannelName = "\(channelName)_rtc_ex"
         roomConfig.channelName = channelName
-        roomConfig.rtcChannelName = rtcChannelName
         roomConfig.rtcChorusChannelName = rtcChorusChannelName
         print("generateTokens: \(uid)")
 
@@ -140,31 +138,15 @@ class RoomViewController: UIViewController {
                 group.leave()
             }
             guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
-            roomConfig.rtcToken007 = tokenMap["rtcToken"] ?? ""
-            roomConfig.rtmToken007 = tokenMap["rtmToken"] ?? ""
+            roomConfig.rtcToken = tokenMap["rtcToken"] ?? ""
+            roomConfig.rtmToken = tokenMap["rtmToken"] ?? ""
         }
 
         group.enter()
         let tokenModel2 = AUITokenGenerateNetworkModel()
-        tokenModel2.channelName = rtcChannelName
+        tokenModel2.channelName = rtcChorusChannelName
         tokenModel2.userId = uid
         tokenModel2.request { error, result in
-            defer {
-                if err == nil {
-                    err = error
-                }
-                group.leave()
-            }
-            guard let tokenMap = result as? [String: String], tokenMap.count >= 2 else {return}
-            roomConfig.rtcRtcToken = tokenMap["rtcToken"] ?? ""
-            roomConfig.rtcRtmToken = tokenMap["rtmToken"] ?? ""
-        }
-
-        group.enter()
-        let tokenModel3 = AUITokenGenerateNetworkModel()
-        tokenModel3.channelName = rtcChorusChannelName
-        tokenModel3.userId = uid
-        tokenModel3.request { error, result in
             defer {
                 if err == nil {
                     err = error
@@ -191,7 +173,8 @@ extension RoomViewController: AUIKaraokeRoomServiceRespDelegate {
     }
 
     func onRoomDestroy(roomId: String) {
-        self.karaokeView?.onBackAction()
+        karaokeView?.onBackAction()
+//        KaraokeUIKit.shared.leaveRoom(roomId: roomInfo?.roomId ?? "")
         AUIAlertView()
             .background(color: UIColor(red: 0.1055, green: 0.0062, blue: 0.4032, alpha: 1))
             .isShowCloseButton(isShow: false)

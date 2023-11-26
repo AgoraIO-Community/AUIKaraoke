@@ -76,12 +76,16 @@ public class KaraokeUIKit: NSObject {
         karaokeView.bindService(service: service)
         service.enter { roomInfo, err in
             aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-            self.isRoomOwner = roomInfo?.owner?.userId == AUIRoomContext.shared.currentUserInfo.userId
+            if let userId = roomInfo?.owner?.userId {
+                self.isRoomOwner = roomInfo?.owner?.userId == AUIRoomContext.shared.currentUserInfo.userId
+            } else {
+                self.isRoomOwner = true
+            }
             completion(roomInfo, err as NSError?)
         }
     }
 
-    public func destroyRoom(roomId: String) {
+    public func leaveRoom(roomId: String) {
         checkSetupAndCommonConfig()
         if isRoomOwner {
             roomManager.destroyRoom(roomId: roomId, callback: { _ in
