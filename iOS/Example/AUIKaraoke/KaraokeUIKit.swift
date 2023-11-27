@@ -21,6 +21,7 @@ public class KaraokeUIKit: NSObject {
     private var roomId: String?
     private var isRoomOwner: Bool = false
     private lazy var roomManager: AUIRoomManagerImpl = AUIRoomManagerImpl()
+    private var isRoomDestroy: Bool = false
 
     public func setup(commonConfig: AUICommonConfig,
                       apiConfig: AUIAPIConfig? = nil) {
@@ -40,6 +41,7 @@ public class KaraokeUIKit: NSObject {
                            completion: @escaping (AUIRoomInfo?, NSError?) -> Void) {
         checkSetupAndCommonConfig()
         var date = Date()
+        isRoomDestroy = false
         roomManager.createRoom(room: roomInfo) {[weak self] error, info in
             guard let self = self else {return}
             if let error = error {
@@ -50,6 +52,7 @@ public class KaraokeUIKit: NSObject {
             date = Date()
             let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
                                                 roomConfig: roomConfig)
+            self.bindRespDelegate(delegate: self)
             aui_info("generateToken1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             self.service = service
             self.roomId = info?.roomId ?? ""
@@ -68,15 +71,17 @@ public class KaraokeUIKit: NSObject {
                           karaokeView: AUIKaraokeRoomView,
                           completion: @escaping (AUIRoomInfo?, NSError?) -> Void) {
         checkSetupAndCommonConfig()
+        isRoomDestroy = false
         let date = Date()
         let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
                                             roomConfig: roomConfig)
         self.service = service
         self.roomId = roomId
+        self.bindRespDelegate(delegate: self)
         karaokeView.bindService(service: service)
         service.enter { roomInfo, err in
             aui_info("service enterRoom2: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-            if let userId = roomInfo?.owner?.userId {
+            if let _ = roomInfo?.owner?.userId {
                 self.isRoomOwner = roomInfo?.owner?.userId == AUIRoomContext.shared.currentUserInfo.userId
             } else {
                 self.isRoomOwner = true
@@ -87,7 +92,8 @@ public class KaraokeUIKit: NSObject {
 
     public func leaveRoom(roomId: String) {
         checkSetupAndCommonConfig()
-        if isRoomOwner {
+        self.unbindRespDelegate(delegate: self)
+        if isRoomOwner || isRoomDestroy {
             roomManager.destroyRoom(roomId: roomId, callback: { _ in
             })
         }
@@ -107,6 +113,12 @@ public class KaraokeUIKit: NSObject {
 
     public func unbindRespDelegate(delegate: AUIKaraokeRoomServiceRespDelegate) {
         service?.unbindRespDelegate(delegate: delegate)
+    }
+}
+
+extension KaraokeUIKit: AUIKaraokeRoomServiceRespDelegate {
+    public func onRoomDestroy(roomId: String) {
+        isRoomDestroy = true
     }
 }
 
