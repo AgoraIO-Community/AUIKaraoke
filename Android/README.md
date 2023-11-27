@@ -17,7 +17,7 @@ AUIKaraoke is an open source audio and video UI component. By integrating the AU
 
 ### 2. Running the Example
 
-- Please fill in the domain name of the business server in the [**local.properties**](/local.properties) file of the project
+- Please fill in the domain name of the business server in the local.properties(If the file does not exist, create one) file of the project
   
   ![PIC](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
 
@@ -35,7 +35,7 @@ SERVER_HOST= （Domain name of the business server）
 ### 1. Add Source Code
 **Copy the following source code into your own project:**
 
-- [asceneskit](../asceneskit)
+- [asceneskit](./asceneskit)
 
 **Configure libraries in settings.gradle**
 ```groovy
@@ -74,15 +74,6 @@ dependencies {
 </manifest>
 ```
 
-**Configure server host in local.properties**
-
-![PIC](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
-
-``` 
-SERVER_HOST= （Domain name of the business server）
-```
-
-> Agora Test Domain: https://service.agora.io/uikit-karaoke
 
 ### 2. Initialize KaraokeUiKit
 ```kotlin
@@ -101,6 +92,8 @@ KaraokeUiKit.setup(
     ktvApi = null // option
 )
 ```
+
+> Agora Test Domain: https://service.agora.io/uikit-karaoke
 
 ### 3. Get Karaoke Room List
 ```kotlin

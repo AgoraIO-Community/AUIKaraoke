@@ -20,7 +20,7 @@ AUIKaraoke 是一个开源的音视频 UI 组件，通过在项目中集成 AUIK
 
 ### 2. 运行示例
 
-- 在项目的[**local.properties**](/local.properties)里配置业务服务器域名
+- 在项目根目录的local.properties(如果不存在则创建一个)里配置业务服务器域名
   
   ![图片](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
 
@@ -39,7 +39,7 @@ SERVER_HOST= （业务服务器域名）
 
 **将以下源码复制到自己项目里：**
 
-- [asceneskit](../asceneskit)
+- [asceneskit](./asceneskit)
 
 **在settings.gradle里添加库**
 ```groovy
@@ -78,16 +78,6 @@ dependencies {
 </manifest>
 ```
 
-**在项目的[**local.properties**](../local.properties)里配置业务服务器域名**
-
-![图片](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
-
-``` 
-SERVER_HOST= （业务服务器域名）
-```
-
-> 声网测试域名： https://service.agora.io/uikit-karaoke
-
 
 ### 2. 初始化KaraokeUiKit
 ```kotlin
@@ -106,6 +96,9 @@ KaraokeUiKit.setup(
     ktvApi = null // option
 )
 ```
+
+> 声网业务服务器测试域名： https://service.agora.io/uikit-karaoke
+
 
 ### 3. 获取房间列表
 ```kotlin
