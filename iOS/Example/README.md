@@ -61,7 +61,7 @@ If you do not intend to deploy backend services temporarily, you can use the def
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 
 ## Quick Integration
-Please review[VoiceRoomUIKit](../doc/KaraokeUIKit.md)
+Please review [VoiceRoomUIKit](../doc/KaraokeUIKit.md)
 
 ## FAQ
 
