@@ -332,7 +332,7 @@ extension AUIKaraokeRoomService {
         })
     }
     
-    public func create(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
+    public func create(roomInfo: AUIRoomInfo, completion:@escaping (NSError?)->()) {
         guard let rtmToken = AUIRoomContext.shared.roomConfigMap[roomInfo.roomId]?.rtmToken else {
             assert(false)
             return
@@ -363,7 +363,7 @@ extension AUIKaraokeRoomService {
         }
     }
     
-    public func enter(completion:@escaping (AUIRoomInfo?, Error?)->()) {
+    public func enter(completion:@escaping (AUIRoomInfo?, NSError?)->()) {
         let roomId = channelName!
         guard let config = AUIRoomContext.shared.roomConfigMap[roomId], config.rtmToken.count > 0 else {
             assert(false)
@@ -377,7 +377,7 @@ extension AUIKaraokeRoomService {
             rtmManager.login(token: config.rtmToken) {[weak self] err in
                 aui_info("[Benchmark]rtm login: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: kSertviceTag)
                 if let err = err {
-                    completion(nil, err as NSError)
+                    completion(nil, err)
                     return
                 }
                 self?.enter(completion: completion)
@@ -439,7 +439,7 @@ extension AUIKaraokeRoomService {
         AUIRoomContext.shared.getArbiter(channelName: channelName)?.destroy()
     }
     
-    private func initRoom(roomInfo: AUIRoomInfo, completion:@escaping (Error?)->()) {
+    private func initRoom(roomInfo: AUIRoomInfo, completion:@escaping (NSError?)->()) {
         guard let roomInfoStr = roomInfo.yy_modelToJSONString() else {
             assert(false)
             completion(nil)

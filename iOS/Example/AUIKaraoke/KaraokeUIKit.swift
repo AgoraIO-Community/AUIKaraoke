@@ -38,31 +38,42 @@ public class KaraokeUIKit: NSObject {
     public func createRoom(roomInfo: AUIRoomInfo,
                            roomConfig: AUIRoomConfig,
                            karaokeView: AUIKaraokeRoomView,
-                           completion: @escaping (AUIRoomInfo?, NSError?) -> Void) {
+                           completion: @escaping (NSError?) -> Void) {
         checkSetupAndCommonConfig()
+        
+        var roomError: NSError?
+        var serviceError: NSError?
+        let dispatchGroup = DispatchGroup()
+        
         var date = Date()
         isRoomDestroy = false
-        roomManager.createRoom(room: roomInfo) {[weak self] error, info in
-            guard let self = self else {return}
-            if let error = error {
-                completion(nil, error)
+        dispatchGroup.enter()
+        roomManager.createRoom(room: roomInfo) {error, info in
+            roomError = error
+            aui_info("roomManager createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.enter()
+        let service = AUIKaraokeRoomService(apiConfig: self.apiConfig, roomConfig: roomConfig)
+        self.bindRespDelegate(delegate: self)
+        self.service = service
+        self.roomId = roomInfo.roomId
+        karaokeView.bindService(service: service)
+        self.isRoomOwner = true
+        service.create(roomInfo: roomInfo) { error in
+            serviceError = error
+            aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            aui_info("createRoom total cost: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            if let err = roomError ?? serviceError {
+                completion(err)
                 return
             }
-            aui_info("restful createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-            date = Date()
-            let service = AUIKaraokeRoomService(apiConfig: self.apiConfig,
-                                                roomConfig: roomConfig)
-            self.bindRespDelegate(delegate: self)
-            aui_info("generateToken1: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-            self.service = service
-            self.roomId = info?.roomId ?? ""
-            date = Date()
-            karaokeView.bindService(service: service)
-            self.isRoomOwner = true
-            service.create(roomInfo: info!) { err in
-                aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
-                completion(info!, nil)
-            }
+            completion(nil)
         }
     }
 

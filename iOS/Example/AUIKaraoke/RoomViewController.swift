@@ -64,7 +64,7 @@ class RoomViewController: UIViewController {
                 }
                 KaraokeUIKit.shared.createRoom(roomInfo: room,
                                                roomConfig: roomConfig,
-                                               karaokeView: karaokeView) {[weak self] roomInfo, error in
+                                               karaokeView: karaokeView) {[weak self] error in
                     guard let self = self else {return}
                     if let error = error {
                         self.navigationController?.popViewController(animated: true)
