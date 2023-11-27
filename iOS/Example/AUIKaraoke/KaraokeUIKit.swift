@@ -45,12 +45,12 @@ public class KaraokeUIKit: NSObject {
         var serviceError: NSError?
         let dispatchGroup = DispatchGroup()
         
-        var date = Date()
+        let date = Date()
         isRoomDestroy = false
         dispatchGroup.enter()
         roomManager.createRoom(room: roomInfo) {error, info in
             roomError = error
-            aui_info("roomManager createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            aui_info("(roomManager)createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             dispatchGroup.leave()
         }
         
@@ -63,7 +63,7 @@ public class KaraokeUIKit: NSObject {
         self.isRoomOwner = true
         service.create(roomInfo: roomInfo) { error in
             serviceError = error
-            aui_info("service createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
+            aui_info("(service)createRoom: \(Int64(-date.timeIntervalSinceNow * 1000)) ms", tag: "Benchmark")
             dispatchGroup.leave()
         }
         
