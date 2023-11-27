@@ -59,6 +59,9 @@ static var HostUrl: String = <#Your HostUrl#>
   - 如果您的cocoapods版本低于1.12.0，会遇到如下错误，请在"Team"里手动设置签名
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 
+## 快速集成
+请查看[VoiceRoomUIKit](../doc/KaraokeUIKit_zh.md)
+
 ## 常见问题
 
 - [常见问题](../doc/KaraokeFAQ_zh.md)
