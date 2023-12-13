@@ -113,7 +113,7 @@ class KaraokeRoomView : FrameLayout,
         mRoomViewBinding.topUserLayout.tvRoomName.text = service.getRoomInfo().roomName
         mRoomViewBinding.topUserLayout.tvRoomId.text = "房间ID: ${service.getRoomInfo().roomId}"
         Glide.with(mRoomViewBinding.topUserLayout.ivRoomCover)
-            .load(service.getRoomInfo().roomOwner?.userAvatar)
+            .load(service.getRoomInfo().owner?.userAvatar)
             .apply(RequestOptions.circleCropTransform())
             .into(mRoomViewBinding.topUserLayout.ivRoomCover)
         mRoomViewBinding.topUserLayout.btnShutDown.setOnClickListener {
@@ -122,7 +122,7 @@ class KaraokeRoomView : FrameLayout,
         mRoomViewBinding.topUserLayout.btnUserMore.setOnClickListener {
             showUserListDialog()
         }
-        service.getRoomInfo().roomOwner?.let {
+        service.getRoomInfo().owner?.let {
             mMemberMap[it.userId] = AUIUserInfo().apply {
                 userId = it.userId
                 userAvatar = it.userAvatar

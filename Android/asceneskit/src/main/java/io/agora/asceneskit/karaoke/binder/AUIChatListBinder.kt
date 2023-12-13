@@ -24,7 +24,7 @@ class AUIChatListBinder constructor(
     IAUIIMManagerService.AUIIMManagerRespObserver {
 
     init {
-        (chatListView as? AUIChatListView)?.setOwnerId(roomInfo.roomOwner?.userId ?: "")
+        (chatListView as? AUIChatListView)?.setOwnerId(roomInfo.owner?.userId ?: "")
     }
 
     override fun bind() {

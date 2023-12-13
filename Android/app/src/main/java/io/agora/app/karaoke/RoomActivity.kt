@@ -6,23 +6,14 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.agora.app.karaoke.databinding.RoomActivityBinding
 import io.agora.asceneskit.karaoke.KaraokeUiKit
-import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
-import io.agora.auikit.service.http.CommonResp
-import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.http.application.ApplicationInterface
-import io.agora.auikit.service.http.application.TokenGenerateReq
-import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.utils.PermissionHelp
-import retrofit2.Response
 
 class RoomActivity : AppCompatActivity(),
     AUIRoomManagerRespObserver {
@@ -77,15 +68,15 @@ class RoomActivity : AppCompatActivity(),
             return
         }
         mRoomDestroyAlert = true
-        AUIAlertDialog(this).apply {
-            setTitle("Tip")
-            setMessage("房间已销毁")
-            setPositiveButton("确认") {
-                dismiss()
-                shutDownRoom()
-            }
-            show()
-        }
+//        AUIAlertDialog(this).apply {
+//            setTitle("Tip")
+//            setMessage("房间已销毁")
+//            setPositiveButton("确认") {
+//                dismiss()
+//                shutDownRoom()
+//            }
+//            show()
+//        }
     }
 
 
@@ -94,7 +85,7 @@ class RoomActivity : AppCompatActivity(),
     }
 
     private fun onUserLeaveRoom() {
-        val owner = (roomInfo?.roomOwner?.userId == AUIRoomContext.shared().currentUserInfo.userId)
+        val owner = (roomInfo?.owner?.userId == AUIRoomContext.shared().currentUserInfo.userId)
         AUIAlertDialog(this).apply {
             setTitle("Tip")
             if (owner) {

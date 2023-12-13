@@ -18,7 +18,7 @@ import io.agora.auikit.service.ktv.KTVApi
 import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.utils.AUILogger
 import io.agora.rtc2.RtcEngineEx
-import io.agora.rtm2.RtmClient
+import io.agora.rtm.RtmClient
 import retrofit2.Response
 
 object KaraokeUiKit {
@@ -212,7 +212,7 @@ object KaraokeUiKit {
         val userId = AUIRoomContext.shared().currentUserInfo.userId
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.channelName, userId))
+            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.channelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
@@ -222,7 +222,7 @@ object KaraokeUiKit {
                     if (rspObj != null) {
                         config.rtcToken = rspObj.rtcToken
                         config.rtmToken = rspObj.rtmToken
-                        AUIRoomContext.shared().appId = rspObj.appId
+                        AUIRoomContext.shared().commonConfig.appId = rspObj.appId
                     }
                     trySuccess.invoke()
                 }
@@ -236,7 +236,7 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChannelName, userId))
+            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.rtcChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
@@ -259,7 +259,7 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(config.rtcChorusChannelName, userId))
+            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.rtcChorusChannelName, userId))
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,

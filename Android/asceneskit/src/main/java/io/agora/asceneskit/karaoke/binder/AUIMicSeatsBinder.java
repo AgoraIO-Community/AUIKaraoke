@@ -76,10 +76,10 @@ public class AUIMicSeatsBinder implements
             AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(seatIndex);
             if (seatIndex == 0 && micSeatInfo == null) {
                 AUIRoomInfo roomInfo = AUIRoomContext.shared().getRoomInfo(micSeatService.getChannelName());
-                if (roomInfo != null && roomInfo.roomOwner != null) {
+                if (roomInfo != null && roomInfo.owner != null) {
                     micSeatInfo = new AUIMicSeatInfo();
                     micSeatInfo.seatIndex = 0;
-                    micSeatInfo.user = roomInfo.roomOwner;
+                    micSeatInfo.user = roomInfo.owner;
                     micSeatInfo.seatStatus = AUIMicSeatStatus.used;
                 }
             }

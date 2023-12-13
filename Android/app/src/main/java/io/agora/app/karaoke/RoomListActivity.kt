@@ -53,6 +53,8 @@ class RoomListActivity : AppCompatActivity() {
         // Create Common Config
         val config = AUICommonConfig()
         config.context = application
+        config.appId = BuildConfig.AGORA_APP_ID
+        config.appCert = BuildConfig.AGORA_APP_CERT
         config.host = BuildConfig.SERVER_HOST
         // Randomly generate local user information
         config.userId = randomUserId()
@@ -269,13 +271,13 @@ class RoomListActivity : AppCompatActivity() {
         ) {
             val item = getItem(position)
             holder.binding.tvRoomName.text = item.roomName
-            holder.binding.tvRoomOwner.text = item.roomOwner?.userName ?: "unKnowUser"
-            holder.binding.tvMember.text = "${item.onlineUsers}人正在嗨歌"
+            holder.binding.tvRoomOwner.text = item.owner?.userName ?: "unKnowUser"
+            holder.binding.tvMember.text = "${item.memberCount}人正在嗨歌"
             holder.binding.root.setOnClickListener {
                 RoomActivity.launch(this@RoomListActivity, false, item, ThemeId)
             }
             Glide.with(holder.binding.ivAvatar)
-                .load(item.roomOwner?.userAvatar)
+                .load(item.owner?.userAvatar)
                 .into(holder.binding.ivAvatar)
             if (loadingMoreState == LoadingMoreState.Normal && itemCount > 0 && position == itemCount - 1) {
                 this@RoomListActivity.loadMore()

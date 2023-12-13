@@ -51,7 +51,7 @@ class AUIKaraokeRoomService(
 
     private val mRtcEngine: RtcEngine = rtcEngine ?: AgoraEngineCreator.createRtcEngine(
         AUIRoomContext.shared().commonConfig.context,
-        AUIRoomContext.shared().appId
+        AUIRoomContext.shared().commonConfig.appId
     )
 
     private val rtmManager: AUIRtmManager = roomManager.rtmManager
@@ -79,7 +79,7 @@ class AUIKaraokeRoomService(
 
     private val mKtvApi: KTVApi = ktvApi ?: run {
         val config = KTVApiConfig(
-            AUIRoomContext.shared().appId,
+            AUIRoomContext.shared().commonConfig.appId,
             roomConfig.rtcRtmToken,
             mRtcEngine,
             roomConfig.rtcChannelName,
