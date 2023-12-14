@@ -1,37 +1,24 @@
 package io.agora.asceneskit.karaoke
 
-import android.util.Log
 import io.agora.auikit.model.AUICommonConfig
-import io.agora.auikit.model.AUICreateRoomInfo
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.http.CommonResp
 import io.agora.auikit.service.http.HttpManager
 import io.agora.auikit.service.http.application.ApplicationInterface
 import io.agora.auikit.service.http.application.TokenGenerateReq
 import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.imp.AUIRoomManagerImplRespResp
-import io.agora.auikit.service.ktv.KTVApi
-import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
+import io.agora.auikit.service.room.AUIRoomManager
 import io.agora.auikit.utils.AUILogger
-import io.agora.rtc2.RtcEngineEx
-import io.agora.rtm.RtmClient
 import retrofit2.Response
 
 object KaraokeUiKit {
-    private val notInitException =
-        RuntimeException("The KaraokeServiceManager has not been initialized!")
-    private val initedException =
-        RuntimeException("The KaraokeServiceManager has been initialized!")
+    private var mAPIConfig: AUIAPIConfig? = null
+    private val mRoomManager = AUIRoomManager()
 
-    private var mRoomManager: AUIRoomManagerImplRespResp? = null
-    private var mRtcEngineEx: RtcEngineEx? = null
-    private var mKTVApi: KTVApi? = null
-    private var mService: AUIKaraokeRoomService? = null
-    private val mErrorObservers = mutableListOf<AUIRtmErrorRespObserverImp>()
+    private val mServices = mutableMapOf<String, AUIKaraokeRoomService>()
 
     /**
      * 初始化。
@@ -40,22 +27,16 @@ object KaraokeUiKit {
      *      当外部传入时在release时不会销毁
      */
     fun setup(
-        config: AUICommonConfig,
-        ktvApi: KTVApi? = null,
-        rtcEngineEx: RtcEngineEx? = null,
-        rtmClient: RtmClient? = null
+        commonConfig: AUICommonConfig,
+        apiConfig: AUIAPIConfig
     ) {
-        if (mRoomManager != null) {
-            throw initedException
-        }
-        HttpManager.setBaseURL(config.host)
-        AUIRoomContext.shared().commonConfig = config
-        mKTVApi = ktvApi
-        mRtcEngineEx = rtcEngineEx // 用户塞进来的engine由用户自己管理生命周期
-        mRoomManager = AUIRoomManagerImplRespResp(config, rtmClient)
+        mAPIConfig = apiConfig
+        AUIRoomContext.shared().setCommonConfig(commonConfig)
+
+        HttpManager.setBaseURL(commonConfig.host)
         AUILogger.initLogger(
             AUILogger.Config(
-                AUIRoomContext.shared().commonConfig.context,
+                AUIRoomContext.shared().requireCommonConfig().context,
                 "Karaoke"
             )
         )
@@ -65,9 +46,7 @@ object KaraokeUiKit {
      * 释放资源
      */
     fun release() {
-        mRtcEngineEx = null
-        mRoomManager = null
-        mKTVApi = null
+        mAPIConfig = null
     }
 
     /**
@@ -79,8 +58,8 @@ object KaraokeUiKit {
         success: (List<AUIRoomInfo>) -> Unit,
         failure: (AUIException) -> Unit
     ) {
-        val roomManager = mRoomManager ?: throw notInitException
-        roomManager.getRoomInfoList(
+        checkSetupAndCommonConfig()
+        mRoomManager.getRoomInfoList(
             startTime, pageSize
         ) { error, roomList ->
             if (error == null) {
@@ -95,20 +74,39 @@ object KaraokeUiKit {
      * 创建房间
      */
     fun createRoom(
-        createRoomInfo: AUICreateRoomInfo,
-        success: (AUIRoomInfo) -> Unit,
-        failure: (AUIException) -> Unit
+        roomInfo: AUIRoomInfo,
+        roomConfig: AUIRoomConfig,
+        karaokeView: KaraokeRoomView,
+        completion: (AUIException?, AUIRoomInfo?) -> Unit
     ) {
-        val roomManager = mRoomManager ?: throw notInitException
-        roomManager.createRoom(
-            createRoomInfo
-        ) { error, roomInfo ->
-            if (error == null && roomInfo != null) {
-                success.invoke(roomInfo)
+        checkSetupAndCommonConfig()
+        if (mServices[roomInfo.roomId] != null) {
+            completion.invoke(AUIException(AUIException.ERROR_CODE_ROOM_EXITED, ""), null)
+            return
+        }
+        mRoomManager.createRoom(roomInfo) { error, roomInfo ->
+            AUILogger.logger().d(
+                tag = "KaraokeUiKit",
+                message = "Create room >> error=$error, roomInfo=$roomInfo"
+            )
+        }
+        val roomService = AUIKaraokeRoomService(
+            mAPIConfig!!,
+            roomConfig
+        )
+        mServices[roomInfo.roomId] = roomService
+        // 加入房间
+        roomService.create(roomInfo) {error ->
+            if(error == null){
+                // success
+                AUILogger.logger().d(tag = "KaraokeUiKit", message = "Enter room successfully")
+                completion.invoke(null, roomInfo)
             } else {
-                failure.invoke(error ?: AUIException(-999, "RoomInfo return null"))
+                AUILogger.logger().d(tag = "KaraokeUiKit", message = "Enter room failed : ${error.code}")
+                completion.invoke(error, null)
             }
         }
+        karaokeView.bindService(roomService)
     }
 
     /**
@@ -119,53 +117,50 @@ object KaraokeUiKit {
      * @param success
      * @param failure
      */
-    fun launchRoom(
+    fun enterRoom(
         roomInfo: AUIRoomInfo,
+        roomConfig: AUIRoomConfig,
         karaokeView: KaraokeRoomView,
-        success: (() -> Unit)? = null,
-        failure: ((AUIException) -> Unit)? = null
+        completion: (AUIException?, AUIRoomInfo?) -> Unit
     ) {
-        val roomManager = mRoomManager ?: throw notInitException
-        generateToken(roomInfo.roomId,
-            { config ->
-                AUIRoomContext.shared().roomConfigMap[roomInfo.roomId] = config
-                val roomService = AUIKaraokeRoomService(
-                    mRtcEngineEx,
-                    mKTVApi,
-                    roomManager,
-                    config,
-                    roomInfo
-                )
-                mService = roomService
+        checkSetupAndCommonConfig()
+        if (mServices[roomInfo.roomId] != null) {
+            completion.invoke(AUIException(AUIException.ERROR_CODE_ROOM_EXITED, ""), null)
+            return
+        }
+        val roomService = AUIKaraokeRoomService(
+            mAPIConfig!!,
+            roomConfig
+        )
+        mServices[roomInfo.roomId] = roomService
+        // 加入房间
+        roomService.enter { error ->
+            if (error == null) {
+                // success
                 karaokeView.bindService(roomService)
+                AUILogger.logger().d(tag = "KaraokeUiKit", message = "Enter room successfully")
+                completion.invoke(null, roomInfo)
+            } else {
+                AUILogger.logger().d(tag = "KaraokeUiKit", message = "Enter room failed : ${error.code}")
+                completion.invoke(error, null)
+            }
+        }
 
-                val observer = AUIRtmErrorRespObserverImp(roomInfo.roomId)
-                mErrorObservers.add(observer)
-                mRoomManager?.rtmManager?.proxy?.registerErrorRespObserver(observer)
-                success?.invoke()
-            },
-            { ex ->
-                failure?.invoke(ex)
-            })
     }
 
     /**
-     * 销毁房间
+     * 离开房间
      *
      * @param roomId
      */
-    fun destroyRoom(roomId: String) {
+    fun leaveRoom(roomId: String) {
         if (AUIRoomContext.shared().isRoomOwner(roomId)) {
-            mService?.getRoomManager()?.destroyRoom(roomId) {}
+            mRoomManager.destroyRoom(roomId) {}
+            mServices[roomId]?.destroy()
         } else {
-            mService?.getRoomManager()?.exitRoom(roomId) {}
+            mServices[roomId]?.exit()
         }
-        mErrorObservers.filter { it.roomId == roomId }.forEach {
-            mRoomManager?.rtmManager?.proxy?.unRegisterErrorRespObserver(it)
-        }
-        mService?.destroy()
-        AUIRoomContext.shared().cleanRoom(roomId)
-        mService = null
+        mServices.remove(roomId)
     }
 
     /**
@@ -173,9 +168,8 @@ object KaraokeUiKit {
      *
      * @param observer
      */
-    fun registerRoomRespObserver(observer: AUIRoomManagerRespObserver) {
-        val roomManager = mRoomManager ?: throw notInitException
-        roomManager.registerRespObserver(observer)
+    fun registerRoomRespObserver(roomId: String, observer: AUIKaraokeRoomServiceRespObserver) {
+        mServices[roomId]?.observableHelper?.subscribeEvent(observer)
     }
 
     /**
@@ -183,12 +177,15 @@ object KaraokeUiKit {
      *
      * @param observer
      */
-    fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver) {
-        val roomManager = mRoomManager ?: throw notInitException
-        roomManager.unRegisterRespObserver(observer)
+    fun unRegisterRoomRespObserver(roomId: String, observer: AUIKaraokeRoomServiceRespObserver) {
+        mServices[roomId]?.observableHelper?.unSubscribeEvent(observer)
     }
 
-    private fun generateToken(
+    fun renewToken(roomId: String, roomConfig: AUIRoomConfig) {
+        mServices[roomId]?.renew(roomConfig)
+    }
+
+    fun generateToken(
         roomId: String,
         onSuccess: (AUIRoomConfig) -> Unit,
         onFailure: (AUIException) -> Unit
@@ -212,7 +209,14 @@ object KaraokeUiKit {
         val userId = AUIRoomContext.shared().currentUserInfo.userId
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.channelName, userId))
+            .tokenGenerate(
+                TokenGenerateReq(
+                    AUIRoomContext.shared().requireCommonConfig().appId,
+                    AUIRoomContext.shared().requireCommonConfig().appCert,
+                    config.channelName,
+                    userId
+                )
+            )
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
@@ -222,7 +226,7 @@ object KaraokeUiKit {
                     if (rspObj != null) {
                         config.rtcToken = rspObj.rtcToken
                         config.rtmToken = rspObj.rtmToken
-                        AUIRoomContext.shared().commonConfig.appId = rspObj.appId
+                        AUIRoomContext.shared().requireCommonConfig().appId = rspObj.appId
                     }
                     trySuccess.invoke()
                 }
@@ -236,7 +240,14 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.rtcChannelName, userId))
+            .tokenGenerate(
+                TokenGenerateReq(
+                    AUIRoomContext.shared().requireCommonConfig().appId,
+                    AUIRoomContext.shared().requireCommonConfig().appCert,
+                    config.rtcChannelName,
+                    userId
+                )
+            )
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
@@ -259,7 +270,14 @@ object KaraokeUiKit {
             })
         HttpManager
             .getService(ApplicationInterface::class.java)
-            .tokenGenerate(TokenGenerateReq(AUIRoomContext.shared().commonConfig.appId, AUIRoomContext.shared().commonConfig.appCert, config.rtcChorusChannelName, userId))
+            .tokenGenerate(
+                TokenGenerateReq(
+                    AUIRoomContext.shared().requireCommonConfig().appId,
+                    AUIRoomContext.shared().requireCommonConfig().appCert,
+                    config.rtcChorusChannelName,
+                    userId
+                )
+            )
             .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
                 override fun onResponse(
                     call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
@@ -282,16 +300,9 @@ object KaraokeUiKit {
             })
     }
 
-    private class AUIRtmErrorRespObserverImp(val roomId: String) : AUIRtmErrorRespObserver {
-        override fun onTokenPrivilegeWillExpire(channelName: String?) {
-            if (roomId != channelName) {
-                return
-            }
-            generateToken(channelName,
-                { mService?.renew(it) },
-                {
-                    Log.e("KaraokeUiKit", "onTokenPrivilegeWillExpire >> renew token failed -- $it")
-                })
+    private fun checkSetupAndCommonConfig() {
+        if (AUIRoomContext.shared().mCommonConfig == null) {
+            throw RuntimeException("make sure invoke setup first")
         }
     }
 

@@ -30,7 +30,7 @@ class AUIChatListBinder constructor(
     override fun bind() {
         chatListView.setChatListItemClickListener(this)
         imManagerService.registerRespObserver(this)
-        chatManager.saveWelcomeMsg(AUIRoomContext.shared().commonConfig.context.getString(R.string.voice_room_welcome))
+        chatManager.saveWelcomeMsg(AUIRoomContext.shared().requireCommonConfig().context.getString(R.string.voice_room_welcome))
         chatListView.refreshSelectLast(chatManager.getMsgList().map { entity ->
             AUIChatInfo(entity.user?.userId ?: "", entity.user?.userName?: "", entity.content, entity.joined)
         })

@@ -31,12 +31,12 @@ class AUIChatBottomBarBinder constructor(
     IAUIInvitationService.AUIInvitationRespObserver {
 
     private var listener:AUISoftKeyboardHeightChangeListener?=null
-    private val userService = roomService.getUserService()
-    private val chatManager = roomService.getChatManager()
-    private val imManagerService = roomService.getIMManagerService()
-    private val micSeatService = roomService.getMicSeatsService()
+    private val userService = roomService.userService
+    private val chatManager = roomService.chatManager
+    private val imManagerService = roomService.imManagerService
+    private val micSeatService = roomService.micSeatService
     private var roomContext = AUIRoomContext.shared()
-    private val isRoomOwner = roomContext.isRoomOwner(roomService.getRoomInfo().roomId)
+    private val isRoomOwner = roomContext.isRoomOwner(roomService.roomInfo?.roomId)
     private var mLocalMute = true
 
     override fun bind() {
@@ -82,7 +82,7 @@ class AUIChatBottomBarBinder constructor(
                             if (seatInfo?.user?.userId == roomContext.currentUserInfo.userId) {
                                 val isMuteByHost = seatInfo.muteAudio != 0
                                 if(isMuteByHost){
-                                    Toast.makeText(roomContext.commonConfig.context, "当前麦位已被房主禁麦", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(roomContext.requireCommonConfig().context, "当前麦位已被房主禁麦", Toast.LENGTH_SHORT).show()
                                     return
                                 }
                             }
@@ -109,7 +109,7 @@ class AUIChatBottomBarBinder constructor(
     }
 
     override fun onSendMessage(content: String?) {
-        imManagerService.sendMessage(roomService.getRoomInfo().roomId,
+        imManagerService.sendMessage(roomService.channelName,
             content ?: ""){ _, error ->
             if(error == null){
                 chatList.refreshSelectLast(chatManager.getMsgList().map { entity ->
@@ -134,7 +134,7 @@ class AUIChatBottomBarBinder constructor(
         var localUserSeat: AUIMicSeatInfo? = null
         var seatIndex = 0
         for (i in 0..7) {
-            val seatInfo = roomService.getMicSeatsService().getMicSeatInfo(i)
+            val seatInfo = roomService.micSeatService.getMicSeatInfo(i)
             if (seatInfo?.user != null && seatInfo.user?.userId == userId) {
                 localUserSeat = seatInfo
                 seatIndex = i
@@ -152,9 +152,9 @@ class AUIChatBottomBarBinder constructor(
         if (userInfo.userId == localUserId) { // 本地用户上麦
             chatBottomBarView.setShowMic(true)
             roomService.setupLocalStreamOn(true)
-            val micSeatInfo = roomService.getMicSeatsService().getMicSeatInfo(seatIndex)
+            val micSeatInfo = roomService.micSeatService.getMicSeatInfo(seatIndex)
             val isMute = (micSeatInfo?.muteAudio == 1) ||
-                    (roomService.getUserService().getUserInfo(localUserId)?.muteAudio == 1)
+                    (roomService.userService.getUserInfo(localUserId)?.muteAudio == 1)
             setLocalMute(seatIndex, isMute)
         }
     }
@@ -171,12 +171,12 @@ class AUIChatBottomBarBinder constructor(
         // 麦位被禁用麦克风
         // 远端用户：关闭对该麦位的音频流订阅
         // 本地用户：保险起见关闭本地用户的麦克风音量
-        val micSeatInfo = roomService.getMicSeatsService().getMicSeatInfo(seatIndex)
+        val micSeatInfo = roomService.micSeatService.getMicSeatInfo(seatIndex)
         val seatUserId = micSeatInfo?.user?.userId
         if (seatUserId.isNullOrEmpty()) {
             return
         }
-        val userInfo = roomService.getUserService().getUserInfo(seatUserId) ?: return
+        val userInfo = roomService.userService.getUserInfo(seatUserId) ?: return
         val localUserId = roomContext?.currentUserInfo?.userId ?: ""
         val mute = isMute || (userInfo.muteAudio == 1)
         if (seatUserId == localUserId) {

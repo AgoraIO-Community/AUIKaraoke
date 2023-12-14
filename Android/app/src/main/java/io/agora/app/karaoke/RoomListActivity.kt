@@ -16,14 +16,16 @@ import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
+import io.agora.asceneskit.karaoke.AUIAPIConfig
 import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUICommonConfig
-import io.agora.auikit.model.AUICreateRoomInfo
+import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
 import io.agora.auikit.utils.BindingViewHolder
 import java.util.Random
+import java.util.UUID
 
 class RoomListActivity : AppCompatActivity() {
 
@@ -62,14 +64,10 @@ class RoomListActivity : AppCompatActivity() {
         config.userAvatar = randomAvatar()
         // Setup karaokeUiKit
         KaraokeUiKit.setup(
-            config = config, // must
-            ktvApi = null,// option
-            rtcEngineEx = null, // option
-            rtmClient = null // option
+            commonConfig = config, // must
+            apiConfig = AUIAPIConfig()
         )
     }
-
-
 
     private fun initView() {
         setTheme(ThemeId)
@@ -128,18 +126,13 @@ class RoomListActivity : AppCompatActivity() {
     }
 
     private fun createRoom(roomName: String) {
-        val createRoomInfo = AUICreateRoomInfo()
-        createRoomInfo.roomName = roomName
-        KaraokeUiKit.createRoom(
-            createRoomInfo,
-            success = { roomInfo ->
-                RoomActivity.launch(this, true, roomInfo, ThemeId)
-            },
-            failure = {
-                Toast.makeText(this@RoomListActivity, "Create room failed!", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        )
+        val roomInfo = AUIRoomInfo()
+        roomInfo.roomId = UUID.randomUUID().toString()
+        roomInfo.roomName = roomName
+        roomInfo.thumbnail = randomAvatar()
+        roomInfo.owner = AUIRoomContext.shared().currentUserInfo
+
+        RoomActivity.launch(this, true, roomInfo, ThemeId)
     }
 
     private fun refreshRoomList() {
