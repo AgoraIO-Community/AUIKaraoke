@@ -157,8 +157,8 @@ object KaraokeUiKit {
         if (AUIRoomContext.shared().isRoomOwner(roomId)) {
             mRoomManager.destroyRoom(roomId) {}
             mServices[roomId]?.destroy()
-        } else {
-            mServices[roomId]?.exit()
+        } else if (mServices[roomId]?.exit() == true) {
+            mRoomManager.destroyRoom(roomId) {}
         }
         mServices.remove(roomId)
     }

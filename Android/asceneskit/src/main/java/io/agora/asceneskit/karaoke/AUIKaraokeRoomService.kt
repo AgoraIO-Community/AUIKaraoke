@@ -102,6 +102,43 @@ class AUIKaraokeRoomService(
 
     val observableHelper = ObservableHelper<AUIKaraokeRoomServiceRespObserver>()
 
+    private val userRespObserver = object : AUIUserRespObserver {
+        override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUIUserInfo>?) {
+            userSnapshotList = userList
+            userList?.firstOrNull { it.userId == AUIRoomContext.shared().currentUserInfo.userId }
+                ?.let { user ->
+                    onUserAudioMute(user.userId, (user.muteAudio == 1))
+                    onUserVideoMute(user.userId, (user.muteVideo == 1))
+                }
+        }
+
+        override fun onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
+            super.onRoomUserLeave(roomId, userInfo)
+            if (AUIRoomContext.shared().getRoomOwner(channelName) == userInfo.userId) {
+                cleanRoomInfo(roomId)
+            } else {
+                cleanUserInfo(roomId, userInfo.userId)
+            }
+        }
+
+        override fun onUserAudioMute(userId: String, mute: Boolean) {
+            if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
+                return
+            }
+            rtcEngine.adjustRecordingSignalVolume(if (mute) 0 else 100)
+        }
+
+        override fun onUserVideoMute(userId: String, mute: Boolean) {
+            if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
+                return
+            }
+            rtcEngine.enableLocalVideo(!mute)
+            val option = ChannelMediaOptions()
+            option.publishCameraTrack = !mute
+            rtcEngine.updateChannelMediaOptions(option)
+        }
+    }
+
     val userService: IAUIUserService = AUIUserServiceImpl(channelName, rtmManager).apply {
         registerRespObserver(userRespObserver)
     }
@@ -141,6 +178,8 @@ class AUIKaraokeRoomService(
         chatManager
     )
 
+    private var isRoomDestroyed = false
+
     private val rtmErrorRespObserver = object : AUIRtmErrorRespObserver {
         override fun onTokenPrivilegeWillExpire(channelName: String?) {
             channelName ?: return
@@ -151,6 +190,7 @@ class AUIKaraokeRoomService(
 
         override fun onMsgReceiveEmpty(channelName: String) {
             super.onMsgReceiveEmpty(channelName)
+            isRoomDestroyed = true
             observableHelper.notifyEventHandlers {
                 it.onRoomDestroy(channelName)
             }
@@ -180,42 +220,7 @@ class AUIKaraokeRoomService(
         }
     }
 
-    private val userRespObserver = object : AUIUserRespObserver {
-        override fun onRoomUserSnapshot(roomId: String, userList: MutableList<AUIUserInfo>?) {
-            userSnapshotList = userList
-            userList?.firstOrNull { it.userId == AUIRoomContext.shared().currentUserInfo.userId }
-                ?.let { user ->
-                    onUserAudioMute(user.userId, (user.muteAudio == 1))
-                    onUserVideoMute(user.userId, (user.muteVideo == 1))
-                }
-        }
 
-        override fun onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
-            super.onRoomUserLeave(roomId, userInfo)
-            if (AUIRoomContext.shared().getRoomOwner(channelName) == userInfo.userId) {
-                cleanRoomInfo(roomId)
-            } else {
-                cleanUserInfo(roomId, userInfo.userId)
-            }
-        }
-
-        override fun onUserAudioMute(userId: String, mute: Boolean) {
-            if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
-                return
-            }
-            rtcEngine.adjustRecordingSignalVolume(if (mute) 0 else 100)
-        }
-
-        override fun onUserVideoMute(userId: String, mute: Boolean) {
-            if (userId != AUIRoomContext.shared().currentUserInfo.userId) {
-                return
-            }
-            rtcEngine.enableLocalVideo(!mute)
-            val option = ChannelMediaOptions()
-            option.publishCameraTrack = !mute
-            rtcEngine.updateChannelMediaOptions(option)
-        }
-    }
 
     private var enterRoomCompletion: ((AUIRoomInfo?) -> Unit)? = null
 
@@ -320,9 +325,10 @@ class AUIKaraokeRoomService(
         AUIRoomContext.shared().getArbiter(channelName)?.destroy()
     }
 
-    fun exit() {
+    fun exit(): Boolean {
         cleanUserInfo(channelName, AUIRoomContext.shared().currentUserInfo.userId)
         cleanRoom()
+        return isRoomDestroyed
     }
 
     private fun checkRoomValid() {
