@@ -80,7 +80,7 @@ class AUIChatBottomBarBinder constructor(
                         for (seatIndex in 0 until micSeatService.micSeatSize){
                             val seatInfo = micSeatService.getMicSeatInfo(seatIndex)
                             if (seatInfo?.user?.userId == roomContext.currentUserInfo.userId) {
-                                val isMuteByHost = seatInfo.muteAudio != 0
+                                val isMuteByHost = seatInfo.muteAudio
                                 if(isMuteByHost){
                                     Toast.makeText(roomContext.requireCommonConfig().context, "当前麦位已被房主禁麦", Toast.LENGTH_SHORT).show()
                                     return
@@ -153,7 +153,7 @@ class AUIChatBottomBarBinder constructor(
             chatBottomBarView.setShowMic(true)
             roomService.setupLocalStreamOn(true)
             val micSeatInfo = roomService.micSeatService.getMicSeatInfo(seatIndex)
-            val isMute = (micSeatInfo?.muteAudio == 1) ||
+            val isMute = micSeatInfo?.muteAudio ?: false ||
                     (roomService.userService.getUserInfo(localUserId)?.muteAudio == 1)
             setLocalMute(seatIndex, isMute)
         }

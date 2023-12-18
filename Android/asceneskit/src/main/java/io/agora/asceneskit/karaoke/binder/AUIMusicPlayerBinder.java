@@ -9,7 +9,6 @@ import java.util.List;
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
 import io.agora.auikit.model.AUILoadMusicConfiguration;
-import io.agora.auikit.model.AUIMicSeatInfo;
 import io.agora.auikit.model.AUIPlayStatus;
 import io.agora.auikit.model.AUIUserThumbnailInfo;
 import io.agora.auikit.service.IAUIChorusService;
@@ -202,11 +201,6 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
     }
 
     // micSeatService delegate implement
-    @Override
-    public void onSeatListChange(List<AUIMicSeatInfo> seatInfoList) {
-        IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatListChange(seatInfoList);
-    }
-
     @Override
     public void onAnchorEnterSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
         IAUIMicSeatService.AUIMicSeatRespObserver.super.onAnchorEnterSeat(seatIndex, userInfo);

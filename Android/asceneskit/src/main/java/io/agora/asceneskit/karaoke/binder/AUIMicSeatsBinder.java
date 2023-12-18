@@ -3,6 +3,7 @@ package io.agora.asceneskit.karaoke.binder;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -131,11 +132,6 @@ public class AUIMicSeatsBinder implements
     }
     /** IAUIMicSeatService.AUIMicSeatRespDelegate implements. */
     @Override
-    public void onSeatListChange(List<AUIMicSeatInfo> seatInfoList) {
-        IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatListChange(seatInfoList);
-    }
-
-    @Override
     public void onAnchorEnterSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
         updateSeatView(seatIndex, seatInfo);
@@ -181,6 +177,10 @@ public class AUIMicSeatsBinder implements
     }
 
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
+        if(seatIndex >= micSeatsView.getMicSeatItemViewList().length){
+            return;
+        }
+
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
         AUIUserInfo userInfo = null;
         if (micSeatInfo != null && micSeatInfo.user != null && !TextUtils.isEmpty(micSeatInfo.user.userId)) {
@@ -192,6 +192,10 @@ public class AUIMicSeatsBinder implements
                 userInfo.userAvatar = micSeatInfo.user.userAvatar;
             }
         }
+
+        String roomOwner = AUIRoomContext.shared().getRoomOwner(micSeatService.getChannelName());
+
+        Log.d("AUIMicSeatsBinder", "updateSeatView >> seatIndex=" + seatIndex + ", micSeatInfo=" + micSeatInfo + ", userInfo=" + userInfo + ", roomOwner=" + roomOwner);
 
         // 麦位状态
         if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
@@ -206,14 +210,15 @@ public class AUIMicSeatsBinder implements
         }
 
         // 房主标识
-        seatView.setRoomOwnerVisibility((userInfo != null && userInfo.userId.equals(AUIRoomContext.shared().getRoomOwner(micSeatService.getChannelName()))) ? View.VISIBLE : View.GONE);
+
+        seatView.setRoomOwnerVisibility((userInfo != null && userInfo.userId.equals(roomOwner)) ? View.VISIBLE : View.GONE);
 
         // 静音状态
-        boolean isAudioMute = (micSeatInfo != null && micSeatInfo.muteAudio != 0) || (userInfo != null && userInfo.muteAudio == 1);
+        boolean isAudioMute = (micSeatInfo != null && micSeatInfo.muteAudio) || (userInfo != null && userInfo.muteAudio == 1);
         seatView.setAudioMuteVisibility(isAudioMute ? View.VISIBLE : View.GONE);
 
         // 视频状态
-        boolean isVideoMute = micSeatInfo != null && micSeatInfo.muteVideo != 0;
+        boolean isVideoMute = micSeatInfo != null && micSeatInfo.muteVideo;
         seatView.setVideoMuteVisibility(isVideoMute ? View.VISIBLE : View.GONE);
 
         // 用户信息
@@ -262,11 +267,11 @@ public class AUIMicSeatsBinder implements
     public boolean onClickSeat(int index, IMicSeatDialogView dialogView) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(index);
         AUIUserInfo userInfo = seatInfo != null && seatInfo.user != null ? userService.getUserInfo(seatInfo.user.userId) : null;
-        boolean isEmptySeat = (userInfo == null || userInfo.userId.length() == 0);
-        boolean isCurrentUser = userInfo != null && userInfo.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
+        boolean isEmptySeat = seatInfo == null || seatInfo.user == null || seatInfo.seatStatus == AUIMicSeatStatus.idle;
+        boolean isCurrentUser = seatInfo != null  && seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         boolean isSeatLocked = seatInfo != null && seatInfo.seatStatus == AUIMicSeatStatus.locked;
-        boolean isSeatAudioMute = seatInfo!= null && seatInfo.muteAudio != 0;
+        boolean isSeatAudioMute = seatInfo!= null && seatInfo.muteAudio;
         boolean isUserAudioMute = userInfo != null && userInfo.muteAudio != 0;
         boolean inSeat = false;
         for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {

@@ -1,6 +1,7 @@
 package io.agora.asceneskit.karaoke
 
 import android.util.Log
+import com.google.gson.reflect.TypeToken
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
@@ -29,6 +30,7 @@ import io.agora.auikit.service.ktv.KTVApiImpl
 import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.service.rtm.AUIRtmLockRespObserver
 import io.agora.auikit.service.rtm.AUIRtmManager
+import io.agora.auikit.service.rtm.AUIRtmPayload
 import io.agora.auikit.utils.AUILogger.Companion.logger
 import io.agora.auikit.utils.AgoraEngineCreator
 import io.agora.auikit.utils.GsonTools
@@ -53,7 +55,10 @@ class AUIKaraokeRoomService(
 
     private val TAG = "AUIKaraokeRoomService"
 
+    val channelName = roomConfig.channelName // roomId
+
     private val rtcEngineCreateByService = apiConfig.rtcEngineEx == null
+    private val rtmCreateCreateByService = apiConfig.rtmClient == null
 
     val rtcEngine: RtcEngine = apiConfig.rtcEngineEx ?: AgoraEngineCreator.createRtcEngine(
         AUIRoomContext.shared().requireCommonConfig().context,
@@ -93,62 +98,48 @@ class AUIKaraokeRoomService(
         apiConfig.rtmClient != null
     )
 
-    val chatManager by lazy { AUIChatManager(channelName, AUIRoomContext.shared()) }
+    val chatManager = AUIChatManager(channelName, AUIRoomContext.shared())
 
     val observableHelper = ObservableHelper<AUIKaraokeRoomServiceRespObserver>()
 
-    val userService: IAUIUserService by lazy {
-        val user = AUIUserServiceImpl(channelName, rtmManager)
-        user.registerRespObserver(userRespObserver)
-        user
+    val userService: IAUIUserService = AUIUserServiceImpl(channelName, rtmManager).apply {
+        registerRespObserver(userRespObserver)
     }
 
-    val imManagerService: IAUIIMManagerService by lazy {
-        AUIIMManagerServiceImpl(
-            channelName,
-            rtmManager,
-            chatManager
-        )
-    }
+    val imManagerService: IAUIIMManagerService = AUIIMManagerServiceImpl(
+        channelName,
+        rtmManager,
+        chatManager
+    )
 
-    val micSeatService: IAUIMicSeatService by lazy {
-        AUIMicSeatServiceImpl(
-            channelName,
-            rtmManager
-        )
-    }
+    val micSeatService: IAUIMicSeatService = AUIMicSeatServiceImpl(
+        channelName,
+        rtmManager
+    )
 
-    val musicPlayerService: IAUIMusicPlayerService by lazy {
-        AUIMusicPlayerServiceImpl(
-            rtcEngine,
-            channelName,
-            ktvApi
-        )
-    }
+    val musicPlayerService: IAUIMusicPlayerService = AUIMusicPlayerServiceImpl(
+        rtcEngine,
+        channelName,
+        ktvApi
+    )
 
-    val chorusService: IAUIChorusService by lazy {
-        AUIChorusServiceImpl(
-            channelName,
-            ktvApi,
-            rtmManager
-        )
-    }
+    val chorusService: IAUIChorusService = AUIChorusServiceImpl(
+        channelName,
+        ktvApi,
+        rtmManager
+    )
 
-    val jukeboxService: IAUIJukeboxService by lazy {
-        AUIJukeboxServiceImpl(
-            channelName,
-            rtmManager,
-            ktvApi
-        )
-    }
+    val jukeboxService: IAUIJukeboxService = AUIJukeboxServiceImpl(
+        channelName,
+        rtmManager,
+        ktvApi
+    )
 
-    val giftService: IAUIGiftsService by lazy {
-        AUIGiftServiceImpl(
-            channelName,
-            rtmManager,
-            chatManager
-        )
-    }
+    val giftService: IAUIGiftsService = AUIGiftServiceImpl(
+        channelName,
+        rtmManager,
+        chatManager
+    )
 
     private val rtmErrorRespObserver = object : AUIRtmErrorRespObserver {
         override fun onTokenPrivilegeWillExpire(channelName: String?) {
@@ -202,9 +193,9 @@ class AUIKaraokeRoomService(
         override fun onRoomUserLeave(roomId: String, userInfo: AUIUserInfo) {
             super.onRoomUserLeave(roomId, userInfo)
             if (AUIRoomContext.shared().getRoomOwner(channelName) == userInfo.userId) {
-                cleanRoom()
+                cleanRoomInfo(roomId)
             } else {
-                cleanUserInfo()
+                cleanUserInfo(roomId, userInfo.userId)
             }
         }
 
@@ -253,8 +244,6 @@ class AUIKaraokeRoomService(
             checkRoomValid()
         }
 
-    val channelName = roomConfig.channelName // roomId
-
     init {
         AUIRoomContext.shared().roomConfigMap[channelName] = roomConfig
         AUIRoomContext.shared().roomArbiterMap[channelName] = AUIArbiter(
@@ -301,8 +290,12 @@ class AUIKaraokeRoomService(
 
             if (roomInfo == null) {
                 rtmManager.getMetadata(roomId) { _, metadata ->
-                    roomInfo =
-                        GsonTools.toBean(metadata?.get(kRoomInfoAttrKey), AUIRoomInfo::class.java)
+                    val payloadInfo = GsonTools.toBean<AUIRtmPayload<AUIRoomInfo>>(
+                        metadata?.get(kRoomInfoAttrKey),
+                        object : TypeToken<AUIRtmPayload<AUIRoomInfo>>() {}.type
+                    )
+                    payloadInfo?.payload?.roomId = payloadInfo?.roomId ?: ""
+                    roomInfo = payloadInfo?.payload
                 }
             }
 
@@ -322,13 +315,13 @@ class AUIKaraokeRoomService(
     }
 
     fun destroy() {
-        cleanRoomInfo()
+        cleanRoomInfo(channelName)
         cleanRoom()
         AUIRoomContext.shared().getArbiter(channelName)?.destroy()
     }
 
     fun exit() {
-        cleanUserInfo()
+        cleanUserInfo(channelName, AUIRoomContext.shared().currentUserInfo.userId)
         cleanRoom()
     }
 
@@ -346,14 +339,21 @@ class AUIKaraokeRoomService(
             if (userSnapshotList?.find {
                     it.userId == AUIRoomContext.shared().getRoomOwner(channelName)
                 } == null) {
-                cleanRoomInfo()
+                cleanRoomInfo(channelName)
             }
         }
     }
 
     private fun initRoom(completion: (AUIException?) -> Unit) {
-        val roomInfoStr = GsonTools.beanToString(roomInfo)
-        if (roomInfoStr == null) {
+        val basicInfo = AUIRtmPayload<AUIRoomInfo>(
+            channelName,
+            payload = roomInfo
+        )
+
+        micSeatService.initService {}
+
+        val basicInfoStr = GsonTools.beanToString(basicInfo)
+        if (basicInfoStr == null) {
             completion.invoke(
                 AUIException(
                     AUIException.ERROR_CODE_NETWORK_PARSE,
@@ -365,7 +365,7 @@ class AUIKaraokeRoomService(
         rtmManager.setBatchMetadata(
             channelName,
             lockName = "",
-            metadata = mapOf(Pair(kRoomInfoAttrKey, roomInfoStr)),
+            metadata = mapOf(Pair(kRoomInfoAttrKey, basicInfoStr)),
             fetchImmediately = true
         ) { err ->
             if (err == null) {
@@ -382,13 +382,21 @@ class AUIKaraokeRoomService(
     }
 
     private fun cleanRoom() {
+        logoutRtm()
+        ktvApi.release()
+        leaveRtcChannel()
+        AUIRoomContext.shared().cleanRoom(channelName)
+    }
+
+    private fun logoutRtm() {
         rtmManager.unSubscribe(channelName)
         rtmManager.unSubscribeError(rtmErrorRespObserver)
         rtmManager.unsubscribeLock(rtmLockRespObserver)
         rtmManager.logout()
-        ktvApi.release()
-        leaveRtcChannel()
-        AUIRoomContext.shared().cleanRoom(channelName)
+        rtmManager.deInit()
+        if (rtmCreateCreateByService) {
+            RtmClient.release()
+        }
     }
 
     private fun leaveRtcChannel() {
@@ -398,18 +406,18 @@ class AUIKaraokeRoomService(
         }
     }
 
-    private fun cleanUserInfo() {
-        if (AUIRoomContext.shared().getArbiter(channelName)?.isArbiter() == true) {
+    private fun cleanUserInfo(roomId: String, userId: String) {
+        if (AUIRoomContext.shared().getArbiter(roomId)?.isArbiter() != true) {
             return
         }
-        val index = micSeatService.getMicSeatIndex(AUIRoomContext.shared().currentUserInfo.userId)
+        val index = micSeatService.getMicSeatIndex(userId)
         if (index >= 0) {
             micSeatService.kickSeat(index) {}
         }
     }
 
-    private fun cleanRoomInfo() {
-        if (AUIRoomContext.shared().getArbiter(channelName)?.isArbiter() == true) {
+    private fun cleanRoomInfo(roomId: String) {
+        if (AUIRoomContext.shared().getArbiter(roomId)?.isArbiter() != true) {
             return
         }
         micSeatService.deInitService {}
