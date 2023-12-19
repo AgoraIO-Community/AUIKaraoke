@@ -11,7 +11,6 @@
 ![auikitkaraoke-architecture](https://download.agora.io/demo/release/auikitkaraoke-architecture.png)
 
 
-
 ## 目录结构
 
 ```
