@@ -54,13 +54,12 @@ static var HostUrl: String = <#Your HostUrl#>
   请打开[AUIKaraoke.xcodeproj](AUIKaraoke.xcodeproj)并按照下图修改为"Xcode 13.0-compatible"
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691738494762.jpg)
   
-
 - 最后打开AUIKaraoke.xcworkspace，运行即可开始您的体验
   - 如果您的cocoapods版本低于1.12.0，会遇到如下错误，请在"Team"里手动设置签名
   ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/1691739881708.jpg)
 
 ## 快速集成
-请查看[VoiceRoomUIKit](../doc/KaraokeUIKit_zh.md)
+请查看[KaraokeUIKit](../doc/KaraokeUIKit_zh.md)
 
 ## 常见问题
 
