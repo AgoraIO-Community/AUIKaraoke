@@ -6,7 +6,7 @@ This document mainly introduces how to quickly run through the AUIKaraoke exampl
 
 ## Architecture
 
-![auikitkaraoke-architecture](./doc/auikitkaraoke-architecture.png)
+![auikitkaraoke-architecture](https://download.agora.io/demo/release/auikitkaraoke-architecture.png)
 
 ## Directory
 

@@ -22,3 +22,11 @@ The music contetn of karaoke use Agora Content Center service, and currently do 
 1: If you are already using the Agora service or in the process of docking, you can contact the sales or service of the docking
 
 2：Send an email to [support@agora.io](mailto:support@agora.io) Consultation
+
+
+
+## Communication&Feedback
+
+Welcome to join our WeChat communication group
+
+![image-20210622142449407](https://download.agora.io/null/karaoke-uikit-wechat-pic.jpg)
