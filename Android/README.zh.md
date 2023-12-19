@@ -8,7 +8,7 @@
 
 ## 架构图
 
-![auikitkaraoke-architecture](./doc/auikitkaraoke-architecture.png)
+![auikitkaraoke-architecture](https://download.agora.io/demo/release/auikitkaraoke-architecture.png)
 
 
 

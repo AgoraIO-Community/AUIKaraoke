@@ -19,3 +19,11 @@ K歌房的歌曲资源使用的是Agora内容中心服务，暂不支持自行�
 方案1：如果您已经在使用声网服务或者在对接中，可以直接联系对接的销售或服务；
 
 方案2：发送邮件给[support@agora.io](mailto:support@agora.io)咨询
+
+
+
+## 交流&反馈
+
+欢迎加入微信群交流
+
+![image-20210622142449407](https://download.agora.io/null/karaoke-uikit-wechat-pic.jpg)
