@@ -335,7 +335,7 @@ class AUIKaraokeRoomService(
     }
 
     private fun checkRoomValid() {
-        if (subscribeSuccess && roomInfo != null && lockRetrived) {
+        if (subscribeSuccess && roomInfo != null && lockRetrived && userSnapshotList != null) {
             if (enterRoomCompletion != null) {
                 enterRoomCompletion?.invoke(roomInfo)
                 enterRoomCompletion = null
