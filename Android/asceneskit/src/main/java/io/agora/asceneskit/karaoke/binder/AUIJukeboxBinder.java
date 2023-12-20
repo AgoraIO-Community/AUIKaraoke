@@ -4,14 +4,19 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIMusicModel;
 import io.agora.auikit.model.AUIRoomContext;
+import io.agora.auikit.service.IAUIChorusService;
 import io.agora.auikit.service.IAUIJukeboxService;
+import io.agora.auikit.service.IAUIMicSeatService;
+import io.agora.auikit.service.callback.AUIException;
 import io.agora.auikit.ui.jukebox.AUIMusicInfo;
 import io.agora.auikit.ui.jukebox.IAUIJukeboxChosenItemView;
 import io.agora.auikit.ui.jukebox.IAUIJukeboxView;
@@ -19,12 +24,19 @@ import io.agora.auikit.ui.jukebox.IAUIJukeboxView;
 public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJukeboxRespObserver, IAUIJukeboxView.ActionDelegate {
     private final IAUIJukeboxView jukeboxView;
     private final IAUIJukeboxService jukeboxService;
+    private IAUIMicSeatService micSeatService;
+    private IAUIChorusService chorusService;
 
     private Handler mMainHandler;
 
-    public AUIJukeboxBinder(IAUIJukeboxView jukeboxView, IAUIJukeboxService jukeboxService) {
+    public AUIJukeboxBinder(IAUIJukeboxView jukeboxView,
+                            IAUIJukeboxService jukeboxService,
+                            IAUIMicSeatService micSeatService,
+                            IAUIChorusService chorusService) {
         this.jukeboxView = jukeboxView;
         this.jukeboxService = jukeboxService;
+        this.micSeatService = micSeatService;
+        this.chorusService = chorusService;
     }
 
     @Override
@@ -155,4 +167,23 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
         runOnUiThread(()-> jukeboxView.setChosenSongList(transformChooseMusicModelList(songs)));
     }
 
+    @Nullable
+    @Override
+    public AUIException onSongWillAdd(String userId, Map<String, String> metaData) {
+        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
+        if(onSeat){
+            return null;
+        }
+        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
+    }
+
+    @Nullable
+    @Override
+    public AUIException onSongWillRemove(String userId, Map<String, String> metaData) {
+        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
+        if(onSeat){
+            return null;
+        }
+        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
+    }
 }

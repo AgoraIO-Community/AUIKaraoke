@@ -206,7 +206,9 @@ class KaraokeRoomView : FrameLayout,
         val jukeboxView = AUIJukeboxView(context)
         val binder = AUIJukeboxBinder(
             jukeboxView,
-            service.jukeboxService
+            service.jukeboxService,
+            service.micSeatService,
+            service.chorusService
         )
         AUIBottomDialog(context).apply {
             setOnShowListener { binder.bind() }

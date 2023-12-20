@@ -2,9 +2,11 @@ package io.agora.asceneskit.karaoke.binder;
 
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.List;
+import java.util.Map;
 
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
@@ -15,6 +17,7 @@ import io.agora.auikit.service.IAUIChorusService;
 import io.agora.auikit.service.IAUIJukeboxService;
 import io.agora.auikit.service.IAUIMicSeatService;
 import io.agora.auikit.service.IAUIMusicPlayerService;
+import io.agora.auikit.service.callback.AUIException;
 import io.agora.auikit.service.callback.AUIMusicLoadStateCallback;
 import io.agora.auikit.service.callback.AUISwitchSingerRoleCallback;
 import io.agora.auikit.ui.musicplayer.IMusicPlayerView;
@@ -47,6 +50,7 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
     private boolean isRoomOwner = false;
     private boolean isOnSeat = false;
     private boolean isOriginal = false;
+    private boolean isAutoEnterSeat = false;
     private String localUid;
 
     public AUIMusicPlayerBinder(AUIMusicPlayerView musicPlayerView, IAUIMusicPlayerService musicPlayerService, IAUIJukeboxService jukeboxService, IAUIChorusService chorusService, IAUIMicSeatService micSeatService) {
@@ -127,7 +131,20 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
     @Override
     public void onChoristerDidLeave(AUIChoristerModel chorister) {
+        if(chorister.userId.equals(localUid)){
+            chorusService.switchSingerRole(3, new AUISwitchSingerRoleCallback() {
+                @Override
+                public void onSwitchRoleSuccess() {
+                    mRole = SingRole.AUDIENCE;
+                    musicPlayerView.onLeaveChorus();
+                }
 
+                @Override
+                public void onSwitchRoleFail(int reason) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -145,6 +162,16 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
                 chorusService.switchSingerRole(0, null);
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public AUIException onWillJoinChorus(@NonNull String songCode, @NonNull String userId, @NonNull Map<String, String> metaData) {
+        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
+        if (onSeat) {
+            return null;
+        }
+        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
     }
 
     // JukeboxService delegate implement
@@ -207,6 +234,10 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (userInfo.userId.equals(localUid)) {
             isOnSeat = true;
             musicPlayerView.onSeat();
+            if(isAutoEnterSeat){
+                joinChorusWithSongCode(songPlayingModel.songCode);
+                isAutoEnterSeat = false;
+            }
         }
     }
 
@@ -431,7 +462,11 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (!isOnSeat) {
             micSeatService.autoEnterSeat(error -> {
                 if (error == null) {
-                    joinChorusWithSongCode(songPlayingModel.songCode);
+                    if (isOnSeat) {
+                        joinChorusWithSongCode(songPlayingModel.songCode);
+                    } else {
+                        isAutoEnterSeat = true;
+                    }
                 } else {
                     musicPlayerView.onJoinChorusFailed();
                 }
@@ -482,20 +517,7 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (songPlayingModel == null) return;
 
         chorusService.leaveChorus(songPlayingModel.songCode, chorusService.getRoomContext().currentUserInfo.userId, error -> {
-            if (error == null) {
-                chorusService.switchSingerRole(3, new AUISwitchSingerRoleCallback() {
-                    @Override
-                    public void onSwitchRoleSuccess() {
-                        mRole = SingRole.AUDIENCE;
-                        musicPlayerView.onLeaveChorus();
-                    }
 
-                    @Override
-                    public void onSwitchRoleFail(int reason) {
-
-                    }
-                });
-            }
         });
     }
 }

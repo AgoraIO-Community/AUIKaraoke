@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
@@ -174,6 +175,14 @@ public class AUIMicSeatsBinder implements
     @Override
     public void onShowInvited(int index) {
         IAUIMicSeatService.AUIMicSeatRespObserver.super.onShowInvited(index);
+    }
+
+    @Nullable
+    @Override
+    public AUIException onSeatWillLeave(String userId, Map<String, String> metadata) {
+        jukeboxService.cleanUserInfo(userId, null);
+        chorusService.cleanUserInfo(userId, null);
+        return IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatWillLeave(userId, metadata);
     }
 
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
@@ -383,6 +392,7 @@ public class AUIMicSeatsBinder implements
     public void onChoristerDidChanged() {
 
     }
+
     /** IAUIMicSeatService.AUIJukeboxRespDelegate implements. */
     @Override
     public void onAddChooseSong(@NonNull AUIChooseMusicModel song) {
@@ -411,6 +421,8 @@ public class AUIMicSeatsBinder implements
             setLeadSingerId("");
         }
     }
+
+
     /** IAUIUserService.AUIUserRespDelegate implements. */
     @Override
     public void onRoomUserSnapshot(@NonNull String roomId, @Nullable List<AUIUserInfo> userList) {

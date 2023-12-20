@@ -190,6 +190,9 @@ class AUIKaraokeRoomService(
 
         override fun onMsgReceiveEmpty(channelName: String) {
             super.onMsgReceiveEmpty(channelName)
+            if (this@AUIKaraokeRoomService.channelName != channelName) {
+                return
+            }
             isRoomDestroyed = true
             observableHelper.notifyEventHandlers {
                 it.onRoomDestroy(channelName)
