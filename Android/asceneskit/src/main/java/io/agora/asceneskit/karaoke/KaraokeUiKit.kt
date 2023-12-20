@@ -7,9 +7,9 @@ import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.service.callback.AUIException
 import io.agora.auikit.service.http.CommonResp
 import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.http.application.ApplicationInterface
-import io.agora.auikit.service.http.application.TokenGenerateReq
-import io.agora.auikit.service.http.application.TokenGenerateResp
+import io.agora.auikit.service.http.token.TokenGenerateReq
+import io.agora.auikit.service.http.token.TokenGenerateResp
+import io.agora.auikit.service.http.token.TokenInterface
 import io.agora.auikit.service.room.AUIRoomManager
 import io.agora.auikit.utils.AUILogger
 import retrofit2.Response
@@ -208,7 +208,7 @@ object KaraokeUiKit {
 
         val userId = AUIRoomContext.shared().currentUserInfo.userId
         HttpManager
-            .getService(ApplicationInterface::class.java)
+            .getService(TokenInterface::class.java)
             .tokenGenerate(
                 TokenGenerateReq(
                     AUIRoomContext.shared().requireCommonConfig().appId,
@@ -239,7 +239,7 @@ object KaraokeUiKit {
                 }
             })
         HttpManager
-            .getService(ApplicationInterface::class.java)
+            .getService(TokenInterface::class.java)
             .tokenGenerate(
                 TokenGenerateReq(
                     AUIRoomContext.shared().requireCommonConfig().appId,
@@ -269,7 +269,7 @@ object KaraokeUiKit {
                 }
             })
         HttpManager
-            .getService(ApplicationInterface::class.java)
+            .getService(TokenInterface::class.java)
             .tokenGenerate(
                 TokenGenerateReq(
                     AUIRoomContext.shared().requireCommonConfig().appId,
