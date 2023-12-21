@@ -257,7 +257,7 @@ public class AUIMicSeatsBinder implements
         for (int i = 0; i < seatViewList.length; i++) {
             AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(i);
             IMicSeatItemView itemView = seatViewList[i];
-            if (micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
+            if (micSeatInfo == null || micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
                 itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
                 continue;
             }

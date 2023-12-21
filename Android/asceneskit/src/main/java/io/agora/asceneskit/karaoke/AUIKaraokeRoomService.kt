@@ -303,7 +303,7 @@ class AUIKaraokeRoomService(
                         object : TypeToken<AUIRtmPayload<AUIRoomInfo>>() {}.type
                     )
                     payloadInfo?.payload?.roomId = payloadInfo?.roomId ?: ""
-                    roomInfo = payloadInfo?.payload
+                    roomInfo = payloadInfo?.payload ?: AUIRoomInfo()
                 }
             }
 
@@ -345,9 +345,10 @@ class AUIKaraokeRoomService(
             }
 
             // room owner not found, clean room
-            if (userSnapshotList?.find {
-                    it.userId == AUIRoomContext.shared().getRoomOwner(channelName)
-                } == null) {
+            val snapShotOwnerId = userSnapshotList?.find {
+                it.userId == AUIRoomContext.shared().getRoomOwner(channelName)
+            }
+            if (snapShotOwnerId == null) {
                 cleanRoomInfo(channelName)
             }
         }
@@ -429,10 +430,9 @@ class AUIKaraokeRoomService(
         if (AUIRoomContext.shared().getArbiter(roomId)?.isArbiter() != true) {
             return
         }
-        micSeatService.deInitService {}
-        musicPlayerService.deInitService { }
+        micSeatService.deInitService { }
         chorusService.deInitService { }
-        imManagerService.deInitService { }
+        jukeboxService.deInitService { }
         rtmManager.cleanBatchMetadata(
             channelName,
             remoteKeys = listOf(kRoomInfoAttrKey),
