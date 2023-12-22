@@ -136,7 +136,7 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
                 @Override
                 public void onSwitchRoleSuccess() {
                     mRole = SingRole.AUDIENCE;
-                    musicPlayerView.onLeaveChorus();
+                    musicPlayerView.onLeaveChorus(isRoomOwner);
                 }
 
                 @Override
