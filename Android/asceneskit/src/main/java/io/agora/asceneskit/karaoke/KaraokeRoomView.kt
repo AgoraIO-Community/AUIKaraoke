@@ -1,13 +1,13 @@
 package io.agora.asceneskit.karaoke
 
 import android.content.Context
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -23,7 +23,6 @@ import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIUserInfo
 import io.agora.auikit.model.AUIUserThumbnailInfo
 import io.agora.auikit.service.IAUIMicSeatService
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
 import io.agora.auikit.service.IAUIUserService
 import io.agora.auikit.ui.basic.AUIBottomDialog
 import io.agora.auikit.ui.chatBottomBar.impl.AUIKeyboardStatusWatcher
@@ -35,8 +34,7 @@ import io.agora.auikit.ui.musicplayer.listener.IMusicPlayerActionListener
 
 class KaraokeRoomView : FrameLayout,
     IAUIUserService.AUIUserRespObserver,
-    IAUIMicSeatService.AUIMicSeatRespObserver,
-    AUIRoomManagerRespObserver {
+    IAUIMicSeatService.AUIMicSeatRespObserver {
 
     private var mOnClickShutDown: (() -> Unit)? = null
 
@@ -75,45 +73,36 @@ class KaraokeRoomView : FrameLayout,
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
 
-        mRoomService?.getUserService()?.unRegisterRespObserver(this)
-        mRoomService?.getMicSeatsService()?.unRegisterRespObserver(this)
-        mRoomService?.getRoomManager()?.unRegisterRespObserver(this)
+        mRoomService?.userService?.unRegisterRespObserver(this)
+        mRoomService?.micSeatService?.unRegisterRespObserver(this)
 
         mBinders.forEach {
             it.unBind()
         }
         if(isRoomOwner()){
-            mRoomService?.getIMManagerService()?.userDestroyedChatroom()
+            mRoomService?.imManagerService?.userDestroyedChatroom()
         }else {
-            mRoomService?.getIMManagerService()?.userQuitRoom()
+            mRoomService?.imManagerService?.userQuitRoom()
         }
     }
 
-    private fun isRoomOwner() = AUIRoomContext.shared().isRoomOwner(mRoomService?.getRoomInfo()?.roomId)
+    private fun isRoomOwner() = AUIRoomContext.shared().isRoomOwner(mRoomService?.roomInfo?.roomId)
 
     fun bindService(service: AUIKaraokeRoomService) {
+        if(Thread.currentThread() != Looper.getMainLooper().thread){
+            post {
+                bindService(service)
+            }
+            return
+        }
         mRoomService = service
-        service.getRoomManager().registerRespObserver(this)
-
-        // 加入房间
-        service.enterRoom({
-            // success
-            post {
-                Toast.makeText(context, "Enter room successfully", Toast.LENGTH_SHORT).show()
-            }
-        }, {
-            post {
-                Toast.makeText(context, "Enter room failed : ${it.code}", Toast.LENGTH_SHORT).show()
-            }
-        })
-
         // 顶部用户信息
-        service.getUserService().registerRespObserver(this)
-        service.getMicSeatsService().registerRespObserver(this)
-        mRoomViewBinding.topUserLayout.tvRoomName.text = service.getRoomInfo().roomName
-        mRoomViewBinding.topUserLayout.tvRoomId.text = "房间ID: ${service.getRoomInfo().roomId}"
+        service.userService.registerRespObserver(this)
+        service.micSeatService.registerRespObserver(this)
+        mRoomViewBinding.topUserLayout.tvRoomName.text = service.roomInfo?.roomName
+        mRoomViewBinding.topUserLayout.tvRoomId.text = "房间ID: ${service.roomInfo?.roomId}"
         Glide.with(mRoomViewBinding.topUserLayout.ivRoomCover)
-            .load(service.getRoomInfo().roomOwner?.userAvatar)
+            .load(service.roomInfo?.owner?.userAvatar)
             .apply(RequestOptions.circleCropTransform())
             .into(mRoomViewBinding.topUserLayout.ivRoomCover)
         mRoomViewBinding.topUserLayout.btnShutDown.setOnClickListener {
@@ -122,7 +111,7 @@ class KaraokeRoomView : FrameLayout,
         mRoomViewBinding.topUserLayout.btnUserMore.setOnClickListener {
             showUserListDialog()
         }
-        service.getRoomInfo().roomOwner?.let {
+        service.roomInfo?.owner?.let {
             mMemberMap[it.userId] = AUIUserInfo().apply {
                 userId = it.userId
                 userAvatar = it.userAvatar
@@ -135,8 +124,8 @@ class KaraokeRoomView : FrameLayout,
         val auiGiftBarrageBinder = AUIGiftBarrageBinder(
             activity!!,
             mRoomViewBinding.giftView,
-            service.getGiftService(),
-            service.getChatManager()
+            service.giftService,
+            service.chatManager
         )
         auiGiftBarrageBinder.bind()
         mBinders.add(auiGiftBarrageBinder)
@@ -158,10 +147,10 @@ class KaraokeRoomView : FrameLayout,
         // 麦位
         val micSeatsBinder = AUIMicSeatsBinder(
             mRoomViewBinding.micSeatsView,
-            service.getUserService(),
-            service.getMicSeatsService(),
-            service.getJukeboxService(),
-            service.getChorusService()
+            service.userService,
+            service.micSeatService,
+            service.jukeboxService,
+            service.chorusService
         )
         micSeatsBinder.bind()
         mBinders.add(micSeatsBinder)
@@ -170,9 +159,9 @@ class KaraokeRoomView : FrameLayout,
         val chatListBinder = AUIChatListBinder(
             mRoomViewBinding.chatListView,
             mRoomViewBinding.chatBottomBar,
-            service.getIMManagerService(),
-            service.getChatManager(),
-            service.getRoomInfo()
+            service.imManagerService,
+            service.chatManager,
+            service.roomInfo!!
         )
         chatListBinder.bind()
         mBinders.add(chatListBinder)
@@ -180,10 +169,10 @@ class KaraokeRoomView : FrameLayout,
         // 播放器
         val musicPlayerBinder = AUIMusicPlayerBinder(
                 mRoomViewBinding.musicPlayerView,
-                service.getMusicPlayerService(),
-                service.getJukeboxService(),
-                service.getChorusService(),
-                service.getMicSeatsService())
+                service.musicPlayerService,
+                service.jukeboxService,
+                service.chorusService,
+                service.micSeatService)
         musicPlayerBinder.bind()
         mBinders.add(musicPlayerBinder)
         mRoomViewBinding.musicPlayerView.setMusicPlayerActionListener(object : IMusicPlayerActionListener {
@@ -217,7 +206,9 @@ class KaraokeRoomView : FrameLayout,
         val jukeboxView = AUIJukeboxView(context)
         val binder = AUIJukeboxBinder(
             jukeboxView,
-            service.getJukeboxService()
+            service.jukeboxService,
+            service.micSeatService,
+            service.chorusService
         )
         AUIBottomDialog(context).apply {
             setOnShowListener { binder.bind() }
@@ -278,11 +269,6 @@ class KaraokeRoomView : FrameLayout,
                 listener?.onSoftKeyboardHeightChanged(isKeyboardShowed,keyboardHeight)
             }
         }
-    }
-
-    /** IAUIUserService.AUIRoomRespDelegate */
-    override fun onRoomDestroy(roomId: String) {
-
     }
 
     /** IAUIUserService.AUIUserRespDelegate */

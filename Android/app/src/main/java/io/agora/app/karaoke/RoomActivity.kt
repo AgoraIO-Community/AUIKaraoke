@@ -6,44 +6,45 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.agora.app.karaoke.databinding.RoomActivityBinding
+import io.agora.asceneskit.karaoke.AUIKaraokeRoomServiceRespObserver
 import io.agora.asceneskit.karaoke.KaraokeUiKit
-import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.service.IAUIRoomManager.AUIRoomManagerRespObserver
-import io.agora.auikit.service.http.CommonResp
-import io.agora.auikit.service.http.HttpManager
-import io.agora.auikit.service.http.application.ApplicationInterface
-import io.agora.auikit.service.http.application.TokenGenerateReq
-import io.agora.auikit.service.http.application.TokenGenerateResp
-import io.agora.auikit.service.rtm.AUIRtmErrorRespObserver
 import io.agora.auikit.ui.basic.AUIAlertDialog
+import io.agora.auikit.utils.AUILogger
 import io.agora.auikit.utils.PermissionHelp
-import retrofit2.Response
 
 class RoomActivity : AppCompatActivity(),
-    AUIRoomManagerRespObserver {
+    AUIKaraokeRoomServiceRespObserver {
     companion object {
-        private var roomInfo: AUIRoomInfo? = null
-        private var themeId: Int = View.NO_ID
-        private var isCreateRoom = false
+        private val EXTRA_IS_CREATE_ROOM = "isCreateRoom"
+        private val EXTRA_ROOM_INFO = "roomInfo"
+        private val EXTRA_THEME_ID = "themeId"
 
-        fun launch(context: Context, isCreateRoom: Boolean, roomInfo: AUIRoomInfo, themeId: Int = View.NO_ID) {
-            Companion.roomInfo = roomInfo
-            Companion.isCreateRoom = isCreateRoom
-            Companion.themeId = themeId
-
+        fun launch(
+            context: Context,
+            isCreateRoom: Boolean,
+            roomInfo: AUIRoomInfo,
+            themeId: Int = View.NO_ID
+        ) {
             val intent = Intent(context, RoomActivity::class.java)
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra(EXTRA_IS_CREATE_ROOM, isCreateRoom)
+            intent.putExtra(EXTRA_ROOM_INFO, roomInfo)
+            intent.putExtra(EXTRA_THEME_ID, themeId)
             context.startActivity(intent)
         }
     }
 
     private val mViewBinding by lazy { RoomActivityBinding.inflate(LayoutInflater.from(this)) }
     private val mPermissionHelp = PermissionHelp(this)
+    private val themeId by lazy { intent.getIntExtra(EXTRA_THEME_ID, View.NO_ID) }
+    private val isCreateRoom by lazy { intent.getBooleanExtra(EXTRA_IS_CREATE_ROOM, false) }
+    private val roomInfo by lazy {
+        intent.getSerializableExtra(EXTRA_ROOM_INFO) as AUIRoomInfo
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,41 +52,49 @@ class RoomActivity : AppCompatActivity(),
             setTheme(themeId)
         }
         setContentView(mViewBinding.root)
-        val roomInfo = roomInfo ?: return
         mViewBinding.karaokeRoomView.setFragmentActivity(this)
         mViewBinding.karaokeRoomView.setOnShutDownClick {
             onUserLeaveRoom()
         }
         mPermissionHelp.checkMicPerm(
             {
-                KaraokeUiKit.launchRoom(
-                    roomInfo,
-                    mViewBinding.karaokeRoomView,
-                    failure = { finish() })
-                KaraokeUiKit.registerRoomRespObserver(this)
+                KaraokeUiKit.generateToken(
+                    roomInfo.roomId,
+                    onSuccess = { roomConfig ->
+                        if (isCreateRoom) {
+                            KaraokeUiKit.createRoom(
+                                roomInfo,
+                                roomConfig,
+                                mViewBinding.karaokeRoomView,
+                                completion = { error, _ ->
+                                    if (error != null) {
+                                        shutDownRoom()
+                                    }
+                                })
+                        } else {
+                            KaraokeUiKit.enterRoom(
+                                roomInfo,
+                                roomConfig,
+                                mViewBinding.karaokeRoomView,
+                                completion = { error, _ ->
+                                    if (error != null) {
+                                        shutDownRoom()
+                                    }
+                                })
+                        }
+                        KaraokeUiKit.registerRoomRespObserver(roomInfo.roomId, this)
+                    },
+                    onFailure = {
+                        shutDownRoom()
+                    }
+                )
+
             },
             {
-                finish()
+                shutDownRoom()
             },
             true
         )
-    }
-
-    private var mRoomDestroyAlert = false
-    override fun onRoomDestroy(roomId: String) {
-        if (mRoomDestroyAlert) {
-            return
-        }
-        mRoomDestroyAlert = true
-        AUIAlertDialog(this).apply {
-            setTitle("Tip")
-            setMessage("房间已销毁")
-            setPositiveButton("确认") {
-                dismiss()
-                shutDownRoom()
-            }
-            show()
-        }
     }
 
 
@@ -94,7 +103,7 @@ class RoomActivity : AppCompatActivity(),
     }
 
     private fun onUserLeaveRoom() {
-        val owner = (roomInfo?.roomOwner?.userId == AUIRoomContext.shared().currentUserInfo.userId)
+        val owner = (roomInfo?.owner?.userId == AUIRoomContext.shared().currentUserInfo.userId)
         AUIAlertDialog(this).apply {
             setTitle("Tip")
             if (owner) {
@@ -114,10 +123,51 @@ class RoomActivity : AppCompatActivity(),
     }
 
     private fun shutDownRoom() {
-        roomInfo?.roomId?.let { roomId ->
-            KaraokeUiKit.destroyRoom(roomId)
-            KaraokeUiKit.unRegisterRoomRespObserver(this@RoomActivity)
+        roomInfo.roomId.let { roomId ->
+            KaraokeUiKit.leaveRoom(roomId)
+            KaraokeUiKit.unRegisterRoomRespObserver(roomId, this@RoomActivity)
         }
         finish()
+    }
+
+    override fun onTokenPrivilegeWillExpire(roomId: String) {
+        super.onTokenPrivilegeWillExpire(roomId)
+        KaraokeUiKit.generateToken(
+            roomInfo.roomId,
+            onSuccess = { roomConfig ->
+                KaraokeUiKit.renewToken(roomInfo.roomId, roomConfig)
+            },
+            onFailure = { error ->
+                AUILogger.logger()
+                    .e("RoomActivity", "onTokenPrivilegeWillExpire generateToken >> error=$error")
+            }
+        )
+    }
+
+    override fun onRoomDestroy(roomId: String) {
+        AUIAlertDialog(this).apply {
+            setTitle("Tip")
+            setMessage("房间已销毁")
+            setPositiveButton("确认") {
+                dismiss()
+                shutDownRoom()
+            }
+            show()
+        }
+    }
+
+    override fun onRoomUserBeKicked(roomId: String, userId: String) {
+        super.onRoomUserBeKicked(roomId, userId)
+        if (roomId == roomInfo.roomId && userId == AUIRoomContext.shared().currentUserInfo.userId) {
+            AUIAlertDialog(this).apply {
+                setTitle("Tip")
+                setMessage("被房主踢出房间")
+                setPositiveButton("确认") {
+                    dismiss()
+                    shutDownRoom()
+                }
+                show()
+            }
+        }
     }
 }
