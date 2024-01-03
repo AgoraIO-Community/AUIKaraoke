@@ -120,7 +120,9 @@ open class AUIKaraokeRoomService: NSObject {
                                       chorusChannelName: roomConfig.rtcChorusChannelName,
                                       chorusChannelToken: roomConfig.rtcChorusRtcToken,
                                       type: .normal,
-                                      maxCacheSize: 10)
+                                      maxCacheSize: 10,
+                                      musicType: .mcc,
+                                      isDebugMode: false)
             self.ktvApi = KTVApiImpl.init(config: config)
             self.ktvApi.renewInnerDataStreamId()
             
@@ -215,7 +217,7 @@ extension AUIKaraokeRoomService {
         option.publishCustomAudioTrack = false
         option.autoSubscribeAudio = true
         option.autoSubscribeVideo = true
-        option.publishMediaPlayerId = Int(self.ktvApi.getMediaPlayer()?.getMediaPlayerId() ?? 0)
+        option.publishMediaPlayerId = Int(self.ktvApi.getMusicPlayer()?.getMediaPlayerId() ?? 0)
         option.enableAudioRecordingOrPlayout = true
         
         aui_info("update clientRoleType: \(option.clientRoleType.rawValue)", tag: kSertviceTag)
@@ -293,18 +295,6 @@ extension AUIKaraokeRoomService: AgoraRtcEngineDelegate {
         aui_error("didOccurError: \(errorCode.rawValue)", tag: kSertviceTag)
         rtcJoinClousure?(AUICommonError.rtcError(Int32(errorCode.rawValue)).toNSError())
         rtcJoinClousure = nil
-    }
-    
-    public func rtcEngine(_ engine: AgoraRtcEngineKit, receiveStreamMessageFromUid uid: UInt, streamId: Int, data: Data) {
-        playerImpl.didKTVAPIReceiveStreamMessageFrom(uid: NSInteger(uid), streamId: streamId, data: data)
-    }
-    
-    public func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
-        playerImpl.didKTVAPILocalAudioStats(stats: stats)
-    }
-    
-    public func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
-        playerImpl.didKTVAPIReceiveAudioVolumeIndication(with: speakers, totalVolume: totalVolume)
     }
 }
 

@@ -165,7 +165,7 @@ class AUIRoomListViewController: UIViewController {
     }
 
     func onLoadMoreAction() {
-        let lastCreateTime = roomList.last?.createTime
+        let lastCreateTime: Int64? = 0//roomList.last?.createTime
         KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: lastCreateTime ?? 0, pageSize: kListCountPerPage, callback: {[weak self] _, list in
             guard let self = self else { return }
             self.roomList += list ?? []
@@ -197,7 +197,7 @@ class AUIRoomListViewController: UIViewController {
                 let room = AUIRoomInfo()
                 room.roomId = UUID().uuidString.lowercased()
                 room.roomName = text
-                room.thumbnail = self.userInfo.userAvatar
+//                room.thumbnail = self.userInfo.userAvatar
                 room.micSeatCount = 8
                 room.owner = AUIRoomContext.shared.currentUserInfo
                 let vc = RoomViewController()

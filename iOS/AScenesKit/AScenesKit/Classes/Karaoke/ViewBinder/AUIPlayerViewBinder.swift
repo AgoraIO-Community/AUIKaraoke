@@ -459,6 +459,10 @@ extension AUIPlayerViewBinder: AUIChorusRespDelegate {
 }
 
 extension AUIPlayerViewBinder: KTVApiEventHandlerDelegate {
+    public func onMusicPlayerProgressChanged(with progress: Int) {
+        
+    }
+    
     public func onTokenPrivilegeWillExpire() {
         
     }
