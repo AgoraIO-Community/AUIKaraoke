@@ -80,10 +80,10 @@ class AUIKaraokeRoomService(
     val ktvApi: KTVApi = apiConfig.ktvApi ?: run {
         val config = KTVApiConfig(
             AUIRoomContext.shared().requireCommonConfig().appId,
-            roomConfig.rtcRtmToken,
+            roomConfig.rtmToken,
             rtcEngine,
-            roomConfig.rtcChannelName,
-            AUIRoomContext.shared().requireCommonConfig().userId.toInt(),
+            roomConfig.channelName,
+            AUIRoomContext.shared().currentUserInfo.userId.toInt(),
             roomConfig.rtcChorusChannelName,
             roomConfig.rtcChorusRtcToken
         )
@@ -331,6 +331,7 @@ class AUIKaraokeRoomService(
     fun exit(): Boolean {
         cleanUserInfo(channelName, AUIRoomContext.shared().currentUserInfo.userId)
         cleanRoom()
+        AUIRoomContext.shared().getArbiter(channelName)?.release()
         return isRoomDestroyed
     }
 
@@ -481,22 +482,22 @@ class AUIKaraokeRoomService(
         AUIRoomContext.shared().roomConfigMap[channelName] = config
 
         // KTVApi renew
-        ktvApi.renewToken(config.rtcRtmToken, config.rtcChorusRtcToken)
+        ktvApi.renewToken(config.rtmToken, config.rtcChorusRtcToken)
 
         // rtm renew
         rtmManager.renew(config.rtmToken)
         rtmManager.renewStreamChannelToken(config.channelName, config.rtcToken)
 
         // rtc renew
-        rtcEngine.renewToken(config.rtcRtcToken)
+        rtcEngine.renewToken(config.rtcToken)
     }
 
     private fun joinRtcChannel() {
         setEngineConfig()
         val ret: Int = rtcEngine.joinChannel(
-            roomConfig.rtcRtcToken,
-            roomConfig.rtcChannelName,
-            AUIRoomContext.shared().requireCommonConfig().userId.toInt(),
+            roomConfig.rtcToken,
+            roomConfig.channelName,
+            AUIRoomContext.shared().currentUserInfo.userId.toInt(),
             channelMediaOptions()
         )
 
