@@ -337,6 +337,8 @@ class AUIKaraokeRoomService(
 
     private fun checkRoomValid() {
         if (subscribeSuccess && roomInfo != null && lockRetrived && userSnapshotList != null) {
+
+            micSeatService.initService{}
             if (enterRoomCompletion != null) {
                 enterRoomCompletion?.invoke(roomInfo)
                 enterRoomCompletion = null
@@ -360,8 +362,6 @@ class AUIKaraokeRoomService(
             channelName,
             payload = roomInfo
         )
-
-        micSeatService.initService {}
 
         val basicInfoStr = GsonTools.beanToString(basicInfo)
         if (basicInfoStr == null) {
