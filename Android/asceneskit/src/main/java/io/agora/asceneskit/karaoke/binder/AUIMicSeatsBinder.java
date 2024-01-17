@@ -101,6 +101,9 @@ public class AUIMicSeatsBinder implements
         chorusService.getChoristersList(new AUIChoristerListCallback() {
             @Override
             public void onResult(@Nullable AUIException error, @Nullable List<AUIChoristerModel> songList) {
+                if (songList == null) {
+                    return;
+                }
                 for (AUIChoristerModel song : songList) {
                     mAccompanySingers.add(song.userId);
                 }
