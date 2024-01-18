@@ -22,7 +22,7 @@ PODS:
     - SwiftyBeaver (~> 1.9.5)
     - YYModel
     - Zip
-  - libpag (4.3.43)
+  - libpag (4.3.45)
   - MJRefresh (3.7.6)
   - ScoreEffectUI (1.0.2)
   - SDWebImage (4.4.8):
@@ -68,7 +68,7 @@ SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
   AScenesKit: 8e58e7dedd0d9dafe6121b243a3cfd593860e89c
   AUIKitCore: 4d63dd31d26415cd3c7b63d5fa6e5c89b7f869e1
-  libpag: dfb5904399f41e6c7f58fee076c5370f5bd92970
+  libpag: 5abe80aba308e2aa7af4de69f0061aeaa81a3089
   MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   ScoreEffectUI: bf1195b4d41a73d43c236450b5d7f958989844aa
   SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13

@@ -118,6 +118,10 @@ class AUIRoomListViewController: UIViewController {
         // 设置基础信息到KaraokeUIKit里
         let commonConfig = AUICommonConfig()
         commonConfig.appId = KeyCenter.AppId
+        commonConfig.appCert = KeyCenter.AppCertificate
+        commonConfig.imAppKey = KeyCenter.IMAppKey
+        commonConfig.imClientId = KeyCenter.AppId
+        commonConfig.imClientSecret = KeyCenter.IMClientSecret
         commonConfig.host = KeyCenter.HostUrl
         let ownerInfo = AUIUserThumbnailInfo()
         ownerInfo.userId = userInfo.userId

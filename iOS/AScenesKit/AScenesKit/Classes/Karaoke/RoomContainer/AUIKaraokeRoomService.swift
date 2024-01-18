@@ -269,6 +269,9 @@ extension AUIKaraokeRoomService {
             for obj in self.respDelegates.allObjects {
                 obj.onRoomInfoChange?(roomId: roomInfo.roomId, roomInfo: roomInfo)
             }
+            
+            //TODO: add more service.sereviceDidLoad
+            chatImplement.sereviceDidLoad?()
         }
         
         guard let userList = userSnapshotList else { return }
