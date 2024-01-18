@@ -21,6 +21,7 @@ import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
+import io.agora.auikit.model.AUIUserThumbnailInfo
 import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
 import io.agora.auikit.utils.BindingViewHolder
@@ -59,9 +60,11 @@ class RoomListActivity : AppCompatActivity() {
         config.appCert = BuildConfig.AGORA_APP_CERT
         config.host = BuildConfig.SERVER_HOST
         // Randomly generate local user information
-        config.userId = randomUserId()
-        config.userName = randomUserName()
-        config.userAvatar = randomAvatar()
+        config.owner = AUIUserThumbnailInfo().apply {
+            userId = randomUserId()
+            userName = randomUserName()
+            userAvatar = randomAvatar()
+        }
         // Setup karaokeUiKit
         KaraokeUiKit.setup(
             commonConfig = config, // must

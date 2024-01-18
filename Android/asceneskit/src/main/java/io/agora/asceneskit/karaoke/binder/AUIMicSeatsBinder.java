@@ -101,6 +101,9 @@ public class AUIMicSeatsBinder implements
         chorusService.getChoristersList(new AUIChoristerListCallback() {
             @Override
             public void onResult(@Nullable AUIException error, @Nullable List<AUIChoristerModel> songList) {
+                if (songList == null) {
+                    return;
+                }
                 for (AUIChoristerModel song : songList) {
                     mAccompanySingers.add(song.userId);
                 }
@@ -276,7 +279,7 @@ public class AUIMicSeatsBinder implements
     public boolean onClickSeat(int index, IMicSeatDialogView dialogView) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(index);
         AUIUserInfo userInfo = seatInfo != null && seatInfo.user != null ? userService.getUserInfo(seatInfo.user.userId) : null;
-        boolean isEmptySeat = seatInfo == null || seatInfo.user == null || seatInfo.seatStatus == AUIMicSeatStatus.idle;
+        boolean isEmptySeat = seatInfo == null || seatInfo.user == null || seatInfo.user.userId.isEmpty() || seatInfo.seatStatus == AUIMicSeatStatus.idle;
         boolean isCurrentUser = seatInfo != null  && seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         boolean isSeatLocked = seatInfo != null && seatInfo.seatStatus == AUIMicSeatStatus.locked;

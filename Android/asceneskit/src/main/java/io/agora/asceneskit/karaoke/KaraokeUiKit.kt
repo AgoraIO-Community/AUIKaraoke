@@ -191,7 +191,7 @@ object KaraokeUiKit {
         onFailure: (AUIException) -> Unit
     ) {
         val config = AUIRoomConfig(roomId)
-        var response = 3
+        var response = 2
         var isFailure = false
         val trySuccess = {
             response -= 1
@@ -244,36 +244,6 @@ object KaraokeUiKit {
                 TokenGenerateReq(
                     AUIRoomContext.shared().requireCommonConfig().appId,
                     AUIRoomContext.shared().requireCommonConfig().appCert,
-                    config.rtcChannelName,
-                    userId
-                )
-            )
-            .enqueue(object : retrofit2.Callback<CommonResp<TokenGenerateResp>> {
-                override fun onResponse(
-                    call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
-                    response: Response<CommonResp<TokenGenerateResp>>
-                ) {
-                    val rspObj = response.body()?.data
-                    if (rspObj != null) {
-                        config.rtcRtcToken = rspObj.rtcToken
-                        config.rtcRtmToken = rspObj.rtmToken
-                    }
-                    trySuccess.invoke()
-                }
-
-                override fun onFailure(
-                    call: retrofit2.Call<CommonResp<TokenGenerateResp>>,
-                    t: Throwable
-                ) {
-                    failure.invoke(AUIException(-2, t.message))
-                }
-            })
-        HttpManager
-            .getService(TokenInterface::class.java)
-            .tokenGenerate(
-                TokenGenerateReq(
-                    AUIRoomContext.shared().requireCommonConfig().appId,
-                    AUIRoomContext.shared().requireCommonConfig().appCert,
                     config.rtcChorusChannelName,
                     userId
                 )
@@ -285,7 +255,7 @@ object KaraokeUiKit {
                 ) {
                     val rspObj = response.body()?.data
                     if (rspObj != null) {
-                        // rtcChorusRtcToken007
+                        // rtcChorusRtcToken
                         config.rtcChorusRtcToken = rspObj.rtcToken
                     }
                     trySuccess.invoke()
