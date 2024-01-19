@@ -229,27 +229,35 @@ class AUIKaraokeRoomService(
 
     private var subscribeSuccess = false
         set(value) {
-            field = value
-            checkRoomValid()
+            if(field != value){
+                field = value
+                checkRoomValid()
+            }
         }
 
     private var lockRetrived = false
         set(value) {
-            field = value
-            checkRoomValid()
+            if(field != value){
+                field = value
+                checkRoomValid()
+            }
         }
 
     private var userSnapshotList: List<AUIUserInfo>? = null
         set(value) {
-            field = value
-            checkRoomValid()
+            if(field != value){
+                field = value
+                checkRoomValid()
+            }
         }
 
     var roomInfo: AUIRoomInfo? = null
         set(value) {
-            field = value
-            AUIRoomContext.shared().insertRoomInfo(value)
-            checkRoomValid()
+            if(field != value){
+                field = value
+                AUIRoomContext.shared().insertRoomInfo(value)
+                checkRoomValid()
+            }
         }
 
     init {
@@ -339,6 +347,7 @@ class AUIKaraokeRoomService(
         if (subscribeSuccess && roomInfo != null && lockRetrived && userSnapshotList != null) {
 
             micSeatService.initService{}
+
             if (enterRoomCompletion != null) {
                 enterRoomCompletion?.invoke(roomInfo)
                 enterRoomCompletion = null
@@ -354,6 +363,8 @@ class AUIKaraokeRoomService(
             if (snapShotOwnerId == null) {
                 cleanRoomInfo(channelName)
             }
+
+            imManagerService.serviceDidLoad()
         }
     }
 
@@ -434,6 +445,7 @@ class AUIKaraokeRoomService(
         micSeatService.deInitService { }
         chorusService.deInitService { }
         jukeboxService.deInitService { }
+        imManagerService.deInitService { }
         rtmManager.cleanBatchMetadata(
             channelName,
             remoteKeys = listOf(kRoomInfoAttrKey),

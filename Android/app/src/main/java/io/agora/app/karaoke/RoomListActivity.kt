@@ -59,6 +59,9 @@ class RoomListActivity : AppCompatActivity() {
         config.appId = BuildConfig.AGORA_APP_ID
         config.appCert = BuildConfig.AGORA_APP_CERT
         config.host = BuildConfig.SERVER_HOST
+        config.imAppKey = BuildConfig.IM_APP_KEY
+        config.imClientId = BuildConfig.IM_CLIENT_ID
+        config.imClientSecret = BuildConfig.IM_CLIENT_SECRET
         // Randomly generate local user information
         config.owner = AUIUserThumbnailInfo().apply {
             userId = randomUserId()
