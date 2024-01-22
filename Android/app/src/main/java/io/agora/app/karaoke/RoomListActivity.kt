@@ -16,16 +16,12 @@ import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
-import io.agora.asceneskit.karaoke.AUIAPIConfig
 import io.agora.asceneskit.karaoke.KaraokeUiKit
-import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
-import io.agora.auikit.model.AUIUserThumbnailInfo
 import io.agora.auikit.ui.basic.AUIAlertDialog
 import io.agora.auikit.ui.basic.AUISpaceItemDecoration
 import io.agora.auikit.utils.BindingViewHolder
-import java.util.Random
 import java.util.UUID
 
 class RoomListActivity : AppCompatActivity() {
@@ -48,32 +44,9 @@ class RoomListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initService()
         initView()
     }
 
-    private fun initService() {
-        // Create Common Config
-        val config = AUICommonConfig()
-        config.context = application
-        config.appId = BuildConfig.AGORA_APP_ID
-        config.appCert = BuildConfig.AGORA_APP_CERT
-        config.host = BuildConfig.SERVER_HOST
-        config.imAppKey = BuildConfig.IM_APP_KEY
-        config.imClientId = BuildConfig.IM_CLIENT_ID
-        config.imClientSecret = BuildConfig.IM_CLIENT_SECRET
-        // Randomly generate local user information
-        config.owner = AUIUserThumbnailInfo().apply {
-            userId = randomUserId()
-            userName = randomUserName()
-            userAvatar = randomAvatar()
-        }
-        // Setup karaokeUiKit
-        KaraokeUiKit.setup(
-            commonConfig = config, // must
-            apiConfig = AUIAPIConfig()
-        )
-    }
 
     private fun initView() {
         setTheme(ThemeId)
@@ -115,7 +88,7 @@ class RoomListActivity : AppCompatActivity() {
         viewBinding.btnCreateRoom.setOnClickListener {
             AUIAlertDialog(this@RoomListActivity).apply {
                 setTitle("房间主题")
-                setInput("房间主题", randomRoomName(), true)
+                setInput("房间主题", RandomUtils.randomRoomName(), true)
                 setPositiveButton("一起嗨歌") {
                     dismiss()
                     createRoom(inputText)
@@ -135,7 +108,7 @@ class RoomListActivity : AppCompatActivity() {
         val roomInfo = AUIRoomInfo()
         roomInfo.roomId = UUID.randomUUID().toString()
         roomInfo.roomName = roomName
-        roomInfo.thumbnail = randomAvatar()
+        roomInfo.thumbnail = RandomUtils.randomAvatar()
         roomInfo.owner = AUIRoomContext.shared().currentUserInfo
 
         RoomActivity.launch(this, true, roomInfo, ThemeId)
@@ -195,47 +168,7 @@ class RoomListActivity : AppCompatActivity() {
             }
         )
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        KaraokeUiKit.release()
-    }
 
-    private fun randomAvatar(): String {
-        val randomValue = Random().nextInt(8) + 1
-        return "https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/sample_avatar/sample_avatar_${randomValue}.png"
-    }
-
-    private fun randomUserId() = Random().nextInt(99999999).toString()
-
-    private fun randomRoomName(): String {
-        val randomValue = (Random().nextInt(9) + 1) * 10000 + Random().nextInt(10000)
-        return "room_${randomValue}"
-    }
-
-    private fun randomUserName(): String {
-        val userNames = arrayListOf(
-            "安迪",
-            "路易",
-            "汤姆",
-            "杰瑞",
-            "杰森",
-            "布朗",
-            "吉姆",
-            "露西",
-            "莉莉",
-            "韩梅梅",
-            "李雷",
-            "张三",
-            "李四",
-            "小红",
-            "小明",
-            "小刚",
-            "小霞",
-            "小智",
-        )
-        val randomValue = Random().nextInt(userNames.size) + 1
-        return userNames[randomValue % userNames.size]
-    }
 
     enum class LoadingMoreState {
         Normal,
