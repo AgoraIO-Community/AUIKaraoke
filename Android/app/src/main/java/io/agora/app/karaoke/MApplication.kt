@@ -7,13 +7,41 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Process
 import com.tencent.bugly.crashreport.CrashReport
+import io.agora.asceneskit.karaoke.AUIAPIConfig
+import io.agora.asceneskit.karaoke.KaraokeUiKit
+import io.agora.auikit.model.AUICommonConfig
+import io.agora.auikit.model.AUIUserThumbnailInfo
 
 class MApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initKaraokeUiKit()
         initBugly()
         listenAppResume()
+    }
+
+    private fun initKaraokeUiKit() {
+        // Create Common Config
+        val config = AUICommonConfig()
+        config.context = this
+        config.appId = BuildConfig.AGORA_APP_ID
+        config.appCert = BuildConfig.AGORA_APP_CERT
+        config.host = BuildConfig.SERVER_HOST
+        config.imAppKey = BuildConfig.IM_APP_KEY
+        config.imClientId = BuildConfig.IM_CLIENT_ID
+        config.imClientSecret = BuildConfig.IM_CLIENT_SECRET
+        // Randomly generate local user information
+        config.owner = AUIUserThumbnailInfo().apply {
+            userId = RandomUtils.randomUserId()
+            userName = RandomUtils.randomUserName()
+            userAvatar = RandomUtils.randomAvatar()
+        }
+        // Setup karaokeUiKit
+        KaraokeUiKit.setup(
+            commonConfig = config, // must
+            apiConfig = AUIAPIConfig()
+        )
     }
 
     private fun initBugly() {

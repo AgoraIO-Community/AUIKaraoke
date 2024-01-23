@@ -177,13 +177,4 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
         return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
     }
 
-    @Nullable
-    @Override
-    public AUIException onSongWillRemove(String userId, Map<String, String> metaData) {
-        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
-        if(onSeat){
-            return null;
-        }
-        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
-    }
 }
