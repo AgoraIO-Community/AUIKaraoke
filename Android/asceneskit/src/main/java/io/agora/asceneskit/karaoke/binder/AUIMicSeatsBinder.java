@@ -273,14 +273,15 @@ public class AUIMicSeatsBinder implements
 
     private void updateChorusTag() {
         IMicSeatItemView[] seatViewList = micSeatsView.getMicSeatItemViewList();
-        if (mSingingMusic != null) {
-            for (int i = 0; i < seatViewList.length; i++) {
-                AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(i);
-                IMicSeatItemView itemView = seatViewList[i];
-                if (micSeatInfo == null || micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
-                    itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
-                    continue;
-                }
+
+        for (int i = 0; i < seatViewList.length; i++) {
+            AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(i);
+            IMicSeatItemView itemView = seatViewList[i];
+            if (micSeatInfo == null || micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
+                itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
+                continue;
+            }
+            if (mSingingMusic != null) {
                 if (mSingingMusic.owner != null && micSeatInfo.user.userId.equals(mSingingMusic.owner.userId)) {
                     itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
                 } else if (mAccompanySingers.contains(micSeatInfo.user.userId)) {
@@ -288,6 +289,8 @@ public class AUIMicSeatsBinder implements
                 } else {
                     itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
                 }
+            } else {
+                itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
             }
         }
     }
