@@ -69,7 +69,7 @@ class AUIKaraokeRoomService(
         RtmConfig.Builder(
             AUIRoomContext.shared().requireCommonConfig().appId,
             AUIRoomContext.shared().currentUserInfo.userId
-        ).presenceTimeout(20).eventListener(object: RtmEventListener{
+        ).presenceTimeout(30).eventListener(object: RtmEventListener{
             override fun onLockEvent(event: LockEvent?) {
                 super.onLockEvent(event)
                 Log.d(TAG, "onLockEvent event: $event")
@@ -333,13 +333,12 @@ class AUIKaraokeRoomService(
     fun destroy() {
         cleanRoomInfo(channelName)
         cleanRoom()
-        AUIRoomContext.shared().getArbiter(channelName)?.destroy()
     }
 
     fun exit(): Boolean {
         cleanUserInfo(channelName, AUIRoomContext.shared().currentUserInfo.userId)
-        cleanRoom()
         AUIRoomContext.shared().getArbiter(channelName)?.release()
+        cleanRoom()
         return isRoomDestroyed
     }
 
@@ -451,6 +450,7 @@ class AUIKaraokeRoomService(
             remoteKeys = listOf(kRoomInfoAttrKey),
             fetchImmediately = true
         ) {}
+        AUIRoomContext.shared().getArbiter(channelName)?.destroy()
     }
 
 
