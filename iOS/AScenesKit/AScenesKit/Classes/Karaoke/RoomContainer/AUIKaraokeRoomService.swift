@@ -248,7 +248,7 @@ extension AUIKaraokeRoomService {
         let commonConfig = AUIRoomContext.shared.commonConfig!
         let userInfo = AUIRoomContext.shared.currentUserInfo
         let rtmConfig = AgoraRtmClientConfig(appId: commonConfig.appId, userId: userInfo.userId)
-        rtmConfig.presenceTimeout = 20
+        rtmConfig.presenceTimeout = 60
         if rtmConfig.userId.count == 0 {
             aui_error("userId is empty")
             assert(false, "userId is empty")
@@ -310,8 +310,12 @@ extension AUIKaraokeRoomService {
         micSeatImpl.kickSeat(seatIndex: idx) { err in }
     }
     
+    
+    /// 清理房间，仲裁者才有权限操作
+    /// - Parameter channelName: <#channelName description#>
     private func cleanRoomInfo(channelName: String) {
-        guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
+        guard let arbiter = AUIRoomContext.shared.getArbiter(channelName: channelName),
+              arbiter.isArbiter() else {return}
 
         micSeatImpl.deinitService?(completion: { err in })
         musicImpl.deinitService?(completion: { err in })
@@ -323,6 +327,8 @@ extension AUIKaraokeRoomService {
                                       fetchImmediately: true,
                                       completion: { err in
         })
+        
+        arbiter.destroy()
     }
     
     public func create(roomInfo: AUIRoomInfo, completion:@escaping (NSError?)->()) {
@@ -420,7 +426,7 @@ extension AUIKaraokeRoomService {
         let roomId = channelName!
         aui_info("exitRoom: \(roomId)", tag: kSertviceTag)
         cleanUserInfo(channelName: roomId, userId: AUIRoomContext.shared.currentUserInfo.userId)
-        cleanRoom()
+        cleanSDK()
         callback(nil)
     }
     
@@ -428,8 +434,7 @@ extension AUIKaraokeRoomService {
         let roomId = channelName!
         aui_info("destroyRoom: \(roomId)", tag: kSertviceTag)
         cleanRoomInfo(channelName: roomId)
-        cleanRoom()
-        AUIRoomContext.shared.getArbiter(channelName: channelName)?.destroy()
+        cleanSDK()
     }
     
     private func initRoom(roomInfo: AUIRoomInfo, completion:@escaping (NSError?)->()) {
@@ -456,7 +461,7 @@ extension AUIKaraokeRoomService {
         }
     }
     
-    private func cleanRoom() {
+    private func cleanSDK() {
         let roomId = channelName!
         self.rtmManager.unSubscribe(channelName: roomId)
         rtmManager.unsubscribeError(channelName: roomId, delegate: self)
