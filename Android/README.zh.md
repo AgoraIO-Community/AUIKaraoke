@@ -47,23 +47,52 @@
 
 ## 运行示例
 
-### 1. 一键部署Karaoke后端服务
+### 1. 获取声网AppID和证书
 
-[如何部署Karaoke后端服务](../backend/README_zh.md) 
+- 登录[声网控制台](https://console.shengwang.cn/)，如果没有账号则注册一个
 
-### 2. 项目运行
+- 创建项目
+
+  <img src="doc/auikitkaroke_img_01.png" alt="image-20240124160437660" width="800" />
+
+  <img src="doc/auikitkaroke_img_02.png" alt="image-20240124160550870" width="800" />
+
+- 复制AppID和证书，并保存下来
+
+  <img src="doc/auikitkaroke_img_03.png" alt="image-20240124160820861" width="800" />
+
+  
+
+
+
+### 2. 获取环信IM AppKey、ClientID和ClientSecret
+
+- 登录[环信即时通讯控制台](https://console.easemob.com/)，如果没有账号则创建一个
+
+- 点击添加并创建应用
+
+  <img src="doc/auikitkaroke_img_04.png" alt="image-20240124161743875" width="800" />
+
+- 点击查看进入应用详情页，复制AppKey、ClientID和ClientSecret，并保存下来
+
+  <img src="doc/auikitkaroke_img_05.png" alt="image-20240124161958384" width="800" />
+
+### 3. （可选）一键部署Karaoke后端服务
+
+- [部署Karaoke后端服务](../backend/README_zh.md) 
+- 获取后端服务请求域名，并保存下来
+
+> 如果没有部署，可以用声网提供的测试域名：https://service.shengwang.cn/uikit-karaoke-v2
+
+### 4. 配置并运行项目
 
 - 克隆或者直接下载项目源码
 
-- 在Android项目根目录的local.properties(如果不存在则创建一个)里配置步骤1部署的HostUrl
+- 在Android项目根目录的local.properties（如果不存在则手动创建）里配置上面获取得的声网AppID、声网App证书、环信IM AppKey、环信IM Client ID、环信IM Client Secret 和 后端服务请求域名
 
-  ![图片](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
+  <img src="doc/auikitkaroke_img_06.png" alt="image-20240124163450845" width="800" />
 
-``` 
-SERVER_HOST= （业务服务器域名）
-```
 
-> 如果暂无意部署后端服务，可以使用声网的测试域名： https://service.agora.io/uikit-karaoke。
 
 - 用 Android Studio 打开Android项目即可开始您的体验
 

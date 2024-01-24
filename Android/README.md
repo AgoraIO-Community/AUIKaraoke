@@ -44,26 +44,54 @@ This document mainly introduces how to quickly run through the AUIKaraoke exampl
 
 ## Getting Started
 
-### 1. Deployment backend services
+### 1. Obtain Agora AppID and AppCertificate
 
-[How to deploy Karaoke backend services](../backend)  
+- Login to [Agora Console](https://console.shengwang.cn/)，register one if no account.
 
-### 2. Build
+- Create project
 
-- Please fill in the domain name of the business server in the local.properties(If the file does not exist, create one) file of the project
+  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_01.png" alt="image-20240124160437660" width="800" />
+
+  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_02.png" alt="image-20240124160550870" width="800" />
+
+- Copy agora AppID and AppCertificate
+
+  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_03.png" alt="image-20240124160820861" width="800" />
+
   
-  ![PIC](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_serverhost_android.png)
-
-``` 
-SERVER_HOST= （Domain name of the business server）
-```
-
-> If you do not intend to deploy backend services temporarily, you can use the agora test server host:
->
->  https://service.agora.io/uikit-karaoke
 
 
-- Open the project with Android Studio and begin your experience.
+
+### 2. Obtain IM AppKey、ClientID和ClientSecret
+
+- Login [IM Console](https://console.easemob.com/)，register one if no account.
+
+- Create a application.
+
+  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_04.png" alt="image-20240124161743875" width="800" />
+
+- Enter application detail page，then copy IM AppKey、ClientID and ClientSecret
+
+  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_05.png" alt="image-20240124161958384" width="800" />
+
+### 3. (Optional)Deploying Karaoke backend services
+
+- [Deploying Karaoke backend services](../backend/README_zh.md) 
+- Obtain backend services host
+
+> If not deployed, you can use the test domain：https://service.shengwang.cn/uikit-karaoke-v2
+
+### 4. Configure and run
+
+- Clone or directly download the project source code
+
+- Configure the obtained agora AppID, agora AppCertificate, IM AppKey, IM Client ID, IM Client Secret, and backend service host url in the local. properties (manually created if not present) of the Android project root directory
+
+  <img src="doc/auikitkaroke_img_07.png" alt="image-20240124165757163" width="800" />
+
+
+
+- Open the Android project with Android Studio to start your experience.
 
 ## Quick integration
 Please review [KaraokeUIKit](./doc/KaraokeUIKit.md)
