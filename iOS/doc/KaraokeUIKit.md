@@ -1,58 +1,56 @@
 # KaraokeUIKit
 
-*English | [中文](KaraokeUIKit_zh.md)*
-
-KaraokeUIKit is a Karaoke scenario component that provides room management and the ability to pull up room pages. Developers can use this component to quickly build a Karaoke application。
+KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间页面的功能，开发者可以凭借该组件快速搭起一个Karaoke应用。
 
 
-## Quick Started
+## 快速集成
 
-### 1. Add Source Code
+### 1. 添加源码
 
-**Copy the following source code into your own project：**
+**将以下源码复制到自己项目里：**
 
 - [AScenesKit](../AScenesKit)
 - [KeyCenter.swift](../Example/AUIKaraoke/KeyCenter.swift)
 
-**Add dependencies on AScenesKit in the Podfile file (for example, when AScenesKit are placed in the same level directory as the Podfile)**
+**在Podfile文件里添加依赖AScenesKit(例如AScenesKit放置在Podfile同一级目录下时)**
 
 ```
   pod 'AScenesKit', :path => './AScenesKit'
 ```
 
-**Drag KeyCenter.swift into the project**
+**把KeyCenter.swift拖进工程里**
 
 ![](https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/add_keycenter_to_karaoke.jpg) 
 
-**Configure microphone and camera permissions**
+**在Info.plist里配置麦克风和摄像头权限**
 
 ![](https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/github_readme/uikit/config_app_privacy_ios.png)
 
 
-### 2. Initialize KaraokeUIKit
+### 2. 初始化KaraokeUIKit
 ```swift
-//Set basic information to KaraokeUIKit
+//设置基础信息到KaraokeUIKit里
 let commonConfig = AUICommonConfig()
 commonConfig.host = KeyCenter.HostUrl
 commonConfig.userId = userInfo.userId
 commonConfig.userName = userInfo.userName
 commonConfig.userAvatar = userInfo.userAvatar
 KaraokeUIKit.shared.setup(roomConfig: commonConfig,
-                          ktvApi: nil,      //If there is an externally initialized KTV API
-                          rtcEngine: nil,   //If there is an externally initialized rtc engine
-                          rtmClient: nil)   //If there is an externally initialized rtm client
+                          ktvApi: nil,      //如果有外部初始化的ktv api
+                          rtcEngine: nil,   //如果有外部初始化的rtc engine
+                          rtmClient: nil)   //如果有外部初始化的rtm client
 ```
 
-### 3. Get room list
+### 3. 获取房间列表
 ```swift
 KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: nil, 
                                     pageSize: kListCountPerPage, 
                                     callback: { error, list in
-    //Update UI
+    //更新UI
 })
 ```
 
-### 4. Create room
+### 4. 创建房间
 ```swift
 let room = AUICreateRoomInfo()
 room.roomName = text
@@ -62,96 +60,95 @@ KaraokeUIKit.shared.createRoom(roomInfo: room) { roomInfo in
     vc.roomInfo = roomInfo
     self.navigationController?.pushViewController(vc, animated: true)
 } failure: { error in
-    //error handler
+    //错误提示
 }
 ```
 
-### 5. Launch room
+### 5. 拉起房间
 ```swift
-//creating room containers
+//创建房间容器
 let karaokeView = AUIKaraokeRoomView(frame: self.view.bounds)
 karaokeView.onClickOffButton = { [weak self] in
-    //exit room callback
+    //退出房间的回调
 }
 self.view.addSubview(karaokeView)
 
-//enter room
+//进入房间
 KaraokeUIKit.shared.launchRoom(roomInfo: self.roomInfo!,
                                karaokeView: karaokeView) {[weak self] error in
     guard let self = self else {return}
     if let _ = error { return }
-    //subscription room destroyed callback
+    //订阅房间被销毁回调
     KaraokeUIKit.shared.bindRespDelegate(delegate: self)
 }
 ```
 
-### 6. Exit the room
-#### 6.1 Proactively exiting
+### 6. 退出房间
+#### 6.1 主动退出
 ```swift
-//AUIKaraokeRoomView provides a closure for onClickOffButton
+//AUIKaraokeRoomView提供了onClickOffButton点击返回的clousure
 karaokeView.onClickOffButton = { [weak self] in
     self.navigationController?.popViewController(animated: true)
     KaraokeUIKit.shared.destoryRoom(roomId: self.roomInfo?.roomId ?? "") 
 }
 ```
 
-#### 6.2 Room destruction passive exit
-Please refer to [Room Destruction] (# 7.1-Room-Destruction)
+#### 6.2 房间销毁被动退出
+详见[房间销毁](#7.1%20房间销毁)
 
 
-### 7. Exception handling
-#### 7.1 Room destruction
+### 7. 异常处理
+#### 7.1 房间销毁
 ```swift
-//Subscribe to the callback for AUIRoomManagerRespDelegate after KaraokeUIKit. shared. launchRoom
+//在KaraokeUIKit.shared.launchRoom之后订阅AUIRoomManagerRespDelegate的回调
 KaraokeUIKit.shared.bindRespDelegate(delegate: self)
 
-//Unsubscribe when exiting the room
+//在退出房间时取消订阅
 KaraokeUIKit.shared.unbindRespDelegate(delegate: self)
 
-//Process room destruction through onRoomDestroy in the AUIRoomManagerRespDelegate callback method
+//然后通过AUIRoomManagerRespDelegate回调方法中的onRoomDestroy来处理房间销毁
 func onRoomDestroy(roomId: String) {
-    //Processing room was destroyed
+    //处理房间被销毁
 }
 ```
 
-### 8 Skin changing
-- AUIKit supports one click skin changing, and you can set the skin using the following methods
+### 8 换肤
+- AUIKit支持一键换肤，您可以通过下列方法设置皮肤
 ```swift
-//Reset to default theme
+//重置成默认主题
 AUIRoomContext.shared.resetTheme()
 ```
 ```swift
-//Switch to the next theme
+//切换到下一个主题
 AUIRoomContext.shared.switchThemeToNext()
 ```
 
 ```swift
-//Specify a theme
-AUIRoomContext.shared.switchTheme(themeName: "UIKit")
+//指定一个主题
+AUIRoomContext.shared.switchTheme(themeName: "Light")
 ```
+- 也可通过修改[配置文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme)或者替换[资源文件](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)来更换组件的皮肤
+- 更多换肤问题可以参考[皮肤设置](./KaraokeTheme.md)
 
-- You can also change the skin of the component by modifying the [configuration file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/theme) or replacing the [resource file](../AUIKit/AUIKit/Resource/auiTheme.bundle/UIKit/resource)
-- For more skin changing issues, please refer to [Skin Settings](./KaraokeTheme.md)
-
-# API reference
+# API参考
 ## setup
-Initialization
+初始化
 ```swift
 func setup(roomConfig: AUICommonConfig,
            ktvApi: KTVApiDelegate? = nil,
            rtcEngine: AgoraRtcEngineKit? = nil,
            rtmClient: AgoraRtmClientKit? = nil) 
 ```
-The parameters are shown in the table below:
-| parameter   | type            | meaning     |
+
+| 参数        | 类型            | 含义                                                         |
 | ----------- | --------------- | ------------------------------------------------------------ |
-| config      | AUICommonConfig | General configuration, including user information and domain name, etc.                             |
-| ktvApi      | KTVApi          | (Optional) Agora KTV scene API instance. When the KTVApi has been integrated in the project, it can be imported, otherwise the empty transmission will be created internally. |
-| rtcEngine | AgoraRtcEngineKit     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
-| rtmClient   | AgoraRtmClientKit       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally.|
+| config      | AUICommonConfig | 通用配置，包含用户信息和域名等                              |
+| ktvApi      | KTVApi          | （可选）声网KTV场景化API实例。当项目里已经集成了KTV场景化可以传入，否则传空由内部自行创建。 |
+| rtcEngineEx | AgoraRtcEngineKit     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。 |
+| rtmClient   | AgoraRtmClientKit       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。 |
 
 ## createRoom
-Create a Room
+创建房间
 
 ```swift
 func createRoom(roomInfo: AUICreateRoomInfo,
@@ -159,17 +156,20 @@ func createRoom(roomInfo: AUICreateRoomInfo,
                 failure: ((Error)->())?)
 ```
 
-The parameters are shown in the table below:
-| parameter   | type            | meaning     |
+
+参数如下表所示：
+
+| 参数           | 类型              | 含义                             |
 | -------------- | ----------------- | -------------------------------- |
-| roomInfo       | AUICreateRoomInfo | Information needed to create a room          |
-| success        | Closure          | Success callback, success will return a room information |
-| failure        | Closure          | Failure callback                         |
+| roomInfo | AUICreateRoomInfo | 创建房间所需的信息               |
+| success        | Closure          | 成功回调，成功会返回一个房间信息 |
+| failure        | Closure          | 失败回调                         |
 
 
 
 ### getRoomInfoList
-Get room list
+
+获取房间列表
 
 ```swift
 func getRoomInfoList(lastCreateTime: Int64, 
@@ -177,186 +177,136 @@ func getRoomInfoList(lastCreateTime: Int64,
                      callback: @escaping AUIRoomListCallback)
 ```
 
-The parameters are shown in the table below:
-| parameter   | type            | meaning     |
-| --------- | -------- | ------------------------------------ |
-| lastCreateTime | Int64     | The page start time, difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085, If it is 0, the current server time will be used
+参数如下表所示：
 
-                  |
-| pageSize  | Int      | The page size                                 |
-| callback   | Closure | Completion callback|
+| 参数      | 类型     | 含义                                 |
+| --------- | -------- | ------------------------------------ |
+| lastCreateTime | Int64     | 起始时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085，为0则使用服务器当前时间                    |
+| pageSize  | Int      | 页数                                 |
+| callback   | Closure | 完成回调 |
 
 ### launchRoom
-Launch Room
+
 ```swift
 func launchRoom(roomInfo: AUIRoomInfo,
                 karaokeView: AUIKaraokeRoomView,
                 completion: @escaping (NSError?)->()) 
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter   | type            | meaning     |
+| 参数        | 类型            | 含义                                  |
 | ----------- | --------------- | ------------------------------------- |
-| roomInfo    | AUIRoomInfo     | Room information                     |
-| karaokeView | KaraokeRoomView | Room UI View                    |
-| completion | Closure | Join the room to complete the callback                          |
+| roomInfo    | AUIRoomInfo     | 房间信息                              |
+| karaokeView | KaraokeRoomView | 房间UI View                           |
+| completion | Closure | 加入房间完成回调                           |
 
 ### destroyRoom
-Destroy Room
+
+销毁房间
 
 ```swift
 func destoryRoom(roomId: String)
 ```
 
-The parameters are shown in the table below:
-
-| parameter   | type            | meaning     |
-| ------ | ------ | -------------- |
-| roomId | String | The ID of the room to destroy |
-
-
-
-### renew
-
-Update room token
-
-```swift
-func renew(config: AUIRoomConfig)
-```
-
-The parameters are shown in the table below:
-
-| parameter   | type            | meaning     |
-| ------ | ------ | -------------- |
-| config | AUIRoomConfig | Configuration related to the room, including subchannel names and tokens |
-
-### subscribeError
-
-Abnormal callback of subscription rooms, such as token expiration, can be updated through the renew method
-
-```swift
-func subscribeError(delegate: AUIRtmErrorProxyDelegate)
-```
-
-The parameters are shown in the table below:
-
-| parameter   | type            | meaning     |
-| ------ | ------ | -------------- |
-| delegate | AUIRtmErrorProxyDelegate | Error callback object |
-
-### unsubscribeError
-
-Exception callback for unsubscribing to a room
-
-```swift
-func unsubscribeError(delegate: AUIRtmErrorProxyDelegate)
-```
-
-The parameters are shown in the table below:
-
-| parameter   | type            | meaning     |
-| ------ | ------ | -------------- |
-| delegate | AUIRtmErrorProxyDelegate | Error callback object |
-
 ### bindRespDelegate
 
-Bind the response of the room, such as the room being destroyed, the user being kicked out, the room's information being updated, etc
+绑定房间响应，比如房间被销毁、用户被踢出、房间的信息更新等
 
 ```swift
 func bindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter   | type            | meaning     |
+| 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| delegate | AUIRoomManagerRespDelegate | Response callback object |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
 
 ### unbindRespDelegate
 
-Response to unbinding the room
+解除绑定房间的响应
 
 ```swift
 func unbindRespDelegate(delegate: AUIRoomManagerRespDelegate)
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter   | type            | meaning     |
+| 参数   | 类型   | 含义           |
 | ------ | ------ | -------------- |
-| delegate | AUIRoomManagerRespDelegate | Response callback object |
+| delegate | AUIRoomManagerRespDelegate | 响应回调对象 |
 
 
-## Data Model
+## 数据模型
 
 ### AUICommonConfig
 
-| parameter   | type            | meaning     |
+| 参数       | 类型    | 含义                 |
 | ---------- | ------- | -------------------- |
-| host       | String  | Backend service domain name     |
-| userId     | String  | User ID              |
-| userName   | String  | User name            |
-| userAvatar | String  | User avatar url      |
+| host       | String  | 后端服务域名          |
+| userId     | String  | 用户ID               |
+| userName   | String  | 用户名               |
+| userAvatar | String  | 用户头像             |
 
 ### AUICreateRoomInfo
-| parameter   | type            | meaning     |
+| 参数       | 类型    | 含义                 |
 | ---------- | ------- | -------------------- |
-| roomName      | String  | Room name           |
-| thumbnail       | String  | Thumbnails on Room List          |
-| micSeatCount     | UInt  | Number of mic seat, default to 8             |
-| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
-| password | String?  | [Optional] Room password            |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
 
 ### AUIRoomInfo
-| parameter   | type            | meaning     |
+
+| 参数        | 类型                 | 含义         |
 | ----------- | -------------------- | ------------ |
-| roomName      | String  | Room name           |
-| thumbnail       | String  | Thumbnails on Room List          |
-| micSeatCount     | UInt  | Number of mic seat, default to 8             |
-| micSeatStyle   | UInt  | mic seat style, default to 3, reserved attributes, currently KTV does not implement special wheat slot layout               |
-| password | String?  | [Optional] Room password            |
-| roomId      | String               | Room id       |
-| roomOwner   | AUIUserThumbnailInfo | Room information   |
-| memberCount | Int                  | Online user count  |
-| createTime  | Int64                | Room create time, difference from 1970-01-01:00:00:00, in milliseconds, For example: 1681879844085 |
+| roomName      | String  | 房间名称            |
+| thumbnail       | String  | 房间列表上的缩略图          |
+| micSeatCount     | UInt  | 麦位个数，默认为8              |
+| micSeatStyle   | UInt  | 麦位样式，默认为3， 预留属性，目前K歌未实现特殊麦位布局               |
+| password | String?  | [可选]房间密码            |
+| roomId      | String               | 房间id       |
+| roomOwner   | AUIUserThumbnailInfo | 房主信息     |
+| memberCount | Int                  | 房间人数     |
+| createTime  | Int64                 | 房间创建时间，与1970-01-01:00:00:00的差值，单位：毫秒，例如:1681879844085 |
 
 ### AUIUserThumbnailInfo
 
-| parameter   | type            | meaning     |
+| 参数       | 类型   | 含义     |
 | ---------- | ------ | -------- |
-| userId     | String | Room id   |
-| userName   | String | User name   |
-| userAvatar | String | User avatar url |
-
+| userId     | String | 用户Id   |
+| userName   | String | 用户名   |
+| userAvatar | String | 用户头像 |
 
 ### AUIRoomManagerRespDelegate
-```AUIRoomManagerRespDelegate``` protocol is used to handle various response events related to room operations. It provides the following methods that can be implemented by classes following this protocol to respond to specific events.
+```AUIRoomManagerRespDelegate``` 协议用于处理与房间操作相关的各种响应事件。它提供了以下方法，可以由遵循此协议的类来实现，以响应特定的事件。
 
-#### Method
+#### 方法
   - ```func onRoomDestroy(roomId: String)```
-    The callback method called when the room is destroyed.
-    - Parameter:
-      - ```roomId```: Room ID.
+    房间被销毁时调用的回调方法。
+    - 参数：
+      - ```roomId```: 房间ID。
     >
   - ```func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo)```
-    The callback method called when room information changes.
-    - Parameter:
-      - ```roomId```: Room ID.
-      - ```roomInfo```: Room information.
+    房间信息发生变更时调用的回调方法。
+    - 参数：
+      - ```roomId```:房间ID。
+      - ```roomInfo```:房间信息。
     >
   - ```func onRoomAnnouncementChange(roomId: String, announcement: String)```
-    The method called when a room announcement changes.
-    - Parameter:
-      - ```roomId```: Room ID.
-      - ```announcement```: Announcement of changes.
+    房间公告发生变更时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```announcement```: 公告变更内容。
     >
 - ```func onRoomUserBeKicked(roomId: String, userId: String)```
-    The method called when a room user is kicked out of the room.
-    - Parameter:
-      - ```roomId```: Room ID.
-      - ```userId```: User ID.
+    房间用户被踢出房间时调用的方法。
+    - 参数：
+      - ```roomId```: 房间ID。
+      - ```userId```: 用户ID。
 
-## License
-Copyright © Agora Corporation. All rights reserved.
-Licensed under the [MIT license](../LICENSE).
+## 许可证
+版权所有 Agora, Inc. 保留所有权利。
+使用 [MIT 许可证](../LICENSE)
