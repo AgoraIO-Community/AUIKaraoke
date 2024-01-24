@@ -1,6 +1,6 @@
 # Karaoke FAQ
 
-*English | [中文](KaraokeFAQ_zh.md)*
+*English | [中文](KaraokeFAQ.zh.md)*
 
 ## 1 Console error -10301：
 
