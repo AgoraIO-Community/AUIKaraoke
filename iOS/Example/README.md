@@ -45,9 +45,10 @@
   <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_03.png" width="800" />
 
 - 开启RTM
+  
   <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_04.png" width="800" />
-  >
-  >
+  
+
   <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_05.png" width="800" />
 
 ### 2. 获取环信IM AppKey、ClientID和ClientSecret
@@ -60,7 +61,7 @@
 
 - 点击查看进入应用详情页，复制AppKey、ClientID和ClientSecret，并保存下来
 
-  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_easemob_02.png" alt="image-20240124161958384" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_easemob_02.png" width="800" />
 
 ### 3. （可选）一键部署Karaoke后端服务
 
