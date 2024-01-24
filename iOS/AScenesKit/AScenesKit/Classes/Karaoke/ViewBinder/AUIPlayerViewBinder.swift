@@ -146,22 +146,20 @@ extension AUIPlayerViewBinder: AUIPlayerViewDelegate {
     }
 
     public func onVoiceConversionDidChanged( index: Int) {
-        var effect: AgoraAudioEffectPreset = .off
+        var effect: AgoraVoiceConversionPreset = .off
         switch index {
-            case 0:
-                effect = .off
             case 1:
-                effect = .voiceChangerEffectBoy
+                effect = .neutral
             case 2:
-                effect = .voiceChangerEffectGirl
+                effect = .sweet
             case 3:
-                effect = .voiceChangerEffectUncle
+                effect = .changerSolid
             case 4:
-                effect = .roomAcousEthereal
-        default:
-            effect = .off
+                effect = .changerBass
+            default:
+                break
         }
-        playerServiceDelegate?.setAudioEffectPreset(present: effect)
+        playerServiceDelegate?.setVoiceConversionPreset(preset: effect)
         playerView?.voiceConversionIdx = index
     }
     
