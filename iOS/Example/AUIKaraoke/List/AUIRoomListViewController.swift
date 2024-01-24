@@ -120,7 +120,7 @@ class AUIRoomListViewController: UIViewController {
         commonConfig.appId = KeyCenter.AppId
         commonConfig.appCert = KeyCenter.AppCertificate
         commonConfig.imAppKey = KeyCenter.IMAppKey
-        commonConfig.imClientId = KeyCenter.AppId
+        commonConfig.imClientId = KeyCenter.IMClientId
         commonConfig.imClientSecret = KeyCenter.IMClientSecret
         commonConfig.host = KeyCenter.HostUrl
         let ownerInfo = AUIUserThumbnailInfo()
