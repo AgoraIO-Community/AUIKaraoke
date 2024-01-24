@@ -1,7 +1,9 @@
 package io.agora.asceneskit.karaoke.binder;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,11 +30,14 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
     private IAUIChorusService chorusService;
 
     private Handler mMainHandler;
+    private final Context context;
 
-    public AUIJukeboxBinder(IAUIJukeboxView jukeboxView,
+    public AUIJukeboxBinder(Context context,
+                            IAUIJukeboxView jukeboxView,
                             IAUIJukeboxService jukeboxService,
                             IAUIMicSeatService micSeatService,
                             IAUIChorusService chorusService) {
+        this.context = context;
         this.jukeboxView = jukeboxView;
         this.jukeboxService = jukeboxService;
         this.micSeatService = micSeatService;
@@ -142,22 +147,46 @@ public class AUIJukeboxBinder implements IAUIBindable, IAUIJukeboxService.AUIJuk
         model.name = song.getName();
         model.singer = song.getSinger();
         model.poster = song.getPost();
-        jukeboxService.chooseSong(model, null);
+        jukeboxService.chooseSong(model, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onSongPinged(AUIMusicInfo song) {
-        jukeboxService.pingSong(song.getSongCode(), null);
+        jukeboxService.pingSong(song.getSongCode(), error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onSongDeleted(AUIMusicInfo song) {
-        jukeboxService.removeSong(song.getSongCode(), null);
+        jukeboxService.removeSong(song.getSongCode(), error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onSongSwitched(AUIMusicInfo song) {
-        jukeboxService.removeSong(song.getSongCode(), null);
+        jukeboxService.removeSong(song.getSongCode(), error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     // IAUIJukeboxService.AUIJukeboxRespDelegate implements

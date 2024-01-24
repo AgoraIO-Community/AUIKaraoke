@@ -69,7 +69,7 @@ class AUIKaraokeRoomService(
         RtmConfig.Builder(
             AUIRoomContext.shared().requireCommonConfig().appId,
             AUIRoomContext.shared().currentUserInfo.userId
-        ).presenceTimeout(30).eventListener(object: RtmEventListener{
+        ).presenceTimeout(60).eventListener(object: RtmEventListener{
             override fun onLockEvent(event: LockEvent?) {
                 super.onLockEvent(event)
                 Log.d(TAG, "onLockEvent event: $event")
@@ -307,7 +307,7 @@ class AUIKaraokeRoomService(
             if (roomInfo == null) {
                 rtmManager.getMetadata(roomId) { _, metadata ->
                     val payloadInfo = GsonTools.toBean<AUIRtmPayload<AUIRoomInfo>>(
-                        metadata?.get(kRoomInfoAttrKey),
+                        metadata?.metadataItems?.find { it.key == kRoomInfoAttrKey }?.value,
                         object : TypeToken<AUIRtmPayload<AUIRoomInfo>>() {}.type
                     )
                     payloadInfo?.payload?.roomId = payloadInfo?.roomId ?: ""

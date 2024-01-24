@@ -544,7 +544,11 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (songPlayingModel == null) return;
 
         chorusService.leaveChorus(songPlayingModel.songCode, chorusService.getRoomContext().currentUserInfo.userId, error -> {
-
+            if(error != null){
+                ThreadManager.getInstance().runOnMainThread(() -> {
+                    Toast.makeText(musicPlayerView.getContext(), "Join chorus failed. code=" + error.code + ", msg=" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
         });
     }
 }

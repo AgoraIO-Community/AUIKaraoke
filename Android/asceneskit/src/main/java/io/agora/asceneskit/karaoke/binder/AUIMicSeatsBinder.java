@@ -1,10 +1,12 @@
 package io.agora.asceneskit.karaoke.binder;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +41,8 @@ public class AUIMicSeatsBinder implements
         IAUIChorusService.AUIChorusRespObserver,
         IAUIJukeboxService.AUIJukeboxRespObserver,
         IAUIUserService.AUIUserRespObserver {
+
+    private final Context context;
     private final IMicSeatsView micSeatsView;
     private final IAUIUserService userService;
     private final IAUIMicSeatService micSeatService;
@@ -50,11 +54,13 @@ public class AUIMicSeatsBinder implements
     private LinkedList<String> mAccompanySingers = new LinkedList<String>();
 
     public AUIMicSeatsBinder(
+            Context context,
             IMicSeatsView micSeatsView,
             IAUIUserService userService,
             IAUIMicSeatService micSeatService,
             IAUIJukeboxService jukeboxService,
             IAUIChorusService chorusService) {
+        this.context = context;
         this.userService = userService;
         this.micSeatsView = micSeatsView;
         this.micSeatService = micSeatService;
@@ -353,37 +359,79 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onClickEnterSeat(int index) {
-        micSeatService.enterSeat(index, null);
+        micSeatService.enterSeat(index, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickLeaveSeat(int index) {
-        micSeatService.leaveSeat(null);
+        micSeatService.leaveSeat(error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickKickSeat(int index) {
-        micSeatService.kickSeat(index, null);
+        micSeatService.kickSeat(index, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickCloseSeat(int index, boolean isClose) {
-        micSeatService.closeSeat(index, isClose, null);
+        micSeatService.closeSeat(index, isClose, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickMuteAudio(int index, boolean mute) {
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         if (isRoomOwner) {
-            micSeatService.muteAudioSeat(index, mute, null);
+            micSeatService.muteAudioSeat(index, mute, error -> {
+                if(error != null){
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         } else {
-            userService.muteUserAudio(mute, null);
+            userService.muteUserAudio(mute, error -> {
+                if(error != null){
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         }
     }
 
     @Override
     public void onClickMuteVideo(int index, boolean mute) {
-        micSeatService.muteVideoSeat(index, mute, null);
+        micSeatService.muteVideoSeat(index, mute, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override

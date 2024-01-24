@@ -146,6 +146,7 @@ class KaraokeRoomView : FrameLayout,
 
         // 麦位
         val micSeatsBinder = AUIMicSeatsBinder(
+            context,
             mRoomViewBinding.micSeatsView,
             service.userService,
             service.micSeatService,
@@ -205,6 +206,7 @@ class KaraokeRoomView : FrameLayout,
         val service = mRoomService ?: return
         val jukeboxView = AUIJukeboxView(context)
         val binder = AUIJukeboxBinder(
+            context,
             jukeboxView,
             service.jukeboxService,
             service.micSeatService,
