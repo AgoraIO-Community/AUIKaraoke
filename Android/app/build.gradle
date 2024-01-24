@@ -6,11 +6,11 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "io.agora.karaoke.localservice"
+        applicationId "io.agora.karaoke"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 5
-        versionName "0.5.0"
+        versionCode 10
+        versionName "1.0.0"
         ndk.abiFilters 'armeabi-v7a','arm64-v8a'//, 'x86', 'x86-64'
 
         def properties = new Properties()
@@ -24,6 +24,9 @@ android {
         final def IM_CLIENT_SECRET = properties.getProperty("IM_CLIENT_SECRET")
         if (SERVER_HOST.isEmpty()) {
             throw new GradleException("请在 local.properties 中配置完整的 SERVER_HOST")
+        }
+        if (AGORA_APP_ID.isEmpty()) {
+            throw new GradleException("请在 local.properties 中配置完整的 AGORA_APP_ID")
         }
 
         buildConfigField "String", "SERVER_HOST", "\"$SERVER_HOST\""
