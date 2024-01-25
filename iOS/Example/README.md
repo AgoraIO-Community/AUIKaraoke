@@ -65,7 +65,7 @@
 
 ### 3. （可选）一键部署Karaoke后端服务
 
-- [部署Karaoke后端服务](../../backend/README_zh.md) 
+- [部署Karaoke后端服务](../../backend) 
 - 获取后端服务请求域名，并保存下来
 
 ### 4. 配置并运行项目
