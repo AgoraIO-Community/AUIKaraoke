@@ -1,33 +1,36 @@
-# AUIKaraoke-Android Quick Start
+# AUIKitKaraoke Android 示例工程快速跑通
 
-*English | [中文](README.zh.md)*
+*[English](README.md) | 中文*
 
-This document mainly introduces how to quickly run through the AUIKaraoke example  and experience online karaoke scenarios, including micseat service, user service, music service, song player service, etc. For a more detailed introduction, please refer to  [AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/Android/README.md)
+本文档主要介绍如何快速跑通 AUIKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/Android/README.zh.md)
 
-## Architecture
+
+
+## 架构图
 
 ![auikitkaraoke-architecture](https://download.agora.io/demo/release/auikitkaraoke-architecture.png)
 
-## Directory
+
+## 目录结构
 
 ```
 .
-├── app                                       				            // Demo
+├── app                                       				// Demo
 └── asceneskit																				
     └── src
         └── main
             ├── java
             │   └── io.agora.asceneskit.karaoke				
-            │       ├── AUIKaraokeRoomService.kt	    // Room service, manage AUIKit services 
-            │       ├── KaraokeRoomView.kt            // Room UI，manage AUIKit UI components
-            │       ├── KaraokeUiKit.kt           	// Karaoke launch class
+            │       ├── AUIKaraokeRoomService.kt	    // 房间服务，管理AUIKit各个Service
+            │       ├── KaraokeRoomView.kt            // 房间UI，管理AUIKit各个UI组件
+            │       ├── KaraokeUiKit.kt           	// K歌入口类
             │       └── binder
-            │           ├── AUIChatBottomBarBinder.kt	// The binder of bottom bar UI and services
-            │           ├── AUIChatListBinder.kt		// The binder of chat list UI and services
-            │           ├── AUIGiftBarrageBinder.kt	// The binder of gift UI and services
-            │           ├── AUIJukeboxBinder.java 	// The binder of jukebox UI and services
-            │           ├── AUIMicSeatsBinder.java	// The binder of micseats UI and services
-            │           ├── AUIMusicPlayerBinder.java	// The binder of music player UI and services
+            │           ├── AUIChatBottomBarBinder.kt	// 底部栏UI和service的绑定者
+            │           ├── AUIChatListBinder.kt		// 聊天UI和service的绑定者
+            │           ├── AUIGiftBarrageBinder.kt   // 礼物UI和service的绑定者
+            │           ├── AUIJukeboxBinder.java 	// 点歌器UI和service的绑定者
+            │           ├── AUIMicSeatsBinder.java	// 麦位UI和service的绑定者
+            │           ├── AUIMusicPlayerBinder.java	// 播放器UI和service的绑定者
             │           └── IAUIBindable.java
             ├── res
             └── res-ktv
@@ -35,74 +38,85 @@ This document mainly introduces how to quickly run through the AUIKaraoke exampl
 
 
 
-## Requirements
+## 环境准备
 
-- <mark>Minimum Compatibility with Android 7.0</mark>（SDK API Level 24）
-- Android Studio 3.5 and above versions.
-- Mobile devices with Android 7.0 and above.
-- JDK 17.
+- <mark>最低兼容 Android 7.0</mark>（SDK API Level 24）
+- Android Studio 3.5及以上版本。
+- Android 7.0 及以上的手机设备。
+- JDK 17
 
-## Getting Started
+## 运行示例
 
-### 1. Obtain Agora AppID and AppCertificate
+### 1. 获取声网AppID和证书
 
-- Login to [Agora Console](https://console.shengwang.cn/)，register one if no account.
+- 登录[声网控制台](https://console.shengwang.cn/)，如果没有账号则注册一个
 
-- Create project
+- 创建项目
 
-  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_01.png" alt="image-20240124160437660" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_01.png" alt="image-20240124160437660" width="800" />
 
-  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_02.png" alt="image-20240124160550870" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_02.png" alt="image-20240124160550870" width="800" />
 
-- Copy agora AppID and AppCertificate
+- 复制AppID和证书，并保存下来
 
-  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_03.png" alt="image-20240124160820861" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_03.png" alt="image-20240124160820861" width="800" />
 
-  
+- 开启RTM
 
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_04.png" width="800" />
 
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_05.png" width="800" />
 
-### 2. Obtain IM AppKey、ClientID和ClientSecret
+### 2. 获取环信IM AppKey、ClientID和ClientSecret
 
-- Login [IM Console](https://console.easemob.com/)，register one if no account.
+- 登录[环信即时通讯控制台](https://console.easemob.com/)，如果没有账号则创建一个
 
-- Create a application.
+- 点击添加并创建应用
 
-  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_04.png" alt="image-20240124161743875" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_easemob_01.png" alt="image-20240124161743875" width="800" />
 
-- Enter application detail page，then copy IM AppKey、ClientID and ClientSecret
+- 点击查看进入应用详情页，复制AppKey、ClientID和ClientSecret，并保存下来
 
-  <img src="/Users/xcz/Workspaces/AUIKitKaraoke/Android/doc/auikitkaroke_img_05.png" alt="image-20240124161958384" width="800" />
+  <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_easemob_02.png" alt="image-20240124161958384" width="800" />
 
-### 3. (Optional)Deploying Karaoke backend services
+### 3. （可选）一键部署Karaoke后端服务
 
-- [Deploying Karaoke backend services](../backend/README_zh.md) 
-- Obtain backend services host
-
-> If not deployed, you can use the test domain：https://service.shengwang.cn/uikit-karaoke-v2
-
-### 4. Configure and run
-
-- Clone or directly download the project source code
-
-- Configure the obtained agora AppID, agora AppCertificate, IM AppKey, IM Client ID, IM Client Secret, and backend service host url in the local. properties (manually created if not present) of the Android project root directory
-
-  <img src="doc/auikitkaroke_img_07.png" alt="image-20240124165757163" width="800" />
+- [部署Karaoke后端服务](../backend/README_zh.md) 
+- 获取后端服务请求域名，并保存下来
 
 
+### 4. 配置并运行项目
 
-- Open the Android project with Android Studio to start your experience.
+- 克隆或者直接下载项目源码
 
-## Quick integration
-Please review [KaraokeUIKit](./doc/KaraokeUIKit.md)
+- 在Android项目根目录的local.properties（如果不存在则手动创建）里填入步骤1获取的声网证书、步骤2获取的环信证书，以及步骤3部署的HostUrl
 
-## FAQ
+```xml
+SERVER_HOST=<#Your HostUrl#>
+AGORA_APP_ID=<#Your Agora AppId#>
+AGORA_APP_CERT=<#Your Agora AppCertificate#>
+IM_APP_KEY=<#Your IM AppKey#>
+IM_CLIENT_ID=<#Your IM ClientID#>
+IM_CLIENT_SECRET=<#Your IM ClientSecret#>
+```
 
-- [FAQ](./doc/KaraokeFAQ.md)
+> 如果暂无意部署后端服务，可以用声网提供的测试域名：https://service.shengwang.cn/uikit-karaoke-v2
+> 如果想尝试运行项目，可以使用声网提供的测试Agora AppID：925dd81d763a42919862fee9f3f204a7，如下图配置：
+>
+> <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_06.png" alt="image-20240125104152743" width="800" />
 
-- If you have any other questions, please feedback to the [developer community](
 
-## License
+- 用 Android Studio 打开Android项目即可开始您的体验
 
-Copyright © Agora Corporation. All rights reserved.
-Licensed under the [MIT license](LICENSE).
+## 快速集成
+
+请查看[KaraokeUIKit](./doc/KaraokeUIKit.zh.md)
+
+## 常见问题
+
+- [常见问题](./doc/KaraokeFAQ.zh.md)
+- 如有其他问题请反馈至 [开发者社区](https://www.rtcdeveloper.cn/cn/community/discussion/0)
+
+## 许可证
+版权所有 Agora, Inc. 保留所有权利。
+使用 [MIT 许可证](LICENSE)
