@@ -1,10 +1,6 @@
 # AUIKitKaraoke Android 示例工程快速跑通
 
-*[English](README.md) | 中文*
-
 本文档主要介绍如何快速跑通 AUIKaraoke 示例工程，体验在线 K 歌场景，包括麦位管理、用户管理、歌曲管理、歌曲播放等，更详细的介绍，请参考[AUIKit](https://github.com/AgoraIO-Community/AUIKit/blob/main/Android/README.zh.md)
-
-
 
 ## 架构图
 
@@ -110,7 +106,7 @@ IM_CLIENT_SECRET=<#Your IM ClientSecret#>
 
 ## 快速集成
 
-请查看[KaraokeUIKit](./doc/KaraokeUIKit.zh.md)
+请查看[KaraokeUIKit](./doc/KaraokeUIKit.md)
 
 ## 常见问题
 
