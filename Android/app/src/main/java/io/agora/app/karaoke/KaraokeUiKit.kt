@@ -1,5 +1,9 @@
-package io.agora.asceneskit.karaoke
+package io.agora.app.karaoke
 
+import io.agora.asceneskit.karaoke.AUIAPIConfig
+import io.agora.asceneskit.karaoke.AUIKaraokeRoomService
+import io.agora.asceneskit.karaoke.AUIKaraokeRoomServiceRespObserver
+import io.agora.asceneskit.karaoke.KaraokeRoomView
 import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUIRoomConfig
 import io.agora.auikit.model.AUIRoomContext

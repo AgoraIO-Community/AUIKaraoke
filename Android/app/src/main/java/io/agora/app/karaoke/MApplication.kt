@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Process
 import com.tencent.bugly.crashreport.CrashReport
 import io.agora.asceneskit.karaoke.AUIAPIConfig
-import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUICommonConfig
 import io.agora.auikit.model.AUIUserThumbnailInfo
 

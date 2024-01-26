@@ -9,7 +9,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import io.agora.app.karaoke.databinding.RoomActivityBinding
 import io.agora.asceneskit.karaoke.AUIKaraokeRoomServiceRespObserver
-import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.ui.basic.AUIAlertDialog
