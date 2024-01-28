@@ -1,35 +1,31 @@
 # UIKit Karaoke Scene Backend Service
 English | [中文](README_zh.md)
 ## Project Introduction
-- This project is developed based on the Spring Boot framework, relying on Redis/MongoDB/RTM/NCS components.
-- Redis is mainly used for online user number real-time updates and data consistency through distributed lock.
+- This project is developed based on the Spring Boot framework, relying on Redis/MongoDB components.
+- Redis is primarily used to provide distributed caching and distributed locking mechanisms to ensure data consistency during updates.
 - MongoDB is mainly used to maintain the room list.
-- RTM is used to store scene data and message transmission channels.
-- NCS is used for RTC channel event callback notification and processing of personnel entering and leaving/room destruction logic.
 
 ## Service Deployment
 ### Quick Experience
 - The service installation environment needs to have the latest Docker environment installed, and the [docker-compose](https://docs.docker.com/compose/) deployment tool installed.
 - You can download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/), which has already installed docker-compose.
-- To launch the service locally, you need to open the docker-compose.yaml file and fill in the [appId and Secret](https://docs.agora.io/en/video-calling/reference/manage-agora-account?platform=android#get-the-app-id) obtained from Agora.
+- To launch the service locally, you need to open the docker-compose.yaml file and fill in the [appId and Secret](https://docs.agora.io/en/video-calling/reference/manage-agora-account?platform=android#get-the-app-id) obtained from Agora and [Huanxin](<https://docs-im-beta.easemob.com/document/server-side/enable_and_configure_IM.html）>).
 - For local deployment, before starting the service, you need to create a `.env` file in the root directory of the project and fill in the following fields:
-  - TOKEN_APPID= < Your TOKEN_APPID >
-  - TOKEN_APPCERTIFICATE=< Your TOKEN_APPCERTIFICATE >
-  - NCS_SECRET=< Your NCS_SECRET >
-  - EM_AUTH_APPKEY=< Your EM_AUTH_APPKEY >
-  - EM_AUTH_CLIENTID=< Your EM_AUTH_CLIENTID >
-  - EM_AUTH_CLIENTSECRET=< YourEM_AUTH_CLIENTSECRET >
+    - WHITELIST_TOKEN_APP_ID=< Your WHITELIST_TOKEN_APP_ID >
+    - WHITELIST_TOKEN_APP_CERT=< Your WHITELIST_TOKEN_APP_CERT >
+    - WHITELIST_CHAT_ROOM_APP_ID=< Your WHITELIST_CHAT_ROOM_APP_ID >
+    - WHITELIST_CHAT_ROOM_ORG_NAME=< Your WHITELIST_CHAT_ROOM_ORG_NAME >
+    - WHITELIST_CHAT_ROOM_APP_NAME=< Your WHITELIST_CHAT_ROOM_APP_NAME >
+    - WHITELIST_CHAT_ROOM_CLIENT_ID=< Your WHITELIST_CHAT_ROOM_CLIENT_ID >
+    - WHITELIST_CHAT_ROOM_CLIENT_SECRET=< Your WHITELIST_CHAT_ROOM_CLIENT_SECRET >
 - Execute `docker compose up -d --build` in the current project root directory, which will pull related images and start Redis/MongoDB/Web service.
 - After the service is started, you can use curl http://localhost:8080/health/check to test.
 - To debug local services using the app, you need to replace the corresponding backend service domain with http://service_machine_IP:8080 on the app. After replacing the domain, you can experience the related services on the app.
 - To stop the service, execute `docker compose down`.
-- Note! NCS message notification is not turned on, and personnel entering and leaving and room destruction logic cannot be automatically processed. If you need to enable this feature, NCS service needs to be enabled.
-- RTM and KTV permissions are not enabled, and the functional experience will be limited. To experience all the functions, refer to [Online Deployment Permission Access Instructions](#online-deployment).
 
 ### Local Development
 - Java version is recommended to be >=11.
 - The editor may use [Visual Studio Code](https://code.visualstudio.com/) and install the following plug-ins:
-    - [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (provides Dockerfile_dev for local container development)
     - [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
 - RTM operation relies on the Linux environment.
 - Open the project directory in vscode and enter container development.
@@ -37,30 +33,16 @@ English | [中文](README_zh.md)
     - spring.data.mongodb.uri
     - spring.redis.host
     - spring.redis.password
-    - ncs.secret
-    - token.appId
-    - token.appCertificate
-    - em.auth.appKey
-    - em.auth.clientId
-    - em.auth.clientSecret
+    - whitelist.token.appId
+    - whitelist.token.appCert
+    - whitelist.chatRoom.appId
+    - whitelist.chatRoom.orgName
+    - whitelist.chatRoom.appName
+    - whitelist.chatRoom.clientId
+    - whitelist.chatRoom.clientSecret
 
 ### Online Deployment
 - Before going online, Redis/MongoDB and other configurations need to be adjusted, and the service needs to be deployed behind the gateway. The gateway can provide authentication/traffic limit and other capabilities, and this service does not have gateway capabilities.
-- At the same time, the following services need to be enabled:
-    - RTM, [Contact customer service to enable](https://www.agora.io)
-    - NCS, RTC channel event callback notification and processing of personnel entering and leaving/room destruction logic
-        - [Enable Message Notification Service](https://docs-beta.agora.io/en/video-calling/develop/receive-notifications?platform=android#enable-notifications)
-            - Choose the following event types
-                - channel create, 101
-                - channel destroy, 102
-                - broadcaster join channel, 103
-                - broadcaster leave channel, 104
-            - Callback URL
-                - https://yourdomain.com/v1/ncs/callback
-            - Modify Secret
-                - Based on the Secret value provided on the configuration page, modify the ncs.secret field in the project configuration file application.yml.
-        - [Channel Event Callback](https://docs-beta.agora.io/en/video-calling/develop/receive-notifications?platform=android#channel-events)
-    - KTV, contact sales to open KTV permission for the AppID (If you do not have contact information for sales, you can contact sales through intelligent customer service [Agora Support](https://agora-ticket.agora.io/)).
 - Metric collection, https://yourdomain:9090/metrics/prometheus, can collect corresponding indicators to monitor the service as needed.
 - The service can be deployed on cloud platforms, such as [Alibaba Cloud Container Service ACK](https://www.alibabacloud.com/en/product/kubernetes).
 
@@ -98,47 +80,35 @@ English | [中文](README_zh.md)
 │   │   │               ├── config                                      // Configuration
 │   │   │               │   ├── GlobalExceptionHandler.java             // Global exception capture
 │   │   │               │   ├── RedisConfig.java                        // Redis configuration
-│   │   │               │   ├── EMServiceConfig.java                    // Huanxin IM configuration
+│   │   │               │   ├── ChatRoomAPIClient.java                  // Huanxin IM configuration
+│   │   │               │   ├── WhitelistConfig.java                    // Whitelist configuration
 │   │   │               │   └── WebMvcConfig.java                       // MVC configuration
 │   │   │               ├── controller                                  // Controller
-│   │   │               │   ├── ChorusController.java                   // Chorus management
 │   │   │               │   ├── HealthController.java                   // Health check
-│   │   │               │   ├── MicSeatController.java                  // Mic management
-│   │   │               │   ├── NcsController.java                      // NCS message notification
-│   │   │               │   ├── RoomController.java                     // Room management
-│   │   │               │   ├── SongController.java                     // Song management
-│   │   │               │   ├── ChatRoomController.java                 // Chat Room management
-│   │   │               │   ├── GiftController.java                     // Gift management
-│   │   │               │   └── TokenController.java                    // Token management
+│   │   │               │   ├── RoomV2Controller.java                   // Room management
+│   │   │               │   ├── ChatRoomV2Controller.java               // ChatRoom management
+│   │   │               │   └── TokenV2Controller.java                  // Token management
 │   │   │               ├── interceptor                                 // Interceptor
 │   │   │               │   ├── PrometheusMetricInterceptor.java        // Indicator interceptor
 │   │   │               │   └── TraceIdInterceptor.java                 // Trace link
 │   │   │               ├── metric                                      // Indicator report
 │   │   │               │   └── PrometheusMetric.java
 │   │   │               │── repository                                  // DB access layer
-│   │   │               │   └── RoomListRepository.java
+│   │   │               │   └── RoomListV2Repository.java
 │   │   │               ├── service                                     // Service layer
-│   │   │               │   ├── IChorusService.java                     // Chorus
-│   │   │               │   ├── IMicSeatService.java                    // Mic
-│   │   │               │   ├── INcsService.java                        // NCS message notification
-│   │   │               │   ├── IRoomService.java                       // Room
-│   │   │               │   ├── IService.java
-│   │   │               │   ├── ISongService.java                       // Song
-│   │   │               │   ├── ITokenService.java                      // Token
+│   │   │               │   ├── IRoomV2Service.java                     // Room
+│   │   │               │   ├── ITokenV2Service.java                    // Token
+│   │   │               │   ├── IEMAPIService.java                      // Huanxin IM API
+│   │   │               │   ├── IChatRoomAPIService.java                // ChatRoom API
 │   │   │               │   └── impl
-│   │   │               │       ├── ChorusServiceImpl.java
-│   │   │               │       ├── MicSeatServiceImpl.java
-│   │   │               │       ├── NcsServiceImpl.java
-│   │   │               │       ├── RoomServiceImpl.java
-│   │   │               │       ├── SongServiceImpl.java
-│   │   │               │       └── TokenServiceImpl.java
-│   │   │               ├── task                                        // Task
-│   │   │               │   └── RoomListTask.java                       // Room list timing processing
+│   │   │               │       ├── RoomV2ServiceImpl.java
+│   │   │               │       ├── ChatRoomV2ServiceImpl.java
+│   │   │               │       ├── ChatRoomAPIServiceImpl.java
+│   │   │               │       └── TokenV2ServiceImpl.java
 │   │   │               └── utils                                       // Tool class
-│   │   │                   ├── HmacShaUtil.java                        // Encryption
 │   │   │                   ├── RedisUtil.java                          // Redis operation
-│   │   │                   ├── RtmUtil.java                            // RTM operation
 │   │   │                   └── TokenUtil.java                          // Token operation
 │   │   └── resources
 │   │       ├── application.yml                                         // Configuration
+│   │       └── logback-spring.xml                                      // Log Configuration
 │
