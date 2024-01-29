@@ -96,7 +96,7 @@ IM_CLIENT_ID=<#Your IM ClientID#>
 IM_CLIENT_SECRET=<#Your IM ClientSecret#>
 ```
 
-> 如果暂无意部署后端服务，可以用声网提供的测试域名：https://service.shengwang.cn/uikit-v2
+> 如果暂无意部署后端服务，可以用声网提供的测试域名：https://service.shengwang.cn/uikit-karaoke-v2
 > 如果想尝试运行项目，可以使用声网提供的测试Agora AppID：925dd81d763a42919862fee9f3f204a7，如下图配置：
 >
 > <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/createaccount/uikit_agora_06.png" alt="image-20240125104152743" width="800" />
