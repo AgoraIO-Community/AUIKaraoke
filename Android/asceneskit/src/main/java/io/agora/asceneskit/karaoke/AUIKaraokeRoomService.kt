@@ -337,8 +337,8 @@ class AUIKaraokeRoomService(
 
     fun exit(): Boolean {
         cleanUserInfo(channelName, AUIRoomContext.shared().currentUserInfo.userId)
-        AUIRoomContext.shared().getArbiter(channelName)?.release()
         cleanRoom()
+        AUIRoomContext.shared().getArbiter(channelName)?.release()
         return isRoomDestroyed
     }
 
@@ -403,18 +403,18 @@ class AUIKaraokeRoomService(
     }
 
     private fun cleanRoom() {
-        logoutRtm()
         ktvApi.release()
+        logoutRtm()
         leaveRtcChannel()
         AUIRoomContext.shared().cleanRoom(channelName)
     }
 
     private fun logoutRtm() {
+        rtmManager.deInit()
         rtmManager.unSubscribe(channelName)
         rtmManager.unSubscribeError(rtmErrorRespObserver)
         rtmManager.unsubscribeLock(rtmLockRespObserver)
         rtmManager.logout()
-        rtmManager.deInit()
         if (rtmCreateCreateByService) {
             RtmClient.release()
         }

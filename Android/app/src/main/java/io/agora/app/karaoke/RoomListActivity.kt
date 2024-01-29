@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.ListAdapter
 import com.bumptech.glide.Glide
 import io.agora.app.karaoke.databinding.RoomListActivityBinding
 import io.agora.app.karaoke.databinding.RoomListItemBinding
-import io.agora.asceneskit.karaoke.KaraokeUiKit
 import io.agora.auikit.model.AUIRoomContext
 import io.agora.auikit.model.AUIRoomInfo
 import io.agora.auikit.ui.basic.AUIAlertDialog
