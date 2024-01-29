@@ -147,17 +147,9 @@ extension AUIPlayerViewBinder: AUIPlayerViewDelegate {
 
     public func onVoiceConversionDidChanged( index: Int) {
         var effect: AgoraVoiceConversionPreset = .off
-        switch index {
-            case 1:
-                effect = .neutral
-            case 2:
-                effect = .sweet
-            case 3:
-                effect = .changerSolid
-            case 4:
-                effect = .changerBass
-            default:
-                break
+        let effects: [AgoraVoiceConversionPreset] = [.off, .neutral, .sweet, .changerSolid, .changerBass]
+        if index < effects.count {
+            effect = effects[index]
         }
         playerServiceDelegate?.setVoiceConversionPreset(preset: effect)
         playerView?.voiceConversionIdx = index
