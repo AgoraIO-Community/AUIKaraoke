@@ -39,3 +39,6 @@ Pods
 **/*.xcworkspace/**
 **/xcuserdata
 **/*.xcframework/**
+
+# VS Code
+.vscode

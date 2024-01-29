@@ -1,79 +1,61 @@
-# UIKit Karaoke Scene Backend Service
-English | [中文](README_zh.md)
-## Project Introduction
-- This project is developed based on the Spring Boot framework, relying on Redis/MongoDB/RTM/NCS components.
-- Redis is mainly used for online user number real-time updates and data consistency through distributed lock.
-- MongoDB is mainly used to maintain the room list.
-- RTM is used to store scene data and message transmission channels.
-- NCS is used for RTC channel event callback notification and processing of personnel entering and leaving/room destruction logic.
+# UIKit K歌场景后台服务
 
-## Service Deployment
-### Quick Experience
-- The service installation environment needs to have the latest Docker environment installed, and the [docker-compose](https://docs.docker.com/compose/) deployment tool installed.
-- You can download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/), which has already installed docker-compose.
-- To launch the service locally, you need to open the docker-compose.yaml file and fill in the [appId and Secret](https://docs.agora.io/en/video-calling/reference/manage-agora-account?platform=android#get-the-app-id) obtained from Agora.
-- For local deployment, before starting the service, you need to create a `.env` file in the root directory of the project and fill in the following fields:
-  - TOKEN_APPID= < Your TOKEN_APPID >
-  - TOKEN_APPCERTIFICATE=< Your TOKEN_APPCERTIFICATE >
-  - NCS_SECRET=< Your NCS_SECRET >
-  - EM_AUTH_APPKEY=< Your EM_AUTH_APPKEY >
-  - EM_AUTH_CLIENTID=< Your EM_AUTH_CLIENTID >
-  - EM_AUTH_CLIENTSECRET=< YourEM_AUTH_CLIENTSECRET >
-- Execute `docker compose up -d --build` in the current project root directory, which will pull related images and start Redis/MongoDB/Web service.
-- After the service is started, you can use curl http://localhost:8080/health/check to test.
-- To debug local services using the app, you need to replace the corresponding backend service domain with http://service_machine_IP:8080 on the app. After replacing the domain, you can experience the related services on the app.
-- To stop the service, execute `docker compose down`.
-- Note! NCS message notification is not turned on, and personnel entering and leaving and room destruction logic cannot be automatically processed. If you need to enable this feature, NCS service needs to be enabled.
-- RTM and KTV permissions are not enabled, and the functional experience will be limited. To experience all the functions, refer to [Online Deployment Permission Access Instructions](#online-deployment).
+## 项目简介
+- 本项目基于Spring Boot框架开发, 依赖 Redis 和 MongoDB 中间件。
+    - Redis, 主要用于提供分布式缓存和分布式锁方式保证数据更新的一致性
+    - MongoDB，主要用于维护房间列表
 
-### Local Development
-- Java version is recommended to be >=11.
-- The editor may use [Visual Studio Code](https://code.visualstudio.com/) and install the following plug-ins:
-    - [Dev Containers](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) (provides Dockerfile_dev for local container development)
+## 服务部署
+### 快速体验
+- > 采用Docker部署服务, 服务安装环境需要提前安装好Docker环境, 并安装最新版[docker-compose](https://docs.docker.com/compose/)部署工具
+    - 可以下载安装[Docker Desktop](https://www.docker.com/products/docker-desktop/), 并已默认安装docker-compose
+- 本地部署
+    - > 本地启动服务前, 需要先在声网申请的[appId和Secret](https://docs.agora.io/cn/Agora%20Platform/get_appid_token?platform=All%20Platforms#%E8%8E%B7%E5%8F%96-app-id)以及环信 IM 相关的配置[开通配置环信即时通讯 IM 服务](https://docs-im-beta.easemob.com/document/server-side/enable_and_configure_IM.html) 
+    - > 本地启动服务前, 需要在项目根目录创建`.env`文件, 并且填入以下字段，用于配置白名单使用：
+        - WHITELIST_TOKEN_APP_ID=< Your WHITELIST_TOKEN_APP_ID >
+        - WHITELIST_TOKEN_APP_CERT=< Your WHITELIST_TOKEN_APP_CERT >
+        - WHITELIST_CHAT_ROOM_APP_ID=< Your WHITELIST_CHAT_ROOM_APP_ID >
+        - WHITELIST_CHAT_ROOM_ORG_NAME=< Your WHITELIST_CHAT_ROOM_ORG_NAME >
+        - WHITELIST_CHAT_ROOM_APP_NAME=< Your WHITELIST_CHAT_ROOM_APP_NAME >
+        - WHITELIST_CHAT_ROOM_CLIENT_ID=< Your WHITELIST_CHAT_ROOM_CLIENT_ID >
+        - WHITELIST_CHAT_ROOM_CLIENT_SECRET=< Your WHITELIST_CHAT_ROOM_CLIENT_SECRET >
+
+    - 在当前项目根目录下执行 `docker compose up -d --build`, 会拉取相关镜像启动Redis、MongoDB服务，同时会对业务服务进行编译。如镜像拉取失败, 可配置国内镜像源解决
+    - 服务启动后, 可使用 curl `http://localhost:8080/health/check` 测试
+    - 如果使用App调试本地服务, 需要在App上替换对应后端服务域名为http://服务机器IP:8080, 替换域名后可以使用App体验相关服务
+    - 停止服务, 执行 `docker compose down`
+
+### 本地开发
+- Java版本推荐>=11
+- 编辑器可采用 [Visual Studio Code](https://code.visualstudio.com/), 安装以下插件
     - [Extension Pack for Java](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack)
-- RTM operation relies on the Linux environment.
-- Open the project directory in vscode and enter container development.
-- Modify the configuration file [application.yml](src/main/resources/application.yml):
+- vscode打开项目目录
+- 修改配置文件[application.yml](src/main/resources/application.yml)
     - spring.data.mongodb.uri
     - spring.redis.host
     - spring.redis.password
-    - ncs.secret
-    - token.appId
-    - token.appCertificate
-    - em.auth.appKey
-    - em.auth.clientId
-    - em.auth.clientSecret
+    - whitelist.token.appId
+    - whitelist.token.appCert
+    - whitelist.chatRoom.appId
+    - whitelist.chatRoom.orgName
+    - whitelist.chatRoom.appName
+    - whitelist.chatRoom.clientId
+    - whitelist.chatRoom.clientSecret
 
-### Online Deployment
-- Before going online, Redis/MongoDB and other configurations need to be adjusted, and the service needs to be deployed behind the gateway. The gateway can provide authentication/traffic limit and other capabilities, and this service does not have gateway capabilities.
-- At the same time, the following services need to be enabled:
-    - RTM, [Contact customer service to enable](https://www.agora.io)
-    - NCS, RTC channel event callback notification and processing of personnel entering and leaving/room destruction logic
-        - [Enable Message Notification Service](https://docs-beta.agora.io/en/video-calling/develop/receive-notifications?platform=android#enable-notifications)
-            - Choose the following event types
-                - channel create, 101
-                - channel destroy, 102
-                - broadcaster join channel, 103
-                - broadcaster leave channel, 104
-            - Callback URL
-                - https://yourdomain.com/v1/ncs/callback
-            - Modify Secret
-                - Based on the Secret value provided on the configuration page, modify the ncs.secret field in the project configuration file application.yml.
-        - [Channel Event Callback](https://docs-beta.agora.io/en/video-calling/develop/receive-notifications?platform=android#channel-events)
-    - KTV, contact sales to open KTV permission for the AppID (If you do not have contact information for sales, you can contact sales through intelligent customer service [Agora Support](https://agora-ticket.agora.io/)).
-- Metric collection, https://yourdomain:9090/metrics/prometheus, can collect corresponding indicators to monitor the service as needed.
-- The service can be deployed on cloud platforms, such as [Alibaba Cloud Container Service ACK](https://www.alibabacloud.com/en/product/kubernetes).
+### 上线部署
+- 正式上线前, 需要调整Redis/MongoDB等配置, 并将服务部署在网关后, 网关可提供鉴权/限流等能力, 本服务不带网关能力
+- 指标收集, https://您的域名:9090/metrics/prometheus, 可根据需要收集相应指标监控服务
+- 服务可以部署在云平台, 比如[阿里云容器服务ACK](https://www.alibabacloud.com/zh/product/kubernetes)
 
-## Directory Structure
+## 目录结构
 ```
 .
-├── Dockerfile                                                          // Project build image
-├── Dockerfile_dev                                                      // Local development image
+├── Dockerfile                                                          // 项目构建镜像
 ├── HELP.md
 ├── README.md
 ├── README_zh.md
-├── docker-compose.yaml                                                 // Local one-click deployment
-├── init-mongo.js                                                       // MongoDB initialization
+├── docker-compose.yaml                                                 // 本地一键部署
+├── init-mongo.js                                                       // MongoDB初始化
 ├── mvnw
 ├── mvnw.cmd
 ├── pom.xml
@@ -83,62 +65,53 @@ English | [中文](README_zh.md)
 │   │   │   └── io
 │   │   │       └── agora
 │   │   │           └── uikit
-│   │   │               ├── Application.java                            // Startup file
-│   │   │               ├── bean                                        // Object class
-│   │   │               │   ├── domain                                  // Entity class
-│   │   │               │   ├── dto                                     // Transfer class
-│   │   │               │   ├── entity                                  // DB entity class
-│   │   │               │   ├── enums                                   // Enumeration
-│   │   │               │   ├── exception                               // Exception handling
+│   │   │               ├── Application.java                            // 启动文件
+│   │   │               ├── bean                                        // 对象类
+│   │   │               │   ├── domain                                  // 实体类
+│   │   │               │   ├── dto                                     // 传输类
+│   │   │               │   ├── entity                                  // DB实体类
+│   │   │               │   ├── enums                                   // 枚举
+│   │   │               │   ├── exception                               // 异常处理
 │   │   │               │   │   └── BusinessException.java
-│   │   │               │   ├── req                                     // Request class
-│   │   │               │   └── valid                                   // Verify
+│   │   │               │   ├── req                                     // 请求类
+│   │   │               │   └── valid                                   // 校验
 │   │   │               │       ├── EnumValid.java
 │   │   │               │       └── EnumValidator.java
-│   │   │               ├── config                                      // Configuration
-│   │   │               │   ├── GlobalExceptionHandler.java             // Global exception capture
-│   │   │               │   ├── RedisConfig.java                        // Redis configuration
-│   │   │               │   ├── EMServiceConfig.java                    // Huanxin IM configuration
-│   │   │               │   └── WebMvcConfig.java                       // MVC configuration
-│   │   │               ├── controller                                  // Controller
-│   │   │               │   ├── ChorusController.java                   // Chorus management
-│   │   │               │   ├── HealthController.java                   // Health check
-│   │   │               │   ├── MicSeatController.java                  // Mic management
-│   │   │               │   ├── NcsController.java                      // NCS message notification
-│   │   │               │   ├── RoomController.java                     // Room management
-│   │   │               │   ├── SongController.java                     // Song management
-│   │   │               │   ├── ChatRoomController.java                 // Chat Room management
-│   │   │               │   ├── GiftController.java                     // Gift management
-│   │   │               │   └── TokenController.java                    // Token management
-│   │   │               ├── interceptor                                 // Interceptor
-│   │   │               │   ├── PrometheusMetricInterceptor.java        // Indicator interceptor
-│   │   │               │   └── TraceIdInterceptor.java                 // Trace link
-│   │   │               ├── metric                                      // Indicator report
+│   │   │               ├── config                                      // 配置
+│   │   │               │   ├── GlobalExceptionHandler.java             // 全局异常捕获
+│   │   │               │   ├── RedisConfig.java                        // Redis配置
+│   │   │               │   ├── ChatRoomAPIClient.java                  // 环信 IM 配置
+│   │   │               │   ├── WhitelistConfig.java                    // 白名单配置
+│   │   │               │   └── WebMvcConfig.java                       // MVC配置
+│   │   │               ├── controller                                  // 控制器
+│   │   │               │   ├── HealthController.java                   // 健康检查
+│   │   │               │   ├── ChatRoomV2Controller.java               // 语言聊房
+│   │   │               │   ├── RoomV2Controller.java                   // 房间管理
+│   │   │               │   └── TokenV2Controller.java                  // Token管理
+│   │   │               ├── interceptor                                 // 拦截器
+│   │   │               │   ├── PrometheusMetricInterceptor.java        // 指标拦截器
+│   │   │               │   └── TraceIdInterceptor.java                 // 链路追踪
+│   │   │               ├── metric                                      // 指标上报
 │   │   │               │   └── PrometheusMetric.java
-│   │   │               │── repository                                  // DB access layer
-│   │   │               │   └── RoomListRepository.java
-│   │   │               ├── service                                     // Service layer
-│   │   │               │   ├── IChorusService.java                     // Chorus
-│   │   │               │   ├── IMicSeatService.java                    // Mic
-│   │   │               │   ├── INcsService.java                        // NCS message notification
-│   │   │               │   ├── IRoomService.java                       // Room
-│   │   │               │   ├── IService.java
-│   │   │               │   ├── ISongService.java                       // Song
-│   │   │               │   ├── ITokenService.java                      // Token
+│   │   │               │── repository                                  // DB访问层
+│   │   │               │   └── RoomListV2Repository.java
+│   │   │               ├── service                                     // 服务层
+│   │   │               │   ├── IRoomV2Service.java                     // 房间
+│   │   │               │   ├── IChatRoomV2Service.java                 // 语聊房服务
+│   │   │               │   ├── IEMAPIService.java                      // 语聊房 feign
+│   │   │               │   ├── IChatRoomAPIService.java                // 语聊房接口
+│   │   │               │   ├── ITokenV2Service.java                    // Token
 │   │   │               │   └── impl
-│   │   │               │       ├── ChorusServiceImpl.java
-│   │   │               │       ├── MicSeatServiceImpl.java
-│   │   │               │       ├── NcsServiceImpl.java
-│   │   │               │       ├── RoomServiceImpl.java
-│   │   │               │       ├── SongServiceImpl.java
-│   │   │               │       └── TokenServiceImpl.java
-│   │   │               ├── task                                        // Task
-│   │   │               │   └── RoomListTask.java                       // Room list timing processing
-│   │   │               └── utils                                       // Tool class
-│   │   │                   ├── HmacShaUtil.java                        // Encryption
-│   │   │                   ├── RedisUtil.java                          // Redis operation
-│   │   │                   ├── RtmUtil.java                            // RTM operation
-│   │   │                   └── TokenUtil.java                          // Token operation
+│   │   │               │       ├── RoomV2ServiceImpl.java
+│   │   │               │       ├── ChatRoomV2ServiceImpl.java
+│   │   │               │       ├── ChatRoomAPIServiceImpl.java
+│   │   │               │       └── TokenV2ServiceImpl.java
+│   │   │               └── utils                                       // 工具类
+│   │   │                   ├── RedisUtil.java                          // Redis操作
+│   │   │                   └── TokenUtil.java                          // Token操作
 │   │   └── resources
-│   │       ├── application.yml                                         // Configuration
-│
+│   │       ├── application.yml                                         // 配置文件
+│   │       └── logback-spring.xml                                      // 日志配置
+```
+
+

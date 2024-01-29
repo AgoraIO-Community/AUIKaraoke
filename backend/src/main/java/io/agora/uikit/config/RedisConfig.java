@@ -1,7 +1,7 @@
 package io.agora.uikit.config;
 
-import java.time.Duration;
-
+import io.agora.uikit.utils.RedisUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +18,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.integration.redis.util.RedisLockRegistry;
 
-import io.agora.uikit.utils.RedisUtil;
-import lombok.AllArgsConstructor;
+import java.time.Duration;
 
 @Configuration
 @AllArgsConstructor
@@ -91,6 +90,8 @@ public class RedisConfig {
         return RedisCacheManager.builder(redisConnectionFactory)
                 .withCacheConfiguration("IMToken", cfg.entryTtl(Duration.ofDays(30)))
                 .withCacheConfiguration("IMUser", cfg.entryTtl(Duration.ofDays(30)))
+                .withCacheConfiguration("chatRoomAPIAppToken", cfg.entryTtl(Duration.ofDays(30)))
+                .withCacheConfiguration("chatRoomAPIUserToken", cfg.entryTtl(Duration.ofDays(30)))
                 .cacheDefaults(cfg)
                 .build();
     }
