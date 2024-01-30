@@ -1,24 +1,22 @@
 # KaraokeUIKit
 
-*English | [中文](KaraokeUIKit.zh.md)*
+KaraokeUIKit是一个Karaoke场景组件，提供房间管理以及拉起房间页面的功能，开发者可以凭借该组件快速搭起一个Karaoke应用。
 
-KaraokeUIKit is a Karaoke scenario component that provides room management and the ability to pull up room pages. Developers can use this component to quickly build a Karaoke application。
+## 快速集成
 
-## Quick Started
+### 1. 添加源码
 
-### 1. Add Source Code
-
-**Copy the following source code into your own project:**
+**将以下源码复制到自己项目里：**
 
 - [asceneskit](../asceneskit)
 
-**Configure libraries in settings.gradle**
+**在settings.gradle里添加库**
 
 ```groovy
 include ':asceneskit'
 ```
 
-**Configure resource path, viewBinding and dependencies in build.gradle**
+**在build.gradle里配置资源路径，viewBinding和依赖**
 
 ```groovy
 dependencies {
@@ -26,7 +24,7 @@ dependencies {
 }
 ```
 
-**Configure permissions and theme in AndroidManifest.xml**
+**在AndroidManifest.xml里配置权限和主题**
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -53,13 +51,13 @@ dependencies {
 ```
 
 
-### 2. Initialize KaraokeUiKit
+### 2. 初始化KaraokeUiKit
 
 ```kotlin
 // Create Common Config
 val config = AUiCommonConfig()
 config.context = application
-config.host = "Domain name of the business server"
+config.host = "业务服务器域名"
 config.userId = "User ID"
 config.userName = "User Name"
 config.userAvatar = "User Avatar"
@@ -72,9 +70,10 @@ KaraokeUiKit.setup(
 )
 ```
 
-> Agora Test Domain: https://service.agora.io/uikit-karaoke
+> 声网业务服务器测试域名： https://service.agora.io/uikit-karaoke
 
-### 3. Get Karaoke Room List
+
+### 3. 获取房间列表
 
 ```kotlin
 KaraokeUiKit.getRoomList(lastCreateTime, 10,
@@ -91,10 +90,10 @@ KaraokeUiKit.getRoomList(lastCreateTime, 10,
 )
 ```
 
-### 4. Create Karaoke Room
+### 4. 创建房间
 
 ```kotlin
-val createRoomInfo = AUICreateRoomInfo()
+val createRoomInfo = AUiCreateRoomInfo()
 createRoomInfo.roomName = roomName
 KaraokeUiKit.createRoom(
     createRoomInfo,
@@ -107,12 +106,12 @@ KaraokeUiKit.createRoom(
 )
 ```
 
-### 5. Launch Karaoke Room
+### 5. 拉起房间
 
 ```kotlin
-// RoomInfo from room list or room creator.
+// 房间信息，由房间列表而来或者是创建房间得到
 val roomInfo : AUIRoomInfo
-// KaraokeRoomView in layout
+// layout里的KaraokeRoomView
 val karaokeRoomView: KaraokeRoomView
 
 KaraokeUiKit.launchRoom(
@@ -120,30 +119,31 @@ KaraokeUiKit.launchRoom(
     karaokeRoomView
 )
 
-// Register room response observer
+// 注册房间事件观察者
 val respObserver = object: AUIRoomManagerRespObserver{
   override fun onRoomDestroy(roomId: String){
-    // Room destroyed by host
+    // 房间被销毁
   }
 }
 KaraokeUiKit.registerRoomRespObserver(respObserver)
-
 ```
 
-### 6. Destory Karaoke Room
+### 6. 销毁房间
 
 ```kotlin
 KaraokeUiKit.destroyRoom(roomId)
-KaraokeUiKit.unbindRespDelegate(respObserver)
+KaraokeUiKit.unRegisterRoomRespObserver(respObserver)
 ```
 
-## API reference
+## API参考
 
 ### KaraokeUiKit
 
-Karaoke Launch Class.
+Karaoke入口类。
 
 #### setup
+
+初始化。
 
 ```kotlin
 fun setup(
@@ -154,18 +154,20 @@ fun setup(
 )
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter   | type            | meaning                                                      |
+| 参数        | 类型            | 含义                                                         |
 | ----------- | --------------- | ------------------------------------------------------------ |
-| config      | AUICommonConfig | General configuration, including user information and domain, etc. |
-| ktvApi      | KTVApi          | (Optional) Agora KTV scene API instance. When the KTVApi has been integrated in the project, it can be imported, otherwise the empty transmission will be created internally. |
-| rtcEngineEx | RtcEngineEx     | (Optional) Agora RTC engine. When Agora RTC has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
-| rtmClient   | RtmClient       | (Optional) Agora RTM engine. When Agora RTM has been integrated in the project, it can be passed in, otherwise it will be automatically created internally. |
+| config      | AUICommonConfig | 通用配置，包含用户信息和域名等                               |
+| ktvApi      | KTVApi          | （可选）声网KTV场景化API实例。当项目里已经集成了KTV场景化可以传入，否则传空由内部自行创建。 |
+| rtcEngineEx | RtcEngineEx     | （可选）声网RTC引擎。当项目里已集成Agora RTC可以传入，否则传空由内部自动创建。 |
+| rtmClient   | RtmClient       | （可选）声网RTM引擎。当项目里已集成Agora RTM可以传入，否则传空由内部自动创建。 |
 
 
 
 #### createRoom
+
+创建房间。
 
 ```kotlin
 fun createRoom(
@@ -175,17 +177,19 @@ fun createRoom(
 )
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter      | type              | meaning                                                  |
-| -------------- | ----------------- | -------------------------------------------------------- |
-| createRoomInfo | AUICreateRoomInfo | Information needed to create a room                      |
-| success        | Function          | Success callback, success will return a room information |
-| failure        | Function          | Failure callback                                         |
+| 参数           | 类型              | 含义                             |
+| -------------- | ----------------- | -------------------------------- |
+| createRoomInfo | AUICreateRoomInfo | 创建房间所需的信息               |
+| success        | Function          | 成功回调，成功会返回一个房间信息 |
+| failure        | Function          | 失败回调                         |
 
 
 
 #### getRoomList
+
+获取房间列表。
 
 ```kotlin
 fun getRoomList(
@@ -196,14 +200,14 @@ fun getRoomList(
 )
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type     | meaning                                                      |
-| --------- | -------- | ------------------------------------------------------------ |
-| startTime | Long     | The page start time                                          |
-| pageSize  | Int      | The page size                                                |
-| success   | Function | Success callback, success will return a list of room information |
-| failure   | Function | Failure callback                                             |
+| 参数      | 类型     | 含义                                 |
+| --------- | -------- | ------------------------------------ |
+| startTime | Long     | 开始时间                             |
+| pageSize  | Int      | 页数                                 |
+| success   | Function | 成功回调，成功会返回一个房间信息列表 |
+| failure   | Function | 失败回调                             |
 
 #### launchRoom
 
@@ -214,52 +218,60 @@ fun launchRoom(
 )
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter   | type            | meaning          |
-| ----------- | --------------- | ---------------- |
-| roomInfo    | AUIRoomInfo     | Room information |
-| karaokeView | KaraokeRoomView | Room UI View     |
+| 参数        | 类型            | 含义        |
+| ----------- | --------------- | ----------- |
+| roomInfo    | AUIRoomInfo     | 房间信息    |
+| karaokeView | KaraokeRoomView | 房间UI View |
+
 
 #### destroyRoom
+
+销毁房间。
 
 ```kotlin
 fun destroyRoom(roomId: String?)
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type   | meaning                       |
-| --------- | ------ | ----------------------------- |
-| roomId    | String | The ID of the room to destroy |
+| 参数   | 类型   | 含义           |
+| ------ | ------ | -------------- |
+| roomId | String | 要销毁的房间ID |
 
 #### registerRoomRespObserver
 
-Bind to get the room response events.
+绑定对应房间的响应，比如房间被销毁、用户被踢出、房间的信息更新等。
 
 ```kotlin
-fun registerRoomRespObserver(observer: AUIRoomManagerRespObserver)
+fun registerRoomRespObserver(observer: AUIRoomManagerRespDelegate)
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type                       | meaning                              |
-| --------- | -------------------------- | ------------------------------------ |
-| observer  | AUIRoomManagerRespObserver | The room response observer implement |
+| 参数     | 类型                       | 含义         |
+| -------- | -------------------------- | ------------ |
+| observer | AUIRoomManagerRespObserver | 响应回调对象 |
 
 #### unRegisterRoomRespObserver
+
+解除绑定对应房间的响应。
 
 ```kotlin
 fun unRegisterRoomRespObserver(observer: AUIRoomManagerRespObserver)
 ```
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type                       | meaning                              |
-| --------- | -------------------------- | ------------------------------------ |
-| observer  | AUIRoomManagerRespObserver | The room response observer implement |
+| 参数     | 类型                       | 含义         |
+| -------- | -------------------------- | ------------ |
+| observer | AUIRoomManagerRespObserver | 响应回调对象 |
+
 
 #### release
+
+释放资源。
 
 ```kotlin
 fun release()
@@ -267,92 +279,92 @@ fun release()
 
 ### AUIRoomManagerRespObserver
 
-Response observer interface.
+响应回调接口。
 
 #### onRoomDestroy
 
-Callback when the room destroyed.
+房间被销毁时回调。
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type   | meaning     |
-| --------- | ------ | ----------- |
-| roomId    | String | The room id |
+| 参数   | 类型   | 含义   |
+| ------ | ------ | ------ |
+| roomId | String | 房间ID |
 
 
 #### onRoomInfoChange
 
-Callback when the room info changed.
+房间信息变更时回调。
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type        | meaning               |
-| --------- | ----------- | --------------------- |
-| roomId    | String      | The room id           |
-| roomInfo  | AUIRoomInfo | The room info changed |
+| 参数     | 类型        | 含义           |
+| -------- | ----------- | -------------- |
+| roomId   | String      | 房间ID         |
+| roomInfo | AUIRoomInfo | 变更后房间信息 |
 
 
 #### onAnnouncementDidChange
 
-Callback when room announcement is updated.
+房间公告被更新时回调。
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type   | meaning              |
-| --------- | ------ | -------------------- |
-| roomId    | String | The room id          |
-| content   | String | announcement content |
+| 参数    | 类型   | 含义     |
+| ------- | ------ | -------- |
+| roomId  | String | 房间ID   |
+| content | String | 公告信息 |
 
 
 #### onRoomUserBeKicked
 
-Calledback when the user is kicked.
+用户被踢时回调。
 
-The parameters are shown in the table below:
+参数如下表所示：
 
-| parameter | type   | meaning        |
-| --------- | ------ | -------------- |
-| roomId    | String | The room id    |
-| userId    | String | Kicked user ID |
+| 参数   | 类型   | 含义       |
+| ------ | ------ | ---------- |
+| roomId | String | 房间ID     |
+| userId | String | 被踢用户ID |
 
 
-## Data Model
+## 数据模型
 
 ### AUICommonConfig
 
-| parameter  | type    | meaning                            |
-| ---------- | ------- | ---------------------------------- |
-| context    | Context | Android Contex                     |
-| host       | String  | Domain name of the business server |
-| userId     | String  | User ID                            |
-| userName   | String  | User name                          |
-| userAvatar | String  | User avatar url                    |
+| 参数       | 类型    | 含义                 |
+| ---------- | ------- | -------------------- |
+| context    | Context | Android Contex上下文 |
+| host       | String  | 业务服务器地址       |
+| userId     | String  | 用户ID               |
+| userName   | String  | 用户名               |
+| userAvatar | String  | 用户头像             |
 
 ### AUIRoomInfo
 
-| parameter   | type                 | meaning           |
-| ----------- | -------------------- | ----------------- |
-| roomId      | String               | Room id           |
-| roomOwner   | AUIUserThumbnailInfo | Room information  |
-| onlineUsers | int                  | Online user count |
-| createTime  | long                 | Room create time  |
+| 参数        | 类型                 | 含义         |
+| ----------- | -------------------- | ------------ |
+| roomId      | String               | 房间id       |
+| roomOwner   | AUIUserThumbnailInfo | 房主信息     |
+| onlineUsers | int                  | 房间人数     |
+| createTime  | long                 | 房间创建时间 |
 
 ### AUIUserThumbnailInfo
 
-| parameter  | type   | meaning         |
-| ---------- | ------ | --------------- |
-| userId     | String | Room id         |
-| userName   | String | User name       |
-| userAvatar | String | User avatar url |
+| 参数       | 类型   | 含义     |
+| ---------- | ------ | -------- |
+| userId     | String | 用户Id   |
+| userName   | String | 用户名   |
+| userAvatar | String | 用户头像 |
 
 ### AUIException
 
-| parameter | type   | meaning       |
-| --------- | ------ | ------------- |
-| code      | int    | Error code    |
-| message   | String | Error message |
+| 参数    | 类型   | 含义     |
+| ------- | ------ | -------- |
+| code    | int    | 错误码   |
+| message | String | 错误信息 |
 
-## License
+## 许可证
 
-Copyright © Agora Corporation. All rights reserved.
-Licensed under the [MIT license](LICENSE).
+版权所有 Agora, Inc. 保留所有权利。
+使用 [MIT 许可证](../LICENSE)

@@ -1,26 +1,34 @@
 package io.agora.asceneskit.karaoke.binder;
 
 
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
 import io.agora.auikit.model.AUILoadMusicConfiguration;
-import io.agora.auikit.model.AUIMicSeatInfo;
 import io.agora.auikit.model.AUIPlayStatus;
 import io.agora.auikit.model.AUIUserThumbnailInfo;
 import io.agora.auikit.service.IAUIChorusService;
 import io.agora.auikit.service.IAUIJukeboxService;
 import io.agora.auikit.service.IAUIMicSeatService;
 import io.agora.auikit.service.IAUIMusicPlayerService;
+import io.agora.auikit.service.callback.AUIException;
 import io.agora.auikit.service.callback.AUIMusicLoadStateCallback;
 import io.agora.auikit.service.callback.AUISwitchSingerRoleCallback;
+import io.agora.auikit.ui.musicplayer.ControllerEffectInfo;
 import io.agora.auikit.ui.musicplayer.IMusicPlayerView;
 import io.agora.auikit.ui.musicplayer.MusicSettingInfo;
 import io.agora.auikit.ui.musicplayer.impl.AUIMusicPlayerView;
+import io.agora.auikit.utils.ThreadManager;
+import io.agora.rtc2.Constants;
 
 public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerService.AUIPlayerRespObserver, IAUIJukeboxService.AUIJukeboxRespObserver, IAUIChorusService.AUIChorusRespObserver, IAUIMicSeatService.AUIMicSeatRespObserver, IMusicPlayerView.ActionDelegate {
 
@@ -37,17 +45,20 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         CO_SINGER,
         AUDIENCE,
     }
+
     private SingRole mRole = SingRole.AUDIENCE;
 
     enum PlayerMusicStatus {
         ON_PLAYING,
         ON_PAUSE
     }
+
     final MutableLiveData<PlayerMusicStatus> playerMusicStatusLiveData = new MutableLiveData<>();
 
     private boolean isRoomOwner = false;
     private boolean isOnSeat = false;
     private boolean isOriginal = false;
+    private boolean isAutoEnterSeat = false;
     private String localUid;
 
     public AUIMusicPlayerBinder(AUIMusicPlayerView musicPlayerView, IAUIMusicPlayerService musicPlayerService, IAUIJukeboxService jukeboxService, IAUIChorusService chorusService, IAUIMicSeatService micSeatService) {
@@ -67,8 +78,15 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
         musicPlayerView.setMusicPlayerActionDelegate(this);
         musicPlayerView.setEffectProperties(musicPlayerService.effectProperties());
+        ArrayList<ControllerEffectInfo> voiceConversionList = new ArrayList<>();
+        voiceConversionList.add(new ControllerEffectInfo(0, Constants.VOICE_CONVERSION_OFF, io.agora.auikit.ui.R.drawable.aui_musicplayer_preset_none, io.agora.auikit.ui.R.string.aui_musicplayer_preset_original));
+        voiceConversionList.add(new ControllerEffectInfo(1, Constants.VOICE_CHANGER_NEUTRAL, io.agora.auikit.ui.R.drawable.aui_musicplayer_preset_child, io.agora.auikit.ui.R.string.aui_musicplayer_preset_child));
+        voiceConversionList.add(new ControllerEffectInfo(2, Constants.VOICE_CHANGER_SWEET, io.agora.auikit.ui.R.drawable.aui_musicplayer_preset_lolita, io.agora.auikit.ui.R.string.aui_musicplayer_preset_lolita));
+        voiceConversionList.add(new ControllerEffectInfo(3, Constants.VOICE_CHANGER_SOLID, io.agora.auikit.ui.R.drawable.aui_musicplayer_preset_uncle, io.agora.auikit.ui.R.string.aui_musicplayer_preset_uncle));
+        voiceConversionList.add(new ControllerEffectInfo(4, Constants.VOICE_CHANGER_BASS, io.agora.auikit.ui.R.drawable.aui_musicplayer_preset_airy, io.agora.auikit.ui.R.string.aui_musicplayer_preset_airy));
+        musicPlayerView.setVoiceConversionList(voiceConversionList);
         // 音效设置默认值
-        MusicSettingInfo musicSettingInfo = new MusicSettingInfo(false,100,50,0,0);
+        MusicSettingInfo musicSettingInfo = new MusicSettingInfo(false, 100, 50, 0, 0);
         musicPlayerView.setMusicSettingInfo(musicSettingInfo);
 
         if (musicPlayerService.getRoomContext().isRoomOwner(musicPlayerService.getChannelName())) {
@@ -128,7 +146,20 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
     @Override
     public void onChoristerDidLeave(AUIChoristerModel chorister) {
+        if (chorister.userId.equals(localUid)) {
+            chorusService.switchSingerRole(3, new AUISwitchSingerRoleCallback() {
+                @Override
+                public void onSwitchRoleSuccess() {
+                    mRole = SingRole.AUDIENCE;
+                    musicPlayerView.onLeaveChorus(isRoomOwner);
+                }
 
+                @Override
+                public void onSwitchRoleFail(int reason) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -146,6 +177,16 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
                 chorusService.switchSingerRole(0, null);
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public AUIException onWillJoinChorus(@NonNull String songCode, @NonNull String userId, @NonNull Map<String, String> metaData) {
+        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
+        if (onSeat) {
+            return null;
+        }
+        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
     }
 
     // JukeboxService delegate implement
@@ -179,7 +220,8 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
         AUIChooseMusicModel newTopSong = songs.get(0);
         if (newTopSong == null) return;
-        if (songPlayingModel != null && songPlayingModel.songCode.equals(newTopSong.songCode)) return;
+        if (songPlayingModel != null && songPlayingModel.songCode.equals(newTopSong.songCode))
+            return;
 
         if (songPlayingModel == null) {
             songPlayingModel = newTopSong;
@@ -203,16 +245,15 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
     // micSeatService delegate implement
     @Override
-    public void onSeatListChange(List<AUIMicSeatInfo> seatInfoList) {
-        IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatListChange(seatInfoList);
-    }
-
-    @Override
     public void onAnchorEnterSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
         IAUIMicSeatService.AUIMicSeatRespObserver.super.onAnchorEnterSeat(seatIndex, userInfo);
         if (userInfo.userId.equals(localUid)) {
             isOnSeat = true;
             musicPlayerView.onSeat();
+            if (isAutoEnterSeat) {
+                joinChorusWithSongCode(songPlayingModel.songCode);
+                isAutoEnterSeat = false;
+            }
         }
     }
 
@@ -357,6 +398,11 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         musicPlayerService.setAudioEffectPreset(effectId);
     }
 
+    @Override
+    public void onVoiceConversion(int voiceId) {
+        musicPlayerService.setVoiceConversionPreset(voiceId);
+    }
+
     private void musicStartPlay(AUIChooseMusicModel newSong) {
         AUILoadMusicConfiguration config = new AUILoadMusicConfiguration();
         if (mRole == SingRole.SOLO_SINGER) {
@@ -437,15 +483,20 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (!isOnSeat) {
             micSeatService.autoEnterSeat(error -> {
                 if (error == null) {
-                    joinChorusWithSongCode(songPlayingModel.songCode);
+                    if (isOnSeat) {
+                        joinChorusWithSongCode(songPlayingModel.songCode);
+                    } else {
+                        isAutoEnterSeat = true;
+                    }
                 } else {
                     musicPlayerView.onJoinChorusFailed();
                 }
             });
-        } else  {
+        } else {
             joinChorusWithSongCode(songPlayingModel.songCode);
         }
     }
+
     private void joinChorusWithSongCode(String code) {
         chorusService.joinChorus(code, chorusService.getRoomContext().currentUserInfo.userId, error -> {
             if (error == null) {
@@ -480,6 +531,11 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
 
                     }
                 });
+            } else {
+                musicPlayerView.onJoinChorusFailed();
+                ThreadManager.getInstance().runOnMainThread(() -> {
+                    Toast.makeText(musicPlayerView.getContext(), "Join chorus failed. code=" + error.code + ", msg=" + error.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
@@ -488,18 +544,9 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         if (songPlayingModel == null) return;
 
         chorusService.leaveChorus(songPlayingModel.songCode, chorusService.getRoomContext().currentUserInfo.userId, error -> {
-            if (error == null) {
-                chorusService.switchSingerRole(3, new AUISwitchSingerRoleCallback() {
-                    @Override
-                    public void onSwitchRoleSuccess() {
-                        mRole = SingRole.AUDIENCE;
-                        musicPlayerView.onLeaveChorus();
-                    }
-
-                    @Override
-                    public void onSwitchRoleFail(int reason) {
-
-                    }
+            if(error != null){
+                ThreadManager.getInstance().runOnMainThread(() -> {
+                    Toast.makeText(musicPlayerView.getContext(), "Join chorus failed. code=" + error.code + ", msg=" + error.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         });

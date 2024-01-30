@@ -27,6 +27,7 @@
         android:drawablePadding="8dp"
         android:gravity="center"
         android:text="2人正在嗨歌"
+        android:visibility="gone"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:textColor="@color/aui_white"

@@ -1,0 +1,15 @@
+excluded:
+   - Pods
+   - Localization
+disabled_rules:
+   - identifier_name
+line_length: 200
+type_body_length:
+   - 300 # warning
+   - 400 # error
+file_length:
+warning: 500
+error: 1200
+function_body_length:
+warning: 50
+error: 100

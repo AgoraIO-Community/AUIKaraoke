@@ -9,7 +9,6 @@ import UIKit
 import SwiftTheme
 
 class AUIListEmptyView: UIView {
-    
     private lazy var imageView: UIImageView = {
         let imgView = UIImageView()
         imgView.frame = CGRect(x: 0, y: 0, width: 200, height: 116)
@@ -27,19 +26,18 @@ class AUIListEmptyView: UIView {
         super.init(frame: frame)
         setupUI()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setupUI(){
+
+    private func setupUI() {
         addSubview(imageView)
         addSubview(titleLabel)
     }
-    
-    func setImage(_ theme_image: ThemeImagePicker?, title: String) {
-        imageView.theme_image = theme_image
+
+    func setImage(_ themeImage: ThemeImagePicker?, title: String) {
+        imageView.theme_image = themeImage
         titleLabel.text = title
     }
-
 }

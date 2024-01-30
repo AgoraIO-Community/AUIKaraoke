@@ -6,9 +6,11 @@ target 'AUIKaraoke' do
   use_frameworks!
   
   pod 'AScenesKit', :path => '../AScenesKit'
-  pod 'AgoraRtcEngine_Special_iOS', '4.1.1.17'
+  pod 'AgoraRtcEngine_Special_iOS', '4.1.1.20'
+#  pod 'AUIKitCore', :path => '../../../AUIKit'
 #  pod 'AgoraLyricsScore', '1.1.1-beta-3'
 #  pod 'LookinServer', :configurations => ['Debug']
+#  pod 'SwiftLint'
 end
 
 post_install do |installer|

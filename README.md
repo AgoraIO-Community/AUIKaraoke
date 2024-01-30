@@ -1,33 +1,31 @@
 # AUIKaraoke
 
-*English | [中文](README.zh.md)*
+## 概述
 
-## Overview
+**AUIKaraoke 组件化解决方案** 是 Agora 面向 Karaoke、语聊等应用场景推出的 low code 解决方案，利用声网 RTC&&RTM 技术能力，帮助开发者快速实现相关业务需求， 焕发核心业务的光彩。
 
-**AUIKaraoke Component Solution** is a low-code solution launched by Agora for Karaoke, VoiceRoom and other scenarios. By utilizing Agora's RTC && RTM technology capabilities, it helps developers quickly implement related business requirements and enhance the core business.
+## 场景描述
 
-## Scenario Description
-
-AUIKaraoke is a functional component solution that integrates Agora's RTC, RTM, copyright songs and other products, helping you to quickly develop online Karaoke rooms. In this solution, the anchor can select a song to become the lead singer and sing with the accompaniment to the audience in the room. The room includes components such as lyrics display, rating, song selection, player, and microphone seats. Agora's copyright songs provides a library of over 200,000 songs, and the connected anchor can search for, select, and view the playlist. Audience members can queue up to sing, interact with the host and other connected anchors in real-time audio.
+AUIKaraoke 是一款集成了声网 RTC、RTM、版权 K 歌等产品的功能组件化方案，帮助您快速开发在线 K 歌房。在此方案中，主播可以点歌成为主唱，跟随歌曲伴奏演唱给歌房内的听众。歌房内有歌词，打分，点歌器，播放器，麦位等组件。声网版权 K 歌提供20万+歌曲曲库，连麦主播可以搜索想唱的歌曲，点歌并查看已点列表。听众可以通过上麦点歌进行排麦演唱，并与房主和其他连麦主播进行实时音频互动。
 
 
-| Role     | Description                                           |
+| 角色     | 描述                                           |
 | -------- | ---------------------------------------------- |
-| Host     | Creator of the room                                     |
-| CoSinger | A connected anchor who joins and sings along with the lead singer            |
-| LeadSinger     | A connected anchor who selects a song, joins the queue to sing, and is currently performing |
-| Audience     | A listener who enters the room, either as a listener or as a connected anchor                               |
+| 房主     | 歌房创建者                                     |
+| 伴唱 | 进入歌房后，通过上麦成为连麦主播，并且加入合唱的用户             |
+| 主唱     | 连麦主播点歌后进行排麦演唱，正在演唱者成为主唱 |
+| 听众     | 进入歌房的倾听者，可能是麦下听众或者上麦听众                               |
 
-AUIKaraoke provides the following core features:
-- **Room management**：Create, destroy, and list rooms
-- **Microphone seat management:**：Manage anchors' microphone access, including granting access, revoking access, kicking off, banning/locking microphones, etc
-- **Music player**：Controls music playback, including play, pause, skip to next song
-- **Song management**： Search for songs, select, add to playlist, skip, and reorder songs
-- **Chorus**：Join/leave chorus, synchronize lyrics display
+AUIKaraoke 提供以下核心功能：
+- **房间管理**：创建、销毁房间，房间列表等
+- **麦位管理**：上麦、下麦、踢人下麦、封禁/锁麦等
+- **音乐播放器**：歌曲播放、暂停、切歌等歌曲控制
+- **歌曲管理**：搜索歌曲，点歌、切歌、置顶歌曲等
+- **合唱**：加入/离开合唱、歌词同步等
 
 
 
-## Demo
+## Demo 体验
 ![](https://download.agora.io/null/uikit_karaoke_demo_pic1.jpg)|![](https://download.agora.io/null/uikit_karaoke_demo_pic3.jpg)|
 ---|---
 
@@ -35,16 +33,16 @@ AUIKaraoke provides the following core features:
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![](https://download.agora.io/demo/release/iOS_uikit_karaoke_0.1.0.png) | ![](https://download.agora.io/demo/release/android_uikit_karaoke_demo_1.0.0.png) |
 
-## Quick Start
+## 快速开始
 
 | iOS | Android | Backend |
 | --- | --- | --- |
 | [Karaoke（iOS）](iOS/Example) | [Karaoke（Android）](Android)  | [Karaoke（Backend）](backend) |
 
 
-## Communication&Feedback
+## 交流&反馈
 
-Welcome to join our WeChat communication group
+欢迎加入微信群交流
 
 ![image-20210622142449407](https://download.agora.io/null/karaoke-uikit-wechat-pic.jpg)
 
@@ -54,15 +52,15 @@ Welcome to join our WeChat communication group
 
 ## FAQ
 
-### How to Get Agora APPID
+### 如何获取声网 APPID
 
-> Apply for Agora AppID：[https://www.agora.io/cn/](https://www.agora.io/cn/)
+> 声网 APPID 申请：[https://www.agora.io/cn/](https://www.agora.io/cn/)
 
 
-### How to Contact Agora for Support
+### 集成遇到困难，该如何联系声网获取协助
 
-> Solution 1: Join our WeChat communication group
+> 方案1：加入微信交流群沟通
 >
-> Solution 2: Send an email to support@agora.io for consultation when you encounter integration difficulties.
+> 方案2：发送邮件给 [support@agora.io](mailto:support@agora.io) 咨询
 
 ---

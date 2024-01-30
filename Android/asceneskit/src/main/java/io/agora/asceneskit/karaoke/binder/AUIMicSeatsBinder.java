@@ -1,15 +1,19 @@
 package io.agora.asceneskit.karaoke.binder;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import io.agora.auikit.model.AUIChooseMusicModel;
 import io.agora.auikit.model.AUIChoristerModel;
@@ -23,7 +27,6 @@ import io.agora.auikit.service.IAUIChorusService;
 import io.agora.auikit.service.IAUIJukeboxService;
 import io.agora.auikit.service.IAUIMicSeatService;
 import io.agora.auikit.service.IAUIUserService;
-import io.agora.auikit.service.callback.AUIChooseSongListCallback;
 import io.agora.auikit.service.callback.AUIChoristerListCallback;
 import io.agora.auikit.service.callback.AUIException;
 import io.agora.auikit.ui.micseats.IMicSeatDialogView;
@@ -38,22 +41,26 @@ public class AUIMicSeatsBinder implements
         IAUIChorusService.AUIChorusRespObserver,
         IAUIJukeboxService.AUIJukeboxRespObserver,
         IAUIUserService.AUIUserRespObserver {
+
+    private final Context context;
     private final IMicSeatsView micSeatsView;
     private final IAUIUserService userService;
     private final IAUIMicSeatService micSeatService;
     private final IAUIJukeboxService jukeboxService;
     private final IAUIChorusService chorusService;
     private Handler mMainHandler;
-    private String mLeadSingerId = "";
+    private AUIChooseMusicModel mSingingMusic = null;
 
     private LinkedList<String> mAccompanySingers = new LinkedList<String>();
 
     public AUIMicSeatsBinder(
+            Context context,
             IMicSeatsView micSeatsView,
             IAUIUserService userService,
             IAUIMicSeatService micSeatService,
             IAUIJukeboxService jukeboxService,
             IAUIChorusService chorusService) {
+        this.context = context;
         this.userService = userService;
         this.micSeatsView = micSeatsView;
         this.micSeatService = micSeatService;
@@ -76,34 +83,33 @@ public class AUIMicSeatsBinder implements
             AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(seatIndex);
             if (seatIndex == 0 && micSeatInfo == null) {
                 AUIRoomInfo roomInfo = AUIRoomContext.shared().getRoomInfo(micSeatService.getChannelName());
-                if (roomInfo != null && roomInfo.roomOwner != null) {
+                if (roomInfo != null && roomInfo.owner != null) {
                     micSeatInfo = new AUIMicSeatInfo();
                     micSeatInfo.seatIndex = 0;
-                    micSeatInfo.user = roomInfo.roomOwner;
+                    micSeatInfo.user = roomInfo.owner;
                     micSeatInfo.seatStatus = AUIMicSeatStatus.used;
                 }
             }
             updateSeatView(seatIndex, micSeatInfo);
         }
 
-        jukeboxService.getAllChooseSongList(new AUIChooseSongListCallback() {
-            @Override
-            public void onResult(@Nullable AUIException error, @Nullable List<AUIChooseMusicModel> songList) {
-                if (songList != null && songList.size() != 0) {
-                    AUIChooseMusicModel song = songList.get(0);
-                    mLeadSingerId = song.owner.userId;
-                    runOnUiThread(() -> updateChorusTag() );
-                }
+        jukeboxService.getAllChooseSongList((error, songList) -> {
+            if (songList != null && songList.size() != 0) {
+                AUIChooseMusicModel song = songList.get(0);
+                setSingingMusic(song);
             }
         });
         chorusService.getChoristersList(new AUIChoristerListCallback() {
             @Override
             public void onResult(@Nullable AUIException error, @Nullable List<AUIChoristerModel> songList) {
+                if (songList == null) {
+                    return;
+                }
                 for (AUIChoristerModel song : songList) {
                     mAccompanySingers.add(song.userId);
                 }
                 if (mAccompanySingers.size() != 0) {
-                    runOnUiThread(() -> updateChorusTag() );
+                    runOnUiThread(() -> updateChorusTag());
                 }
             }
         });
@@ -120,6 +126,7 @@ public class AUIMicSeatsBinder implements
 
         micSeatsView.setMicSeatActionDelegate(null);
     }
+
     private void runOnUiThread(@NonNull Runnable runnable) {
         if (mMainHandler != null) {
             if (mMainHandler.getLooper().getThread() == Thread.currentThread()) {
@@ -129,12 +136,10 @@ public class AUIMicSeatsBinder implements
             }
         }
     }
-    /** IAUIMicSeatService.AUIMicSeatRespDelegate implements. */
-    @Override
-    public void onSeatListChange(List<AUIMicSeatInfo> seatInfoList) {
-        IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatListChange(seatInfoList);
-    }
 
+    /**
+     * IAUIMicSeatService.AUIMicSeatRespDelegate implements.
+     */
     @Override
     public void onAnchorEnterSeat(int seatIndex, @NonNull AUIUserThumbnailInfo userInfo) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
@@ -163,14 +168,19 @@ public class AUIMicSeatsBinder implements
     public void onSeatClose(int seatIndex, boolean isClose) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(seatIndex);
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
-        if(seatInfo == null || seatView == null){
+        if (seatInfo == null || seatView == null) {
             return;
         }
         MicSeatStatus status;
-        switch (seatInfo.seatStatus){
-            case AUIMicSeatStatus.locked: status = MicSeatStatus.locked; break;
-            case AUIMicSeatStatus.used: status = MicSeatStatus.used; break;
-            default: status = MicSeatStatus.idle;
+        switch (seatInfo.seatStatus) {
+            case AUIMicSeatStatus.locked:
+                status = MicSeatStatus.locked;
+                break;
+            case AUIMicSeatStatus.used:
+                status = MicSeatStatus.used;
+                break;
+            default:
+                status = MicSeatStatus.idle;
         }
         seatView.setMicSeatState(status);
     }
@@ -180,18 +190,45 @@ public class AUIMicSeatsBinder implements
         IAUIMicSeatService.AUIMicSeatRespObserver.super.onShowInvited(index);
     }
 
+    @Nullable
+    @Override
+    public AUIException onSeatWillLeave(String userId, Map<String, String> metadata) {
+        jukeboxService.cleanUserInfo(userId, null);
+        chorusService.cleanUserInfo(userId, null);
+        return IAUIMicSeatService.AUIMicSeatRespObserver.super.onSeatWillLeave(userId, metadata);
+    }
+
+    @Nullable
+    @Override
+    public AUIException onSongWillRemove(String userId, Map<String, String> metaData) {
+        boolean onSeat = micSeatService.getMicSeatIndex(userId) >= 0;
+        if (onSeat) {
+            chorusService.cleanUserInfo("", null);
+            return null;
+        }
+        return new AUIException(AUIException.ERROR_CODE_PERMISSION_LEAK, "");
+    }
+
     private void updateSeatView(int seatIndex, @Nullable AUIMicSeatInfo micSeatInfo) {
+        if (seatIndex >= micSeatsView.getMicSeatItemViewList().length) {
+            return;
+        }
+
         IMicSeatItemView seatView = micSeatsView.getMicSeatItemViewList()[seatIndex];
         AUIUserInfo userInfo = null;
         if (micSeatInfo != null && micSeatInfo.user != null && !TextUtils.isEmpty(micSeatInfo.user.userId)) {
             userInfo = userService.getUserInfo(micSeatInfo.user.userId);
-            if(userInfo == null){
+            if (userInfo == null) {
                 userInfo = new AUIUserInfo();
                 userInfo.userId = micSeatInfo.user.userId;
                 userInfo.userName = micSeatInfo.user.userName;
                 userInfo.userAvatar = micSeatInfo.user.userAvatar;
             }
         }
+
+        String roomOwner = AUIRoomContext.shared().getRoomOwner(micSeatService.getChannelName());
+
+        Log.d("AUIMicSeatsBinder", "updateSeatView >> seatIndex=" + seatIndex + ", micSeatInfo=" + micSeatInfo + ", userInfo=" + userInfo + ", roomOwner=" + roomOwner);
 
         // 麦位状态
         if (micSeatInfo == null || micSeatInfo.seatStatus == AUIMicSeatStatus.idle) {
@@ -206,67 +243,76 @@ public class AUIMicSeatsBinder implements
         }
 
         // 房主标识
-        seatView.setRoomOwnerVisibility((userInfo != null && userInfo.userId.equals(AUIRoomContext.shared().getRoomOwner(micSeatService.getChannelName()))) ? View.VISIBLE : View.GONE);
+
+        seatView.setRoomOwnerVisibility((userInfo != null && userInfo.userId.equals(roomOwner)) ? View.VISIBLE : View.GONE);
 
         // 静音状态
-        boolean isAudioMute = (micSeatInfo != null && micSeatInfo.muteAudio != 0) || (userInfo != null && userInfo.muteAudio == 1);
+        boolean isAudioMute = (micSeatInfo != null && micSeatInfo.muteAudio) || (userInfo != null && userInfo.muteAudio == 1);
         seatView.setAudioMuteVisibility(isAudioMute ? View.VISIBLE : View.GONE);
 
         // 视频状态
-        boolean isVideoMute = micSeatInfo != null && micSeatInfo.muteVideo != 0;
+        boolean isVideoMute = micSeatInfo != null && micSeatInfo.muteVideo;
         seatView.setVideoMuteVisibility(isVideoMute ? View.VISIBLE : View.GONE);
 
         // 用户信息
         if (userInfo != null) {
             seatView.setTitleText(userInfo.userName);
             seatView.setUserAvatarImageUrl(userInfo.userAvatar);
-            if (userInfo.userId.equals(mLeadSingerId)) {
-                seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
-            } else if (mAccompanySingers.contains(userInfo.userId)) {
-                seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.SecondarySinger);
+            if (mSingingMusic != null) {
+                if (mSingingMusic.owner != null && userInfo.userId.equals(mSingingMusic.owner.userId)) {
+                    seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
+                } else if (mAccompanySingers.contains(userInfo.userId)) {
+                    seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.SecondarySinger);
+                } else {
+                    seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
+                }
             } else {
                 seatView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
             }
         }
     }
 
-    private void setLeadSingerId(String str) {
-        if (str.equals(mLeadSingerId)) {
-            return;
-        }
-        mLeadSingerId = str;
-        updateChorusTag();
+    private void setSingingMusic(@Nullable AUIChooseMusicModel music) {
+        mSingingMusic = music;
+        runOnUiThread(this::updateChorusTag);
     }
 
     private void updateChorusTag() {
         IMicSeatItemView[] seatViewList = micSeatsView.getMicSeatItemViewList();
+
         for (int i = 0; i < seatViewList.length; i++) {
             AUIMicSeatInfo micSeatInfo = micSeatService.getMicSeatInfo(i);
             IMicSeatItemView itemView = seatViewList[i];
-            if (micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
+            if (micSeatInfo == null || micSeatInfo.user == null || micSeatInfo.user.userId.isEmpty()) {
                 itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
                 continue;
             }
-            if (micSeatInfo.user.userId.equals(mLeadSingerId)) {
-                itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
-            } else if (mAccompanySingers.contains(micSeatInfo.user.userId)) {
-                itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.SecondarySinger);
+            if (mSingingMusic != null) {
+                if (mSingingMusic.owner != null && micSeatInfo.user.userId.equals(mSingingMusic.owner.userId)) {
+                    itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.LeadSinger);
+                } else if (mAccompanySingers.contains(micSeatInfo.user.userId)) {
+                    itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.SecondarySinger);
+                } else {
+                    itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
+                }
             } else {
                 itemView.setChorusMicOwnerType(IMicSeatItemView.ChorusType.None);
             }
         }
     }
 
-    /** AUIMicSeatDialogView.ActionDelegate implements. */
+    /**
+     * AUIMicSeatDialogView.ActionDelegate implements.
+     */
     @Override
     public boolean onClickSeat(int index, IMicSeatDialogView dialogView) {
         AUIMicSeatInfo seatInfo = micSeatService.getMicSeatInfo(index);
         AUIUserInfo userInfo = seatInfo != null && seatInfo.user != null ? userService.getUserInfo(seatInfo.user.userId) : null;
-        boolean isEmptySeat = (userInfo == null || userInfo.userId.length() == 0);
-        boolean isCurrentUser = userInfo != null && userInfo.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
+        boolean isEmptySeat = seatInfo == null || seatInfo.user == null || seatInfo.user.userId.isEmpty() || seatInfo.seatStatus == AUIMicSeatStatus.idle;
+        boolean isCurrentUser = seatInfo != null && seatInfo.user != null && seatInfo.user.userId.equals(micSeatService.getRoomContext().currentUserInfo.userId);
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         boolean isSeatLocked = seatInfo != null && seatInfo.seatStatus == AUIMicSeatStatus.locked;
-        boolean isSeatAudioMute = seatInfo!= null && seatInfo.muteAudio != 0;
+        boolean isSeatAudioMute = seatInfo != null && seatInfo.muteAudio;
         boolean isUserAudioMute = userInfo != null && userInfo.muteAudio != 0;
         boolean inSeat = false;
         for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {
@@ -278,7 +324,7 @@ public class AUIMicSeatsBinder implements
         }
 
         // 设置弹窗用户信息
-        if(userInfo != null){
+        if (userInfo != null) {
             dialogView.setUserInfo(userInfo.userId);
             dialogView.setUserName(userInfo.userName);
             dialogView.setUserAvatar(userInfo.userAvatar);
@@ -313,37 +359,79 @@ public class AUIMicSeatsBinder implements
 
     @Override
     public void onClickEnterSeat(int index) {
-        micSeatService.enterSeat(index, null);
+        micSeatService.enterSeat(index, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickLeaveSeat(int index) {
-        micSeatService.leaveSeat(null);
+        micSeatService.leaveSeat(error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickKickSeat(int index) {
-        micSeatService.kickSeat(index, null);
+        micSeatService.kickSeat(index, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickCloseSeat(int index, boolean isClose) {
-        micSeatService.closeSeat(index, isClose, null);
+        micSeatService.closeSeat(index, isClose, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
     public void onClickMuteAudio(int index, boolean mute) {
         boolean isRoomOwner = micSeatService.getRoomContext().isRoomOwner(micSeatService.getChannelName());
         if (isRoomOwner) {
-            micSeatService.muteAudioSeat(index, mute, null);
+            micSeatService.muteAudioSeat(index, mute, error -> {
+                if(error != null){
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         } else {
-            userService.muteUserAudio(mute, null);
+            userService.muteUserAudio(mute, error -> {
+                if(error != null){
+                    runOnUiThread(() -> {
+                        Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            });
         }
     }
 
     @Override
     public void onClickMuteVideo(int index, boolean mute) {
-        micSeatService.muteVideoSeat(index, mute, null);
+        micSeatService.muteVideoSeat(index, mute, error -> {
+            if(error != null){
+                runOnUiThread(() -> {
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
     }
 
     @Override
@@ -351,7 +439,9 @@ public class AUIMicSeatsBinder implements
         micSeatService.onClickInvited(index);
     }
 
-    /** IAUIMicSeatService.AUIChorusRespDelegate implements. */
+    /**
+     * IAUIMicSeatService.AUIChorusRespDelegate implements.
+     */
     @Override
     public void onChoristerDidEnter(AUIChoristerModel chorister) {
         if (mAccompanySingers.contains(chorister.userId)) {
@@ -378,7 +468,10 @@ public class AUIMicSeatsBinder implements
     public void onChoristerDidChanged() {
 
     }
-    /** IAUIMicSeatService.AUIJukeboxRespDelegate implements. */
+
+    /**
+     * IAUIMicSeatService.AUIJukeboxRespDelegate implements.
+     */
     @Override
     public void onAddChooseSong(@NonNull AUIChooseMusicModel song) {
 
@@ -400,13 +493,17 @@ public class AUIMicSeatsBinder implements
         if (songs.size() != 0) {
             AUIChooseMusicModel song = songs.get(0);
             mAccompanySingers.clear();
-            setLeadSingerId(song.owner.userId);
+            setSingingMusic(song);
         } else {
             mAccompanySingers.clear();
-            setLeadSingerId("");
+            setSingingMusic(null);
         }
     }
-    /** IAUIUserService.AUIUserRespDelegate implements. */
+
+
+    /**
+     * IAUIUserService.AUIUserRespDelegate implements.
+     */
     @Override
     public void onRoomUserSnapshot(@NonNull String roomId, @Nullable List<AUIUserInfo> userList) {
         for (int i = 0; i < micSeatService.getMicSeatSize(); i++) {

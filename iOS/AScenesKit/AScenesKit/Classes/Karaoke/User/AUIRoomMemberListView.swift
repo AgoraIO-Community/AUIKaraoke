@@ -82,14 +82,7 @@ public class AUIRoomMemberUserCell: UITableViewCell {
 
 /// 用户列表
 public class AUIRoomMemberListView: UIView {
-    
     public var memberList: [AUIUserCellUserDataProtocol] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
-    
-    public var seatMap: [String: Int] = [:] {
         didSet {
             tableView.reloadData()
         }
@@ -155,10 +148,9 @@ extension AUIRoomMemberListView: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell: AUIRoomMemberUserCell = tableView.dequeueReusableCell(withIdentifier: kMemberListCellID, for: indexPath) as! AUIRoomMemberUserCell
         let user = memberList[indexPath.row]
-        let seatIdx = seatMap[user.userId] ?? -1
+        let seatIdx = user.seatIndex
         let subTitle = seatIdx >= 0 ? String(format: auikaraoke_localized("micSeatDesc1Format"), seatIdx + 1) : ""
         cell.setUserInfo(withAvatar: user.userAvatar, title: user.userName, subTitle: subTitle)
         return cell

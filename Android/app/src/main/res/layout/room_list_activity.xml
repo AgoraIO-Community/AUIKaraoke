@@ -11,10 +11,6 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_marginTop="30dp"
-        android:paddingBottom="100dp"
-        android:clipToPadding="false"
-        android:clipChildren="false"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -22,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingHorizontal="@dimen/room_list_item_space_h"
-            android:paddingVertical="@dimen/room_list_item_space_v"
+            android:paddingVertical="50dp"
             android:clipToPadding="false"
             android:clipChildren="false"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"

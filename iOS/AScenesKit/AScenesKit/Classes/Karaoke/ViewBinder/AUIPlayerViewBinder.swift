@@ -146,22 +146,12 @@ extension AUIPlayerViewBinder: AUIPlayerViewDelegate {
     }
 
     public func onVoiceConversionDidChanged( index: Int) {
-        var effect: AgoraAudioEffectPreset = .off
-        switch index {
-            case 0:
-                effect = .off
-            case 1:
-                effect = .voiceChangerEffectBoy
-            case 2:
-                effect = .voiceChangerEffectGirl
-            case 3:
-                effect = .voiceChangerEffectUncle
-            case 4:
-                effect = .roomAcousEthereal
-        default:
-            effect = .off
+        var effect: AgoraVoiceConversionPreset = .off
+        let effects: [AgoraVoiceConversionPreset] = [.off, .neutral, .sweet, .changerSolid, .changerBass]
+        if index < effects.count {
+            effect = effects[index]
         }
-        playerServiceDelegate?.setAudioEffectPreset(present: effect)
+        playerServiceDelegate?.setVoiceConversionPreset(preset: effect)
         playerView?.voiceConversionIdx = index
     }
     
@@ -254,10 +244,7 @@ extension AUIPlayerViewBinder: AUIMusicRespDelegate {
     //处理各种身份的加入合唱逻辑
     private func handleKtvLogic(with song: AUIChooseMusicModel) {
         //判断当前用户是否是点歌者
-        let songOwnerUid = currentSong?.owner?.userId
-        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return}
-        let local = commonConfig.userId
-        let isSongOwner = local == songOwnerUid
+        let isSongOwner = getLocalUserId() == currentSong?.owner?.userId
         self.singerRole = isSongOwner ? .soloSinger : .audience
         playerView?.joinState = isSongOwner ? .none : .before
         
@@ -462,6 +449,10 @@ extension AUIPlayerViewBinder: AUIChorusRespDelegate {
 }
 
 extension AUIPlayerViewBinder: KTVApiEventHandlerDelegate {
+    public func onMusicPlayerProgressChanged(with progress: Int) {
+        
+    }
+    
     public func onTokenPrivilegeWillExpire() {
         
     }
@@ -602,8 +593,7 @@ extension AUIPlayerViewBinder: AUIKaraokeLrcViewDelegate {
     }
     
     func getLocalUserId() -> String? {
-        guard let commonConfig = AUIRoomContext.shared.commonConfig else {return nil}
-        return commonConfig.userId
+        return AUIRoomContext.shared.currentUserInfo.userId
     }
 }
 

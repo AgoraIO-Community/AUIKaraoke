@@ -91,7 +91,6 @@ open class AUIKaraokeRoomView: UIView {
                                                  y: top,
                                                  width: self.aui_width,
                                                  height: self.frame.height - top - 65 - CGFloat(ABottomBarHeight)))
-        view.showNewMessage(entity: startMessage(nil))
         return view
     }()
     lazy var inputBar: AUIChatInputBar = {
@@ -306,14 +305,11 @@ open class AUIKaraokeRoomView: UIView {
         loadSubviews()
         viewBinderConnected()
         
-        let channelName:String = service.channelName
-        aui_info("enter room: \(channelName)", tag: "AUIKaraokeRoomView")
-        service.roomManagerImpl.enterRoom(roomId: channelName) { error in
-            aui_info("enter room success", tag: "AUIKaraokeRoomView")
-        }
-        service.joinRtcChannel { error in
-            aui_info("joinRtcChannel finished: \(error?.localizedDescription ?? "success")", tag: "AUIKaraokeRoomView")
-        }
+//        let channelName:String = service.channelName
+//        aui_info("enter room: \(channelName)", tag: "AUIKaraokeRoomView")
+//        service.enterRoom { error in
+//            aui_info("enter room success", tag: "AUIKaraokeRoomView")
+//        }
     }
     
     private func loadSubviews() {
@@ -384,6 +380,8 @@ open class AUIKaraokeRoomView: UIView {
             return
         }
         
+        service.bindRespDelegate(delegate: self)
+        
         //绑定Service
         micSeatBinder.bind(micSeatView: micSeatView,
                            micSeatService: service.micSeatImpl,
@@ -392,7 +390,10 @@ open class AUIKaraokeRoomView: UIView {
                            chorusService: service.chorusImpl)
 //        invitationView.invitationdelegate = service.invitationImpl
 //        invitationView.roomDelegate = service.roomManagerImpl
-        jukeBoxBinder.bind(jukeBoxView: jukeBoxView, service: service.musicImpl)
+        jukeBoxBinder.bind(jukeBoxView: jukeBoxView,
+                           musicService: service.musicImpl,
+                           micSeatService: service.micSeatImpl,
+                           chorusService: service.chorusImpl)
 
         playerBinder.bind(playerView: playerView,
                           playerService: service.playerImpl,
@@ -405,14 +406,13 @@ open class AUIKaraokeRoomView: UIView {
         microphoneButton.isHidden = !AUIRoomContext.shared.isRoomOwner(channelName: service.channelName)
         
         userBinder.bind(userView: membersView,
+                        rtmManager: service.rtmManager,
                         userService: service.userImpl,
-                        micSeatService: service.micSeatImpl)
+                        micSeatService: service.micSeatImpl,
+                        musicService: service.musicImpl,
+                        chorusService: service.chorusImpl)
         
         service.userImpl.bindRespDelegate(delegate: self)
-        
-        if let roomInfo = AUIRoomContext.shared.roomInfoMap[service.channelName] {
-            self.roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
-        }
         
         membersView.onClickMoreButtonAction = { [weak self] in
             guard let `self` = self else { return }
@@ -447,13 +447,13 @@ extension AUIKaraokeRoomView {
     @objc public func onBackAction() {
         guard let service = service else {return}
         if AUIRoomContext.shared.isRoomOwner(channelName: service.channelName) {
-            service.roomManagerImpl.destroyRoom(roomId: service.channelName) { err in
+            service.destroy { err in
             }
         } else {
-            service.roomManagerImpl.exitRoom(roomId: service.channelName) { err in
+            service.exit { err in
             }
         }
-        service.destroy()
+        
         AUIRoomContext.shared.clean(channelName: service.channelName)
         AUICommonDialog.hidden()
         AUIToast.hidden()
@@ -505,15 +505,13 @@ extension AUIKaraokeRoomView {
     }
     
     @objc private func onMoreAction(_ button: UIButton){
-
         let item = AUIActionSheetThemeItem.vertical()
         item.backgroundIcon = "Player.voiceConversionDialogItemBackgroundIcon"
         item.icon = "Room.moreDialogLrcBackgroundIcon"
         item.title = auikaraoke_localized("lrcBackground")
-        item.callback = { [weak self] in
+        item.callback = {
             aui_info("onMoreAction click", tag: "AUIKaraokeRoomView")
-            guard let self = self else {return}
-            
+//            guard let self = self else {return}
         }
         
         let theme = AUIActionSheetTheme()
@@ -547,7 +545,7 @@ extension AUIKaraokeRoomView: AUIMicSeatRespDelegate {
     public func onAnchorLeaveSeat(seatIndex: Int, user: AUIKitCore.AUIUserThumbnailInfo) {
         if user.userId == service?.userImpl.getRoomContext().currentUserInfo.userId {
             microphoneButton.isHidden = true
-            service?.userImpl.getRoomContext().currentUserInfo.seatIndex = -1
+//            service?.userImpl.getRoomContext().currentUserInfo.seatIndex = -1
         }
     }
     
@@ -602,6 +600,12 @@ extension AUIKaraokeRoomView: AUIUserRespDelegate {
 
 }
 
+extension AUIKaraokeRoomView: AUIKaraokeRoomServiceRespDelegate {
+    public func onRoomInfoChange(roomId: String, roomInfo: AUIRoomInfo) {
+        roomInfoView.updateRoomInfo(withRoomId: roomInfo.roomId, roomName: roomInfo.roomName, ownerHeadImg: roomInfo.owner?.userAvatar)
+        chatListView.showNewMessage(entity: startMessage(nil))
+    }
+}
 
 //TODO: implement by gift binder
 extension AUIKaraokeRoomView: AUIRoomGiftDialogEventsDelegate {

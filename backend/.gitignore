@@ -1,9 +1,8 @@
-application-dev.yml
 .idea
 logs
-Makefile
 target
 .vscode
+.env
 
 # RTM
 agora_cache.db
@@ -13,5 +12,3 @@ core
 crash_context_v1
 hs_err*
 xdump_config
-
-.env
