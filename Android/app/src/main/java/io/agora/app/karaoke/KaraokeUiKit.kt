@@ -21,6 +21,7 @@ import retrofit2.Response
 object KaraokeUiKit {
     private var mAPIConfig: AUIAPIConfig? = null
     private val mRoomManager = AUIRoomManager()
+    private val mScenesId = "Karaoke"
 
     private val mServices = mutableMapOf<String, AUIKaraokeRoomService>()
 
@@ -64,6 +65,8 @@ object KaraokeUiKit {
     ) {
         checkSetupAndCommonConfig()
         mRoomManager.getRoomInfoList(
+            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+            mScenesId,
             startTime, pageSize
         ) { error, roomList ->
             if (error == null) {
@@ -88,7 +91,11 @@ object KaraokeUiKit {
             completion.invoke(AUIException(AUIException.ERROR_CODE_ROOM_EXITED, ""), null)
             return
         }
-        mRoomManager.createRoom(roomInfo) { error, roomInfo ->
+        mRoomManager.createRoom(
+            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+            mScenesId,
+            roomInfo
+        ) { error, roomInfo ->
             AUILogger.logger().d(
                 tag = "KaraokeUiKit",
                 message = "Create room >> error=$error, roomInfo=$roomInfo"
@@ -159,10 +166,18 @@ object KaraokeUiKit {
      */
     fun leaveRoom(roomId: String) {
         if (AUIRoomContext.shared().isRoomOwner(roomId)) {
-            mRoomManager.destroyRoom(roomId) {}
+            mRoomManager.destroyRoom(
+                AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+                mScenesId,
+                roomId
+            ) {}
             mServices[roomId]?.destroy()
         } else if (mServices[roomId]?.exit() == true) {
-            mRoomManager.destroyRoom(roomId) {}
+            mRoomManager.destroyRoom(
+                AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+                mScenesId,
+                roomId
+            ) {}
         }
         mServices.remove(roomId)
     }

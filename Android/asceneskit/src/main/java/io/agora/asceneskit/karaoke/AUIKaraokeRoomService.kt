@@ -307,7 +307,7 @@ class AUIKaraokeRoomService(
             if (roomInfo == null) {
                 rtmManager.getMetadata(roomId) { _, metadata ->
                     val payloadInfo = GsonTools.toBean<AUIRtmPayload<AUIRoomInfo>>(
-                        metadata?.metadataItems?.find { it.key == kRoomInfoAttrKey }?.value,
+                        metadata?.get(kRoomInfoAttrKey),
                         object : TypeToken<AUIRtmPayload<AUIRoomInfo>>() {}.type
                     )
                     payloadInfo?.payload?.roomId = payloadInfo?.roomId ?: ""
