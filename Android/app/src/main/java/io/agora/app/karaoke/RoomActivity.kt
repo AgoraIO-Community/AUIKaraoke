@@ -57,11 +57,11 @@ class RoomActivity : AppCompatActivity(),
         }
         mPermissionHelp.checkMicPerm(
             {
-                KaraokeUiKit.generateToken(
+                KaraokeUIKit.generateToken(
                     roomInfo.roomId,
                     onSuccess = { roomConfig ->
                         if (isCreateRoom) {
-                            KaraokeUiKit.createRoom(
+                            KaraokeUIKit.createRoom(
                                 roomInfo,
                                 roomConfig,
                                 mViewBinding.karaokeRoomView,
@@ -71,7 +71,7 @@ class RoomActivity : AppCompatActivity(),
                                     }
                                 })
                         } else {
-                            KaraokeUiKit.enterRoom(
+                            KaraokeUIKit.enterRoom(
                                 roomInfo,
                                 roomConfig,
                                 mViewBinding.karaokeRoomView,
@@ -81,7 +81,7 @@ class RoomActivity : AppCompatActivity(),
                                     }
                                 })
                         }
-                        KaraokeUiKit.registerRoomRespObserver(roomInfo.roomId, this)
+                        KaraokeUIKit.registerRoomRespObserver(roomInfo.roomId, this)
                     },
                     onFailure = {
                         shutDownRoom()
@@ -123,18 +123,18 @@ class RoomActivity : AppCompatActivity(),
 
     private fun shutDownRoom() {
         roomInfo.roomId.let { roomId ->
-            KaraokeUiKit.leaveRoom(roomId)
-            KaraokeUiKit.unRegisterRoomRespObserver(roomId, this@RoomActivity)
+            KaraokeUIKit.leaveRoom(roomId)
+            KaraokeUIKit.unRegisterRoomRespObserver(roomId, this@RoomActivity)
         }
         finish()
     }
 
     override fun onTokenPrivilegeWillExpire(roomId: String) {
         super.onTokenPrivilegeWillExpire(roomId)
-        KaraokeUiKit.generateToken(
+        KaraokeUIKit.generateToken(
             roomInfo.roomId,
             onSuccess = { roomConfig ->
-                KaraokeUiKit.renewToken(roomInfo.roomId, roomConfig)
+                KaraokeUIKit.renewToken(roomInfo.roomId, roomConfig)
             },
             onFailure = { error ->
                 AUILogger.logger()
