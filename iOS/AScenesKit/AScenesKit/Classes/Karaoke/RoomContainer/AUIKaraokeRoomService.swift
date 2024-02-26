@@ -304,8 +304,9 @@ extension AUIKaraokeRoomService: AgoraRtcEngineDelegate {
 // room manager handler
 extension AUIKaraokeRoomService {
     private func cleanUserInfo(channelName: String, userId: String) {
-        
-        AUIRoomContext.shared.getArbiter(channelName: channelName)?.release()
+        if userId == AUIRoomContext.shared.currentUserInfo.userId {
+            AUIRoomContext.shared.getArbiter(channelName: channelName)?.release()
+        }
         //TODO: 仲裁者暂无
         guard AUIRoomContext.shared.getArbiter(channelName: channelName)?.isArbiter() ?? false else {return}
         guard let idx = micSeatImpl.getMicSeatIndex?(userId: userId), idx >= 0 else {return}
@@ -404,6 +405,7 @@ extension AUIKaraokeRoomService {
             }
         }
         subscribeDate = Date()
+//        AUIRoomContext.shared.getArbiter(channelName: roomId)?.create()
         AUIRoomContext.shared.getArbiter(channelName: roomId)?.acquire()
         rtmManager.subscribeError(channelName: roomId, delegate: self)
         rtmManager.subscribeLock(channelName: roomId, lockName: kRTM_Referee_LockName, delegate: self)
