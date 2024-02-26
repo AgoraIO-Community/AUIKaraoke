@@ -6,7 +6,7 @@ android {
     compileSdkVersion 30
 
     defaultConfig {
-        applicationId "io.agora.karaoke"
+        applicationId "io.agora.karaoke.uikit"
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 10

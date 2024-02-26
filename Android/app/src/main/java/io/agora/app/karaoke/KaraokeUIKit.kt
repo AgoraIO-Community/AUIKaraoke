@@ -18,9 +18,14 @@ import io.agora.auikit.service.room.AUIRoomManager
 import io.agora.auikit.utils.AUILogger
 import retrofit2.Response
 
-object KaraokeUiKit {
+object KaraokeUIKit {
     private var mAPIConfig: AUIAPIConfig? = null
-    private val mRoomManager = AUIRoomManager()
+    private val mRoomManager by lazy {
+        AUIRoomManager(
+            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+            mScenesId
+        )
+    }
     private val mScenesId = "Karaoke"
 
     private val mServices = mutableMapOf<String, AUIKaraokeRoomService>()
@@ -65,8 +70,6 @@ object KaraokeUiKit {
     ) {
         checkSetupAndCommonConfig()
         mRoomManager.getRoomInfoList(
-            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
-            mScenesId,
             startTime, pageSize
         ) { error, roomList ->
             if (error == null) {
@@ -92,10 +95,8 @@ object KaraokeUiKit {
             return
         }
         mRoomManager.createRoom(
-            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
-            mScenesId,
             roomInfo
-        ) { error, roomInfo ->
+        ) { error, _ ->
             AUILogger.logger().d(
                 tag = "KaraokeUiKit",
                 message = "Create room >> error=$error, roomInfo=$roomInfo"
@@ -167,15 +168,11 @@ object KaraokeUiKit {
     fun leaveRoom(roomId: String) {
         if (AUIRoomContext.shared().isRoomOwner(roomId)) {
             mRoomManager.destroyRoom(
-                AUIRoomContext.shared().mCommonConfig?.appId ?: "",
-                mScenesId,
                 roomId
             ) {}
             mServices[roomId]?.destroy()
         } else if (mServices[roomId]?.exit() == true) {
             mRoomManager.destroyRoom(
-                AUIRoomContext.shared().mCommonConfig?.appId ?: "",
-                mScenesId,
                 roomId
             ) {}
         }

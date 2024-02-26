@@ -133,7 +133,7 @@ class RoomListActivity : AppCompatActivity() {
                 lastCreateTime = it.createTime
             }
         }
-        KaraokeUiKit.getRoomList(lastCreateTime, 10,
+        KaraokeUIKit.getRoomList(lastCreateTime, 10,
             success = { roomList ->
                 if (roomList.size < 10) {
                     listAdapter.loadingMoreState = LoadingMoreState.NoMoreData
