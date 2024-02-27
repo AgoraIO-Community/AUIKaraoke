@@ -18,7 +18,8 @@ K歌房的歌曲资源使用的是Agora内容中心服务，暂不支持自行�
 
 方案2：发送邮件给[support@agora.io](mailto:support@agora.io)咨询
 
-
+方案3：扫码加入我们的微信交流群提问
+<img src="https://download.agora.io/demo/release/SDHY_QA.jpg" width="360" height="360">
 
 ## 交流&反馈
 
