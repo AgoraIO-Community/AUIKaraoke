@@ -403,6 +403,16 @@ public class AUIMusicPlayerBinder implements IAUIBindable, IAUIMusicPlayerServic
         musicPlayerService.setVoiceConversionPreset(voiceId);
     }
 
+    @Override
+    public void onSkipPrelude(long seekPosition) {
+        musicPlayerService.seekSing(seekPosition);
+    }
+
+    @Override
+    public void onSkipPostlude() {
+        musicPlayerService.seekSing(musicPlayerService.getPlayerDuration() - 500);
+    }
+
     private void musicStartPlay(AUIChooseMusicModel newSong) {
         AUILoadMusicConfiguration config = new AUILoadMusicConfiguration();
         if (mRole == SingRole.SOLO_SINGER) {
