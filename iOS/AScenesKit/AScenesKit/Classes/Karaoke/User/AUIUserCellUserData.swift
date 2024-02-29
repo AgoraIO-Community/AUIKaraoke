@@ -9,6 +9,7 @@ import AUIKitCore
 
 class AUIUserCellUserData: AUIUserThumbnailInfo, AUIUserCellUserDataProtocol {
     var seatIndex: Int = -1
+    var isOwner: Bool = false
 }
 
 extension AUIUserThumbnailInfo {

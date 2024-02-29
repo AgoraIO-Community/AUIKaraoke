@@ -37,9 +37,13 @@ class MApplication: Application() {
             userAvatar = RandomUtils.randomAvatar()
         }
         // Setup karaokeUiKit
-        KaraokeUiKit.setup(
+        KaraokeUIKit.setup(
             commonConfig = config, // must
-            apiConfig = AUIAPIConfig()
+            apiConfig = AUIAPIConfig(
+                ktvApi = null,
+                rtcEngineEx = null,
+                rtmClient = null
+            )
         )
     }
 

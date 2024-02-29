@@ -218,6 +218,17 @@ public class AUIMicSeatViewBinder: NSObject {
 }
 
 extension AUIMicSeatViewBinder: AUIMicSeatRespDelegate {
+    public func onSeatWillLeave(userId: String, metaData: NSMutableDictionary) -> NSError? {
+//        if let err = micSeatDelegate?.cleanUserInfo?(userId: userId, metaData: metaData) {
+//            return err
+//        }
+        musicDelegate?.cleanUserInfo?(userId: userId, completion: { err in
+        })
+        chorusDelegate?.cleanUserInfo?(userId: userId, completion: { err in
+        })
+        
+        return nil
+    }
     
     public func onAnchorEnterSeat(seatIndex: Int, user: AUIUserThumbnailInfo) {
         aui_info("onAnchorEnterSeat seat: \(seatIndex)", tag: "AUIMicSeatViewBinder")
@@ -463,18 +474,6 @@ extension AUIMicSeatViewBinder: AUIChorusRespDelegate {
         //获取需要更新的麦位UI
 //        guard let index =  getMicIndex(with: chorister.userId) else {return}
 //        updateMic(with: index, role: .onlineAudience)
-    }
-    
-    public func onSeatWillLeave(userId: String, metaData: NSMutableDictionary) -> NSError? {
-//        if let err = micSeatDelegate?.cleanUserInfo?(userId: userId, metaData: metaData) {
-//            return err
-//        }
-        musicDelegate?.cleanUserInfo?(userId: userId, completion: { err in
-        })
-        chorusDelegate?.cleanUserInfo?(userId: userId, completion: { err in
-        })
-        
-        return nil
     }
     
     public func onWillJoinChours(songCode: String, userId: String, metaData: NSMutableDictionary) -> NSError? {

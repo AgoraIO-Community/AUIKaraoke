@@ -12,6 +12,7 @@ import AScenesKit
 import AgoraRtcKit
 import AgoraRtmKit
 
+private let kSceneId = "Karaoke"
 @objcMembers
 public class KaraokeUIKit: NSObject {
     public static let shared: KaraokeUIKit = KaraokeUIKit()
@@ -20,7 +21,7 @@ public class KaraokeUIKit: NSObject {
     private var service: AUIKaraokeRoomService?
     private var roomId: String?
     private var isRoomOwner: Bool = false
-    private lazy var roomManager: AUIRoomManagerImpl = AUIRoomManagerImpl()
+    private lazy var roomManager: AUIRoomManagerImpl = AUIRoomManagerImpl(sceneId: kSceneId)
     private var isRoomDestroy: Bool = false
 
     public func setup(commonConfig: AUICommonConfig,

@@ -1,15 +1,18 @@
 PODS:
   - Agora_Chat_iOS (1.2.0)
-  - AgoraLyricsScore (1.1.5)
+  - AgoraComponetLog (0.0.1)
+  - AgoraLyricsScore (1.1.6):
+    - AgoraComponetLog
+    - Zip
   - AgoraRtcEngine_Special_iOS (4.1.1.20)
   - AgoraRtm_iOS (2.1.8)
   - Alamofire (5.8.1)
   - AScenesKit (0.5.3):
-    - AUIKitCore (= 1.0.0)
+    - AUIKitCore (= 1.1.0)
     - libpag
-  - AUIKitCore (1.0.0):
-    - AUIKitCore/All (= 1.0.0)
-  - AUIKitCore/All (1.0.0):
+  - AUIKitCore (1.1.0):
+    - AUIKitCore/All (= 1.1.0)
+  - AUIKitCore/All (1.1.0):
     - Agora_Chat_iOS
     - AgoraLyricsScore
     - AgoraRtcEngine_Special_iOS (< 4.1.1.100, > 4.1.1.19)
@@ -17,7 +20,7 @@ PODS:
     - Alamofire
     - MJRefresh
     - ScoreEffectUI
-    - SDWebImage (~> 4.4.8)
+    - SDWebImage (~> 5.0.0)
     - SwiftTheme
     - SwiftyBeaver (~> 1.9.5)
     - YYModel
@@ -25,9 +28,9 @@ PODS:
   - libpag (4.3.48)
   - MJRefresh (3.7.6)
   - ScoreEffectUI (1.0.2)
-  - SDWebImage (4.4.8):
-    - SDWebImage/Core (= 4.4.8)
-  - SDWebImage/Core (4.4.8)
+  - SDWebImage (5.0.6):
+    - SDWebImage/Core (= 5.0.6)
+  - SDWebImage/Core (5.0.6)
   - SwiftTheme (0.6.4)
   - SwiftyBeaver (1.9.5)
   - YYModel (1.0.4)
@@ -40,6 +43,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Agora_Chat_iOS
+    - AgoraComponetLog
     - AgoraLyricsScore
     - AgoraRtcEngine_Special_iOS
     - AgoraRtm_iOS
@@ -60,16 +64,17 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Agora_Chat_iOS: e11aa75b290e5e8a6b90c1c73642ac1172a71b97
-  AgoraLyricsScore: e080f77403bc2a55c4d032d317e9c922cbce9f6d
+  AgoraComponetLog: c52aec8db3ea38c5693fd4f1beee05ba7715e68b
+  AgoraLyricsScore: 7576387b199cdc3b2752a113688abd0a807a2ca3
   AgoraRtcEngine_Special_iOS: b4c357c188d6af620f272f0d7b664d99e760a86e
   AgoraRtm_iOS: 9fb76b5f71900d012aaed6c033e235d6fd201ed9
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
-  AScenesKit: b96381c19e03bbd8759619ca0f85d9b072d619b5
-  AUIKitCore: 9f0208a71efcc93830f80d411eae5df6ec0e7a42
+  AScenesKit: b579b6487b1ff1eeba36f14eecec62b502bf64d2
+  AUIKitCore: 5bb2acb631c2432e83537c430f683fd1b6fb6eea
   libpag: ad632e7da859943441195536dcdb8d3bb708ba11
   MJRefresh: 2fe7fb43a5167ceda20bb7e63f130c04fd1814a5
   ScoreEffectUI: bf1195b4d41a73d43c236450b5d7f958989844aa
-  SDWebImage: 783af2c3fa36291a250030c4752ee370a9a51d13
+  SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
   SwiftTheme: 007cbaf1f9e171caf6448a4657533e54c682b285
   SwiftyBeaver: 84069991dd5dca07d7069100985badaca7f0ce82
   YYModel: 2a7fdd96aaa4b86a824e26d0c517de8928c04b30

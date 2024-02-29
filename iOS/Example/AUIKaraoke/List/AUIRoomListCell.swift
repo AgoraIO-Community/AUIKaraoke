@@ -15,7 +15,8 @@ class AUIRoomListCell: UICollectionViewCell {
         didSet {
             titleLabel.text = roomInfo?.roomName
 //            statusLabel.text = "\(roomInfo?.memberCount ?? 0)人正在嗨歌"
-            avatarImageView.sd_setImage(with: URL(string: roomInfo?.owner?.userAvatar ?? ""), placeholderImage: UIImage(systemName: "person.circle"))
+            avatarImageView.sd_setImage(with: URL(string: roomInfo?.owner?.userAvatar ?? ""), 
+                                        placeholderImage: UIImage(systemName: "person.circle"))
             ownerLabel.text = "\(roomInfo?.owner?.userName ?? "")的房间"
         }
     }
@@ -23,6 +24,7 @@ class AUIRoomListCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.theme_image = auiThemeImage("AUIRoomListCell.starIcon")
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
         return imageView
     }()
     private lazy var statusLabel: UILabel = {
@@ -30,6 +32,7 @@ class AUIRoomListCell: UICollectionViewCell {
         label.textColor = .white
         label.font = .systemFont(ofSize: 11)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isHidden = true
         return label
     }()
     private lazy var topBgView: UIView = {
@@ -38,6 +41,7 @@ class AUIRoomListCell: UICollectionViewCell {
         view.layer.cornerRadius = 9
         view.layer.masksToBounds = true
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isHidden = true
         return view
     }()
     private lazy var avatarImageView: UIImageView = {
@@ -45,7 +49,7 @@ class AUIRoomListCell: UICollectionViewCell {
         imageView.layer.cornerRadius = 16
         imageView.layer.masksToBounds = true
         imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     private lazy var titleLabel: UILabel = {

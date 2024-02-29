@@ -18,9 +18,15 @@ import io.agora.auikit.service.room.AUIRoomManager
 import io.agora.auikit.utils.AUILogger
 import retrofit2.Response
 
-object KaraokeUiKit {
+object KaraokeUIKit {
     private var mAPIConfig: AUIAPIConfig? = null
-    private val mRoomManager = AUIRoomManager()
+    private val mRoomManager by lazy {
+        AUIRoomManager(
+            AUIRoomContext.shared().mCommonConfig?.appId ?: "",
+            mScenesId
+        )
+    }
+    private val mScenesId = "Karaoke"
 
     private val mServices = mutableMapOf<String, AUIKaraokeRoomService>()
 
@@ -88,7 +94,9 @@ object KaraokeUiKit {
             completion.invoke(AUIException(AUIException.ERROR_CODE_ROOM_EXITED, ""), null)
             return
         }
-        mRoomManager.createRoom(roomInfo) { error, roomInfo ->
+        mRoomManager.createRoom(
+            roomInfo
+        ) { error, _ ->
             AUILogger.logger().d(
                 tag = "KaraokeUiKit",
                 message = "Create room >> error=$error, roomInfo=$roomInfo"
@@ -159,10 +167,14 @@ object KaraokeUiKit {
      */
     fun leaveRoom(roomId: String) {
         if (AUIRoomContext.shared().isRoomOwner(roomId)) {
-            mRoomManager.destroyRoom(roomId) {}
+            mRoomManager.destroyRoom(
+                roomId
+            ) {}
             mServices[roomId]?.destroy()
         } else if (mServices[roomId]?.exit() == true) {
-            mRoomManager.destroyRoom(roomId) {}
+            mRoomManager.destroyRoom(
+                roomId
+            ) {}
         }
         mServices.remove(roomId)
     }

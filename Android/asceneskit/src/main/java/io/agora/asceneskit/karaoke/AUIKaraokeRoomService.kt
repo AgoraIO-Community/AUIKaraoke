@@ -35,6 +35,7 @@ import io.agora.auikit.utils.AUILogger.Companion.logger
 import io.agora.auikit.utils.AgoraEngineCreator
 import io.agora.auikit.utils.GsonTools
 import io.agora.auikit.utils.ObservableHelper
+import io.agora.auikit.utils.ThreadManager
 import io.agora.rtc2.ChannelMediaOptions
 import io.agora.rtc2.Constants
 import io.agora.rtc2.RtcEngine
@@ -307,7 +308,7 @@ class AUIKaraokeRoomService(
             if (roomInfo == null) {
                 rtmManager.getMetadata(roomId) { _, metadata ->
                     val payloadInfo = GsonTools.toBean<AUIRtmPayload<AUIRoomInfo>>(
-                        metadata?.metadataItems?.find { it.key == kRoomInfoAttrKey }?.value,
+                        metadata?.get(kRoomInfoAttrKey),
                         object : TypeToken<AUIRtmPayload<AUIRoomInfo>>() {}.type
                     )
                     payloadInfo?.payload?.roomId = payloadInfo?.roomId ?: ""
@@ -315,7 +316,16 @@ class AUIKaraokeRoomService(
                 }
             }
 
-            AUIRoomContext.shared().getArbiter(channelName)?.acquire()
+            AUIRoomContext.shared().getArbiter(channelName)?.acquire { lockError ->
+                if(lockError != null && enterRoomCompletion != null){
+                    enterRoomCompletion = null
+                    isRoomDestroyed = true
+                    ThreadManager.getInstance().runOnMainThread {
+                        completion.invoke(AUIException(AUIException.ERROR_CODE_RTM, "error: $lockError"))
+                    }
+                    return@acquire
+                }
+            }
             rtmManager.subscribeError(rtmErrorRespObserver)
             rtmManager.subscribeLock(channelName, observer = rtmLockRespObserver)
             rtmManager.subscribe(channelName) { subscribeError ->
