@@ -10,7 +10,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 30
         versionCode 10
-        versionName "1.0.0"
+        versionName "1.0.1"
         ndk.abiFilters 'armeabi-v7a','arm64-v8a'//, 'x86', 'x86-64'
 
         def properties = new Properties()
