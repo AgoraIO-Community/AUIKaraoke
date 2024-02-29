@@ -377,7 +377,7 @@ KaraokeUIKit支持对UI及业务功能做定制化修改，并且由于是依赖
   >   <img src="https://fullapp.oss-cn-beijing.aliyuncs.com/uikit/readme/karaoke/ios/karaoke_custom_06.png" width="800" />
 
 
-#### 1.3修改房间管理
+#### 1.3 修改房间管理
 
   > 在后台服务里提供了一个房间管理，这个房间管理在移动端是由[RoomManager](https://github.com/AgoraIO-Community/AUIKit/blob/main/iOS/AUIKitCore/Sources/Service/Impl/AUIRoomManagerImpl.swift)进行管理。
   > RoomManager提供了创建房间、销毁房间、获取房间列表这三个api，但是这仅能满足简单的房间管理需求，如果有更复杂的需求就需要自行开发房间管理服务。或者您已经有自己的房间管理服务，您也可以使用自己的房间管理服务。
