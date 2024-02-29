@@ -93,7 +93,7 @@ AUIKitKaraoke 依赖于 ASceneKit，ASceneKit 依赖于底层的 AUIKit。详细
 
   > 本项目依赖一个后台服务，该后台服务主要提供下面几个功能：
   > - 房间管理
-  > - Token生成
+  > - Rtc/Rtm Token生成
   > - 环信IM聊天房创建
   > 
   >后台代码完全开源，部署教程见[后台部署](../backend)，部署完即可拿到后台服务域名。
