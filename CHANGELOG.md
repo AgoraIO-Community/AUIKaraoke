@@ -1,4 +1,7 @@
 
+## [1.1.0](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/1.1.0)
+- 适配AUIKit 1.2.0版本。
+
 ## [1.0.1](https://github.com/AgoraIO-Community/AUIKaraoke/releases/tag/1.0.1)
 - 适配AUIKit 1.1.0版本。
 - 更新Readme，增加易读性。
