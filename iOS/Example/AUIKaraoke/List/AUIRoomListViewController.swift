@@ -169,7 +169,7 @@ class AUIRoomListViewController: UIViewController {
     }
 
     func onLoadMoreAction() {
-        let lastCreateTime: Int64? = 0//roomList.last?.createTime
+        let lastCreateTime: Int64? = roomList.last?.createTime
         KaraokeUIKit.shared.getRoomInfoList(lastCreateTime: lastCreateTime ?? 0, pageSize: kListCountPerPage, callback: {[weak self] _, list in
             guard let self = self else { return }
             self.roomList += list ?? []
