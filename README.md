@@ -40,14 +40,6 @@ AUIKaraoke 提供以下核心功能：
 | [Karaoke（iOS）](iOS/Example) | [Karaoke（Android）](Android)  | [Karaoke（Backend）](backend) |
 
 
-## 交流&反馈
-
-欢迎加入微信群交流
-
-![image-20210622142449407](https://download.agora.io/null/karaoke-uikit-wechat-pic.jpg)
-
-
-
 ---
 
 ## FAQ
