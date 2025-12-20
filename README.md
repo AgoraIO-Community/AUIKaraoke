@@ -55,12 +55,3 @@ AUIKaraoke 提供以下核心功能：
 ### 如何获取声网 APPID
 
 > 声网 APPID 申请：[https://www.agora.io/cn/](https://www.agora.io/cn/)
-
-
-### 集成遇到困难，该如何联系声网获取协助
-
-> 方案1：加入微信交流群沟通
->
-> 方案2：发送邮件给 [support@agora.io](mailto:support@agora.io) 咨询
-
----
